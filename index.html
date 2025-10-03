@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Starry Background</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Glow effect for stars */
+    .star {
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: white;
+      position: absolute;
+      box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.8);
+    }
+  </style>
+</head>
+<body class="bg-black w-screen h-screen overflow-hidden relative">
+  <!-- Stars container -->
+  <div id="stars" class="absolute inset-0"></div>
+
+  <!-- Page content -->
+  <div class="flex items-center justify-center h-full text-white">
+    <!-- <h1 class="text-4xl font-bold">🌌 Starry Background Demo</h1> -->
+  </div>
+
+  <script src="./main.js"></script>
+</body>
+</html>
