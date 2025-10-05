@@ -1,3 +1,4 @@
+
 function createStars(count: number) {
   const container = document.getElementById("stars");
   if (!container) return;
