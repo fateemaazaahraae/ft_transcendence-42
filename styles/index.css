@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+#stars {
+  background-color: black;
+  background-image: radial-gradient(white 1px, transparent 1px);
+  background-size: 5px 5px; /* spacing of stars */
+}
