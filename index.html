@@ -9,6 +9,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif&display=swap" rel="stylesheet">
   <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+   <style>
+    /* Hide default cursor */
+    body {
+      cursor: none;
+      background-color: #0f0f1a; /* dark background like your image */
+    }
+
+    /* Glowing cursor styles */
+    .cursor-dot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #D934B0; /* pink/red center */
+      box-shadow: 0 0 30px 15px #D934B0;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: transform 0.05s linear;
+      z-index: 9999;
+    }
+  </style>
 </head>
 
 <body class="bg-black w-screen h-screen overflow-hidden relative">
@@ -17,6 +40,8 @@
 <main id="app" class="relative z-50 w-full h-full flex items-center justify-center text-white"></main>
   <script type="module" src="/src/main.ts"></script>
   <script type="module" src="./stars.ts"></script>
+  <div id="cursor" class="cursor-dot"></div>
+  <script type="module" src="./cursor.ts"></script>
 </body>
 
 </html>
