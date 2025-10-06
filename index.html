@@ -1,22 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pong Frontend</title>
-  <img src="/images/logo.svg" class="absolute top-[30px] left-[50px] w-[130px] h-auto">
   <link rel="stylesheet" href="/styles/index.css">
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 </head>
+
 <body class="bg-black w-screen h-screen overflow-hidden relative">
-  <!-- Stars -->
-  <div id="stars"class="absolute inset-0"></div>
-
-  <!-- SPA container -->
-  <main id="app" class="flex items-center justify-center h-full text-white"></main>
-
+  <div id="stars"></div>
+  <img src="/images/logo.svg" class="absolute top-[30px] left-[50px] w-[130px] h-auto z-10">
+<main id="app" class="relative z-50 w-full h-full flex items-center justify-center text-white"></main>
   <script type="module" src="/src/main.ts"></script>
   <script type="module" src="./stars.ts"></script>
 </body>

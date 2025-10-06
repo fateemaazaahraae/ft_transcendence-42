@@ -12,7 +12,7 @@ function createStars(count: number) {
     const y = Math.random() * window.innerHeight;
 
     // Very small size
-    const size = Math.random() + 0.3; // 0.5px to 1.5px
+    const size = Math.random() + 0.5; // 0.5px to 1.5px
     star.style.width = `${size}px`;
     star.style.height = `${size}px`;
 
@@ -22,8 +22,8 @@ function createStars(count: number) {
 
     // Twinkle + drift animation
     star.style.animation = `
-      twinkle ${Math.random() * 5 + 5}s infinite,
-      drift ${Math.random() * 20 + 10}s linear infinite
+       twinkle ${Math.random() * 2 + 1}s infinite,
+      drift ${Math.random() * 5 + 3}s linear infinite
     `;
 
     // Random drift direction
