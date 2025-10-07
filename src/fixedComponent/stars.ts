@@ -12,7 +12,7 @@ function createStars(count: number) {
     const y = Math.random() * window.innerHeight;
 
     // Very small size
-    const size = Math.random() + 0.5; // 0.5px to 1.5px
+    const size = Math.random() + 0.5;
     star.style.width = `${size}px`;
     star.style.height = `${size}px`;
 
@@ -56,5 +56,15 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// Generate 200 stars
-createStars(200);
+createStars(300);
+
+function resetStars() {
+  const container = document.getElementById("stars");
+  if (!container) return;
+
+  container.innerHTML = "";
+  createStars(300);
+}
+
+// Recreate stars on resize or zoom
+window.addEventListener("resize", resetStars);
