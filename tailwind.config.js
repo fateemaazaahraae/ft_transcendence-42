@@ -1,12 +1,11 @@
-// tailwind.config.js
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./index.html", "./src/**/*.{ts,js}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}"
+  ],
   theme: {
-    extend: {
-      fontFamily: {
-        glitch: ["Rubik Glitch", "cursive"],
-      },
-    },
+    extend: {},
   },
   plugins: [],
-};
+}
