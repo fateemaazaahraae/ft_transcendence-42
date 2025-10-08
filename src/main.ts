@@ -7,6 +7,6 @@ import Friends from "./pages/friends";
 
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Landing();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Login();
-document.querySelector<HTMLDivElement>("#app")!.innerHTML = Leaderboard();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Leaderboard();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Settings();
-// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Friends();
+document.querySelector<HTMLDivElement>("#app")!.innerHTML = Friends();
