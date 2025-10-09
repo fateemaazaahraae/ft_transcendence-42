@@ -1,11 +1,11 @@
 export default function Settings() {
     return `
   <div class="fixed bottom-[250px] left-6 flex flex-col items-center gap-10 z-50">
-      <i class="fa-solid fa-house hover:text-secondary transition-colors duration-500 ease-in-out text-[22px] text-primary cursor-pointer"></i>
-      <i class="fa-solid fa-user hover:text-secondary transition-colors duration-500 ease-in-out text-[22px] text-primary cursor-pointer"></i>
-      <i class="fa-solid fa-trophy hover:text-secondary transition-colors duration-500 ease-in-out text-[22px] text-primary cursor-pointer"></i>
-      <i class="fa-solid fa-user-group hover:text-secondary transition-colors duration-500 ease-in-out text-[22px] text-primary cursor-pointer"></i>
-      <i class="fa-solid fa-comments hover:text-secondary transition-colors duration-500 ease-in-out text-[22px] text-primary cursor-pointer"></i>
+      <i class="fa-solid fa-house hover:text-secondary transition-colors duration-400 ease-in-out text-[22px] text-primary cursor-pointer"></i>
+      <i class="fa-solid fa-user hover:text-secondary transition-colors duration-400 ease-in-out text-[22px] text-primary cursor-pointer"></i>
+      <i class="fa-solid fa-trophy hover:text-secondary transition-colors duration-400 ease-in-out text-[22px] text-primary cursor-pointer"></i>
+      <i class="fa-solid fa-user-group hover:text-secondary transition-colors duration-400 ease-in-out text-[22px] text-primary cursor-pointer"></i>
+      <i class="fa-solid fa-comments hover:text-secondary transition-colors duration-400 ease-in-out text-[22px] text-primary cursor-pointer"></i>
 
       <div class="flex items-center justify-center w-[40px] h-[40px] bg-primary rounded-full">
           <i class="fa-solid fa-gear text-[18px] text-black cursor-pointer"></i>
@@ -17,30 +17,30 @@ export default function Settings() {
 
     <!-- Language icon -->
     <div class="relative group">
-      <button class="flex items-center gap-2 text-primary hover:text-secondary cursor-pointer transition-all duration-500 ease-in-out">
+      <button class="flex items-center gap-2 text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">
         <i class="fa-solid fa-chevron-down text-xs cursor-pointer"></i>
         En
       </button>
 
-      <ul class="absolute mt-1 rounded-md hidden group-hover:block transition-all duration-500 ease-in-out">
+      <ul class="absolute mt-1 rounded-md hidden group-hover:block transition-all duration-400 ease-in-out">
         <li class="px-4 py-2 hover:text-secondary cursor-pointer">En</li>
         <li class="px-4 py-2 hover:text-secondary cursor-pointer">Fr</li>
         <li class="px-4 py-2 hover:text-secondary cursor-pointer">Ar</li>
       </ul>
     </div>
 
-    <i class="fa-regular fa-bell text-primary cursor-pointer hover:text-secondary transition-colors duration-500 ease-in-out"></i>
-    <i class="fa-solid fa-arrow-right-from-bracket text-primary cursor-pointer hover:text-secondary transition-colors duration-500 ease-in-out"></i>
+    <i class="fa-regular fa-bell text-primary cursor-pointer hover:text-secondary transition-colors duration-400 ease-in-out"></i>
+    <i class="fa-solid fa-arrow-right-from-bracket text-primary cursor-pointer hover:text-secondary transition-colors duration-400 ease-in-out"></i>
   </div>
 
   <h1 id="leader" class="text-white font-glitch text-5xl tracking-[4px] fixed top-[120px] left-1/2 -translate-x-1/2 z-50" >Settings</h1>
 
   <!-- Information section -->
-  <div class="font-roboto text-[25px] font-bold text-white fixed top-[250px] left-[550px] z-50">Information</div>
-  <form>
+  <div class="font-roboto text-[25px] font-bold text-white fixed top-[250px] left-1/4 z-50">Information</div>
   
+  <form>
       <!-- firstname -->
-      <div class="flex flex-row gap-[100px] fixed top-[310px] left-1/2 -translate-x-1/2">
+      <div class="flex flex-row gap-[100px] fixed top-[310px] left-1/4">
         <div class="mb-4">
           <label class="block text-white text-[12px] font-roboto font-medium ml-2 mb-2" for="firstname">First Name</label>
           <input id="firstname" type="text" name="firstname" class="w-[350px] h-[45px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[15px] placeholder-white/80" required value="Fatima-zahrae" >
@@ -54,7 +54,7 @@ export default function Settings() {
       </div>
 
       <!-- username -->
-      <div class="flex flex-row gap-[100px] fixed top-[410px] left-1/2 -translate-x-1/2">
+      <div class="flex flex-row gap-[100px] fixed top-[410px] left-1/4">
         <div class="mb-4">
           <label class="block text-white text-[12px] font-roboto font-medium ml-2 mb-2" for="username">Username</label>
           <input id="username" type="text" name="username" class="w-[350px] h-[45px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[15px] placeholder-white/80" required value="fateemaazaahrae">
@@ -68,7 +68,7 @@ export default function Settings() {
       </div>
 
       <!-- gender -->
-      <div class="flex flex-row gap-[100px] fixed top-[510px] left-1/2 -translate-x-1/2">
+      <div class="flex flex-row gap-[100px] fixed top-[510px] left-1/4">
         <div class="mb-4">
           <label class="block text-white text-[12px] font-roboto font-medium ml-2 mb-2" for="gender">Gender</label>
           <input id="gender" type="text" name="gender" class="w-[350px] h-[45px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[15px] placeholder-white/80" required value="Female">
@@ -82,9 +82,9 @@ export default function Settings() {
       </div>
 
   <!-- password section -->
-  <div class="font-roboto text-[25px] font-bold text-white fixed top-[640px] left-[550px] z-50">Change password</div>
+  <div class="font-roboto text-[25px] font-bold text-white fixed top-[640px] left-1/4 z-50">Change password</div>
       <!-- current password -->
-      <div class="flex flex-row gap-[100px] fixed top-[700px] left-1/2 -translate-x-1/2">
+      <div class="flex flex-row gap-[100px] fixed top-[700px] left-1/4">
         <div class="mb-4">
           <label class="block text-white text-[12px] font-roboto font-medium ml-2 mb-2" for="current-password">Current Password</label>
           <input id="current-password" type="password" name="current-password" class="w-[350px] h-[45px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[15px] placeholder-white/60" placeholder="Enter your current password">
@@ -96,7 +96,14 @@ export default function Settings() {
           <input id="new-password" type="password" name="new-password" class="w-[350px] h-[45px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[15px] placeholder-white/60" placeholder="Enter New password">
         </div>
       </div>
-    <button type="submit" class="w-[200px] h-[50px] bg-black drop-shadow-cyan rounded-[25px] text-white font-roboto font-bold text-[18px] fixed top-[850px] left-[1550px] hover:bg-primary hover:text-black transition-colors duration-500 ease-in-out">Save Changes</button>
+    <button type="submit" class="w-[200px] h-[50px] bg-black drop-shadow-cyan rounded-[25px] text-white font-roboto font-bold text-[18px] fixed top-[850px] left-[1550px] hover:bg-primary hover:text-black transition-colors duration-400 ease-in-out">Save Changes</button>
   </form>
+
+  <div class="flex flex-col items-center gap-7 fixed left-[1500px] top-[330px]">
+    <img src="../../images/pink-girl.svg" class="w-[250px] h-[250px] rounded-full border-2 border-primary/40 object-cover">
+    <button class="w-[150px] h-[40px] bg-black drop-shadow-cyan rounded-[20px] text-white font-roboto font-bold text-[14px] hover:bg-primary hover:text-black transition-colors duration-400 ease-in-out">Change Photo</button>
+  </div>
+
+
 `;
 }

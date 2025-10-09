@@ -14,9 +14,11 @@ module.exports = {
         roboto: ["'Roboto Serif'", "serif"],
       },
        dropShadow: {
-        cyan: "0 0 10px #35C6DD", // custom drop shadow
+        cyan: "0 0 10px #35C6DD",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar')({ nocompatible: true }),
+  ],
 }
