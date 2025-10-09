@@ -6,6 +6,8 @@ module.exports = {
       colors: {
         primary: "#35C6DD",
         secondary: "#D934B0",
+        redRemove: "#D44444",
+        greenAdd: "#76E998",
       },
       fontFamily: {
         glitch: ["'Rubik Glitch'", "cursive"],

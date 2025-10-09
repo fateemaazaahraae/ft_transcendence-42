@@ -1,15 +1,15 @@
 export default function Friends() {
     return `
   <div class="fixed bottom-[250px] left-6 flex flex-col items-center gap-10 z-50">
-      <i class="fa-solid fa-house text-[22px] hover:text-secondary text-primary cursor-pointer"></i>
-      <i class="fa-solid fa-user text-[22px] hover:text-secondary text-primary cursor-pointer"></i>
-      <i class="fa-solid fa-trophy text-[22px] hover:text-secondary text-primary cursor-pointer"></i>
+      <i class="fa-solid fa-house text-[22px] hover:text-secondary transition-all duration-500 ease-in-out text-primary cursor-pointer"></i>
+      <i class="fa-solid fa-user text-[22px] hover:text-secondary transition-all duration-500 ease-in-out text-primary cursor-pointer"></i>
+      <i class="fa-solid fa-trophy text-[22px] hover:text-secondary transition-all duration-500 ease-in-out text-primary cursor-pointer"></i>
       
       <div class="flex items-center justify-center w-[40px] h-[40px] bg-primary rounded-full">
           <i class="fa-solid fa-user-group text-[18px] text-black cursor-pointer"></i>
       </div>
-      <i class="fa-solid fa-comments text-[22px] hover:text-secondary text-primary cursor-pointer"></i>
-      <i class="fa-solid fa-gear text-[22px] hover:text-secondary text-primary cursor-pointer"></i>
+      <i class="fa-solid fa-comments text-[22px] hover:text-secondary transition-all duration-500 ease-in-out text-primary cursor-pointer"></i>
+      <i class="fa-solid fa-gear text-[22px] hover:text-secondary transition-all duration-500 ease-in-out text-primary cursor-pointer"></i>
 
     </div>
 
@@ -17,27 +17,176 @@ export default function Friends() {
 
       <!-- Language icon -->
       <div class="relative group">
-        <button class="flex items-center gap-2 text-primary hover:text-secondary cursor-pointer">
+        <button class="flex items-center gap-2 text-primary hover:text-secondary cursor-pointer transition-all duration-500 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs cursor-pointer"></i>
           En
         </button>
 
-        <ul class="absolute mt-1 rounded-md hidden group-hover:block transition-all duration-200 ease-in-out">
+        <ul class="absolute mt-1 rounded-md hidden group-hover:block transition-all duration-500 ease-in-out">
           <li class="px-4 py-2 hover:text-secondary cursor-pointer">En</li>
           <li class="px-4 py-2 hover:text-secondary cursor-pointer">Fr</li>
           <li class="px-4 py-2 hover:text-secondary cursor-pointer">Ar</li>
         </ul>
       </div>
 
-      <i class="fa-regular fa-bell text-primary cursor-pointer hover:text-secondary"></i>
-      <i class="fa-solid fa-arrow-right-from-bracket text-primary cursor-pointer hover:text-secondary"></i>
+      <i class="fa-regular fa-bell text-primary cursor-pointer hover:text-secondary transition-colors duration-500 ease-in-out"></i>
+      <i class="fa-solid fa-arrow-right-from-bracket text-primary cursor-pointer hover:text-secondary transition-colors duration-500 ease-in-out"></i>
     </div>
+
+  <!-- Friends, Invitations, Blocked buttons -->
+  <div class="flex flex-row items-center gap-10 fixed left-1/2 -translate-x-1/2 top-[250px]">
+    <button class="w-[280px] h-[53px] bg-black drop-shadow-cyan rounded-3xl text-primary/40 font-roboto font-extrabold tracking-[1px] text-[25px] flex items-center justify-center">Friends</button>
+    <button class="w-[280px] h-[53px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[25px] flex items-center justify-center">Invitaions</button>
+    <button class="w-[280px] h-[53px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[25px] flex items-center justify-center">Blocked</button>
   </div>
 
-  <div class="flex flex-row items-center gap-10 fixed left-1/2 -translate-x-1/2 top-[180px]">
-    <div class="w-[280px] h-[53px] bg-black drop-shadow-cyan rounded-3xl text-primary/40 font-roboto font-extrabold tracking-[1px] text-[25px] flex items-center justify-center">Friends</div>
-    <div class="w-[280px] h-[53px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[25px] flex items-center justify-center">Invitaions</div>
-    <div class="w-[280px] h-[53px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[25px] flex items-center justify-center">Blocked</div>
+  <!-- Friends list -->
+
+<div class="fixed left-1/2 -translate-x-1/2 top-[400px] h-[350px] w-[1000px] overflow-x-auto scrollbar-thin scrollbar-thumb-primary/40 scrollbar-track-secconary">
+  <div class="grid grid-flow-col auto-cols-[240px] gap-10">
+    
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-greenAdd rounded-full"></div>
+      <img src="../../images/blue-boy.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">Smith</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-redRemove rounded-full"></div>
+      <img src="../../images/white-boy.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">Noah</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+    
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-greenAdd rounded-full"></div>
+      <img src="../../images/purple-girl.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">salaoui</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+    
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-redRemove rounded-full"></div>
+      <img src="../../images/white-boy2.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">Oliver</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+    
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-greenAdd rounded-full"></div>
+      <img src="../../images/green-girl.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">fateemaazaahrae</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+    
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-greenAdd rounded-full"></div>
+      <img src="../../images/dark-girl.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">knacer</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-greenAdd rounded-full"></div>
+      <img src="../../images/dark-girl.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">knacer</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-greenAdd rounded-full"></div>
+      <img src="../../images/dark-girl.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">knacer</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-greenAdd rounded-full"></div>
+      <img src="../../images/dark-girl.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">knacer</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-greenAdd rounded-full"></div>
+      <img src="../../images/dark-girl.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">knacer</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-greenAdd rounded-full"></div>
+      <img src="../../images/dark-girl.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">knacer</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-greenAdd rounded-full"></div>
+      <img src="../../images/dark-girl.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">knacer</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-greenAdd rounded-full"></div>
+      <img src="../../images/dark-girl.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">knacer</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+
+    <div class="w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative">
+      <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] bg-greenAdd rounded-full"></div>
+      <img src="../../images/dark-girl.svg" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]"/>
+      <div class="font-roboto font-bold">knacer</div>
+      <div class="flex flex-row items-center gap-6 mb-6">
+        <i class="fa-solid fa-comment text-[35px] text-primary/40"></i>
+        <button class="w-[110px] h-[35px] bg-redRemove rounded-2xl font-roboto font-bold text-[15px]">Remove</button>
+      </div>
+    </div>
+
   </div>
+</div>
+
 `;
 }
