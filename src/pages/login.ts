@@ -2,8 +2,8 @@ export default function Login() {
   return `
     <div class="flex items-center justify-center gap-[4px] relative min-h-screen w-full">
     
-    <div class="absolute  w-[400px] h-[200px] bg-cyan-500 rounded-full blur-[80px] opacity-90 rotate-[45deg] top-[196px] left-[270px] transform -translate-x-1/2 -translate-y-1/2"></div>
-    <div class="absolute  w-[400px] h-[250px] bg-[rgb(208,46,164)] rounded-full blur-[80px] opacity-90 rotate-[45deg]  top-[560px] left-[550px]"></div>
+    <div class="absolute  w-[400px] h-[200px] bg-cyan-500 rounded-full blur-[80px] opacity-90 rotate-[45deg] top-[250px] left-[280px]"></div>
+    <div class="absolute  w-[400px] h-[250px] bg-[rgb(208,46,164)] rounded-full blur-[80px] opacity-90 rotate-[45deg]  top-[550px] left-[500px]"></div>
     <div class="relative h-[600px] w-[480px] pt-[40px] pb-[60px] items-center px-[50px] bg-black rounded-[50px] backdrop-blur-[10px] ml-[1480px] ">
       <form action="">
         <h2
@@ -16,12 +16,11 @@ export default function Login() {
             required 
             placeholder="User name" 
             class="w-[370px] h-[52px] px-[20px] py-[15px] items-center bg-black font-roboto text-white border-none rounded-[20px]
-                  shadow-[0_0_10px_rgba(53,198,221,0.9)] 
-                  focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] 
-                  text-[1.1em] font-medium outline-none mx-3 
-                  placeholder:text-[0.8em] placeholder:text-gray-400 
-                  transition-shadow duration-500 ease-in-out"
-          >
+              shadow-[0_0_10px_rgba(53,198,221,0.9)] 
+              focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] 
+              text-[1.1em] font-medium outline-none mx-3 
+              placeholder:text-[0.8em] placeholder:text-gray-400 
+              transition-shadow duration-400 ease-in-out">
         </div>
 
         <div class="input-box mt-4">
@@ -30,12 +29,11 @@ export default function Login() {
             required 
             placeholder="Password" 
             class="w-[370px] h-[52px] px-[20px] py-[15px] items-center bg-black font-roboto text-white border-none rounded-[20px]
-                  shadow-[0_0_10px_rgba(53,198,221,0.9)] 
-                  focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] 
-                  text-[1.1em] font-medium outline-none mx-3 
-                  placeholder:text-[0.8em] placeholder:text-gray-400 
-                  transition-shadow duration-300 ease-in-out"
-          >
+              shadow-[0_0_10px_rgba(53,198,221,0.9)] 
+              focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] 
+              text-[1.1em] font-medium outline-none mx-3 
+              placeholder:text-[0.8em] placeholder:text-gray-400 
+              transition-shadow duration-400 ease-in-out">
         </div>
         <div class="flex p-[20px] font-roboto items-center justify-between mt-3">
           <label class="flex items-center gap-2 text-white cursor-pointer">
