@@ -91,10 +91,10 @@ export default function Settings() {
     </form>
 
     <!-- Profile Image -->
-    <div class="flex flex-col items-center justify-start gap-4">
+    <div class="flex flex-col items-center justify-start gap-4 w-[330px] h-[330px] mx-auto">
       <div class="relative">
-        <img src="../../images/pink-girl.svg" class="w-[250px] h-[250px] rounded-full border-2 border-primary/40 object-cover">
-        <i class="fa-solid fa-pen-to-square absolute bottom-10 right-4 text-[20px] text-primary/90 cursor-pointer"></i>
+        <img src="../../images/pink-girl.svg" class="w-[330px] h-[330px] rounded-full border-2 border-primary/40 object-cover">
+        <i class="fa-solid fa-pen-to-square absolute bottom-12 right-7 text-[20px] text-primary/90 cursor-pointer"></i>
       </div>
     </div>
 
