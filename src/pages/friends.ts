@@ -1,6 +1,6 @@
 export default function Friends() {
     return `
-  <div class="fixed bottom-[250px] left-6 flex flex-col items-center gap-10 z-50">
+  <diz class="fixed top-1/2 -translate-y-1/2 left-6 flex flex-col items-center gap-10 z-50">
       <i class="fa-solid fa-house text-[22px] hover:text-secondary transition-all duration-400 ease-in-out text-primary"></i>
       <i class="fa-solid fa-user text-[22px] hover:text-secondary transition-all duration-400 ease-in-out text-primary"></i>
       <i class="fa-solid fa-trophy text-[22px] hover:text-secondary transition-all duration-400 ease-in-out text-primary"></i>
@@ -11,7 +11,7 @@ export default function Friends() {
       <i class="fa-solid fa-comments text-[22px] hover:text-secondary transition-all duration-400 ease-in-out text-primary"></i>
       <i class="fa-solid fa-gear text-[22px] hover:text-secondary transition-all duration-400 ease-in-out text-primary"></i>
 
-    </div>
+    </diz>
 
     <div class="fixed left-[1650px] top-[40px] flex flex-row items-center gap-5 z-50">
 

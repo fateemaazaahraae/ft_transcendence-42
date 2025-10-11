@@ -84,7 +84,7 @@ export default function Leaderboard() {
     <div class="flex items-center gap-3">
       <div class="text-white text-[22px] font-roboto font-semibold ml-7">4.</div>
       <img src="../../images/purple-girl.svg" alt="purple-girl" class="w-[38px] h-[38px] object-cover rounded-full border border-primary/50" />
-      <div class="text-white text-[20px] font-roboto font-semibold">salaoui</div>
+      <div class="text-white text-[20px] font-roboto font-semibold truncate w-[200px]">salaoui</div>
     </div>
     <div class="ml-auto w-[130px] h-[50px] bg-secondary rounded-lg flex items-center justify-center">
       <div class="text-white text-[20px] font-roboto font-semibold">5.895</div>
@@ -97,7 +97,7 @@ export default function Leaderboard() {
     <div class="flex items-center gap-3">
       <div class="text-white text-[22px] font-roboto font-semibold ml-7">5.</div>
       <img src="../../images/white-boy2.svg" alt="white-boy2" class="w-[38px] h-[38px] object-cover rounded-full border border-primary/50" />
-      <div class="text-white text-[20px] font-roboto font-semibold">oliver</div>
+      <div class="text-white text-[20px] font-roboto font-semibold truncate w-[200px]">oliver</div>
     </div>
     <div class="ml-auto w-[130px] h-[50px] bg-secondary rounded-lg flex items-center justify-center">
       <div class="text-white text-[20px] font-roboto font-semibold">5.150</div>
@@ -110,7 +110,7 @@ export default function Leaderboard() {
     <div class="flex items-center gap-3">
       <div class="text-white text-[22px] font-roboto font-semibold ml-7">6.</div>
       <img src="../../images/red-boy.svg" alt="red-boy" class="w-[38px] h-[38px] object-cover rounded-full border border-primary/50" />
-      <div class="text-white text-[20px] font-roboto font-semibold">Thomas</div>
+      <div class="text-white text-[20px] font-roboto font-semibold truncate w-[200px]">Thomas</div>
     </div>
     <div class="ml-auto w-[130px] h-[50px] bg-secondary rounded-lg flex items-center justify-center">
       <div class="text-white text-[20px] font-roboto font-semibold">5.069</div>
@@ -123,7 +123,7 @@ export default function Leaderboard() {
     <div class="flex items-center gap-3">
       <div class="text-white text-[22px] font-roboto font-semibold ml-7">7.</div>
       <img src="../../images/dark-girl.svg" alt="dark-girl" class="w-[38px] h-[38px] object-cover rounded-full border border-primary/50" />
-      <div class="text-white text-[20px] font-roboto font-semibold">keltoum</div>
+      <div class="text-white text-[20px] font-roboto font-semibold truncate w-[200px]">keltoum</div>
     </div>
     <div class="ml-auto w-[130px] h-[50px] bg-secondary rounded-lg flex items-center justify-center">
       <div class="text-white text-[20px] font-roboto font-semibold">5.011</div>
@@ -136,7 +136,7 @@ export default function Leaderboard() {
     <div class="flex items-center gap-3">
       <div class="text-white text-[22px] font-roboto font-semibold ml-7">8.</div>
       <img src="../../images/green-girl.svg" alt="green-girl" class="w-[38px] h-[38px] object-cover rounded-full border border-primary/50" />
-      <div class="text-white text-[20px] font-roboto font-semibold">fateemaazaahraae</div>
+      <div class="text-white text-[20px] font-roboto font-semibold truncate w-[200px]">fateemaazaahrwwwwwwwwwwwwaae</div>
     </div>
     <div class="ml-auto w-[130px] h-[50px] bg-secondary rounded-lg flex items-center justify-center">
       <div class="text-white text-[20px] font-roboto font-semibold">4.993</div>
