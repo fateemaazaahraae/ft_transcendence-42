@@ -1,10 +1,10 @@
 export default function Login() {
   return `
-    <div class="flex items-center justify-center gap-[4px] relative min-h-screen w-full">
+    <div class="flex items-center justify-center gap-[170px] relative min-h-screen w-full">
     
-    <div class="absolute  w-[400px] h-[200px] bg-cyan-500 rounded-full blur-[80px] opacity-90 rotate-[45deg] top-[250px] left-[280px]"></div>
-    <div class="absolute  w-[400px] h-[250px] bg-[rgb(208,46,164)] rounded-full blur-[80px] opacity-90 rotate-[45deg]  top-[550px] left-[500px]"></div>
-    <div class="relative h-[600px] w-[480px] pt-[40px] pb-[60px] items-center px-[50px] bg-black rounded-[50px] backdrop-blur-[10px] ml-[1480px] ">
+    <div class="absolute  w-[400px] h-[250px] bg-cyan-300 rounded-full blur-[60px] opacity-90 rotate-[45deg] top-[230px] left-[340px]"></div>
+    <div class="absolute  w-[400px] h-[250px] bg-[rgb(208,46,164)] rounded-full blur-[80px] opacity-90 rotate-[45deg]  top-[550px] left-[560px]"></div>
+    <div class="relative h-[600px] w-[480px] pt-[40px] pb-[60px] items-center px-[50px] bg-black rounded-[50px] backdrop-blur-[10px] ml-[1580px] ">
       <form action="">
         <h2
             class="text-white text-center font-glitch text-[1.5em] leading-[35px] tracking-[2px] mt-[5px] mb-[20px]">
@@ -79,7 +79,7 @@ export default function Login() {
     <!--<div class="relative z-0 rounded-full blur-[65px] opacity-100 w-[300px] h-[200px] bg-[#D02EA4FF] top-[3%] bottom-[20%] left-240 right-[calc(50%-397px)] rotate-[140deg]"></div>-->
 
     </div>
-    <img src="/images/white-boy2.svg" class="w-[1120px] h-[752px] mr-[1050px] drop-shadow-[0_0_20px_rgba(255,255,255,255.7)]">
+    <img src="/images/white_boy22.svg" class="w-[420px] h-[702px] mr-[1570px] drop-shadow-[0_0_20px_rgba(255,255,255,255.7)]">
   </div>
   `;
 }
