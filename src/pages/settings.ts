@@ -1,109 +1,104 @@
 export default function Settings() {
-    return `
-  <div class="fixed bottom-[250px] left-6 flex flex-col items-center gap-10 z-50">
-      <i class="fa-solid fa-house hover:text-secondary transition-colors duration-400 ease-in-out text-[22px] text-primary cursor-pointer"></i>
-      <i class="fa-solid fa-user hover:text-secondary transition-colors duration-400 ease-in-out text-[22px] text-primary cursor-pointer"></i>
-      <i class="fa-solid fa-trophy hover:text-secondary transition-colors duration-400 ease-in-out text-[22px] text-primary cursor-pointer"></i>
-      <i class="fa-solid fa-user-group hover:text-secondary transition-colors duration-400 ease-in-out text-[22px] text-primary cursor-pointer"></i>
-      <i class="fa-solid fa-comments hover:text-secondary transition-colors duration-400 ease-in-out text-[22px] text-primary cursor-pointer"></i>
+  return `
+<div class="min-h-screen text-white font-roboto px-6 md:px-20 py-10 relative">
 
-      <div class="flex items-center justify-center w-[40px] h-[40px] bg-primary rounded-full">
-          <i class="fa-solid fa-gear text-[18px] text-black cursor-pointer"></i>
-      </div>
-
+  <!-- Sidebar -->
+  <aside class="fixed left-6 bottom-1/4 flex flex-col items-center gap-8">
+    <i class="fa-solid fa-house text-[22px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+    <i class="fa-solid fa-user text-[22px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+    <i class="fa-solid fa-trophy text-[22px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+    <i class="fa-solid fa-user-group text-[22px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+    <i class="fa-solid fa-comments text-[22px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+    <div class="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center mt-2">
+      <i class="fa-solid fa-gear text-black text-[18px]"></i>
     </div>
+  </aside>
 
-  <div class="fixed left-[1650px] top-[40px] flex flex-row items-center gap-5 z-50">
-
-    <!-- Language icon -->
+  <!-- Controls Icons -->
+  <div class="absolute top-10 right-[5%] flex items-center gap-6">
     <div class="relative group">
-      <button class="flex items-center gap-2 text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">
-        <i class="fa-solid fa-chevron-down text-xs cursor-pointer"></i>
+      <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
+        <i class="fa-solid fa-chevron-down text-xs"></i>
         En
       </button>
-
-      <ul class="absolute mt-1 rounded-md hidden group-hover:block transition-all duration-400 ease-in-out">
-        <li class="px-4 py-2 hover:text-secondary cursor-pointer">En</li>
-        <li class="px-4 py-2 hover:text-secondary cursor-pointer">Fr</li>
-        <li class="px-4 py-2 hover:text-secondary cursor-pointer">Ar</li>
+      <ul class="absolute mt-1 rounded-md hidden group-hover:block bg-black/80 p-2">
+        <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">En</li>
+        <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Fr</li>
+        <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Ar</li>
       </ul>
     </div>
-
-    <i class="fa-regular fa-bell text-primary cursor-pointer hover:text-secondary transition-colors duration-400 ease-in-out"></i>
-    <i class="fa-solid fa-arrow-right-from-bracket text-primary cursor-pointer hover:text-secondary transition-colors duration-400 ease-in-out"></i>
+    <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+    <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
   </div>
 
-  <h1 id="leader" class="text-white font-glitch text-5xl tracking-[4px] fixed top-[120px] left-1/2 -translate-x-1/2 z-50" >Settings</h1>
+  <!-- Title -->
+  <h1 class="text-4xl md:text-5xl font-glitch text-center mt-20 mb-10">Settings</h1>
 
-  <!-- Information section -->
-  <div class="font-roboto text-[25px] font-bold text-white fixed top-[250px] left-1/4 z-50">Information</div>
-  
-  <form>
-      <!-- firstname -->
-      <div class="flex flex-row gap-[100px] fixed top-[310px] left-1/4">
-        <div class="mb-4">
-          <label class="block text-white text-[12px] font-roboto font-medium ml-2 mb-2" for="firstname">First Name</label>
-          <input id="firstname" type="text" name="firstname" class="w-[350px] h-[45px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[15px] placeholder-white/80" required value="Fatima-zahrae" >
-        </div>
+  <!-- Content Wrapper -->
+<div class="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-16 max-w-[1400px] mx-auto items-center px-6">
 
-        <!-- lastname -->
-        <div class="mb-4">
-          <label class="block text-white text-[12px] font-roboto font-medium ml-2 mb-2" for="lastname">Last Name</label>
-          <input id="lastname" type="text" name="lastname" class="w-[350px] h-[45px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[15px] placeholder-white/80" required value="Bazaz">
+    <!-- Form -->
+    <form class="flex flex-col gap-12">
+      <section>
+        <h2 class="text-[22px] font-bold mb-6">Information</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div>
+            <label class="block text-[12px] mb-2">First Name</label>
+            <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" value="Fatima-zahrae" />
+          </div>
+          <div>
+            <label class="block text-[12px] mb-2">Last Name</label>
+            <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" value="Bazaz" />
+          </div>
+          <div>
+            <label class="block text-[12px] mb-2">Username</label>
+            <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" value="fateemaazaahrae" />
+          </div>
+          <div>
+            <label class="block text-[12px] mb-2">Email</label>
+            <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" value="fatimazahraebazaz1@gmail.com" />
+          </div>
+          <div>
+            <label class="block text-[12px] mb-2">Gender</label>
+            <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" value="Female" />
+          </div>
+          <div>
+            <label class="block text-[12px] mb-2">Age</label>
+            <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" value="25" />
+          </div>
         </div>
+      </section>
+
+      <section>
+        <h2 class="text-[22px] font-bold mb-6">Change Password</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-20">
+          <div>
+            <label class="block text-[12px] mb-2">Current Password</label>
+            <input type="password" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" placeholder="Enter current password" />
+          </div>
+          <div>
+            <label class="block text-[12px] mb-2">New Password</label>
+            <input type="password" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" placeholder="Enter new password" />
+          </div>
+        </div>
+      </section>
+
+      <button type="submit" class="w-[200px] h-[50px] bg-black drop-shadow-cyan rounded-[25px] text-white font-bold hover:bg-primary/60 hover:text-black transition-colors">
+        Save Changes
+      </button>
+    </form>
+
+    <!-- Profile Image -->
+    <div class="flex flex-col items-center justify-start gap-4">
+      <div class="relative">
+        <img src="../../images/pink-girl.svg" class="w-[250px] h-[250px] rounded-full border-2 border-primary/40 object-cover">
+        <i class="fa-solid fa-pen-to-square absolute bottom-10 right-4 text-[20px] text-primary/90 cursor-pointer"></i>
       </div>
+    </div>
 
-      <!-- username -->
-      <div class="flex flex-row gap-[100px] fixed top-[410px] left-1/4">
-        <div class="mb-4">
-          <label class="block text-white text-[12px] font-roboto font-medium ml-2 mb-2" for="username">Username</label>
-          <input id="username" type="text" name="username" class="w-[350px] h-[45px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[15px] placeholder-white/80" required value="fateemaazaahrae">
-        </div>
-
-        <!-- email -->
-        <div class="mb-4">
-          <label class="block text-white text-[12px] font-roboto font-medium ml-2 mb-2" for="email">E-mail</label>
-          <input id="email" type="text" name="email" class="w-[350px] h-[45px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[15px] placeholder-white/80" required value="fatimazahraebazaz1@gmail.com">
-        </div>
-      </div>
-
-      <!-- gender -->
-      <div class="flex flex-row gap-[100px] fixed top-[510px] left-1/4">
-        <div class="mb-4">
-          <label class="block text-white text-[12px] font-roboto font-medium ml-2 mb-2" for="gender">Gender</label>
-          <input id="gender" type="text" name="gender" class="w-[350px] h-[45px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[15px] placeholder-white/80" required value="Female">
-        </div>
-
-        <!-- age -->
-        <div class="mb-4">
-          <label class="block text-white text-[12px] font-roboto font-medium ml-2 mb-2" for="age">Age</label>
-          <input id="age" type="text" name="age" class="w-[350px] h-[45px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[15px] placeholder-white/80" required required value="25">
-        </div>
-      </div>
-
-  <!-- password section -->
-  <div class="font-roboto text-[25px] font-bold text-white fixed top-[640px] left-1/4 z-50">Change password</div>
-      <!-- current password -->
-      <div class="flex flex-row gap-[100px] fixed top-[700px] left-1/4">
-        <div class="mb-4">
-          <label class="block text-white text-[12px] font-roboto font-medium ml-2 mb-2" for="current-password">Current Password</label>
-          <input id="current-password" type="password" name="current-password" class="w-[350px] h-[45px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[15px] placeholder-white/60" placeholder="Enter your current password">
-        </div>
-
-        <!-- newpassword -->
-        <div class="mb-4">
-          <label class="block text-white text-[12px] font-roboto font-medium ml-2 mb-2" for="new-password">New Password</label>
-          <input id="new-password" type="password" name="new-password" class="w-[350px] h-[45px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[15px] placeholder-white/60" placeholder="Enter New password">
-        </div>
-      </div>
-    <button type="submit" class="w-[200px] h-[50px] bg-black drop-shadow-cyan rounded-[25px] text-white font-roboto font-bold text-[18px] fixed top-[850px] left-[1550px] hover:bg-primary hover:text-black transition-colors duration-400 ease-in-out">Save Changes</button>
-  </form>
-
-  <div class="flex flex-col items-center gap-7 fixed left-[1500px] top-[330px]">
-    <img src="../../images/pink-girl.svg" class="w-[250px] h-[250px] rounded-full border-2 border-primary/40 object-cover">
-    <button class="w-[150px] h-[40px] bg-black drop-shadow-cyan rounded-[20px] text-white font-roboto font-bold text-[14px] hover:bg-primary hover:text-black transition-colors duration-400 ease-in-out">Change Photo</button>
   </div>
-
-
+</div>
 `;
 }
