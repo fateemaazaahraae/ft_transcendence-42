@@ -4,7 +4,7 @@ export default function Settings() {
 
     <!-- Sidebar -->
     <aside
-        class="fixed md:left-6 md:top-1/2 md:-translate-y-1/2 md:flex-col md:gap-8
+        class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
          bottom-0 left-0 w-full bg-black/40 backdrop-blur-md md:w-auto
          flex justify-around md:justify-normal items-center py-3 md:py-0
          md:bg-transparent md:backdrop-blur-0 z-50">
