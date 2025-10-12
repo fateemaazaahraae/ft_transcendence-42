@@ -56,7 +56,7 @@ export default function Login() {
           </a>
         </div>
         <button type="submit"
-          class="w-[45%] h-[43px] font-glitch items-center ml-[110px] leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[20px] py-[7px] rounded-[50px] cursor-pointer mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
+          class="flex w-[45%] h-[43px] font-glitch items-center justify-center ml-[110px] leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[20px] py-[7px] rounded-[50px] cursor-pointer mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
           Login
         </button>
         <div class="flex items-center my-[30px]">
@@ -68,8 +68,8 @@ export default function Login() {
       </div>
 
         <div class="social-icons flex text-white text-[2.1em] gap-[15px] justify-center cursor-pointer mt-2">
-            <ion-icon name="logo-google"></ion-icon>
-            <ion-icon name="logo-github"></ion-icon>
+            <i class="fa-brands fa-google"></i>
+            <i class="fa-brands fa-github"></i>
         </div>
         <div class="text-white mt-9 text-center text-[0.9em] font-roboto font-semibold">
             <p>Don’t have an account? Click here to <a href="#" class="text-[#35C6DD] text-[0.9em] items-end font-bold border-b  hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">Register Now</a> </p>
