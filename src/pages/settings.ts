@@ -14,8 +14,8 @@ export default function Settings() {
       <i class="fa-solid fa-user-group text-[22px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
       <i class="fa-solid fa-comments text-[22px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
 
-      <div class="md:w-[40px] md:h-[40px] sm:w-[35px] sm:h-[35px] bg-primary rounded-full flex items-center justify-center mt-2 md:mt-2">
-        <i class="fa-solid fa-gear text-black text-[18px]"></i>
+      <div class="w-[40px] h-[40px] md:w-[40px] md:h-[40px] sm:w-[35px] sm:h-[35px] bg-primary rounded-full flex items-center justify-center mt-2 md:mt-2">
+        <i class="fa-solid fa-gear text-black text-[22px]"></i>
       </div>
     </aside>
 
@@ -41,13 +41,13 @@ export default function Settings() {
     <h1 class="text-4xl md:text-5xl font-glitch text-center mt-20 mb-20">Settings</h1>
 
     <!-- Content Wrapper -->
-    <div class="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-16 max-w-[1400px] mx-auto items-center px-6">
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-16 max-w-[1400px] mx-auto items-center">
 
       <!-- Profile Image -->
-      <div class="flex flex-col items-center justify-start gap-4 w-[330px] h-[330px] mx-auto">
+      <div class="flex flex-col items-start md:justify-start gap-4 w-[330px] h-[330px] mx-auto">
         <div class="relative">
-          <img src="../../images/pink-girl.svg" class="sm:w-[250px] sm:h-[250px] md:w-[330px] md:h-[330px] rounded-full border-2 border-primary/40 object-cover">
-          <i class="fa-solid fa-pen-to-square absolute md:bottom-12 md:right-7 sm:bottom-9 sm:right-6 text-[20px] text-primary/90 cursor-pointer"></i>
+          <img src="../../images/pink-girl.svg" class="w-[330px] h-[330px] sm:w-[250px] sm:h-[250px] md:w-[330px] md:h-[330px] rounded-full border-2 border-primary/40 object-cover">
+          <i class="fa-solid fa-pen-to-square absolute bottom-12 right-7 md:bottom-12 md:right-7 sm:bottom-9 sm:right-6 text-[20px] text-primary/90 cursor-pointer"></i>
         </div>
       </div>
 
@@ -56,30 +56,30 @@ export default function Settings() {
         <section>
           <h2 class="text-[22px] font-bold mb-6">Information</h2>
 
-          <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-12">
+          <div class="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
               <label class="block text-[12px] font-medium mb-2">First Name</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" value="Fatima-zahrae" />
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="Fatima-zahrae" />
             </div>
             <div>
               <label class="block text-[12px] font-medium mb-2">Last Name</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" value="Bazaz" />
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="Bazaz" />
             </div>
             <div>
               <label class="block text-[12px] font-medium mb-2">Username</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" value="fateemaazaahrae" />
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="fateemaazaahrae" />
             </div>
             <div>
               <label class="block text-[12px] font-medium mb-2">Email</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" value="fatimazahraebazaz1@gmail.com" />
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="fatimazahraebazaz1@gmail.com" />
             </div>
             <div>
               <label class="block text-[12px] font-medium mb-2">Gender</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" value="Female" />
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="Female" />
             </div>
             <div>
               <label class="block text-[12px] font-medium mb-2">Age</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" value="25" />
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="25" />
             </div>
           </div>
         </section>
@@ -87,7 +87,7 @@ export default function Settings() {
         <section>
           <h2 class="text-[22px] font-bold mb-6">Change Password</h2>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-20">
+          <div class="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
               <label class="block text-[12px] font-medium mb-2">Current Password</label>
               <input type="password" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" placeholder="Enter current password" />
