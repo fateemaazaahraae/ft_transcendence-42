@@ -1,4 +1,4 @@
-export default function Login() {
+export default function Register() {
   return `<div class="flex items-center gap-[170px] relative">
         <img src="/images/blue-boy33.svg" alt="Blue Boy" class="w-[500px] h-auto ml-[300px]">
         <div class="absolute z-0 rounded-full blur-[55px] opacity-100 w-[300px] h-[500px] bg-[#D02EA48A] right-[calc(50%-748px)] bottom-[20%] top-[43%] -rotate-[20deg]"></div>
@@ -10,23 +10,23 @@ export default function Login() {
                 Register Now !</h2>
                 <div class="flex justify-between gap-[10px] pb-[3px] pr-[5px] pl-0 w-[430px] my-[30px] bg-none rounded-[20px] ">
                     <span class="icon"></span>
-                    <input type="text" required placeholder="First name" class="w-full h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[1.1em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.7em] ">
+                    <input type="text" required placeholder="First name" class="w-full h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
                     <span class="icon"></span>
-                    <input type="text" required placeholder="Last name" class="w-full h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[1.1em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.7em] ">
+                    <input type="text" required placeholder="Last name" class="w-full h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
                 </div>
                 <div class="flex justify-between gap-[10px] pb-[3px] pr-[5px] pl-0 w-[430px] my-[30px] bg-none rounded-[20px] ">
                     <span class="icon"></span>
-                    <input type="text" required placeholder="User name" class="w-full h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[1.1em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.7em] ">
+                    <input type="text" required placeholder="User name" class="w-full h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
                 </div>
                 <div class="flex justify-between gap-[10px] pb-[3px] pr-[5px] pl-0 w-[430px] my-[30px] bg-none rounded-[20px] ">
                     <span class="icon"></span>
-                    <input type="email" required placeholder="Email" class="w-full h-[52px] px-[20px] py-[15px] bg-black text font-roboto-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[1.1em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.7em] ">
+                    <input type="email" required placeholder="Email" class="w-full h-[52px] px-[20px] py-[15px] bg-black text font-roboto-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
                 </div>
                 <div class="flex justify-between gap-[10px] pb-[3px] pr-[5px] pl-0 w-[430px] my-[30px] bg-none rounded-[20px] ">
                     <span class="icon"></span>
-                    <input type="password" required placeholder="Password" class="w-full h-[52px] px-[20px] py-[15px] bg-black text font-roboto-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[1.1em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.7em] ">
+                    <input type="password" required placeholder="Password" class="w-full h-[52px] px-[20px] py-[15px] bg-black text font-roboto-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
                     <span class="icon"></span>
-                    <input type="password" required placeholder="Confirm Password" class="w-full h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[1.1em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.7em] ">
+                    <input type="password" required placeholder="Confirm Password" class="w-full h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
                 </div>
                 <button type="submit"
                     class="w-[45%] h-[50px] font-glitch items-center ml-[110px] leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[15px] py-[10px] rounded-[50px] cursor-pointer mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
