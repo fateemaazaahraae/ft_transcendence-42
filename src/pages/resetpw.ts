@@ -1,7 +1,7 @@
 export default function ResetPw() {
   return `
     <div class="flex items-center justify-center gap-[170px] relative min-h-screen w-full">
-    <div class="absolute  w-[310px] h-[170px] bg-cyan-300 rounded-full blur-[60px] opacity-90 rotate-[45deg] top-[330px] left-[380px]"></div>
+    <div class="absolute  w-[315px] h-[230px] bg-cyan-300 rounded-full blur-[60px] opacity-90 rotate-[45deg] top-[300px] left-[400px]"></div>
     <div class="absolute  w-[200px] h-[270px] bg-[rgb(208,46,164)] rounded-full blur-[80px] opacity-90 rotate-[45deg]  top-[450px] left-[660px]"></div>
     <div class="relative h-[350px] w-[480px] pt-[40px] pb-[60px] items-center px-[50px] bg-black rounded-[50px] backdrop-blur-[10px] ml-[1580px] ">
       <form action="">

@@ -1,15 +1,15 @@
 import "./../styles/index.css";
-// import Landing from "./pages/landing";
-// import Login from "./pages/login";
-// import Register from "./pages/register";
+import Landing from "./pages/landing";
+import Login from "./pages/login";
+import Register from "./pages/register";
 import ResetPw from "./pages/resetpw";
-// import TwoFactor from "./pages/TwoFactor"
-// import ChangePw from "./pages/changepw";
+import TwoFactor from "./pages/TwoFactor"
+import ChangePw from "./pages/changepw";
 
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Landing();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Login();
-document.querySelector<HTMLDivElement>("#app")!.innerHTML = ResetPw();
-// document.querySelector<HTMLDivElement>("#app")!.innerHTML = TwoFactor();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = ResetPw();
+document.querySelector<HTMLDivElement>("#app")!.innerHTML = TwoFactor();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = ChangePw();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Register();
 

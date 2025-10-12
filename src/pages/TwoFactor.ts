@@ -1,9 +1,9 @@
 export default function TwoFactor() {
   return `
     <div class="flex items-center justify-center gap-[170px] relative min-h-screen w-full">
-    
-    <div class="absolute  w-[400px] h-[250px] bg-cyan-300 rounded-full blur-[60px] opacity-90 rotate-[45deg] top-[230px] left-[340px]"></div>
-    <div class="absolute  w-[400px] h-[250px] bg-[rgb(208,46,164)] rounded-full blur-[80px] opacity-90 rotate-[45deg]  top-[550px] left-[560px]"></div>
+    <div class="absolute  w-[255px] h-[180px] bg-cyan-300 rounded-full blur-[60px] opacity-90 rotate-[45deg] top-[350px] left-[420px]"></div>
+    <div class="absolute  w-[165px] h-[200px] bg-[rgb(208,46,164)] rounded-full blur-[80px] opacity-90 rotate-[45deg]  top-[500px] left-[740px]"></div>
+
     <div class="relative h-[300px] w-[500px] pt-[40px] pb-[60px] items-center px-[50px] bg-black rounded-[50px] backdrop-blur-[10px] ml-[1580px] ">
       <form action="">
         <h2
