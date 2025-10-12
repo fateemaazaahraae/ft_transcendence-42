@@ -38,7 +38,7 @@ export default function Settings() {
     </div>
 
     <!-- Title -->
-    <h1 class="text-4xl md:text-5xl font-glitch text-center mt-40 mb-20">Settings</h1>
+    <h1 class="text-4xl md:text-5xl font-glitch text-center mt-20 mb-20">Settings</h1>
 
     <!-- Content Wrapper -->
     <div class="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-16 max-w-[1400px] mx-auto items-center px-6">
@@ -58,28 +58,28 @@ export default function Settings() {
 
           <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-12">
             <div>
-              <label class="block text-[12px] mb-2">First Name</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" value="Fatima-zahrae" />
+              <label class="block text-[12px] font-medium mb-2">First Name</label>
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" value="Fatima-zahrae" />
             </div>
             <div>
-              <label class="block text-[12px] mb-2">Last Name</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" value="Bazaz" />
+              <label class="block text-[12px] font-medium mb-2">Last Name</label>
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" value="Bazaz" />
             </div>
             <div>
-              <label class="block text-[12px] mb-2">Username</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" value="fateemaazaahrae" />
+              <label class="block text-[12px] font-medium mb-2">Username</label>
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" value="fateemaazaahrae" />
             </div>
             <div>
-              <label class="block text-[12px] mb-2">Email</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" value="fatimazahraebazaz1@gmail.com" />
+              <label class="block text-[12px] font-medium mb-2">Email</label>
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" value="fatimazahraebazaz1@gmail.com" />
             </div>
             <div>
-              <label class="block text-[12px] mb-2">Gender</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" value="Female" />
+              <label class="block text-[12px] font-medium mb-2">Gender</label>
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" value="Female" />
             </div>
             <div>
-              <label class="block text-[12px] mb-2">Age</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" value="25" />
+              <label class="block text-[12px] font-medium mb-2">Age</label>
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" value="25" />
             </div>
           </div>
         </section>
@@ -89,12 +89,12 @@ export default function Settings() {
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-20">
             <div>
-              <label class="block text-[12px] mb-2">Current Password</label>
-              <input type="password" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" placeholder="Enter current password" />
+              <label class="block text-[12px] font-medium mb-2">Current Password</label>
+              <input type="password" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" placeholder="Enter current password" />
             </div>
             <div>
-              <label class="block text-[12px] mb-2">New Password</label>
-              <input type="password" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2" placeholder="Enter new password" />
+              <label class="block text-[12px] font-medium mb-2">New Password</label>
+              <input type="password" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px]" placeholder="Enter new password" />
             </div>
           </div>
         </section>

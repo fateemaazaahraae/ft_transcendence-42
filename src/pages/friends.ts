@@ -1,6 +1,6 @@
 export default function Friends() {
   return `
-  <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative overflow-hidden flex flex-col">
+  <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
 
     <!-- Sidebar -->
     <aside
@@ -37,11 +37,8 @@ export default function Friends() {
       <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
-    <!-- Title -->
-    <h1 class="text-4xl md:text-5xl font-glitch text-center pt-48 mb-10">Friends</h1>
-
     <!-- Buttons -->
-    <div class="flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-5 mb-16">
+    <div class="flex flex-col sm:flex-row justify-center items-center gap-6 pt-48 sm:gap-5 mb-16">
       <button class="md:w-[250px] sm:w-[190px] h-[50px] bg-black drop-shadow-cyan rounded-3xl text-primary/40 font-roboto font-extrabold tracking-[1px] text-[20px] sm:text-[25px] flex items-center justify-center">
         Friends
       </button>
@@ -54,10 +51,9 @@ export default function Friends() {
     </div>
 
     <!-- Friends List (Horizontal Scroll) -->
-    <div class="max-w-[1000px] mx-auto px-4 sm:px-8 md:px-0">
-      <div
-        class="flex gap-8 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-primary/60 scrollbar-track-transparent"
-      >
+    <div class="max-w-[1000px] mx-auto px-4 sm:px-8 sm:pb-20 md:px-0">
+      <div class="grid grid-cols-2 gap-6 sm:gap-8 sm:overflow-y-auto md:flex md:py-8 md:overflow-x-auto md:scrollbar-thin md:scrollbar-thumb-primary/60 md:scrollbar-track-transparent">
+
         ${[
           { name: "smith", color: "bg-greenAdd", img: "../../images/blue-boy.svg" },
           { name: "noah", color: "bg-redRemove", img: "../../images/white-boy.svg" },

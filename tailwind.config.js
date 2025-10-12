@@ -12,6 +12,7 @@ module.exports = {
       fontFamily: {
         glitch: ["'Rubik Glitch'", "cursive"],
         roboto: ["'Roboto Serif'", "serif"],
+        sansroboto: ["'Roboto'", "sans-serif"],
       },
       dropShadow: {
         cyan: ["0px 0px 10px #35C6DD"],
