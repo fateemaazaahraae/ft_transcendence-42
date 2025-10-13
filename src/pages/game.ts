@@ -9,7 +9,7 @@ export default function Game(){
       }, 
       player2:{
         avatar: "/images/purple-girl.svg",
-        name: "tima",
+        name: "timaaaaaaa",
         score: 0, 
       },
     },
@@ -38,24 +38,24 @@ export default function Game(){
 
     <!-- Game -->
     
-    <div class="absolute flex top-[15%] left-[28%]">
-        <img src="${game.match[0].player1.avatar}" class="w-[100px] h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
-        <div class="flex flex-col items-center gap-3 ml-[15%]">
-          <h1 class="mt-[5%] font-roboto text-center text-2xl"> ${game.match[0].player1.name} </h1>
-          <span class="w-[80px] pt-[6%] h-[40px] rounded-2xl text-center font-roboto text-xl bg-black drop-shadow-cyann" > ${game.match[0].player1.score} </span>
+    <div class="absolute flex top-[20%] left-[10%] lg:top-[20%] xl:top-[15%] lg:left-[23%] xl:left-[28%]">
+        <img src="${game.match[0].player1.avatar}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+        <div class="flex flex-col items-center gap-3 ml-[5%] lg:ml-[15%]">
+          <h1 class="mt-[5%] font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[100px]"> ${game.match[0].player1.name} </h1>
+          <span class=" w-[35px] h-[25px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-xl bg-black drop-shadow-cyann" > ${game.match[0].player1.score} </span>
         </div>
-        <div class="flex flex-col items-center gap-3 ml-[80%] mr-[15%]">
-        <h1 class="mt-[5%] font-roboto text-center text-2xl"> ${game.match[0].player2.name} </h1>
-        <span class="w-[80px] pt-[6%] h-[40px] rounded-2xl text-center font-roboto text-xl bg-black drop-shadow-pink" > ${game.match[0].player2.score} </span>
+        <div class="flex flex-col items-center gap-3 ml-[15%] mr-[5%] lg:ml-[80%] lg:mr-[15%]">
+        <h1 class="mt-[10%] font-roboto text-center text-[18px] lg:text-xl xl:text-2xl "> ${game.match[0].player2.name} </h1>
+        <span class=" w-[35px] h-[25px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-xl bg-black drop-shadow-pink" > ${game.match[0].player2.score} </span>
         </div>
-        <img src="${game.match[0].player2.avatar}" class="w-[100px] h-[100px] rounded-full border-secondary object-cover border-[2px]"/>
+        <img src="${game.match[0].player2.avatar}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-secondary object-cover border-[2px]"/>
     </div>
 
-    <div class="absolute top-[30%] left-[15%] w-[70%] h-[60%] bg-black rounded-3xl drop-shadow-cyan flex justify-between items-center overflow-hidden">
-        <div class="w-[10px] h-[20%]  bg-primary/80 ml-4 "></div>
-        <div class="absolute left-1/2 top-0 w-[3px] h-full bg-[#35C6DD]/40  "></div>
-        <img src="../../images/ball.png" class ="absolute w-[30px] top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2"/>
-        <div class="w-[10px] h-[20%]  bg-secondary mr-4 "></div>
+    <div class="absolute lg:top-[35%] xl:top-[30%] top-[30%] left-[15%] w-[65%] h-[60%] lg:w-[70%] lg:h-[50%] xl:h-[60%] bg-black rounded-3xl drop-shadow-cyan lg:flex flex flex-col justify-between items-center overflow-hidden">
+        <div class="w-[25%] h-[10px] lg:w-[10px] lg:h-[20%]  bg-primary/80 lg:mr-[98%] lg:mt-[5%] "></div>
+        <div class="absolute top-1/2 left-0 lg:left-1/2 lg:top-0 w-full h-[3px] lg:w-[3px] lg:h-full bg-[#35C6DD]/40  "></div>
+        <img src="../../images/ball.png" class ="absolute w-[20px] lg:w-[30px] top-1/4 lg:top-1/2 lg:left-1/3 -translate-x-1/2 -translate-y-1/2"/>
+        <div class="w-[25%] h-[10px] lg:w-[10px] lg:h-[20%]  bg-secondary lg:ml-[98%] lg:mb-[5%] "></div>
     </div>
     </div>
     `;
