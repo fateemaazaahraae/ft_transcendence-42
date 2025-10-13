@@ -9,15 +9,15 @@ export default function Friends() {
        flex justify-around md:justify-normal items-center py-3 md:py-0
        md:bg-transparent md:backdrop-blur-0 z-50">
 
-      <i class="fa-solid fa-house text-[22px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i class="fa-solid fa-trophy text-[22px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i class="fa-solid fa-house text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
 
       <div class="md:w-[40px] md:h-[40px] w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center mt-2 md:mt-2">
         <i class="fa-solid fa-user-group text-black text-[18px]"></i>
       </div>
 
-      <i class="fa-solid fa-comments text-[22px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i class="fa-solid fa-gear text-[22px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
     </aside>
 
     <!-- Controls Icons -->
@@ -38,21 +38,21 @@ export default function Friends() {
     </div>
 
     <!-- Buttons -->
-    <div class="flex flex-row justify-center items-center gap-2 pt-48 sm:gap-5 mb-16">
-      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-black drop-shadow-cyan rounded-3xl text-primary/40 font-roboto font-extrabold tracking-[1px] text-[15px] sm:text-[25px] flex items-center justify-center">
+    <div class="flex flex-row justify-center items-center gap-2 pt-48 md:gap-5 mb-16">
+      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-black drop-shadow-cyan rounded-3xl text-primary/40 font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
         Friends
       </button>
-      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] sm:text-[25px] flex items-center justify-center">
+      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
         Invitations
       </button>
-      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] sm:text-[25px] flex items-center justify-center">
+      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
         Blocked
       </button>
     </div>
 
     <!-- Friends List (Horizontal Scroll) -->
-    <div class="max-w-[1000px] mx-auto px-4 sm:px-8 pb-20 md:px-0">
-      <div class="grid grid-cols-1 gap-6 sm:gap-8 sm:overflow-y-auto md:flex md:py-8 md:overflow-x-auto md:scrollbar-thin md:scrollbar-thumb-primary/60 md:scrollbar-track-transparent">
+    <div class="max-w-[1000px] mx-auto px-4 md:px-8 pb-20">
+      <div class="grid grid-cols-1 gap-6 md:gap-8 overflow-y-auto md:flex md:py-8 md:overflow-x-auto md:scrollbar-thin md:scrollbar-thumb-primary/60 md:scrollbar-track-transparent">
 
         ${[
           { name: "smith", color: "bg-greenAdd", img: "../../images/blue-boy.svg" },
@@ -67,10 +67,10 @@ export default function Friends() {
           <div class="flex-none w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative snap-center">
             <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] ${friend.color} rounded-full"></div>
             <img src="${friend.img}" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]" />
-            <div class="font-roboto font-bold">${friend.name}</div>
+            <div class="font-roboto font-bold truncate w-[180px] text-center">${friend.name}</div>
             <div class="flex flex-row items-center gap-6 mb-6">
-              <i class="fa-solid fa-comment text-[30px] sm:text-[35px] text-primary/50 hover:text-primary transition-all duration-400 ease-in-out"></i>
-              <button class="w-[100px] sm:w-[110px] h-[35px] bg-primary/50 rounded-2xl font-roboto font-bold text-[14px] sm:text-[15px] hover:bg-redRemove transition-all duration-400 ease-in-out">
+              <i class="fa-solid fa-comment text-[30px] md:text-[35px] text-primary/50 hover:text-primary transition-all duration-400 ease-in-out"></i>
+              <button class="w-[100px] md:w-[110px] h-[35px] bg-primary/50 rounded-2xl font-roboto font-bold text-[14px] md:text-[15px] hover:bg-redRemove transition-all duration-400 ease-in-out">
                 Remove
               </button>
             </div>
