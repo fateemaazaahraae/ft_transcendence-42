@@ -51,7 +51,7 @@ export default function Invitations() {
     </div>
 
     <!-- Invitations list -->
-    <div class="fixed left-1/2 -translate-x-1/2 top-md:top-[350px] h-[400px] w-[90%] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4 pb-12">
+    <div class="fixed left-1/2 -translate-x-1/2 top-[300px] md:top-[350px] h-[400px] w-[90%] md:w-[800px] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4 pb-12">
       <div class="flex flex-col gap-4">
         ${[
           {name:"John", img:"../../images/blue-boy.svg", date:"2025-19-09"},
@@ -65,14 +65,14 @@ export default function Invitations() {
           .map(
             (invitaions) => `
           <div class="flex flex-row items-center bg-primary/40 rounded-[20px] px-4 py-2 w-full md:w-[700px] mx-auto text-center">
-            <div class="flex items-center gap-3 w-1/3 min-w-[150px] h-[30px]">
-              <img src="${invitaions.img}" class="w-[45px] h-[45px] rounded-full border border-primary/50 object-cover">
-              <div class="font-roboto font-bold text-[20px] truncate">${invitaions.name}</div>
+            <div class="flex items-center gap-3 w-1/3 min-w-[130px] h-[30px]">
+              <img src="${invitaions.img}" class="w-[35px] h-[35px] md:w-[45px] md:h-[45px] rounded-full border border-primary/50 object-cover">
+              <div class="font-roboto font-bold text-[15px] md:text-[20px] truncate">${invitaions.name}</div>
             </div>
-            <div class="font-roboto font-normal text-[15px] text-center w-1/3">
+            <div class="font-roboto font-normal text-[12px] md:text-[15px] text-center w-1/3">
               ${invitaions.date}
             </div>
-            <div class="flex gap-3 justify-end w-1/3">
+            <div class="flex gap-2 md:gap-3 justify-end w-1/3">
               <i class="fa-solid fa-circle-check text-[25px] md:text-[35px] text-primary/40 hover:text-greenAdd transition duration-400 ease-in-out"></i>
               <i class="fa-solid fa-circle-xmark text-[25px] md:text-[35px] text-secondary hover:text-redRemove transition duration-400 ease-in-out"></i>
             </div>
