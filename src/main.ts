@@ -22,6 +22,7 @@ import PageNotFound from "./pages/pageNotFound.ts";
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Game();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Login();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Leaderboard();
+<<<<<<< HEAD
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Settings();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Friends();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Invitations();
@@ -53,3 +54,12 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = Blocked();
 // }
 
 // navigate("home");
+=======
+document.querySelector<HTMLDivElement>("#app")!.innerHTML = Settings();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Friends();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Invitations();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Blocked();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = PageNotFound();
+
+
+>>>>>>> f6d3ab7bf40d0b87d143f42a1eaef18fcd43b7fc
