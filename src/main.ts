@@ -28,4 +28,28 @@ import PageNotFound from "./pages/pageNotFound.ts";
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = Blocked();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = PageNotFound();
 
+// const routes: Record<string, () => string> = {
+//   landing: Landing,
+//   home: Home,
+//   gameStyle: GameStyle,
+//   game: Game,
+//   login: Login,
+//   leaderboard: Leaderboard,
+//   settings: Settings,
+//   friends: Friends,
+//   invitations: Invitations,
+//   blocked: Blocked,
+// };
 
+// function navigate(page: string) {
+//   const app = document.querySelector<HTMLDivElement>("#app")!;
+//   const render = routes[page];
+
+//   if (render) {
+//     app.innerHTML = render();
+//   } else {
+//     app.innerHTML = PageNotFound();
+//   }
+// }
+
+// navigate("home");
