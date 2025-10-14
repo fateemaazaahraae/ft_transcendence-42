@@ -22,10 +22,10 @@ import PageNotFound from "./pages/pageNotFound.ts";
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Game();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Login();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Leaderboard();
-// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Settings();
+document.querySelector<HTMLDivElement>("#app")!.innerHTML = Settings();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Friends();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Invitations();
-document.querySelector<HTMLDivElement>("#app")!.innerHTML = Blocked();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Blocked();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = PageNotFound();
 
 
