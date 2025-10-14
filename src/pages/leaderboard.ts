@@ -1,4 +1,9 @@
 export default function Leaderboard() {
+  const topThree = [
+    { rank: "1", name: "Smith", img: "../../images/blue-boy.svg", score: "6.359" },
+    { rank: "2", name: "Kayla", img: "../../images/pink-girl.svg", score: "6.258" },
+    { rank: "3", name: "John", img: "../../images/white-boy.svg", score: "6.158" }
+  ];
   return `
   <div class="min-h-screen text-white font-roboto px-6 md:px-20 py-10 relative pb-[90px] overflow-y-auto">
 
@@ -10,13 +15,13 @@ export default function Leaderboard() {
          md:bg-transparent md:backdrop-blur-0 z-50">
 
       <i class="fa-solid fa-house text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <div class="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center">
+        <i class="fa-solid fa-trophy text-[18px] text-black"></i>
+      </div>
       <i class="fa-solid fa-user-group text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
       <i class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i class="fa-solid fa-gear text-primary hover:text-secondary transition-all duration-400 ease-in-out text-[18px]"></i>
 
-      <div class="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center">
-        <i class="fa-solid fa-gear text-black text-[18px]"></i>
-      </div>
     </aside>
 
 
@@ -39,52 +44,52 @@ export default function Leaderboard() {
 
     <h1 id="leader" class="text-4xl md:text-5xl font-glitch text-center mt-20 mb-14" >LEADERBOARD</h1>
 
-    <!-- Gold -->
-    <div class="flex flex-col gap-20 top-[220px] items-center">
-      <div class="w-[90px] h-[150px] bg-primary/40 ">
-        <img src="../../images/blue-boy.svg" alt="blue-boy" class="w-[70px] h-[70px] object-cover fixed left-1/2 -translate-x-1/2 top-[10px] rounded-full border border-primary/50" />
-        <div class="fixed left-1/2 -translate-x-1/2 text-white top-[88px] text-[15px] font-roboto font-semibold"> Smith</div>
-        <div class="fixed left-1/2 -translate-x-1/2 text-white top-[110px] text-[12px] font-roboto font-semibold"> 6.359</div>
-        <img src="../../images/gold.svg" alt="gold" class="w-[40px] h-[40px] fixed left-1/2 -translate-x-1/2 top-[137px] z-10" />
-      </div>
-      <div class="fixed left-1/2 -translate-x-1/2 top-[370px]
-                w-0 h-0
-                border-l-[45px] border-l-transparent
-                border-r-[45px] border-r-transparent
-                border-t-[45px] border-t-primary/40 z-0">
-      </div>
+    <div class="flex flex-col items-center justify-center relative">
 
-      <!-- Silver -->
-      <div class="w-[85px] h-[130px] bg-primary/40">
-        <img src="../../images/pink-girl.svg" alt="blue-boy" class="w-[60px] h-[60px] object-cover fixed left-1/2 -translate-x-1/2 top-[10px] rounded-full border border-primary/50" />
-        <div class="fixed left-1/2 -translate-x-1/2 text-white top-[75px] text-[15px] font-roboto font-semibold"> Kayla</div>
-        <div class="fixed left-1/2 -translate-x-1/2 text-white top-[98px] text-[12px] font-roboto font-semibold"> 6.258</div>
-        <img src="../../images/silver.svg" alt="gold" class="w-[35px] h-[35px] fixed left-1/2 -translate-x-1/2 top-[120px] z-10" />
+      <!-- Top 3 Container -->
+      <div class="flex flex-wrap justify-center items-end gap-10 md:gap-20">
+
+        <!-- Silver -->
+        <div class="flex flex-col items-center relative">
+          <div class="w-[85px] h-[140px] bg-primary/40 flex flex-col items-center justify-end pb-4 relative">
+            <img src="${topThree[1].img}" alt="pink-girl"
+              class="w-[60px] h-[60px] object-cover rounded-full border border-primary/50 absolute top-[5px]" />
+            <div class="text-white text-[15px] font-roboto font-semibold">${topThree[1].name}</div>
+            <div class="text-white text-[12px] font-roboto font-medium">${topThree[1].score}</div>
+            <img src="../../images/silver.svg" alt="silver" class="w-[35px] h-[35px] absolute bottom-[-30px]" />
+          </div>
+          <div class="w-0 h-0 border-l-[43px] border-l-transparent border-r-[43px] border-r-transparent border-t-[43px] border-t-primary/40"></div>
+        </div>
+
+        <!-- Gold -->
+        <div class="flex flex-col items-center relative">
+          <div class="w-[90px] h-[160px] bg-primary/40 flex flex-col items-center justify-end pb-4 relative">
+            <img src="${topThree[0].img}" alt="blue-boy"
+              class="w-[70px] h-[70px] object-cover rounded-full border border-primary/50 absolute top-[5px]" />
+            <div class="text-white text-[15px] font-roboto font-semibold">${topThree[0].name}</div>
+            <div class="text-white text-[12px] font-roboto font-medium">${topThree[0].score}</div>
+            <img src="../../images/gold.svg" alt="gold" class="w-[40px] h-[40px] absolute bottom-[-30px]" />
+          </div>
+          <div class="w-0 h-0 border-l-[45px] border-l-transparent border-r-[45px] border-r-transparent border-t-[45px] border-t-primary/40"></div>
+        </div>
+
+        <!-- Bronze -->
+        <div class="flex flex-col items-center relative">
+          <div class="w-[85px] h-[140px] bg-primary/40 flex flex-col items-center justify-end pb-4 relative">
+            <img src="${topThree[2].img}" alt="white-boy"
+              class="w-[60px] h-[60px] object-cover rounded-full border border-primary/50 absolute top-[5px]" />
+            <div class="text-white text-[15px] font-roboto font-semibold">${topThree[2].name}</div>
+            <div class="text-white text-[12px] font-roboto font-medium">${topThree[2].score}</div>
+            <img src="../../images/bronze.svg" alt="bronze" class="w-[35px] h-[35px] absolute bottom-[-30px]" />
+          </div>
+          <div class="w-0 h-0 border-l-[43px] border-l-transparent border-r-[43px] border-r-transparent border-t-[43px] border-t-primary/40"></div>
+        </div>
+
       </div>
-      <div class="fixed left-[1170px] -translate-x-1/2 top-[380px]
-                w-0 h-0
-                border-l-[43px] border-l-transparent
-                border-r-[43px] border-r-transparent
-                border-t-[43px] border-t-primary/40"></div>
-      
-      
-      <!-- Bronze -->
-      <div class="w-[85px] h-[130px] bg-primary/40">
-        <img src="../../images/white-boy.svg" alt="blue-boy" class="w-[60px] h-[60px] object-cover fixed left-1/2 -translate-x-1/2 top-[10px] rounded-full border border-primary/50" />
-        <div class="fixed left-1/2 -translate-x-1/2 text-white top-[75px] text-[15px] font-roboto font-semibold"> Noah</div>
-        <div class="fixed left-1/2 -translate-x-1/2 text-white top-[98px] text-[12px] font-roboto font-semibold"> 5.996</div>
-        <img src="../../images/bronze.svg" alt="gold" class="w-[35px] h-[35px] fixed left-1/2 -translate-x-1/2 top-[120px] z-10" />
-      </div>
-      <div class="fixed left-[750px] -translate-x-1/2 top-[380px]
-                w-0 h-0
-                border-l-[43px] border-l-transparent
-                border-r-[43px] border-r-transparent
-                border-t-[43px] border-t-primary/40"></div>
     </div>
 
-
     <!-- Others -->
-    <div class="relative left-1/2 -translate-x-1/2 top-[300px] w-[90%] pb-20 md:pb-0">
+    <div class="relative left-1/2 -translate-x-1/2 top-[100px] w-[90%] pb-20 md:pb-0">
       <div class="flex flex-col gap-4 items-center">
         ${[
           {rank:"4.", name:"salaoui", img:"../../images/purple-girl.svg", score:"5.895"},
@@ -97,12 +102,12 @@ export default function Leaderboard() {
             (leader) => `
           <div class="w-[350px] md:w-[500px] h-[50px] bg-primary/40 rounded-lg flex items-center pl-5">
             <div class="flex items-center gap-3">
-              <div class="text-white text-[22px] font-roboto font-semibold">${leader.rank}</div>
+              <div class="text-white text-[22px] font-roboto font-medium">${leader.rank}</div>
               <img src="${leader.img}" alt="${leader.name}" class="w-[38px] h-[38px] object-cover rounded-full border border-primary/50" />
               <div class="text-white text-[20px] font-roboto font-semibold truncate w-[200px]">${leader.name}</div>
             </div>
             <div class="ml-auto w-[130px] h-[50px] bg-secondary rounded-lg flex items-center justify-center">
-              <div class="text-white text-[20px] font-roboto font-semibold">${leader.score}</div>
+              <div class="text-white text-[20px] font-roboto font-medium">${leader.score}</div>
             </div>
           </div>
 

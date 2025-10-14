@@ -1,4 +1,14 @@
 export default function Settings() {
+  const user = {
+    firstName: "Fatima-zahrae",
+    lastName: "Bazaz",
+    userName: "fateemaazaahrae",
+    email: "fateemaazaahrae@example.com",
+    gender: "Female",
+    age: 25,
+    profileImage: "../../images/pink-girl.svg"
+  }
+
   return `
   <div class="min-h-screen text-white font-roboto px-6 md:px-20 py-10 relative pb-[90px] overflow-y-auto">
 
@@ -46,7 +56,7 @@ export default function Settings() {
       <!-- Profile Image -->
       <div class="flex flex-col md:justify-start gap-4 w-[200px] h-[200px] md:w-[280px] md:h-[280px] lg:w-[350px] lg:h-[350px] mx-auto">
         <div class="relative">
-          <img src="../../images/pink-girl.svg" class="w-[200px] h-[200px] md:w-[280px] md:h-[280px] lg:w-[350px] lg:h-[350px] rounded-full border-2 border-primary/40 object-cover">
+          <img src="${user.profileImage}" class="w-[200px] h-[200px] md:w-[280px] md:h-[280px] lg:w-[350px] lg:h-[350px] rounded-full border-2 border-primary/40 object-cover">
           <i class="fa-solid fa-pen-to-square absolute bottom-6 right-4 md:bottom-9 md:right-6 lg:bottom-16 text-[20px] text-primary/90 cursor-pointer"></i>
         </div>
       </div>
@@ -59,27 +69,27 @@ export default function Settings() {
           <div class="grid grid-cols-2 gap-6">
             <div>
               <label class="block text-[12px] font-medium mb-2">First Name</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="Fatima-zahrae" />
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="${user.firstName}" />
             </div>
             <div>
               <label class="block text-[12px] font-medium mb-2">Last Name</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="Bazaz" />
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="${user.lastName}" />
             </div>
             <div>
               <label class="block text-[12px] font-medium mb-2">Username</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="fateemaazaahrae" />
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="${user.userName}" />
             </div>
             <div>
               <label class="block text-[12px] font-medium mb-2">Email</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="fatimazahraebazaz1@gmail.com" />
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="${user.email}" />
             </div>
             <div>
               <label class="block text-[12px] font-medium mb-2">Gender</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="Female" />
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="${user.gender}" />
             </div>
             <div>
               <label class="block text-[12px] font-medium mb-2">Age</label>
-              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="25" />
+              <input type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[14px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="${user.age}" />
             </div>
           </div>
         </section>
