@@ -23,7 +23,6 @@ export default function Chat() {
   
   <!-- chat side -->
 
-
  <div class="ml-[60px] h-screen w-screen flex items-center justify-center">
     <div class="w-[700px] h-[500px] shadow-lg flex gap-4 overflow-hidden text-white">
 
@@ -32,29 +31,37 @@ export default function Chat() {
       
        <div class="relative ">
         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <svg class="w-4 h-4 text-gray-500 dark:text-secondary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
         </div>
-        <input type="search" id="default-search" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-primary focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search ..." required />
-    </div>
+   
+          <input
+            type="search"
+            id="default-search"
+            class="block bg-primary/80 w-full h-[35px] px-4 ps-9 text-sm text-white rounded-2xl border-none focus:outline-none"
+            placeholder="Search ..."
+            required
+          />
+
+        </div>
     
       <div class="space-y-4">
-          <div class="flex items-center gap-4 cursor-pointer hover:bg-blue-600 p-2 rounded">
-            <div class="w-10 h-10 bg rounded-full flex items-center justify-center text-black font-bold">
-            <img src="../images/green-girl.svg" class="w-16 h-16 rounded-full right-">
+          <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+            <div class="w-16 h-16 bg rounded-full flex items-center justify-center text-black font-bold">
+            <img src="../images/green-girl.svg" class="w-16 h-16 border-b border-primary rounded-full right-">
             </div>
             <div>
-              <p class="font-medium text-secondary ">Alice</p>
+              <p class="font-medium text-secondary ">Bouchra</p>
               <p class="text-sm text-gray-200">Hey, how are you?</p>
             </div>
           </div>
-          <div class="flex items-center gap-4 cursor-pointer hover:bg-blue-600 p-2 rounded">
-            <div class="w-10 h-10 bg rounded-full flex items-center justify-center text-black font-bold">
-            <img src="../images/white-boy.svg" class="w-16 h-16 rounded-full right-">
+          <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+            <div class="w-16 h-16 bg rounded-full flex items-center justify-center text-black font-bold">
+            <img src="../images/white-boy.svg" class="w-16 h-16 border-b border-primary rounded-full right-">
             </div>
             <div>
-              <p class="font-medium text-secondary ">Bob</p>
+              <p class="font-medium text-secondary ">Boy</p>
               <p class="text-sm text-gray-200">Let's meet tomorrow</p>
             </div>
           </div>
@@ -65,12 +72,12 @@ export default function Chat() {
       <div class="flex-1 rounded-xl flex flex-col border ">
 
         <!-- Chat Header -->
-        <div class="flex items-center gap-4 p-4 border-b border-gray-700 bg-primary/80">
-          <div class="w-16 h-16 bg-blue rounded-full flex items-center justify-center text-black font-bold">
-          <img src="../images/green-girl.svg" class="w-16 h-16 rounded-full right-">
+        <div class="flex items-center gap-4 p-4 rounded-t-xl  bg-primary/80">
+          <div class="w-16 h-16 bg-blue flex items-center justify-center text-black font-bold">
+          <img src="../images/green-girl.svg" class="w-16 h-16 border-b border-primary rounded-full right-">
           </div>
             <div>
-              <p class="font-medium">Alice</p>
+              <p class="font-medium">Bouchra</p>
               <p class="text-sm text-gray-200">Online</p>
               
             </div>
@@ -78,14 +85,14 @@ export default function Chat() {
 
         <!-- Messages -->
         <div class="flex-1 p-4 space-y-4 overflow-y-auto bg-primary/60">
-          <div class="bg-blue text-black p-3 rounded-lg w-fit max-w-[70%]">Hi Bob, how are you?</div>
-          <div class="bg-blue text-white p-3 rounded-lg w-fit max-w-[70%] self-end ml-auto">Hey Alice! I'm doing great, thanks!</div>
-          <div class="bg-blue text-black p-3 rounded-lg w-fit max-w-[70%]">Want to catch up later?</div>
+          <div class="bg-primary/65 text-white  p-3 rounded-lg w-fit max-w-[70%]">Hi Salma, how are you?</div>
+          <div class="bg-primary/65 text-white p-3 rounded-lg w-fit max-w-[70%] self-end ml-auto">Hey Bouchra! I'm doing great, thanks!</div>
+          <div class="bg-primary/65 text-white p-3 rounded-lg w-fit max-w-[70%]">Want to catch up later?</div>
         </div>
 
         <!-- Message Input -->
-          <div class="relative " >
-            <div class="p-4 bg-primary/60">
+          <div class="relative "  >
+            <div class="p-4 bg-primary/60 rounded-b-xl">
               <div class="relative ">
                 <!-- Search Icon Inside -->
                 <i class="w-4 h-4 fa-regular fa-paper-plane text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>
@@ -99,10 +106,11 @@ export default function Chat() {
                 <input 
                   type="text" 
                   placeholder="       Type a message..." 
-                  class="w-full pl-10 pr-4 py-2 rounded-full bg-primary text-white placeholder-white focus:outline-none">
+                  class="w-full pl-10 pr-4 py-2 rounded-full bg-primary/65 text-white placeholder-white focus:outline-none">
               </div>
             </div>
         </div>
+        
    </div>
     </div>
   </div>
