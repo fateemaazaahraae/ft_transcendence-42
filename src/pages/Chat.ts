@@ -58,10 +58,10 @@ export default function Chat() {
       </div>
 
       <!-- Main Chat Window -->
-      <div class="flex-1 rounded-xl flex flex-col border bg-primary/60">
+      <div class="flex-1 rounded-xl flex flex-col border ">
 
         <!-- Chat Header -->
-        <div class="flex items-center gap-4 p-4 border-b border-gray-700">
+        <div class="flex items-center gap-4 p-4 border-b border-gray-700 bg-primary/80">
           <div class="w-16 h-16 bg-blue rounded-full flex items-center justify-center text-black font-bold">
           <img src="../images/green-girl.svg" class="w-16 h-16 rounded-full right-">
           </div>
@@ -73,35 +73,33 @@ export default function Chat() {
           </div>
 
         <!-- Messages -->
-        <div class="flex-1 p-4 space-y-4 overflow-y-auto">
+        <div class="flex-1 p-4 space-y-4 overflow-y-auto bg-primary/60">
           <div class="bg-blue text-black p-3 rounded-lg w-fit max-w-[70%]">Hi Bob, how are you?</div>
           <div class="bg-blue text-white p-3 rounded-lg w-fit max-w-[70%] self-end ml-auto">Hey Alice! I'm doing great, thanks!</div>
           <div class="bg-blue text-black p-3 rounded-lg w-fit max-w-[70%]">Want to catch up later?</div>
         </div>
 
         <!-- Message Input -->
-         <div class="relative" >
-  <div class="p-4">
-    <div class="relative">
-      <!-- Search Icon Inside -->
-      <i class="w-4 h-4 fa-regular fa-paper-plane text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>
-      <i class="fa-solid fa-plus text-secondary absolute left-3 top-1/2 -translate-y-1/2" ></i>
-      <i class="fa-solid fa-table-tennis-paddle-ball text-secondary absolute left-9 top-1/2 -translate-y-1/2""></i>
-    <!-- <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-      </svg>-->
-      
-      <!-- Input with padding for icon -->
-      <input 
-        type="text" 
-        placeholder="       Type a message..." 
-        class="w-full pl-10 pr-4 py-2 rounded-full bg-primary text-white placeholder-white focus:outline-none">
-    </div>
-  </div>
-</div>
-            <!-- <button class="bg-primary text-black px-4 py-2 rounded-full">Send</button>-->
-
-      </div>
+          <div class="relative " >
+            <div class="p-4 bg-primary/60">
+              <div class="relative ">
+                <!-- Search Icon Inside -->
+                <i class="w-4 h-4 fa-regular fa-paper-plane text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>
+                <i class="fa-solid fa-plus text-secondary absolute left-3 top-1/2 -translate-y-1/2" ></i>
+                <i class="fa-solid fa-table-tennis-paddle-ball text-secondary absolute left-9 top-1/2 -translate-y-1/2""></i>
+              <!-- <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>-->
+                
+                <!-- Input with padding for icon -->
+                <input 
+                  type="text" 
+                  placeholder="       Type a message..." 
+                  class="w-full pl-10 pr-4 py-2 rounded-full bg-primary text-white placeholder-white focus:outline-none">
+              </div>
+            </div>
+        </div>
+   </div>
     </div>
   </div>
   </div>
