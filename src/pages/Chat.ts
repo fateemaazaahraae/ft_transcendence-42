@@ -24,58 +24,86 @@ export default function Chat() {
   <!-- chat side -->
 
 
-  <!-- Chat Layout -->
- <div class="w-[700px] h-[500px] bg-primary rounded-xl shadow-lg flex gap-4 overflow-hidden font-roboto text-white">
+ <div class="ml-[60px] h-screen w-screen flex items-center justify-center">
+    <div class="w-[700px] h-[500px] shadow-lg flex gap-4 overflow-hidden text-white">
 
-  <!-- Sidebar: Chat Profiles -->
-  
-  <div class="w-1/3 md:w-1/2 lg:w-1/4 bg-blue border-r border-blue p-4 overflow-y-auto">
-    <h2 class="text-xl font-semibold mb-4">Chats</h2>
-    <div class="space-y-4">
-      <div class="flex items-center gap-4 cursor-pointer hover:bg-gray-700 p-2 rounded">
-        <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-black font-bold">A</div>
-        <div>
-          <p class="font-medium">Alice</p>
-          <p class="text-sm text-gray-400">Hey, how are you?</p>
+      <!-- Sidebar: Chat Profiles -->
+      <div class="w-1/2.5 bg-primary/60 rounded-xl border-r border-blue p-4 overflow-y-auto">
+      
+       <div class="relative ">
+        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
         </div>
-      </div>
-      <div class="flex items-center gap-4 cursor-pointer hover:bg-gray-700 p-2 rounded">
-        <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-black font-bold">B</div>
-        <div>
-          <p class="font-medium">Bob</p>
-          <p class="text-sm text-gray-400">Let's meet tomorrow</p>
-        </div>
-      </div>
+        <input type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-primary focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search ..." required />
     </div>
-  </div>
-
-  <!-- Main Chat Window -->
-  <div class="flex-1 flex flex-col justify-between bg-blue">
     
-    <!-- Chat Header -->
-    <div class="flex items-center gap-4 p-4 border-b border-gray-700 bg-blue">
-      <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-black font-bold">A</div>
-      <div>
-        <p class="font-medium">Alice</p>
-        <p class="text-sm text-gray-400">Online</p>
+      <div class="space-y-4">
+          <div class="flex items-center gap-4 cursor-pointer hover:bg-blue-600 p-2 rounded">
+            <div class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-black font-bold">A</div>
+            <div>
+              <p class="font-medium">Alice</p>
+              <p class="text-sm text-gray-200">Hey, how are you?</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 cursor-pointer hover:bg-blue-600 p-2 rounded">
+            <div class="w-10 h-10 bg rounded-full flex items-center justify-center text-black font-bold">B</div>
+            <div>
+              <p class="font-medium">Bob</p>
+              <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- Messages -->
-    <div class="flex-1 p-4 space-y-4 overflow-y-auto">
-      <div class="bg-primary text-black p-3 rounded-lg w-fit max-w-[70%]">Hi Bob, how are you?</div>
-      <div class="bg-gray-700 text-white p-3 rounded-lg w-fit max-w-[70%] self-end ml-auto">Hey Alice! I'm doing great, thanks!</div>
-      <div class="bg-primary text-black p-3 rounded-lg w-fit max-w-[70%]">Want to catch up later?</div>
-    </div>
+      <!-- Main Chat Window -->
+      <div class="flex-1 rounded-xl flex flex-col border bg-primary/60">
 
-    <!-- Message Input -->
-    <div class="p-4 border-t border-gray-700 bg-gray-800 flex items-center gap-2">
-      <input type="text" placeholder="Type a message..." class="flex-1 p-2 rounded-full bg-gray-700 text-white focus:outline-none">
-      <button class="bg-primary text-black px-4 py-2 rounded-full">Send</button>
+        <!-- Chat Header -->
+        <div class="flex items-center gap-4 p-4 border-b border-gray-700">
+          <div class="w-16 h-16 bg-blue rounded-full flex items-center justify-center text-black font-bold">
+          <img src="../images/green-girl.svg" class="w-16 h-16 rounded-full right-">
+          </div>
+            <div>
+              <p class="font-medium">Alice</p>
+              <p class="text-sm text-gray-200">Online</p>
+              
+            </div>
+          </div>
+
+        <!-- Messages -->
+        <div class="flex-1 p-4 space-y-4 overflow-y-auto">
+          <div class="bg-blue text-black p-3 rounded-lg w-fit max-w-[70%]">Hi Bob, how are you?</div>
+          <div class="bg-blue text-white p-3 rounded-lg w-fit max-w-[70%] self-end ml-auto">Hey Alice! I'm doing great, thanks!</div>
+          <div class="bg-blue text-black p-3 rounded-lg w-fit max-w-[70%]">Want to catch up later?</div>
+        </div>
+
+        <!-- Message Input -->
+         <div class="relative" >
+  <div class="p-4">
+    <div class="relative">
+      <!-- Search Icon Inside -->
+      <i class="w-4 h-4 fa-regular fa-paper-plane text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>
+      <i class="fa-solid fa-plus text-secondary absolute left-3 top-1/2 -translate-y-1/2" ></i>
+      <i class="fa-solid fa-table-tennis-paddle-ball text-secondary absolute left-9 top-1/2 -translate-y-1/2""></i>
+    <!-- <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+      </svg>-->
+      
+      <!-- Input with padding for icon -->
+      <input 
+        type="text" 
+        placeholder="       Type a message..." 
+        class="w-full pl-10 pr-4 py-2 rounded-full bg-primary text-white placeholder-white focus:outline-none">
     </div>
   </div>
 </div>
-    
+            <!-- <button class="bg-primary text-black px-4 py-2 rounded-full">Send</button>-->
+
+      </div>
+    </div>
+  </div>
   </div>
   `;
 }
