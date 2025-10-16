@@ -5,9 +5,9 @@ module.exports = {
     extend: {
       colors: {
         primary: "#35C6DD",
-        secondary: "#D934B0",
         redRemove: "#D44444",
         greenAdd: "#76E998",
+        secondary: "#F40CA4",
       },
       fontFamily: {
         glitch: ["'Rubik Glitch'", "cursive"],
@@ -16,6 +16,8 @@ module.exports = {
       },
       dropShadow: {
         cyan: ["0px 0px 10px #35C6DD"],
+        cyann: ["0px 0px 12px #00DCFF"],
+        pink: ["0px 0px 10px #F40CA4"],
         white: ["0 0 70px #FFFFFF"],
         blue: ["0 0 30px rgba(53,198,221,0.6)"],
         green: ["0 0 100px #00FFA8"],

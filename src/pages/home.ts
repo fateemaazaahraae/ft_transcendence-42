@@ -61,40 +61,82 @@ export default function Home() {
         score: 5,
       },
     },
+    {
+      player1: {
+        name: "Keltoum",
+        avatar: "/images/pink-girl.svg",
+        score: 11,
+      },
+      player2: {
+        name: "hmed",
+        avatar: "/images/blue-boy.svg",
+        score: 5,
+      },
+    },
+    {
+      player1: {
+        name: "Keltoum",
+        avatar: "/images/pink-girl.svg",
+        score: 11,
+      },
+      player2: {
+        name: "hmed",
+        avatar: "/images/blue-boy.svg",
+        score: 5,
+      },
+    },
+    {
+      player1: {
+        name: "Keltoum",
+        avatar: "/images/pink-girl.svg",
+        score: 11,
+      },
+      player2: {
+        name: "hmed",
+        avatar: "/images/blue-boy.svg",
+        score: 5,
+      },
+    },
     // Add more matches as needed
   ],
   };
   const winningRate =user.winning;
   return `
-    <div class="fixed bottom-[250px] left-6 flex flex-col items-center gap-10 z-50">
-    <div class="flex items-center justify-center w-[40px] h-[40px] bg-primary hover:bg-[#D934B0] rounded-full">
-        <i class="fa-solid fa-house text-[22px] text-black cursor-pointer"></i>
-    </div>
-    <i class="fa-solid fa-user text-[22px] text-primary hover:text-[#D934B0] cursor-pointer"></i>
-    <i class="fa-solid fa-trophy text-[18px] text-primary hover:text-[#D934B0] cursor-pointer"></i>
-    <i class="fa-solid fa-user-group text-[22px] text-primary hover:text-[#D934B0] cursor-pointer"></i>
-    <i class="fa-solid fa-comments text-[22px] text-primary hover:text-[#D934B0] cursor-pointer"></i>
-    <i class="fa-solid fa-gear text-[22px] text-primary hover:text-[#D934B0] cursor-pointer"></i>
-  </div>
+   <div class="relative w-full h-screen">
 
-  <div class="fixed left-[1650px] top-[40px] flex flex-row items-center gap-5 z-50">
+    <!-- Sidebar -->
+    <aside
+        class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
+         bottom-0 left-0 w-full bg-black/40 backdrop-blur-md md:w-auto
+         flex justify-around md:justify-normal items-center py-3 md:py-0
+         md:bg-transparent md:backdrop-blur-0 z-50">
 
-    <!-- Language icon -->
-    <div class="relative group">
-      <button class="flex items-center gap-2 text-primary hover:text-[#D934B0] cursor-pointer">
-        <i class="fa-solid fa-chevron-down text-xs cursor-pointer"></i>
-        En
-      </button>
+         <div data-path="/home" class="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center">
+          <i class="fa-solid fa-house text-[18px] text-black"></i>
+        </div>
+        <i data-path="/leaderboard" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+        <i data-path="/friends" class="fa-solid fa-user-group text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+        <i data-path="/chat" class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+        <i data-path="/settings" class="fa-solid fa-gear text-primary hover:text-secondary transition-all duration-400 ease-in-out text-[18px]"></i>
 
-      <ul class="absolute mt-1 rounded-md hidden group-hover:block transition-all duration-200 ease-in-out">
-        <li class="px-4 py-2 hover:text-[#D934B0] cursor-pointer">En</li>
-        <li class="px-4 py-2 hover:text-[#D934B0] cursor-pointer">Fr</li>
-        <li class="px-4 py-2 hover:text-[#D934B0] cursor-pointer">Ar</li>
-      </ul>
-    </div>
+    </aside>
 
-    <i class="fa-regular fa-bell text-primary hover:text-[#D934B0] cursor-pointer"></i>
-    <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-[#D934B0] cursor-pointer"></i>
+
+    <!-- Controls Icons -->
+    <div class="absolute top-10 right-[5%] flex items-center gap-5">
+      <div class="relative group">
+        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
+          <i class="fa-solid fa-chevron-down text-xs"></i>
+          En
+        </button>
+        <ul class="absolute mt-1 rounded-md hidden group-hover:block bg-black/80 p-2">
+          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">En</li>
+          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Fr</li>
+          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Ar</li>
+        </ul>
+      </div>
+      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+      <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
     <!-- HOME -->
@@ -116,7 +158,7 @@ export default function Home() {
       <p>${user.level}%</p>
     </div>
 
-    <div class="w-[400px] h-[12px] bg-[#D934B0] rounded-full overflow-hidden relative">
+    <div class="w-[400px] h-[12px] bg-secondary rounded-full overflow-hidden relative">
       <div 
         class="absolute top-0 left-0 h-full bg-[#35C6DD] rounded-full transition-all duration-700 ease-in-out"
         style="width: ${user.level}%;"
@@ -124,14 +166,14 @@ export default function Home() {
     </div>
     </div>
 
-    <div class="mt-[7%] flex text-[13px] text-[#D934B0] w-[400px] h-[20px] bg-[#35C6DD]/90 rounded-full justify-between items-center px-4">
+    <div class="mt-[7%] flex text-[13px] text-secondary w-[400px] h-[20px] bg-[#35C6DD]/90 rounded-full justify-between items-center px-4">
       <p class="font-roboto">
       <span class="text-white">Rank</span>
-      <span class="text-[#D934B0] ml-2">${user.rank}</span>
+      <span class="text-secondary ml-2">${user.rank}</span>
       </p>
       <p class="font-roboto">
       <span class="text-white">Score</span>
-      <span class="text-[#D934B0] ml-2">${user.score}</span>
+      <span class="text-secondary ml-2">${user.score}</span>
       </p>
     </div>
   </div>
@@ -143,7 +185,7 @@ export default function Home() {
   <div class="relative w-[150px] h-[150px] rounded-full flex items-center justify-center">
   <div 
     class="absolute inset-0 rounded-full"
-    style="background: conic-gradient(#35C6DD ${winningRate}%, #D934B0 0);">
+    style="background: conic-gradient(#35C6DD ${winningRate}%, #F40CA4 0);">
   </div>
   <div class="absolute inset-[8px] bg-black rounded-full flex items-center justify-center">
     <span class="text-white font-roboto text-xl">${winningRate}%</span>
@@ -154,7 +196,7 @@ export default function Home() {
   <div class="relative group">
     <p class="text-primary font-roboto text-xl cursor-pointer group-hover:blur-[3px]">Wins</p>
     <span class="absolute font-roboto left-1/2 -translate-x-1/2
-                  text-white text-sm px-3 py-1 rounded-md 
+                  text-primary text-sm px-3 py-1 rounded-md 
                   opacity-0 group-hover:opacity-100 transition-opacity duration-300">
       ${user.wins}
     </span>
@@ -164,9 +206,9 @@ export default function Home() {
 
   <!-- Losses -->
   <div class="relative group">
-    <p class="text-[#D934B0] font-roboto text-xl cursor-pointer group-hover:blur-[3px]">Losses</p>
+    <p class="text-secondary font-roboto text-xl cursor-pointer group-hover:blur-[3px]">Losses</p>
     <span class="absolute font-roboto left-1/2 -translate-x-1/2 
-                  text-white text-sm px-3 py-1 rounded-md 
+                  text-secondary text-sm px-3 py-1 rounded-md 
                   opacity-0 group-hover:opacity-100 transition-opacity duration-300">
       ${user.losses}
     </span>
@@ -207,9 +249,9 @@ export default function Home() {
   
   <!-- Scrollable container -->
   <div class = "flex gap-[15%]">
-  <div class="flex flex-col gap-4 w-[750px] max-h-[250px] overflow-x-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4">
+  <div class="flex flex-col gap-4 w-[750px] max-h-[250px] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4">
   ${user.matchHistory.map(match => `
-    <div class="flex justify-between items-center w-full h-[60px] rounded-2xl bg-primary/70 px-4 shadow-lg">
+    <div class="flex justify-between items-center w-full h-[60px] rounded-2xl bg-primary/60 px-4 shadow-lg">
     
     <!-- Player 1 -->
     <div class="flex items-center gap-3">
@@ -226,19 +268,19 @@ export default function Home() {
     <!-- Player 2 -->
     <div class="flex items-center gap-3">
     <p class="text-white font-roboto text-lg">${match.player2.name}</p>
-    <img src="${match.player2.avatar}" class="object-cover w-[45px] h-[45px] rounded-full border-2 border-[#D934B0]" />
+    <img src="${match.player2.avatar}" class="object-cover w-[45px] h-[45px] rounded-full border-2 border-secondary" />
     </div>
     
     </div>
     `).join("")}
     </div>
     <div class="flex flex-col items-center gap-5 group">
-      <img src="/images/match.svg" class ="w-[300px] group-hover:blur-sm"/>
-      <button class=" w-[130px] h-[30px] rounded-3xl bg-primary/80 text-white font-glitch hover:bg-[#D934B0] group-hover:blur-[15px]">play</button>
+      <img src="/images/match.svg" class ="w-[300px]"/>
+      <button class=" w-[130px] h-[30px] rounded-3xl bg-primary/60 text-white font-glitch hover:bg-secondary">play</button>
     </div>
     </div>
     </div>
 </div>
-
+</div>
     `;
 }

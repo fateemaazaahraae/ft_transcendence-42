@@ -7,9 +7,11 @@ import Settings from "./pages/settings.ts";
 import Friends from "./pages/friends.ts";
 import Invitations from "./pages/invitaions.ts";
 import Blocked from "./pages/blocked.ts";
+import PageNotFound from "./pages/pageNotFound.ts"
 
 
 const routes: Record<string, () => string> = {
+    404: PageNotFound,
     "/": Landing,
     "/home": Home,
     "/login": Login,
@@ -22,8 +24,20 @@ const routes: Record<string, () => string> = {
 
 function render(path: string) {
     const app = document.querySelector<HTMLDivElement>("#app");
-    const page = routes[path] || routes["/"];
+    const page = routes[path] || routes[404];
     app!.innerHTML = page();
+
+    sideBarListners();
+}
+
+function sideBarListners() {
+    const barIcons = document.querySelectorAll<HTMLElement>("aside i[data-path]");
+    barIcons.forEach(icon => {
+        icon.addEventListener("click", () => {
+            const path = icon.dataset.path!;
+            render(path);
+        });
+    });
 }
 
 export function navigate(path: string) {
@@ -38,13 +52,3 @@ window.addEventListener("popstate", () => {
 window.addEventListener("DOMContentLoaded", () => {
   render(window.location.pathname);
 });
-
-
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Landing();
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Home();
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Login();
-// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Leaderboard()
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Settings();
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Friends();
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Invitations();
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Blocked();
