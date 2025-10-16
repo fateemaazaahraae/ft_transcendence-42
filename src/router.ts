@@ -8,7 +8,6 @@ import Friends from "./pages/friends.ts";
 import Invitations from "./pages/invitaions.ts";
 import Blocked from "./pages/blocked.ts";
 
-
 const routes: Record<string, () => string> = {
     "/": Landing,
     "/home": Home,
@@ -38,13 +37,3 @@ window.addEventListener("popstate", () => {
 window.addEventListener("DOMContentLoaded", () => {
   render(window.location.pathname);
 });
-
-
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Landing();
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Home();
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Login();
-// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Leaderboard()
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Settings();
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Friends();
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Invitations();
-// // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Blocked();
