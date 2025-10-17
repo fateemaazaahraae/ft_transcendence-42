@@ -2,7 +2,7 @@ import { navigate } from "../main.ts";
 
 export default function Landing() {
   return `
-    <div class="w-full h-full flex flex-col items-center pt-40">
+    <div class="w-full h-full flex flex-col items-center pt-40 overflow-x-hidden overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4">
     <div class="relative text-center">
       <h1 class="text-black text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-glitch text-center text-shadow-cyan leading-[1.1]"
       style="-webkit-text-stroke: 5px rgba(53,198,221,0.6);">
@@ -53,8 +53,16 @@ export default function Landing() {
               opacity-0 group-hover:opacity-100 transition-opacity duration-500">
       <p class="text-white text-center text-[8px] md:text-[14px] lg:text-xl font-glitch mb-1 xl:mb-4">Salma Alaoui</p>
       <div class="flex text-white gap-1 xl:gap-3 text-[14px] md:text-[16px] lg:text-2xl ">
-      <i class="fa-brands fa-github  hover:text-[#FD8BD5] transition-colors"></i>
-      <i class="fa-brands fa-linkedin hover:text-[#FD8BD5] transition-colors"></i>
+      <a href="https://www.linkedin.com/feed/" 
+         target="_blank" 
+         rel="noopener noreferrer">
+          <i class="fa-brands fa-github  hover:text-[#FD8BD5] transition-colors"></i>
+      </a>
+      <a href="https://www.linkedin.com/feed/" 
+         target="_blank" 
+         rel="noopener noreferrer">
+        <i class="fa-brands fa-linkedin hover:text-[#FD8BD5] transition-colors"></i>
+      </a>
       </div>
       </div>
       </div>
@@ -65,8 +73,16 @@ export default function Landing() {
       <div class="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
         <p class="text-white text-[8px] text-center md:text-[14px] lg:text-xl font-glitch mb-1 xl:mb-4">Fatima Zahrae Bazaz</p>
         <div class="flex text-white gap-1 xl:gap-3 text-[14px] md:text-[16px] lg:text-2xl">
-          <i class="fa-brands fa-github hover:text-[#00FFA8] transition-colors"></i>
-          <i class="fa-brands fa-linkedin hover:text-[#00FFA8] transition-colors"></i>
+          <a href="https://github.com/fateemaazaahraae/" 
+              target="_blank" 
+              rel="noopener noreferrer">
+            <i class="fa-brands fa-github hover:text-[#00FFA8] transition-colors"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/fatima-zahrae-bazaz/" 
+              target="_blank" 
+              rel="noopener noreferrer">
+            <i class="fa-brands fa-linkedin hover:text-[#00FFA8] transition-colors"></i>
+          </a>
         </div>
       </div>
       </div>
@@ -78,8 +94,16 @@ export default function Landing() {
               opacity-0 group-hover:opacity-100 transition-opacity duration-500">
       <p class="text-white text-center text-[8px] md:text-[14px] lg:text-xl font-glitch mb-1 xl:mb-4">Keltoum Nacer</p>
       <div class="flex text-white gap-1 xl:gap-3 text-[14px] md:text-[16px] lg:text-2xl ">
-      <i class="fa-brands fa-github hover:text-[#4D55AC] transition-colors"></i>
-      <i class="fa-brands fa-linkedin hover:text-[#4D55AC] transition-colors"></i>
+      <a href="https://github.com/" 
+         target="_blank" 
+         rel="noopener noreferrer">
+          <i class="fa-brands fa-github hover:text-[#4D55AC] transition-colors"></i>
+      </a>
+      <a href="https://www.linkedin.com/feed/" 
+         target="_blank" 
+         rel="noopener noreferrer"> 
+          <i class="fa-brands fa-linkedin hover:text-[#4D55AC] transition-colors"></i>
+      </a>
       </div>
       </div>
       </div>
@@ -91,8 +115,16 @@ export default function Landing() {
               opacity-0 group-hover:opacity-100 transition-opacity duration-500">
       <p class="text-white text-center text-[8px] md:text-[14px] lg:text-xl font-glitch mb-1 xl:mb-4">Bouchra Benjraife</p>
       <div class="flex text-white gap-1 xl:gap-3 text-[14px] md:text-[16px] lg:text-2xl ">
-      <i class="fa-brands fa-github hover:text-[#D82674] transition-colors"></i>
-      <i class="fa-brands fa-linkedin hover:text-[#D82674] transition-colors"></i>
+      <a href="https://www.linkedin.com/feed/" 
+         target="_blank" 
+         rel="noopener noreferrer">
+        <i class="fa-brands fa-github hover:text-[#D82674] transition-colors"></i>
+      </a>
+      <a href="https://www.linkedin.com/feed/" 
+         target="_blank" 
+         rel="noopener noreferrer">
+        <i class="fa-brands fa-linkedin hover:text-[#D82674] transition-colors"></i>
+      </a>
       </div>
       </div>
       </div>
@@ -103,6 +135,6 @@ export default function Landing() {
 
 export function LandingEventListener() {
   const playBtn = document.getElementById("play-btn");
-  playBtn?.addEventListener("click", () => {navigate("/home");
+  playBtn?.addEventListener("click", () => {navigate("/login");
   });
 }

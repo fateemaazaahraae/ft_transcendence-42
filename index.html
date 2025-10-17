@@ -20,16 +20,25 @@
   <img src="/images/logo.svg" class="absolute top-2 left-3 md:top-8 md:left-8 w-[80px] md:w-[130px] h-auto z-10" />
 
   <!-- Main content -->
-  <main id="app" class="relative z-[50] w-full h-full text-white"></main>
+  <main id="app" class="relative z-[50] w-full h-screen text-white overflow-x-hidden"></main>
 
   <!-- cursor -->
   <div id="cursor" class="fixed top-0 left-0 w-[5px] h-[5px] rounded-full bg-[#D934B0]
     shadow-[0_0_30px_15px_#D934B0] pointer-events-none transform -translate-x-1/2 -translate-y-1/2
     transition-transform duration-[50] ease-linear z-[9999]"></div>
 
+    <!-- Notification Bar (global) -->
+  <div id="notificationBar" class="hidden fixed top-16 right-5 w-[300px] bg-black/80 rounded-xl shadow-lg p-4 flex-col gap-3 z-[9999]">
+    <div class="text-white font-bold text-lg">Notifications</div>
+    <div class="text-white text-sm">You have new friend requests!</div>
+    <div class="text-white text-sm">Oliver sent you a message.</div>
+    <div class="text-white text-sm">Noah liked your post.</div>
+  </div>
+
 
   <script type="module" src="/src/main.ts"></script>
   <script type="module" src="./src/fixedComponent/stars.ts"></script>
   <script type="module" src="./src/fixedComponent/cursor.ts"></script>
+  <!-- <script type="module" src="./src/pages/notifications.ts"></script> -->
 </body>
 </html>

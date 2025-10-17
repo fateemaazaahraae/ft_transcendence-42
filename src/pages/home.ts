@@ -103,7 +103,7 @@ export default function Home() {
   };
   const winningRate =user.winning;
   return `
-<div class="relative h-screen overflow-y-auto">
+<div class="relative w-full h-screen overflow-x-hidden px-6">
 
     <!-- Sidebar -->
     <aside
@@ -225,7 +225,7 @@ export default function Home() {
         <!-- Main trophy -->
         <div  class="flex items-center justify-center absolute mt-[20%] md:mt-[23%] lg:mt-[20%] xl:mt-0 xl:top-1/2 left-[10%] lg:left-[30%] xl:left-1/2 w-[120px] h-[120px] md:w-[130px] md:h-[130px] xl:w-[190px] xl:h-[190px] rounded-full border-[3px] border-[#35C6DD] drop-shadow-cyan cursor-pointer 
                 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500 group-hover:opacity-0" > 
-          <img src="/images/golden_trophy.svg" class=" w-[80px] md:w-[90px]" />
+          <img src="/images/golden_trophy.svg" class=" w-[80px] md:w-[90px] xl:w-[120px]" />
         </div>
         <!-- Hidden trophies in 2x3 grid -->
         <div class="absolute top-[30%] lg:top-[30%] xl:top-[50%] left-[10%] lg:left-[30%] xl:left-[37%] flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-700 -translate-x-1/2 -translate-y-1/2">
@@ -258,7 +258,7 @@ export default function Home() {
               <!-- Player 1 -->
               <div class="flex items-center gap-3">
                 <img src="${match.player1.avatar}" class="object-cover w-[40px] h-[40px] xl:w-[45px] xl:h-[45px] rounded-full border-2 border-[#35C6DD]" />
-                <p class="text-white font-roboto font-medium text-[12px] md:text-[14px] lg:text-[16px] xl:text-lg truncate w-[50px] lg:w-70">${match.player1.name}</p>
+                <p class="text-white font-roboto font-medium text-[12px] md:text-[14px] lg:text-[16px] xl:text-lg truncate w-[50px] lg:w-[80px]">${match.player1.name}</p>
               </div>
     
               <!-- Score -->
@@ -269,7 +269,7 @@ export default function Home() {
               </p>
               <!-- Player 2 -->
               <div class="flex items-center gap-3">
-                <p class="text-white font-roboto font-medium text-[12px] md:text-[14px] lg:text-[16px] xl:text-lg truncate w-[50px] lg:w-70">${match.player2.name}</p>
+                <p class="text-white font-roboto font-medium text-[12px] md:text-[14px] lg:text-[16px] xl:text-lg truncate w-[50px] lg:w-[80px]">${match.player2.name}</p>
                 <img src="${match.player2.avatar}" class="object-cover w-[40px] h-[40px] xl:w-[45px] xl:h-[45px] rounded-full border-2 border-secondary" />
               </div>
     
