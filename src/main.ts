@@ -3,7 +3,12 @@ import Landing, { LandingEventListener } from "./pages/landing";
 import Home, { HomeEventListener } from "./pages/home";
 import GameStyle, { GameStyleEventListener } from "./pages/gameStyle.ts";
 import Game from "./pages/game.ts";
-import Login from "./pages/login";
+import Login, { LoginEventListener } from "./pages/login";
+import Register, { RegisterEventListener } from "./pages/register.ts";
+import ResetPw, { ResetPwEventListener } from "./pages/resetpw.ts";
+import TwoFactor, { FactorEventListener } from "./pages/TwoFactor.ts";
+import ChangePw, { ChangePwEventListener } from "./pages/changepw.ts";
+import ChoseAvatar, { ChoseAvatarEventListener } from "./pages/ChoseAvatar.ts";
 import Leaderboard from "./pages/leaderboard";
 import Settings from "./pages/settings.ts";
 import Friends, {FriendsEventListener} from "./pages/friends.ts";
@@ -11,16 +16,19 @@ import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
 import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
 import PageNotFound from "./pages/pageNotFound.ts"
 import { notifications, notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
-import Register from "./pages/register.ts";
 
 
 const routes: Record<string, {render: () => string; setUp?: () => void}> = {
     "/": {render: Landing, setUp: LandingEventListener},
-    "/register": {render: Register},
-    "/login": {render: Login},
     "/home": {render: Home, setUp: HomeEventListener},
     "/gameStyle": {render: GameStyle, setUp: GameStyleEventListener},
     "/game": {render: Game},
+    "/login": {render: Login, setUp: LoginEventListener},
+    "/register": {render: Register, setUp: RegisterEventListener},
+    "/resetpw": {render: ResetPw, setUp: ResetPwEventListener},
+    "/changepw": {render: ChangePw, setUp: ChangePwEventListener},
+    "/TwoFactor": {render: TwoFactor, setUp:FactorEventListener},
+    "/ChoseAvatar": {render: ChoseAvatar, setUp:ChoseAvatarEventListener},
     "/leaderboard": {render: Leaderboard},
     "/settings": {render: Settings},
     "/friends": {render: Friends, setUp: FriendsEventListener},

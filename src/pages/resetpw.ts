@@ -1,3 +1,4 @@
+import { navigate } from "../main.ts";
 export default function ResetPw() {
   return `
     <div class="flex items-center justify-center gap-[170px] relative min-h-screen w-full">
@@ -21,7 +22,7 @@ export default function ResetPw() {
               placeholder:text-[0.8em] placeholder:text-gray-400 
               transition-shadow duration-400 ease-in-out">
         </div>
-        <button type="submit"
+        <button type="submit" id="send"
           class="flex w-[45%] h-[43%] font-glitch items-center justify-center ml-[110px] leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] py-[7px] rounded-[50px] cursor-pointer mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
           Send
         </button>
@@ -35,5 +36,11 @@ export default function ResetPw() {
     <img src="/images/white_boy22.svg" class="w-[420px] h-[702px] mr-[1570px] drop-shadow-[0_0_20px_rgba(255,255,255,255.7)]">
   </div>
   `;
+}
+
+export function ResetPwEventListener(){
+  const btnSend=document.getElementById("send");
+  btnSend?.addEventListener("click", () =>{navigate("/TwoFactor");
+  });
 }
 

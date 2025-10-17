@@ -1,3 +1,5 @@
+import { navigate } from "../main.ts";
+
 export default function ChangePw() {
   return `
     <div class="flex items-center justify-center gap-[170px] relative min-h-screen w-full">
@@ -34,9 +36,9 @@ export default function ChangePw() {
               placeholder:text-[0.8em] placeholder:text-gray-400 
               transition-shadow duration-400 ease-in-out">
         </div>
-        <button type="submit"
+        <button type="submit" id="confirm"
           class="flex w-[45%] h-[43px] font-glitch items-center justify-center ml-[110px] leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[20px] py-[7px] rounded-[50px] cursor-pointer mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
-          Reset
+          Confirm
         </button>
         <div class="text-white mt-[33px] text-center text-[1.0em] font-roboto font-medium">
                     <p>Already a member? <a href="#" class="text-[#35C6DD] text-[0.9em] items-end font-bold border-b  hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">Login</a> </p>
@@ -50,3 +52,8 @@ export default function ChangePw() {
   `;
 }
 
+export function ChangePwEventListener(){
+    const confirm= document.getElementById("confirm");
+    confirm?.addEventListener("click", () =>{navigate("/login");
+    }); 
+}

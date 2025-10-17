@@ -1,3 +1,4 @@
+import { navigate } from "../main.ts";
 export default function Login() {
   return `
     <div class="flex items-center justify-center gap-[170px] relative min-h-screen w-full">
@@ -51,11 +52,11 @@ export default function Login() {
             </span>
             <span class="font-thin text-[0.92em]">Remember Me</span>
           </label>
-          <a href="#" class="text-[#35C6DD] text-[0.8em] font-semibold border-b hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">
-            Forgot password?
+          <a href="" id="pw" class="text-[#35C6DD] text-[0.8em] font-semibold border-b hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">
+            Forget password?
           </a>
         </div>
-        <button type="submit"
+        <button type="submit" id="login-btn"
           class="flex w-[45%] h-[43px] font-glitch items-center justify-center ml-[110px] leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[20px] py-[7px] rounded-[50px] cursor-pointer mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
           Login
         </button>
@@ -72,7 +73,9 @@ export default function Login() {
             <i class="fa-brands fa-github"></i>
         </div>
         <div class="text-white mt-9 text-center text-[0.9em] font-roboto font-semibold">
-            <p>Don’t have an account? Click here to <a href="#" class="text-[#35C6DD] text-[0.9em] items-end font-bold border-b  hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">Register Now</a> </p>
+            <p>Don’t have an account? Click here to 
+            <a href="" id="register-link" class="text-[#35C6DD] text-[0.9em] items-end font-bold border-b  hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">Register Now</a>
+             </p>
 
         </div>
       </form>
@@ -82,5 +85,17 @@ export default function Login() {
     <img src="/images/white_boy22.svg" class="w-[420px] h-[702px] mr-[1570px] drop-shadow-[0_0_20px_rgba(255,255,255,255.7)]">
   </div>
   `;
+}
+
+export function LoginEventListener(){
+  const register=document.getElementById("register-link");
+  register?.addEventListener("click", () => {navigate("/register");  
+  });
+  const btn=document.getElementById("login-btn");
+  btn?.addEventListener("click", () => {navigate("/home");
+  });
+  const password=document.getElementById("pw");
+  password?.addEventListener("click", () => {navigate("/resetpw");
+  });
 }
 

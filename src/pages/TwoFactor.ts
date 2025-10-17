@@ -1,3 +1,5 @@
+import { navigate } from "../main.ts";
+
 export default function TwoFactor() {
   return `
     <div class="flex items-center justify-center gap-[170px] relative min-h-screen w-full">
@@ -21,7 +23,7 @@ export default function TwoFactor() {
               placeholder:text-[0.8em] placeholder:text-gray-400 
               transition-shadow duration-400 ease-in-out">
         </div>
-        <button type="submit"
+        <button type="submit" id="verify"
           class="flex w-[45%] h-[43px] font-glitch items-center justify-center ml-[110px] leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[20px] py-[7px] rounded-[50px] cursor-pointer mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
           Verify
         </button>
@@ -33,3 +35,8 @@ export default function TwoFactor() {
   `;
 }
 
+export function FactorEventListener(){
+    const verify= document.getElementById("verify");
+    verify?.addEventListener("click", () =>{navigate("/changepw");
+    }); 
+}

@@ -1,3 +1,5 @@
+import { navigate } from "../main.ts";
+
 export default function ChoseAvatar() {
   return `
     <div class="flex items-center justify-center relative min-h-screen w-full">
@@ -58,7 +60,7 @@ export default function ChoseAvatar() {
         </button>
 
 
-        <button type="submit"
+        <button type="submit" id="sign"
           class="flex w-[45%] h-[43px] font-glitch items-center justify-center ml-[130px] leading-[35px] bg-[#35C6DDB5] text-white text-[1.4em] tracking-[2px] px-[20px] py-[17px] rounded-[50px] cursor-pointer mt-14 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
           Sign Up
         </button>
@@ -68,4 +70,8 @@ export default function ChoseAvatar() {
   `;
 }
 
-
+export function ChoseAvatarEventListener(){
+    const sign= document.getElementById("sign");
+    sign?.addEventListener("click", () =>{navigate("/home");
+    }); 
+}
