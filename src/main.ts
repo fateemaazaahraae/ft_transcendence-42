@@ -4,43 +4,46 @@ import Home from "./pages/home";
 import Login from "./pages/login";
 import Leaderboard from "./pages/leaderboard";
 import Settings from "./pages/settings.ts";
-import Friends from "./pages/friends.ts";
-import Invitations from "./pages/invitaions.ts";
-import Blocked from "./pages/blocked.ts";
+import Friends, {FriendsEventListener} from "./pages/friends.ts";
+import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
+import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
 import PageNotFound from "./pages/pageNotFound.ts"
 
 
-const routes: Record<string, () => string> = {
-    404: PageNotFound,
-    "/": Landing,
-    "/home": Home,
-    "/login": Login,
-    "/leaderboard": Leaderboard,
-    "/settings": Settings,
-    "/friends": Friends,
-    "/invitations": Invitations,
-    "/blocked": Blocked,
+const routes: Record<string, {render: () => string; setUp?: () => void}> = {
+    "/": {render: Landing},
+    "/home": {render: Home},
+    "/login": {render: Login},
+    "/leaderboard": {render: Leaderboard},
+    "/settings": {render: Settings},
+    "/friends": {render: Friends, setUp: FriendsEventListener},
+    "/invitations": {render: Invitations, setUp: InvitationsEventListener},
+    "/blocked": {render: Blocked, setUp: BlockedEventListener},
+    404: {render: PageNotFound},
 };
 
 function render(path: string) {
     const app = document.querySelector<HTMLDivElement>("#app");
     const page = routes[path] || routes[404];
-    app!.innerHTML = page();
+    app!.innerHTML = page.render();
 
-    sideBarListners();
+    sideBarListeners();
+    if (page.setUp)
+        page.setUp();
 }
 
-function sideBarListners() {
+function sideBarListeners() {
     const barIcons = document.querySelectorAll<HTMLElement>("aside i[data-path]");
     barIcons.forEach(icon => {
         icon.addEventListener("click", () => {
             const path = icon.dataset.path!;
-            render(path);
+            navigate(path);
         });
     });
 }
 
 export function navigate(path: string) {
+    console.log("rah 3eyto liya");
     window.history.pushState({}, "", path);
     render(path);
 }
@@ -50,5 +53,6 @@ window.addEventListener("popstate", () => {
 })
 
 window.addEventListener("DOMContentLoaded", () => {
-  render(window.location.pathname);
+    console.log("App loaded");
+    render(window.location.pathname);
 });

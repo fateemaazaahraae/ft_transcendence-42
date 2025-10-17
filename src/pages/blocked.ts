@@ -1,3 +1,14 @@
+import { navigate } from "../main.ts";
+
+let blockedList = [
+  {name: "smith", img: "../../images/blue-boy.svg"},
+  {name: "noah", img: "../../images/white-boy.svg"},
+  {name: "salaoui", img: "../../images/purple-girl.svg"},
+  {name: "oliver", img: "../../images/white-boy2.svg"},
+  {name: "fateemaazaahrae", img: "../../images/green-girl.svg"},
+  {name: "knacer", img: "../../images/dark-girl.svg"},
+];
+
 export default function Blocked() {
     return `
   <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
@@ -21,7 +32,7 @@ export default function Blocked() {
     </aside>
 
     <!-- Controls Icons -->
-    <div class="absolute top-10 right-[5%] flex items-center gap-6">
+    <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="relative group">
         <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
@@ -39,10 +50,10 @@ export default function Blocked() {
 
     <!-- Buttons -->
     <div class="flex flex-row justify-center items-center gap-2 pt-48 md:gap-5 mb-16">
-      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
+      <button id="friendsButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
       Friends
       </button>
-      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
+      <button id="invitationsButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
       Invitations
       </button>
       <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-black drop-shadow-cyan rounded-3xl text-primary/40 font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
@@ -54,21 +65,14 @@ export default function Blocked() {
 
     <div class="max-w-[1000px] mx-auto px-4 md:px-8 md:pb-20 pb-20">
       <div class="grid grid-cols-1 gap-8 md:gap-6 md:overflow-y-auto md:flex md:py-8 md:overflow-x-auto md:scrollbar-thin md:scrollbar-thumb-primary/60 md:scrollbar-track-transparent">
-        ${[
-          {name: "smith", img: "../../images/blue-boy.svg"},
-          {name: "noah", img: "../../images/white-boy.svg"},
-          {name: "salaoui", img: "../../images/purple-girl.svg"},
-          {name: "oliver", img: "../../images/white-boy2.svg"},
-          {name: "fateemaazaahrae", img: "../../images/green-girl.svg"},
-          {name: "knacer", img: "../../images/dark-girl.svg"},
-        ]
+        ${blockedList
           .map(
             (blocked) => `
           <div class="flex-none w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative snap-center">
             <img src="${blocked.img}" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]" />
             <div class="font-roboto font-bold truncate w-[180px] text-center">${blocked.name}</div>
             <div class="flex flex-row items-center gap-6 mb-6">
-              <button class="w-[100px] md:w-[110px] h-[35px] bg-primary/50 rounded-2xl font-roboto font-bold text-[14px] md:text-[15px] hover:bg-greenAdd transition-all duration-400 ease-in-out">
+              <button class="unblock-btn w-[100px] md:w-[110px] h-[35px] bg-primary/50 rounded-2xl font-roboto font-bold text-[14px] md:text-[15px] hover:bg-greenAdd transition-all duration-400 ease-in-out" data-name="${blocked.name}">
                 Unblock
               </button>
             </div>
@@ -80,4 +84,29 @@ export default function Blocked() {
   </div>
 
 `;
+}
+
+export function BlockedEventListener() {
+  const friends = document.getElementById("friendsButton");
+  const invitations = document.getElementById("invitationsButton");
+
+  friends?.addEventListener("click", () => {
+    console.log("Friends Button Clicked");
+    navigate("/friends");
+  })
+
+  invitations?.addEventListener("click", () => {
+    console.log("Invitations Button Clicked");
+    navigate("/invitations");
+  })
+
+  const unblockFriends = document.querySelectorAll(".unblock-btn");
+  unblockFriends.forEach((button) => {
+    button.addEventListener("click", () => {
+      console.log("Unblock button clicked");
+      const name = button.getAttribute("data-name");
+      blockedList = blockedList.filter((block) => block.name !== name);
+      navigate("/blocked");
+    })
+  })
 }

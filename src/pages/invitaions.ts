@@ -1,3 +1,15 @@
+import { navigate } from "../main.ts";
+
+let invitationsList = [
+  {name:"John", img:"../../images/blue-boy.svg", date:"2025-19-09"},
+  {name:"piiw", img:"../../images/red-boy.svg", date:"2025-19-09"},
+  {name:"one", img:"../../images/white-boy2.svg", date:"2025-19-09"},
+  {name:"two", img:"../../images/white-boy.svg", date:"2025-19-09"},
+  {name:"three", img:"../../images/green-girl.svg", date:"2025-19-09"},
+  {name:"four", img:"../../images/purple-girl.svg", date:"2025-19-09"},
+  {name:"five", img:"../../images/dark-girl.svg", date:"2025-19-09"},
+];
+
 export default function Invitations() {
   return `
   <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
@@ -21,7 +33,7 @@ export default function Invitations() {
     </aside>
 
     <!-- Controls Icons -->
-    <div class="absolute top-10 right-[5%] flex items-center gap-6">
+    <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="relative group">
         <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
@@ -39,13 +51,13 @@ export default function Invitations() {
 
     <!-- Buttons -->
     <div class="flex flex-row justify-center items-center gap-2 pt-48 md:gap-5 mb-16">
-      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
+      <button id="friendsButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
         Friends
       </button>
       <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-black drop-shadow-cyan rounded-3xl text-primary/40 font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
-        Invitaions
+        Invitations
       </button>
-      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
+      <button id="blockedButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
         Blocked
       </button>
     </div>
@@ -53,15 +65,7 @@ export default function Invitations() {
     <!-- Invitations list -->
     <div class="fixed left-1/2 -translate-x-1/2 top-[300px] md:top-[350px] h-[400px] w-[90%] md:w-[800px] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4 pb-12">
       <div class="flex flex-col gap-4">
-        ${[
-          {name:"John", img:"../../images/blue-boy.svg", date:"2025-19-09"},
-          {name:"piiw", img:"../../images/red-boy.svg", date:"2025-19-09"},
-          {name:"ahlele", img:"../../images/white-boy2.svg", date:"2025-19-09"},
-          {name:"fta7", img:"../../images/white-boy.svg", date:"2025-19-09"},
-          {name:"ahlele", img:"../../images/green-girl.svg", date:"2025-19-09"},
-          {name:"fta7", img:"../../images/purple-girl.svg", date:"2025-19-09"},
-          {name:"ahlele", img:"../../images/dark-girl.svg", date:"2025-19-09"},
-        ]
+        ${invitationsList
           .map(
             (invitaions) => `
           <div class="flex flex-row items-center bg-primary/40 rounded-[20px] px-4 py-2 w-full md:w-[700px] mx-auto text-center">
@@ -73,8 +77,8 @@ export default function Invitations() {
               ${invitaions.date}
             </div>
             <div class="flex gap-2 md:gap-3 justify-end w-1/3">
-              <i class="fa-solid fa-circle-check text-[25px] md:text-[35px] text-primary/40 hover:text-greenAdd transition duration-400 ease-in-out"></i>
-              <i class="fa-solid fa-circle-xmark text-[25px] md:text-[35px] text-secondary hover:text-redRemove transition duration-400 ease-in-out"></i>
+              <i class="accept-btn fa-solid fa-circle-check text-[25px] md:text-[35px] text-primary/40 hover:text-greenAdd transition duration-400 ease-in-out"></i>
+              <i class="reject-btn fa-solid fa-circle-xmark text-[25px] md:text-[35px] text-secondary hover:text-redRemove transition duration-400 ease-in-out" data-name="${invitaions.name}"></i>
             </div>
           </div>
         `
@@ -85,4 +89,30 @@ export default function Invitations() {
   </div>
 
 `;
+}
+
+export function InvitationsEventListener() {
+  const friendsButton = document.getElementById("friendsButton");
+  const blockedButton = document.getElementById("blockedButton");
+
+  friendsButton?.addEventListener("click", () => {
+    console.log("Friends Button Clicked");
+    navigate("/friends");
+  })
+
+  blockedButton?.addEventListener("click", () => {
+    console.log("Blocked Button Clicked");
+    navigate("/blocked");
+  })
+
+  const acceptButtons = document.querySelectorAll(".accept-btn");
+  const rejectButtons = document.querySelectorAll(".reject-btn");
+  rejectButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      console.log("Reject Invitation Clicked");
+      const name = button.getAttribute("data-name");
+      invitationsList = invitationsList.filter((invitation) => invitation.name !== name);
+      navigate("/invitations");
+    });
+  });
 }

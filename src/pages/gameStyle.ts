@@ -25,7 +25,7 @@ export default function GameStyle() {
 
 
     <!-- Controls Icons -->
-    <div class="absolute top-10 right-[5%] flex items-center gap-6">
+    <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="relative group">
         <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>

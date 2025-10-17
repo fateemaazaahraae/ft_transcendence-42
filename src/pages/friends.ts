@@ -1,3 +1,14 @@
+import { navigate } from "../main.ts";
+
+let friendsList = [
+  { name: "smith", color: "bg-greenAdd", img: "../../images/blue-boy.svg" },
+  { name: "noah", color: "bg-redRemove", img: "../../images/white-boy.svg" },
+  { name: "salaoui", color: "bg-greenAdd", img: "../../images/purple-girl.svg" },
+  { name: "oliver", color: "bg-redRemove", img: "../../images/white-boy2.svg" },
+  { name: "fateemaazaahrae", color: "bg-greenAdd", img: "../../images/green-girl.svg" },
+  { name: "knacer", color: "bg-greenAdd", img: "../../images/dark-girl.svg" },
+];
+
 export default function Friends() {
   return `
   <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
@@ -42,10 +53,10 @@ export default function Friends() {
       <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-black drop-shadow-cyan rounded-3xl text-primary/40 font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
         Friends
       </button>
-      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
+      <button id="invitationsButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
         Invitations
       </button>
-      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
+      <button id="blockedButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
         Blocked
       </button>
     </div>
@@ -54,14 +65,7 @@ export default function Friends() {
     <div class="max-w-[1000px] mx-auto px-4 md:px-8 pb-20">
       <div class="grid grid-cols-1 gap-6 md:gap-8 overflow-y-auto md:flex md:py-8 md:overflow-x-auto md:scrollbar-thin md:scrollbar-thumb-primary/60 md:scrollbar-track-transparent">
 
-        ${[
-          { name: "smith", color: "bg-greenAdd", img: "../../images/blue-boy.svg" },
-          { name: "noah", color: "bg-redRemove", img: "../../images/white-boy.svg" },
-          { name: "salaoui", color: "bg-greenAdd", img: "../../images/purple-girl.svg" },
-          { name: "oliver", color: "bg-redRemove", img: "../../images/white-boy2.svg" },
-          { name: "fateemaazaahrae", color: "bg-greenAdd", img: "../../images/green-girl.svg" },
-          { name: "knacer", color: "bg-greenAdd", img: "../../images/dark-girl.svg" },
-        ]
+        ${friendsList
           .map(
             (friend) => `
           <div class="flex-none w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative snap-center">
@@ -70,7 +74,7 @@ export default function Friends() {
             <div class="font-roboto font-bold truncate w-[180px] text-center">${friend.name}</div>
             <div class="flex flex-row items-center gap-6 mb-6">
               <i class="fa-solid fa-comment text-[30px] md:text-[35px] text-primary/50 hover:text-primary transition-all duration-400 ease-in-out"></i>
-              <button class="w-[100px] md:w-[110px] h-[35px] bg-primary/50 rounded-2xl font-roboto font-bold text-[14px] md:text-[15px] hover:bg-redRemove transition-all duration-400 ease-in-out">
+              <button class="remove-btn w-[100px] md:w-[110px] h-[35px] bg-primary/50 rounded-2xl font-roboto font-bold text-[14px] md:text-[15px] hover:bg-redRemove transition-all duration-400 ease-in-out" data-name="${friend.name}">
                 Remove
               </button>
             </div>
@@ -81,4 +85,29 @@ export default function Friends() {
     </div>
   </div>
 `;
+}
+
+export function FriendsEventListener() {
+  const blocked = document.getElementById("blockedButton");
+  const invitations = document.getElementById("invitationsButton");
+
+  blocked?.addEventListener("click", () => {
+    console.log("Blocked Button Clicked");
+    navigate("/blocked");
+  })
+
+  invitations?.addEventListener("click", () => {
+    console.log("Invitations Button Clicked");
+    navigate("/invitations");
+  })
+
+  const removeFriends = document.querySelectorAll(".remove-btn");
+  removeFriends.forEach((button) => {
+    button.addEventListener("click", () => {
+      console.log("Remove Friend Clicked");
+      const name = button.getAttribute("data-name");
+      friendsList = friendsList.filter((friend) => friend.name !== name);
+      navigate("/friends");
+    });
+  });
 }
