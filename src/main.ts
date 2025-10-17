@@ -32,6 +32,9 @@ function render(path: string) {
     const page = routes[path] || routes[404];
     app!.innerHTML = page.render();
 
+    requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+    });
     sideBarListeners();
     if (page.setUp)
         page.setUp();
