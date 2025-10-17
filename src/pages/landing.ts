@@ -15,7 +15,7 @@ export default function Landing() {
       <img src="/images/white-boy2.svg" class=" drop-shadow-blue opacity-0 md:opacity-100 md:w-auto md:max-w-[180px] lg:max-w-[220px] xl:max-w-[450px]">
       </div>
      <div class="relative inline-block group">
-      <button 
+      <button id="play-btn" 
         class="mt-10 font-glitch px-8 lg:px-12 py-3 text-xl bg-black text-white rounded-[50px] 
               drop-shadow-cyan transition-all duration-300 
               group-hover:opacity-0 group-hover:scale-0">

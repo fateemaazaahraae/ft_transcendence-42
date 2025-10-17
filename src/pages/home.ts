@@ -180,7 +180,7 @@ export default function Home() {
       </div>
     </div>
     <!-- Vertical Bar -->
-    <div class="w-[90%] h-[2px] md:w-[75%] lg:w-[1px] lg:h-[180px] xl:w-[3px] xl:h-[250px] rounded-full bg-[#35C6DD] mt-[5%] lg:mt-0 lg:ml-[40px] lg:mr-[30px] xl:ml-[80px] xl:mr-[40px] shadow-[0_0_20px_#35C6DD]"></div>
+    <div class="w-[70%] h-[2px] md:w-[60%] lg:w-[1px] lg:h-[180px] xl:w-[3px] xl:h-[250px] rounded-full bg-[#35C6DD] mt-[15%] lg:mt-0 lg:ml-[40px] lg:mr-[30px] xl:ml-[80px] xl:mr-[40px] shadow-[0_0_20px_#35C6DD]"></div>
     <div class="flex relative gap-[10%] md:gap-[15%] lg:gap-0">
     <div class="flex flex-col ml-[18%] md:ml-[10%] lg:ml-0 lg:gap-4 justify-center items-center">
       <h1 class=" text-white  lg:mb-0 font-glitch md:text-2xl xl:text-4xl whitespace-nowrap"> Wining rate </h1>
@@ -245,7 +245,7 @@ export default function Home() {
     </div>
   </div>
   <!-- Match history -->
-    <div class="w-[90%] md:w-[75%] h-[3px] lg:w-0 lg:h-0 rounded-full bg-[#35C6DD] mt-[30%] md:mt-[18%] lg:mt-0 ml-[5%] md:ml-[12%] lg:ml-0  shadow-[0_0_20px_#35C6DD]"></div>
+    <div class="w-[70%] md:w-[60%] h-[2px] lg:w-0 lg:h-0 rounded-full bg-[#35C6DD] mt-[30%] md:mt-[18%] lg:mt-0 ml-[15%] md:ml-[20%] lg:ml-0  shadow-[0_0_20px_#35C6DD]"></div>
   <div class = "flex flex-col lg:flex-row lg:gap-[5%] mt-[8%] md:mt-[3%] lg:mt-[15%] xl:mt-[10%] justify-center items-center">
     <div class="flex flex-col lg:ml-[20%]">
       <h1 class=" text-center font-glitch md:text-2xl xl:text-4xl xl:mr-[20%] lg:mb-1 xl:mb-6">Match history</h1>
