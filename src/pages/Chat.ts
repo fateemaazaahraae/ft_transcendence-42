@@ -24,10 +24,10 @@ export default function Chat() {
   <!-- chat side -->
 
  <div class="ml-[60px] h-screen w-screen flex items-center justify-center">
-    <div class="w-[700px] h-[500px] shadow-lg flex gap-4 overflow-hidden text-white">
+    <div class="w-[90%] h-[500px] shadow-lg flex gap-4 overflow-hidden text-white">
 
       <!-- Sidebar: Chat Profiles -->
-      <div class="w-1/2.5 bg-primary/60 rounded-xl border-r border-blue p-4 overflow-y-auto">
+      <div class="w-1/2.5 bg-primary/60 rounded-xl  border-blue p-4 ">
       
        <div class="relative ">
         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -44,37 +44,107 @@ export default function Chat() {
             required
           />
 
+          <i class="fa-solid fa-ellipsis-vertical  text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>
+        </div>
+        <div class=" m-3 w-full h-[35px]  flex items-center ">
+          <p class="text-white m-3 rounded-xl bg-primary/65   pl-3 pr-3 hover:bg-primary">All</p>
+          <p class="text-white m-3 rounded-xl bg-primary/65  pl-3 pr-3 hover:bg-primary"">Favorites</p>
+          <p class="text-white m-3 rounded-xl bg-primary/65  pl-3 pr-3 hover:bg-primary"">Contacts</p>
         </div>
     
-      <div class="space-y-4">
-          <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
-            <div class="w-16 h-16 bg rounded-full flex items-center justify-center text-black font-bold">
-            <img src="../images/green-girl.svg" class="w-16 h-16 border-b border-primary rounded-full right-">
+      <div class="space-y-4  overflow-y-auto h-full scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent">
+          <div class="   scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+            <div class="w-16 h-8 bg rounded-full flex items-center justify-center text-black font-bold">
+            <img src="../images/green-girl.svg" class="w-12 h-12 border border-primary rounded-full right-">
             </div>
             <div>
               <p class="font-medium text-secondary ">Bouchra</p>
               <p class="text-sm text-gray-200">Hey, how are you?</p>
             </div>
           </div>
-          <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
-            <div class="w-16 h-16 bg rounded-full flex items-center justify-center text-black font-bold">
-            <img src="../images/white-boy.svg" class="w-16 h-16 border-b border-primary rounded-full right-">
+            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
+                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                </div>
+              <div>
+                <p class="font-medium text-secondary ">Boy</p>
+                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+              </div>
             </div>
-            <div>
-              <p class="font-medium text-secondary ">Boy</p>
-              <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
+                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                </div>
+              <div>
+                <p class="font-medium text-secondary ">Boy</p>
+                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+              </div>
             </div>
-          </div>
-        </div>
+            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
+                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                </div>
+              <div>
+                <p class="font-medium text-secondary ">Boy</p>
+                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                <div class="w-16 h-8 bg rounded-full flex items-center justify-center text-black font-bold">
+                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                </div>
+              <div>
+                <p class="font-medium text-secondary ">Boy</p>
+                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
+                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                </div>
+              <div>
+                <p class="font-medium text-secondary ">Boy</p>
+                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
+                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                </div>
+              <div>
+                <p class="font-medium text-secondary ">Boy</p>
+                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
+                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                </div>
+              <div>
+                <p class="font-medium text-secondary ">Boy</p>
+                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
+                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                </div>
+              <div>
+                <p class="font-medium text-secondary ">Boy</p>
+                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+              </div>
+            </div>
+    </div>
       </div>
 
       <!-- Main Chat Window -->
-      <div class="flex-1 rounded-xl flex flex-col border ">
+      <div class="flex-1 rounded-xl flex flex-col ">
 
         <!-- Chat Header -->
         <div class="flex items-center gap-4 p-4 rounded-t-xl  bg-primary/80">
           <div class="w-16 h-16 bg-blue flex items-center justify-center text-black font-bold">
-          <img src="../images/green-girl.svg" class="w-16 h-16 border-b border-primary rounded-full right-">
+          
+          <img src="../images/green-girl.svg" class="w-16 h-16 border border-primary rounded-full right-">
           </div>
             <div>
               <p class="font-medium">Bouchra</p>
@@ -94,7 +164,7 @@ export default function Chat() {
           <div class="relative "  >
             <div class="p-4 bg-primary/60 rounded-b-xl">
               <div class="relative ">
-                <!-- Search Icon Inside -->
+                
                 <i class="w-4 h-4 fa-regular fa-paper-plane text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>
                 <i class="fa-solid fa-plus text-secondary absolute left-3 top-1/2 -translate-y-1/2" ></i>
                 <i class="fa-solid fa-table-tennis-paddle-ball text-secondary absolute left-9 top-1/2 -translate-y-1/2""></i>
