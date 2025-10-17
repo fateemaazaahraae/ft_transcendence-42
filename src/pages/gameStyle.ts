@@ -1,3 +1,5 @@
+import { navigate } from "../main.ts";
+
 export default function GameStyle() {
     const match ={
         user: "/images/pink-girl.svg",
@@ -7,26 +9,25 @@ export default function GameStyle() {
   <div class="relative w-full h-screen">
 
     <!-- Sidebar -->
-<aside
-      class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
-       bottom-0 left-0 w-full bg-black/40 backdrop-blur-md md:w-auto
-       flex justify-around md:justify-normal items-center py-3 md:py-0
-       md:bg-transparent md:backdrop-blur-0 z-50">
+    <aside
+        class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
+         bottom-0 left-0 w-full bg-black/40 backdrop-blur-md md:w-auto
+         flex justify-around md:justify-normal items-center py-3 md:py-0
+         md:bg-transparent md:backdrop-blur-0 z-50">
 
-       <div class="md:w-[40px] md:h-[40px] sm:w-[35px] sm:h-[35px] bg-primary rounded-full flex items-center justify-center mt-2 md:mt-2">
-      <i class="fa-solid fa-house text-black text-[18px] "></i>
+      <div data-path="/home" class="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center">
+        <i class="fa-solid fa-house text-[18px] text-black"></i>
       </div>
-      <i class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i data-path="/leaderboard" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i data-path="/friends" class="fa-solid fa-user-group text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i data-path="/chat" class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i data-path="/settings" class="fa-solid fa-gear text-primary hover:text-secondary transition-all duration-400 ease-in-out text-[18px]"></i>
 
-        <i class="fa-solid fa-user-group text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-
-      <i class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
     </aside>
 
 
     <!-- Controls Icons -->
-    <div class="absolute top-10 right-[5%] flex items-center gap-6">
+    <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="relative group">
         <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
@@ -57,7 +58,7 @@ export default function GameStyle() {
                 <img src="/images/vs.svg" class="w-[90px] md:w-[100px] lg:w-[120px]" />
                 <i class="object-cover fa-solid fa-circle-user text-[100px] md:text-[100px] lg:text-[120px] xl:text-[150px] mt-[25%] text-primary/90"></i> 
             </div>
-            <button class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
+            <button id=play class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
         </div>
         <div class="flex flex-col gap-9 md:gap-7 lg:gap-11 items-center w-[350px] h-[300px] md:w-[450px] md:h-[310px] lg:w-[500px] lg:h-[400px] xl:w-[600px] xl:h-[430px] bg-primary/60 rounded-3xl">
             <h1 class="mt-[5%] font-glitch text-center text-2xl md:text-3xl lg:text-4xl"> Tournament</h1>
@@ -66,7 +67,7 @@ export default function GameStyle() {
                 <img src="/images/golden_trophy.svg" class="w-[70px] md:w-[90px] lg:w-[120px] xl:w-[150px]"/>
                 <img src="/images/girls-team.svg" class="w-[120px] md:w-[150px] lg:w-[180px] xl:w-[200px]" />
             </div>
-            <button class="w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Start</button>
+            <button id=start class="w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Start</button>
         </div>
       </div>
     </div>
@@ -74,3 +75,13 @@ export default function GameStyle() {
   </div>
   `;
 }
+
+export function GameStyleEventListener(){
+  const match=document.getElementById("play");
+  match?.addEventListener("click", () =>{navigate("/game");
+  });
+  const tournament=document.getElementById("start");
+  tournament?.addEventListener("click", () =>{navigate("/game");
+  });
+}
+

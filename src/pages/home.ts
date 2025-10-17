@@ -1,3 +1,4 @@
+import { navigate } from "../main.ts";
 export default function Home() {
   const user = {
     name: "Keltoum",
@@ -106,20 +107,19 @@ export default function Home() {
 
     <!-- Sidebar -->
     <aside
-      class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
-       bottom-0 left-0 w-full bg-black/40 backdrop-blur-md md:w-auto
-       flex justify-around md:justify-normal items-center py-3 md:py-0
-       md:bg-transparent md:backdrop-blur-0 z-50">
+        class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
+         bottom-0 left-0 w-full bg-black/40 backdrop-blur-md md:w-auto
+         flex justify-around md:justify-normal items-center py-3 md:py-0
+         md:bg-transparent md:backdrop-blur-0 z-50">
 
-       <div class="md:w-[40px] md:h-[40px] sm:w-[35px] sm:h-[35px] bg-primary rounded-full flex items-center justify-center mt-2 md:mt-2">
-      <i class="fa-solid fa-house text-black text-[18px] "></i>
-      </div>
-      <i class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+         <div data-path="/home" class="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center">
+          <i class="fa-solid fa-house text-[18px] text-black"></i>
+        </div>
+        <i data-path="/leaderboard" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+        <i data-path="/friends" class="fa-solid fa-user-group text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+        <i data-path="/chat" class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+        <i data-path="/settings" class="fa-solid fa-gear text-primary hover:text-secondary transition-all duration-400 ease-in-out text-[18px]"></i>
 
-        <i class="fa-solid fa-user-group text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-
-      <i class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
     </aside>
 
 
@@ -279,10 +279,17 @@ export default function Home() {
     </div>  
     <div class="flex flex-col mt-[10%] md:mt-[5%] mb-[15%] md:mb-[5%] lg:md-0 lg:mt-[5%] lg:mr-[10%] items-center gap-5 group">
       <img src="/images/match.svg" class="md:w-[350px] lg:w-[250px]"/>
-      <button class="w-[100px] xl:w-[130px] h-[30px] rounded-3xl bg-primary/60 text-white font-glitch hover:bg-secondary">play</button>
+      <button id="play-btn2" class="w-[100px] xl:w-[130px] h-[30px] rounded-3xl bg-primary/60 text-white font-glitch hover:bg-secondary">play</button>
     </div>
   </div>
     
 </div>
     `;
+}
+
+export function HomeEventListener()
+{
+  const btnPlay = document.getElementById("play-btn2");
+  btnPlay?.addEventListener("click", () => {navigate("/gameStyle");
+});
 }

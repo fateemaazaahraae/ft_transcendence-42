@@ -5,11 +5,14 @@ module.exports = {
     extend: {
       colors: {
         primary: "#35C6DD",
+        redRemove: "#D44444",
+        greenAdd: "#76E998",
         secondary: "#F40CA4",
       },
       fontFamily: {
         glitch: ["'Rubik Glitch'", "cursive"],
         roboto: ["'Roboto Serif'", "serif"],
+        sansroboto: ["'Roboto'", "sans-serif"],
       },
       dropShadow: {
         cyan: ["0px 0px 10px #35C6DD"],
@@ -43,12 +46,5 @@ module.exports = {
       addUtilities(Object.fromEntries(newUtilities));
     },
     require('tailwind-scrollbar')({ nocompatible: true }),
-    function ({ addBase }) {
-      addBase({
-        '::-webkit-scrollbar-button': {
-          display: 'none',
-        },
-      });
-    },
   ],
 };
