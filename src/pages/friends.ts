@@ -110,12 +110,4 @@ export function FriendsEventListener() {
       navigate("/friends");
     });
   });
-
-  // const notificationBell = document.getElementById("notificationBell");
-  // const notificationBar = document.getElementById("notificationBar");
-
-  // notificationBell?.addEventListener("click", () => {
-  //   notificationBar?.classList.toggle("hidden");
-  // });
-
 }
