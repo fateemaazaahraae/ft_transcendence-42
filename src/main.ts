@@ -10,15 +10,17 @@ import Friends, {FriendsEventListener} from "./pages/friends.ts";
 import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
 import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
 import PageNotFound from "./pages/pageNotFound.ts"
-import { notificationBarListeners } from "./pages/notifications.ts";
+import { notifications, notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
+import Register from "./pages/register.ts";
 
 
 const routes: Record<string, {render: () => string; setUp?: () => void}> = {
     "/": {render: Landing, setUp: LandingEventListener},
+    "/register": {render: Register},
+    "/login": {render: Login},
     "/home": {render: Home, setUp: HomeEventListener},
     "/gameStyle": {render: GameStyle, setUp: GameStyleEventListener},
     "/game": {render: Game},
-    "/login": {render: Login},
     "/leaderboard": {render: Leaderboard},
     "/settings": {render: Settings},
     "/friends": {render: Friends, setUp: FriendsEventListener},
@@ -38,6 +40,7 @@ function render(path: string) {
     sideBarListeners();
     if (page.setUp)
         page.setUp();
+    renderNotifications(notifications);
 }
 
 function sideBarListeners() {
@@ -48,7 +51,6 @@ function sideBarListeners() {
             navigate(path);
         });
     });
-    notificationBarListeners();
 }
 
 export function navigate(path: string) {
@@ -64,4 +66,5 @@ window.addEventListener("popstate", () => {
 window.addEventListener("DOMContentLoaded", () => {
     console.log("App loaded");
     render(window.location.pathname);
+    notificationBarListeners();
 });
