@@ -44,7 +44,7 @@ export default function Friends() {
           <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Ar</li>
         </ul>
       </div>
-      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+      <i id="notificationBell" class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
       <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
@@ -110,4 +110,12 @@ export function FriendsEventListener() {
       navigate("/friends");
     });
   });
+
+  // const notificationBell = document.getElementById("notificationBell");
+  // const notificationBar = document.getElementById("notificationBar");
+
+  // notificationBell?.addEventListener("click", () => {
+  //   notificationBar?.classList.toggle("hidden");
+  // });
+
 }

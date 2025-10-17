@@ -8,6 +8,7 @@ import Friends, {FriendsEventListener} from "./pages/friends.ts";
 import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
 import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
 import PageNotFound from "./pages/pageNotFound.ts"
+import { notificationBarListeners } from "./pages/notifications.ts";
 
 
 const routes: Record<string, {render: () => string; setUp?: () => void}> = {
@@ -40,6 +41,7 @@ function sideBarListeners() {
             navigate(path);
         });
     });
+    notificationBarListeners();
 }
 
 export function navigate(path: string) {
