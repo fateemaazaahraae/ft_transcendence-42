@@ -6,7 +6,7 @@ export default function GameStyle() {
         player: "/images/purple-girl.svg",
     };
   return `
-  <div class="relative w-full h-screen">
+  <div class="relative w-full h-screen overflow-x-hidden">
 
     <!-- Sidebar -->
     <aside

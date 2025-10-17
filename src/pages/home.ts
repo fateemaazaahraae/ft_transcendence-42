@@ -103,7 +103,7 @@ export default function Home() {
   };
   const winningRate =user.winning;
   return `
-<div class="relative  w-full h-screen">
+<div class="relative w-full h-screen overflow-x-hidden">
 
     <!-- Sidebar -->
     <aside
