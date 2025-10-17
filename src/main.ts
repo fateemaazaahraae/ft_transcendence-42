@@ -1,6 +1,8 @@
 import "./../styles/index.css";
-import Landing from "./pages/landing";
-import Home from "./pages/home";
+import Landing, { LandingEventListener } from "./pages/landing";
+import Home, { HomeEventListener } from "./pages/home";
+import GameStyle, { GameStyleEventListener } from "./pages/gameStyle.ts";
+import Game from "./pages/game.ts";
 import Login from "./pages/login";
 import Leaderboard from "./pages/leaderboard";
 import Settings from "./pages/settings.ts";
@@ -12,8 +14,10 @@ import { notificationBarListeners } from "./pages/notifications.ts";
 
 
 const routes: Record<string, {render: () => string; setUp?: () => void}> = {
-    "/": {render: Landing},
-    "/home": {render: Home},
+    "/": {render: Landing, setUp: LandingEventListener},
+    "/home": {render: Home, setUp: HomeEventListener},
+    "/gameStyle": {render: GameStyle, setUp: GameStyleEventListener},
+    "/game": {render: Game},
     "/login": {render: Login},
     "/leaderboard": {render: Leaderboard},
     "/settings": {render: Settings},
