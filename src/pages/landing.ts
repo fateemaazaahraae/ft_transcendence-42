@@ -53,12 +53,12 @@ export default function Landing() {
               opacity-0 group-hover:opacity-100 transition-opacity duration-500">
       <p class="text-white text-center text-[8px] md:text-[14px] lg:text-xl font-glitch mb-1 xl:mb-4">Salma Alaoui</p>
       <div class="flex text-white gap-1 xl:gap-3 text-[14px] md:text-[16px] lg:text-2xl ">
-      <a href="https://www.linkedin.com/feed/" 
+      <a href="https://github.com/salma046" 
          target="_blank" 
          rel="noopener noreferrer">
           <i class="fa-brands fa-github  hover:text-[#FD8BD5] transition-colors"></i>
       </a>
-      <a href="https://www.linkedin.com/feed/" 
+      <a href="https://www.linkedin.com/in/salma-alaoui-b14b46262" 
          target="_blank" 
          rel="noopener noreferrer">
         <i class="fa-brands fa-linkedin hover:text-[#FD8BD5] transition-colors"></i>
