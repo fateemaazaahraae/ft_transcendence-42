@@ -16,7 +16,7 @@ import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
 import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
 import PageNotFound from "./pages/pageNotFound.ts"
 import { notifications, notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
-
+import { initLogout } from "./pages/logout.ts";
 
 const routes: Record<string, {render: () => string; setUp?: () => void}> = {
     "/": {render: Landing, setUp: LandingEventListener},
@@ -49,6 +49,7 @@ function render(path: string) {
     if (page.setUp)
         page.setUp();
     renderNotifications(notifications);
+    initLogout();
 }
 
 function sideBarListeners() {
