@@ -16,6 +16,7 @@ import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
 import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
 import PageNotFound from "./pages/pageNotFound.ts"
 import { notifications, notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
+import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 
 
 const routes: Record<string, {render: () => string; setUp?: () => void}> = {
@@ -72,7 +73,7 @@ window.addEventListener("popstate", () => {
 })
 
 window.addEventListener("DOMContentLoaded", () => {
-    console.log("App loaded");
     render(window.location.pathname);
     notificationBarListeners();
+    LanguagesMenuEventListener();
 });
