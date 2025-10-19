@@ -34,7 +34,7 @@ export default function Leaderboard() {
         </button>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-      <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+      <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
     <h1 id="leader" class="text-4xl md:text-5xl font-glitch text-center mt-20 mb-14" >LEADERBOARD</h1>
