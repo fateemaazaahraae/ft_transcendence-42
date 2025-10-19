@@ -1,8 +1,10 @@
+import { navigate } from "../main.ts";
 export function initLogout(){
     const logoutIcon = document.getElementById("logout-icon");
     const logout = document.getElementById("logout");
     const cancel = document.getElementById("cancel");
     const overlay = document.getElementById("overlay");
+    const confirm = document.getElementById("confirm");
 
     if(!logoutIcon || !logout || !cancel || !overlay) return;
 
@@ -23,4 +25,7 @@ export function initLogout(){
 
   cancel.addEventListener("click", hideModal);
   overlay.addEventListener("click", hideModal);
+  confirm?.addEventListener("click", ()=>{hideModal();
+    navigate("/");
+  });
 }
