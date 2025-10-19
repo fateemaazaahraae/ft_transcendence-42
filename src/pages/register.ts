@@ -1,10 +1,9 @@
 import { navigate } from "../main.ts";
 
 export default function Register() {
-  return `<div class="flex items-center gap-[170px] relative">
+  return `<div class="flex items-center gap-[170px] relative pt-[3%]">
         <img src="/images/blue-boy33.svg" alt="Blue Boy" class="w-[500px] h-auto mt-[7%] ml-[300px] drop-shadow-[0_0_17px_rgba(0,160,255,255.7)]">
-        <div class="absolute z-0 rounded-full blur-[55px] opacity-100 w-[300px] h-[500px] bg-[#D02EA48A] right-[calc(50%-798px)] bottom-[20%] top-[43%] -rotate-[20deg]"></div>
-        <div class="absolute z-0 rounded-full blur-[55px] opacity-100 w-[250px] h-[250px] bg-[#35C6DDE5] right-[calc(50%-410px)] top-[20%]"></div>
+<!--I removed glow from this part-->
         <div class="relative w-[530px] mt-[7%] pt-[2%] pb-[2%] px-[50px] bg-black rounded-[50px] blur-[10]">
             <form action="">
                 <h2
@@ -56,6 +55,10 @@ export default function Register() {
     </div>
     `;
 }
+
+        // <div class="absolute z-0 rounded-full blur-[55px] opacity-100 w-[300px] h-[500px] bg-[#D02EA48A] right-[calc(50%-798px)] bottom-[20%] top-[43%] -rotate-[20deg]"></div>
+        // <div class="absolute z-0 rounded-full blur-[55px] opacity-100 w-[250px] h-[250px] bg-[#35C6DDE5] right-[calc(50%-410px)] top-[20%]"></div>
+
 
 export function RegisterEventListener(){
     const login= document.getElementById("login-link");

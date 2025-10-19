@@ -36,6 +36,16 @@ module.exports = {
           0 12px 50px rgba(255,255,255,0.25)
           `,
       },
+      animation: {
+        'spin-reverse': 'spin-reverse s linear infinite',
+        'spin-slower': 'spin 5s linear infinite',
+      },
+      keyframes: {
+        'spin-reverse': {
+          from: { transform: 'rotate(360deg)' },
+          to: { transform: 'rotate(0deg)' },
+        },
+      },
     },
   },
   plugins: [
