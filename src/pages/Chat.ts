@@ -24,7 +24,7 @@ export default function Chat() {
   <!-- chat side -->
 
  <div class="ml-[60px] h-screen w-screen flex items-center justify-center">
-    <div class="w-[90%] h-[500px] shadow-lg flex gap-4 overflow-hidden text-white">
+    <div class="w-[70%] h-[600px] shadow-lg flex gap-4 overflow-hidden text-white">
 
       <!-- Sidebar: Chat Profiles -->
       <div class="w-1/2.5 bg-primary/60 rounded-xl  border-blue p-4 ">
@@ -46,16 +46,12 @@ export default function Chat() {
 
           <i class="fa-solid fa-ellipsis-vertical  text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>
         </div>
-        <div class=" m-3 w-full h-[35px]  flex items-center ">
-          <p class="text-white m-3 rounded-xl bg-primary/65   pl-3 pr-3 hover:bg-primary">All</p>
-          <p class="text-white m-3 rounded-xl bg-primary/65  pl-3 pr-3 hover:bg-primary"">Favorites</p>
-          <p class="text-white m-3 rounded-xl bg-primary/65  pl-3 pr-3 hover:bg-primary"">Contacts</p>
-        </div>
+       
     
-      <div class="space-y-4  overflow-y-auto h-full scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent">
+      <div class="space-y-4 mt-3 mb-3 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent">
           <div class="   scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
             <div class="w-16 h-8 bg rounded-full flex items-center justify-center text-black font-bold">
-            <img src="../images/green-girl.svg" class="w-12 h-12 border border-primary rounded-full right-">
+            <img src="../images/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
             </div>
             <div>
               <p class="font-medium text-secondary ">Bouchra</p>
@@ -64,7 +60,7 @@ export default function Chat() {
           </div>
             <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                 <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
-                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                 </div>
               <div>
                 <p class="font-medium text-secondary ">Boy</p>
@@ -73,7 +69,7 @@ export default function Chat() {
             </div>
             <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                 <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
-                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                 </div>
               <div>
                 <p class="font-medium text-secondary ">Boy</p>
@@ -82,7 +78,7 @@ export default function Chat() {
             </div>
             <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                 <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
-                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                 </div>
               <div>
                 <p class="font-medium text-secondary ">Boy</p>
@@ -91,7 +87,7 @@ export default function Chat() {
             </div>
             <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                 <div class="w-16 h-8 bg rounded-full flex items-center justify-center text-black font-bold">
-                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                 </div>
               <div>
                 <p class="font-medium text-secondary ">Boy</p>
@@ -100,7 +96,7 @@ export default function Chat() {
             </div>
             <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                 <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
-                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                 </div>
               <div>
                 <p class="font-medium text-secondary ">Boy</p>
@@ -109,7 +105,7 @@ export default function Chat() {
             </div>
             <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                 <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
-                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                 </div>
               <div>
                 <p class="font-medium text-secondary ">Boy</p>
@@ -118,7 +114,7 @@ export default function Chat() {
             </div>
             <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                 <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
-                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                 </div>
               <div>
                 <p class="font-medium text-secondary ">Boy</p>
@@ -127,7 +123,7 @@ export default function Chat() {
             </div>
             <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                 <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
-                <img src="../images/white-boy.svg" class="w-12 h-12 border border-primary rounded-full right-">
+                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                 </div>
               <div>
                 <p class="font-medium text-secondary ">Boy</p>
@@ -155,9 +151,22 @@ export default function Chat() {
 
         <!-- Messages -->
         <div class="flex-1 p-4 space-y-4 overflow-y-auto bg-primary/60">
-          <div class="bg-primary/65 text-white  p-3 rounded-lg w-fit max-w-[70%]">Hi Salma, how are you?</div>
-          <div class="bg-primary/65 text-white p-3 rounded-lg w-fit max-w-[70%] self-end ml-auto">Hey Bouchra! I'm doing great, thanks!</div>
-          <div class="bg-primary/65 text-white p-3 rounded-lg w-fit max-w-[70%]">Want to catch up later?</div>
+          <div class="flex justify-items ">
+          <img src="../images/green-girl.svg" class="w-16 h-16 object-cover mr-3 border border-primary rounded-full">
+        <div class="bg-primary/65 text-white  p-3 rounded-3xl w-fit  max-w-[60%]">
+           Hi Salma, how are you?
+           </div>
+           </div>
+
+           <div class="flex items-end gap-3 ml-auto w-fit">
+           <div class="bg-primary/65 text-white p-3 rounded-3xl w-fit  max-w-[70%]">Hey Bouchra! I'm doing great, thanks!</div>
+           <img src="../images/green-girl.svg" class="w-16 h-16  object-cover border border-primary rounded-full ">
+           </div>
+           
+           <div class="flex justify-items ">
+          <img src="../images/green-girl.svg" class="w-16 h-16 object-cover mr-3 border border-primary rounded-full ">
+          <div class="bg-primary/65 text-white p-3 rounded-3xl w-fit max-w-[70%]">Want to catch up later?</div>
+        </div>
         </div>
 
         <!-- Message Input -->
@@ -176,7 +185,7 @@ export default function Chat() {
                 <input 
                   type="text" 
                   placeholder="       Type a message..." 
-                  class="w-full pl-10 pr-4 py-2 rounded-full bg-primary/65 text-white placeholder-white focus:outline-none">
+                  class="w-full pl-10 pr-4 py-2 pr-10 rounded-full bg-primary/65 text-white placeholder-white focus:outline-none">
               </div>
             </div>
         </div>
