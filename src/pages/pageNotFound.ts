@@ -1,6 +1,6 @@
 export default function PageNotFound() {
  return `
-  <div class="flex flex-col fixed items-center  min-h-screen top-1/3 left-[20%] xl:left-[30%] lg:top-1/4 text-white text-center overflow-x-hidden overflow-y-auto">
+  <div class="flex flex-col fixed items-center  min-h-screen top-1/3 left-[20%] xl:left-[30%] lg:top-1/4 text-black text-center overflow-x-hidden overflow-y-auto">
 
     <!-- Glitch 404 text -->
     <h1 class="text-[80px] md:text-[120px] lg:text-[150px] font-glitch tracking-[8px] 
