@@ -1,4 +1,5 @@
 export default function Chat() {
+ 
   return `
   <div class="flex items-center justify-center text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
 
@@ -44,7 +45,6 @@ export default function Chat() {
             required
           />
 
-          <i class="fa-solid fa-ellipsis-vertical  text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>
         </div>
        
     
@@ -135,24 +135,36 @@ export default function Chat() {
 
       <!-- Main Chat Window -->
       <div class="flex-1 rounded-xl flex flex-col ">
+          <!--<i class="fa-solid fa-ellipsis-vertical  text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>-->
 
         <!-- Chat Header -->
-        <div class="flex items-center gap-4 p-4 rounded-t-xl  bg-primary/80">
-          <div class="w-16 h-16 bg-blue flex items-center justify-center text-black font-bold">
-          
-          <img src="../images/green-girl.svg" class="w-16 h-16 border border-primary rounded-full right-">
+        <div class="relative flex items-center justify-between p-3 rounded-t-xl bg-primary/80">
+        <div class="flex items-center gap-3">
+          <img src="../images/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
+          <div>
+            <p class="font-medium">Bouchra</p>
+            <p class="text-sm text-gray-200">Online</p>
           </div>
-            <div>
-              <p class="font-medium">Bouchra</p>
-              <p class="text-sm text-gray-200">Online</p>
-              
-            </div>
-          </div>
+        </div>
+        
+        <!-- Right Side: Ellipsis Icon -->
+        <button class="w-8 h-8 flex items-center justify-center onclick="toggleMenu() rounded-full hover:bg-black/20 transition-all">
+          <i class="fa-solid fa-ellipsis-vertical text-secondary"></i>
+        </button>
+        <div id="dropdownMenu" class="hidden absolute right-0 top-12 ...">
+        <button>View Profile</button>
+        <button>Mute</button>
+        <button>Block User</button>
+        <button>Delete Chat</button>
+        <button>Report</button>
+      </div>
+      </div>
+
 
         <!-- Messages -->
         <div class="flex-1 p-4 space-y-4 overflow-y-auto bg-primary/60">
           <div class="flex justify-items ">
-          <img src="../images/green-girl.svg" class="w-16 h-16 object-cover mr-3 border border-primary rounded-full">
+          <img src="../images/green-girl.svg" class="w-14 h-14 object-cover mr-3 border border-primary rounded-full">
         <div class="bg-primary/65 text-white  p-3 rounded-3xl w-fit  max-w-[60%]">
            Hi Salma, how are you?
            </div>
@@ -160,11 +172,11 @@ export default function Chat() {
 
            <div class="flex items-end gap-3 ml-auto w-fit">
            <div class="bg-primary/65 text-white p-3 rounded-3xl w-fit  max-w-[70%]">Hey Bouchra! I'm doing great, thanks!</div>
-           <img src="../images/green-girl.svg" class="w-16 h-16  object-cover border border-primary rounded-full ">
+           <img src="../images/green-girl.svg" class="w-14 h-14  object-cover border border-primary rounded-full ">
            </div>
            
            <div class="flex justify-items ">
-          <img src="../images/green-girl.svg" class="w-16 h-16 object-cover mr-3 border border-primary rounded-full ">
+          <img src="../images/green-girl.svg" class="w-14 h-14 object-cover mr-3 border border-primary rounded-full ">
           <div class="bg-primary/65 text-white p-3 rounded-3xl w-fit max-w-[70%]">Want to catch up later?</div>
         </div>
         </div>
