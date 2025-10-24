@@ -1,10 +1,10 @@
 import "./../styles/index.css";
 import Landing from "./pages/landing";
+import Chat, { OptionsChat } from './pages/Chat';
 
 
 
-
-import Chat from "./pages/Chat";
+// import Chat from "./pages/Chat";
 import Home from "./pages/home";
 import GameStyle from "./pages/gameStyle";
 import Game from "./pages/game";
@@ -19,6 +19,7 @@ import gameStyle from "./pages/gameStyle";
 import PageNotFound from "./pages/pageNotFound.ts";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = Chat();
+OptionsChat(); 
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Landing();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Home();
 
