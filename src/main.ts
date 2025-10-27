@@ -1,6 +1,6 @@
 import "./../styles/index.css";
 import Landing from "./pages/landing";
-import Chat, { OptionsChat } from './pages/Chat';
+import Chat, { OptionsChat ,closeChat} from './pages/Chat';
 
 
 
@@ -20,6 +20,7 @@ import PageNotFound from "./pages/pageNotFound.ts";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = Chat();
 OptionsChat(); 
+closeChat();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Landing();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = Home();
 
