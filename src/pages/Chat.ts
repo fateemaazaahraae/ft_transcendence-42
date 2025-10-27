@@ -152,11 +152,11 @@ export default function Chat() {
         <i class="fa-solid fa-ellipsis-vertical text-secondary"></i>
         </button>
 
-        <div id="dropdownMenu" class="hidden absolute right-3 top-12 bg-primary/90 backdrop-blur-md rounded-lg shadow-lg py-2 w-40 z-50">
-  <button class="w-full text-left px-2 py-2 hover:bg-secondary hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap">Contact Info</button>
-  <button class="w-full text-left px-2 py-2 hover:bg-secondary hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap">Add To Favorites</button>
-  <button class="w-full text-left px-2 py-2 hover:bg-secondary hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap">Close Chat</button>
-  <button class="w-full text-left px-2 py-2 hover:bg-secondary hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap">Block User</button>
+      <div id="dropdownMenu" class="hidden absolute right-3 top-12 bg-#35C6DD backdrop-blur-md rounded-lg shadow-lg py-2 w-40 z-50">
+  <button class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap">Contact Info</button>
+  <button class="w-full text-left px-2 py-2 hover:bg-primary/65  hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap">Add To Favorites</button>
+  <button class="w-full text-left px-2 py-2 hover:bg-primary/65  hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap">Close Chat</button>
+  <button class="w-full text-left px-2 py-2 hover:bg-primary/65  hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap">Block User</button>
   
 </div>
       </div>
