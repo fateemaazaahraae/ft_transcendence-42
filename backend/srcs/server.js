@@ -1,10 +1,12 @@
 import Fastify from "fastify";
 import { registerRoutes } from "./routes/register.js";
 import { loginRoutes } from "./routes/login.js";
+import fastifyJwt from "@fastify/jwt";
 
 const fastify = Fastify({ logger: true });
 
-// Register routes
+fastify.register(fastifyJwt, {secret: "supersecretkey"});
+
 registerRoutes(fastify);
 loginRoutes(fastify);
 // Start server

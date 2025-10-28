@@ -18,10 +18,8 @@ export function loginRoutes(fastify) {
             const passwordMatch = await bcrypt.compare(password, user.passwordHash);
             if (!passwordMatch)
                 return reply.code(400).send({ error: "User name or password is uncorrect" });
-            return reply.code(201).send({
-                message: "login successful!",
-                user:{ userName: user.userName, userEmail: user.email}
-             });
+            const token = fastify.jwt.sign({id: user.id, userName: user.userName});
+            return reply.send({token});
         }
         catch (err) {
             console.error(err);
