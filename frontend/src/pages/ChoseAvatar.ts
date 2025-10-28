@@ -15,6 +15,7 @@ export default function ChoseAvatar() {
 
         <div class="grid grid-cols-4 gap-6 mb-6" id="avatar-grid">
           <div class="avatar">
+<<<<<<< HEAD:src/pages/ChoseAvatar.ts
             <img src="/images/blue-boy.svg" alt="Avatar 1" class="avatar-img" />
           </div>
           <div class="avatar">
@@ -37,6 +38,30 @@ export default function ChoseAvatar() {
           </div>
           <div class="avatar">
             <img src="/images/red-boy.svg" alt="Avatar 8" class="avatar-img" />
+=======
+            <img src="/public/blue-boy.svg" alt="Avatar 1" class="avatar-img" />
+          </div>
+          <div class="avatar">
+            <img src="/public/green-girl.svg" alt="Avatar 2" class="avatar-img" />
+          </div>
+          <div class="avatar">
+            <img src="/public/white_boy22.svg" alt="Avatar 3" class="avatar-img" />
+          </div>
+          <div class="avatar">
+            <img src="/public/dark-girl.svg" alt="Avatar 4" class="avatar-img" />
+          </div>
+          <div class="avatar">
+            <img src="/public/pink-girl.svg" alt="Avatar 5" class="avatar-img" />
+          </div>
+          <div class="avatar">
+            <img src="/public/white-boy.svg" alt="Avatar 6" class="avatar-img" />
+          </div>
+          <div class="avatar">
+            <img src="/public/purple-girl.svg" alt="Avatar 7" class="avatar-img" />
+          </div>
+          <div class="avatar">
+            <img src="/public/red-boy.svg" alt="Avatar 8" class="avatar-img" />
+>>>>>>> b0a02b0fc80573ebe4589c8905a7432f26ebe29d:frontend/src/pages/ChoseAvatar.ts
           </div>
         </div>
         

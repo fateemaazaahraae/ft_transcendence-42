@@ -1,12 +1,12 @@
 import { navigate } from "../main.ts";
 
 let blockedList = [
-  {name: "smith", img: "../../images/blue-boy.svg"},
-  {name: "noah", img: "../../images/white-boy.svg"},
-  {name: "salaoui", img: "../../images/purple-girl.svg"},
-  {name: "oliver", img: "../../images/white-boy2.svg"},
-  {name: "fateemaazaahrae", img: "../../images/green-girl.svg"},
-  {name: "knacer", img: "../../images/dark-girl.svg"},
+  {name: "smith", img: "../../public/blue-boy.svg"},
+  {name: "noah", img: "../../public/white-boy.svg"},
+  {name: "salaoui", img: "../../public/purple-girl.svg"},
+  {name: "oliver", img: "../../public/white-boy2.svg"},
+  {name: "fateemaazaahrae", img: "../../public/green-girl.svg"},
+  {name: "knacer", img: "../../public/dark-girl.svg"},
 ];
 
 export default function Blocked() {
@@ -33,16 +33,11 @@ export default function Blocked() {
 
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
-      <div class="relative group">
+      <div class="arrow relative group">
         <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
           En
         </button>
-        <ul class="absolute mt-1 rounded-md hidden group-hover:block bg-black/80 p-2">
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">En</li>
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Fr</li>
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Ar</li>
-        </ul>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
       <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>

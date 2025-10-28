@@ -36,6 +36,26 @@ module.exports = {
           0 12px 50px rgba(255,255,255,0.25)
           `,
       },
+      keyframes: {
+        glitch: {
+          '0%, 100%': { transform: 'translate(0)' },
+          '20%': { transform: 'translate(-2px, 2px)' },
+          '40%': { transform: 'translate(-2px, -2px)' },
+          '60%': { transform: 'translate(2px, 2px)' },
+          '80%': { transform: 'translate(2px, -2px)' },
+        },
+        'glitch-slow': {
+          '0%, 100%': { transform: 'translate(0)' },
+          '25%': { transform: 'translate(-1px, 1px)' },
+          '50%': { transform: 'translate(1px, -1px)' },
+          '75%': { transform: 'translate(-1px, -1px)' },
+        },
+      },
+
+      animation: {
+        glitch: 'glitch 0.3s infinite',
+        'glitch-slow': 'glitch-slow 1s infinite',
+      },
     },
   },
   plugins: [

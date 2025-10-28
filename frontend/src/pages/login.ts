@@ -82,7 +82,7 @@ export default function Login() {
     <!--<div class="relative z-0 rounded-full blur-[65px] opacity-100 w-[300px] h-[200px] bg-[#D02EA4FF] top-[3%] bottom-[20%] left-240 right-[calc(50%-397px)] rotate-[140deg]"></div>-->
 
     </div>
-    <img src="/images/white_boy22.svg" class="w-[420px] h-[702px] mr-[1570px] drop-shadow-[0_0_20px_rgba(255,255,255,255.7)]">
+    <img src="/public/white_boy22.svg" class="w-[420px] h-[702px] mr-[1570px] drop-shadow-[0_0_20px_rgba(255,255,255,255.7)]">
   </div>
   `;
 }

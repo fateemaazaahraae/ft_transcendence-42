@@ -2,8 +2,8 @@ import { navigate } from "../main.ts";
 
 export default function GameStyle() {
     const match ={
-        user: "/images/pink-girl.svg",
-        player: "/images/purple-girl.svg",
+        user: "/public/pink-girl.svg",
+        player: "/public/purple-girl.svg",
     };
   return `
   <div class="relative w-full h-screen overflow-x-hidden">
@@ -28,16 +28,11 @@ export default function GameStyle() {
 
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
-      <div class="relative group">
+      <div class="arrow relative group">
         <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
           En
         </button>
-        <ul class="absolute mt-1 rounded-md hidden group-hover:block bg-black/80 p-2">
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">En</li>
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Fr</li>
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Ar</li>
-        </ul>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
       <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
@@ -55,7 +50,7 @@ export default function GameStyle() {
             <div class="flex justify-center gap-3">
                 <img src="${match.user}" 
                 class=" object-cover w-[100px] h-[100px] md:w-[100px] md:h-[100px] lg:w-[120px] lg:h-[120px] xl:w-[150px] xl:h-[150px] rounded-full border-[3px] border-[#35C6DD]/90"/>
-                <img src="/images/vs.svg" class="w-[90px] md:w-[100px] lg:w-[120px]" />
+                <img src="/public/vs.svg" class="w-[90px] md:w-[100px] lg:w-[120px]" />
                 <i class="object-cover fa-solid fa-circle-user text-[100px] md:text-[100px] lg:text-[120px] xl:text-[150px] mt-[25%] text-primary/90"></i> 
             </div>
             <button id=play class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
@@ -63,9 +58,9 @@ export default function GameStyle() {
         <div class="flex flex-col gap-9 md:gap-7 lg:gap-11 items-center w-[350px] h-[300px] md:w-[450px] md:h-[310px] lg:w-[500px] lg:h-[400px] xl:w-[600px] xl:h-[430px] bg-primary/60 rounded-3xl">
             <h1 class="mt-[5%] font-glitch text-center text-2xl md:text-3xl lg:text-4xl"> Tournament</h1>
             <div class="flex justify-center">
-                <img src="/images/boys-team.svg" class="w-[120px] md:w-[150px] lg:w-[180px] xl:w-[200px]" />
-                <img src="/images/golden_trophy.svg" class="w-[70px] md:w-[90px] lg:w-[120px] xl:w-[150px]"/>
-                <img src="/images/girls-team.svg" class="w-[120px] md:w-[150px] lg:w-[180px] xl:w-[200px]" />
+                <img src="/public/boys-team.svg" class="w-[120px] md:w-[150px] lg:w-[180px] xl:w-[200px]" />
+                <img src="/public/golden_trophy.svg" class="w-[70px] md:w-[90px] lg:w-[120px] xl:w-[150px]"/>
+                <img src="/public/girls-team.svg" class="w-[120px] md:w-[150px] lg:w-[180px] xl:w-[200px]" />
             </div>
             <button id=start class="w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Start</button>
         </div>

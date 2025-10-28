@@ -47,7 +47,11 @@ export default function ChangePw() {
       </form>
 
     </div>
+<<<<<<< HEAD:src/pages/changepw.ts
     <img src="/images/white_boy22.svg" class="w-[420px] h-[702px] mr-[1570px] drop-shadow-[0_0_20px_rgba(255,255,255,255.7)]">
+=======
+    <img src="/public/white_boy22.svg" class="w-[420px] h-[702px] mr-[1570px] drop-shadow-[0_0_20px_rgba(255,255,255,255.7)]">
+>>>>>>> b0a02b0fc80573ebe4589c8905a7432f26ebe29d:frontend/src/pages/changepw.ts
   </div>
   `;
 }
