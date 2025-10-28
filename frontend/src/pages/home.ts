@@ -6,7 +6,7 @@ export default function Home() {
     level: 70.8,
     rank: 2,
     score: 1.5 + "k",
-    avatar: "/images/pink-girl.svg",
+    avatar: "/public/pink-girl.svg",
     wins: 45,
     losses: 14,
     get winning() {
@@ -17,84 +17,84 @@ export default function Home() {
     {
       player1: {
         name: "Keltoum",
-        avatar: "/images/pink-girl.svg",
+        avatar: "/public/pink-girl.svg",
         score: 11,
       },
       player2: {
         name: "John",
-        avatar: "/images/white-boy2.svg",
+        avatar: "/public/white-boy2.svg",
         score: 7,
       },
     },
     {
       player1: {
         name: "Keltoum",
-        avatar: "/images/pink-girl.svg",
+        avatar: "/public/pink-girl.svg",
         score: 9,
       },
       player2: {
         name: "tima",
-        avatar: "/images/green-girl.svg",
+        avatar: "/public/green-girl.svg",
         score: 11,
       },
     },
     {
       player1: {
         name: "Keltoum",
-        avatar: "/images/pink-girl.svg",
+        avatar: "/public/pink-girl.svg",
         score: 11,
       },
       player2: {
         name: "Salma",
-        avatar: "/images/purple-girl.svg",
+        avatar: "/public/purple-girl.svg",
         score: 5,
       },
     },
     {
       player1: {
         name: "Keltoum",
-        avatar: "/images/pink-girl.svg",
+        avatar: "/public/pink-girl.svg",
         score: 11,
       },
       player2: {
         name: "hmed",
-        avatar: "/images/blue-boy.svg",
+        avatar: "/public/blue-boy.svg",
         score: 5,
       },
     },
     {
       player1: {
         name: "Keltoum",
-        avatar: "/images/pink-girl.svg",
+        avatar: "/public/pink-girl.svg",
         score: 11,
       },
       player2: {
         name: "hmed",
-        avatar: "/images/blue-boy.svg",
+        avatar: "/public/blue-boy.svg",
         score: 5,
       },
     },
     {
       player1: {
         name: "Keltoum",
-        avatar: "/images/pink-girl.svg",
+        avatar: "/public/pink-girl.svg",
         score: 11,
       },
       player2: {
         name: "hmed",
-        avatar: "/images/blue-boy.svg",
+        avatar: "/public/blue-boy.svg",
         score: 5,
       },
     },
     {
       player1: {
         name: "Keltoum",
-        avatar: "/images/pink-girl.svg",
+        avatar: "/public/pink-girl.svg",
         score: 11,
       },
       player2: {
         name: "hmed",
-        avatar: "/images/blue-boy.svg",
+        avatar: "/public/blue-boy.svg",
         score: 5,
       },
     },
@@ -125,16 +125,11 @@ export default function Home() {
 
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
-      <div class="relative group">
+      <div class="arrow relative group">
         <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
           En
         </button>
-        <ul class="absolute mt-1 rounded-md hidden group-hover:block bg-black/80 p-2">
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">En</li>
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Fr</li>
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Ar</li>
-        </ul>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
       <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
@@ -145,7 +140,7 @@ export default function Home() {
    <div class="flex justify center items-center">
       <!-- Avatar -->
       <img 
-        src="/images/pink-girl.svg" 
+        src="/public/pink-girl.svg" 
         class="object-cover w-[110px] h-[110px] md:w-[150px] md:h-[150px] xl:w-[220px] xl:h-[220px] rounded-full border-[3px] border-[#35C6DD]"
       >
 
@@ -225,19 +220,19 @@ export default function Home() {
         <!-- Main trophy -->
         <div  class="flex items-center justify-center absolute mt-[20%] md:mt-[23%] lg:mt-[20%] xl:mt-0 xl:top-1/2 left-[10%] lg:left-[30%] xl:left-1/2 w-[120px] h-[120px] md:w-[130px] md:h-[130px] xl:w-[190px] xl:h-[190px] rounded-full border-[3px] border-[#35C6DD] drop-shadow-cyan cursor-pointer 
                 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500 group-hover:opacity-0" > 
-          <img src="/images/golden_trophy.svg" class=" w-[80px] md:w-[90px] xl:w-[120px]" />
+          <img src="/public/golden_trophy.svg" class=" w-[80px] md:w-[90px] xl:w-[120px]" />
         </div>
         <!-- Hidden trophies in 2x3 grid -->
         <div class="absolute top-[30%] lg:top-[30%] xl:top-[50%] left-[10%] lg:left-[30%] xl:left-[37%] flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-700 -translate-x-1/2 -translate-y-1/2">
           <div class="flex gap-2 mb-1">
-            <img src="/images/trophy1.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-            <img src="/images/trophy6.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-            <img src="/images/trophy3.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="/public/trophy1.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="/public/trophy6.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="/public/trophy3.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
           </div>
           <div class="flex gap-2 mt-1">
-            <img src="/images/trophy4.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-            <img src="/images/trophy5.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-            <img src="/images/trophy2.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="/public/trophy4.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="/public/trophy5.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="/public/trophy2.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
           </div>
         </div>
       </div>
@@ -278,7 +273,7 @@ export default function Home() {
         </div>
     </div>  
     <div class="flex flex-col mt-[10%] md:mt-[5%] mb-[15%] md:mb-[5%] lg:md-0 lg:mt-[5%] lg:mr-[10%] items-center gap-5 group">
-      <img src="/images/match.svg" class="md:w-[350px] lg:w-[250px]"/>
+      <img src="/public/match.svg" class="md:w-[350px] lg:w-[250px]"/>
       <button id="play-btn2" class="w-[100px] xl:w-[130px] h-[30px] rounded-3xl bg-primary/60 text-white font-glitch hover:bg-secondary">play</button>
     </div>
   </div>

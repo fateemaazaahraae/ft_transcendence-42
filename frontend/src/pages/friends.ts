@@ -1,12 +1,12 @@
 import { navigate } from "../main.ts";
 
 let friendsList = [
-  { name: "smith", color: "bg-greenAdd", img: "../../images/blue-boy.svg" },
-  { name: "noah", color: "bg-redRemove", img: "../../images/white-boy.svg" },
-  { name: "salaoui", color: "bg-greenAdd", img: "../../images/purple-girl.svg" },
-  { name: "oliver", color: "bg-redRemove", img: "../../images/white-boy2.svg" },
-  { name: "fateemaazaahrae", color: "bg-greenAdd", img: "../../images/green-girl.svg" },
-  { name: "knacer", color: "bg-greenAdd", img: "../../images/dark-girl.svg" },
+  { name: "smith", color: "bg-greenAdd", img: "../../public/blue-boy.svg" },
+  { name: "noah", color: "bg-redRemove", img: "../../public/white-boy.svg" },
+  { name: "salaoui", color: "bg-greenAdd", img: "../../public/purple-girl.svg" },
+  { name: "oliver", color: "bg-redRemove", img: "../../public/white-boy2.svg" },
+  { name: "fateemaazaahrae", color: "bg-greenAdd", img: "../../public/green-girl.svg" },
+  { name: "knacer", color: "bg-greenAdd", img: "../../public/dark-girl.svg" },
 ];
 
 export default function Friends() {
@@ -33,18 +33,13 @@ export default function Friends() {
 
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
-      <div class="relative group">
+      <div class="arrow relative group">
         <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
           En
         </button>
-        <ul class="absolute mt-1 rounded-md hidden group-hover:block bg-black/80 p-2">
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">En</li>
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Fr</li>
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Ar</li>
-        </ul>
       </div>
-      <i id="notificationBell" class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
       <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 

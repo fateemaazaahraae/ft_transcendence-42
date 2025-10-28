@@ -1,13 +1,13 @@
 import { navigate } from "../main.ts";
 
 let invitationsList = [
-  {name:"John", img:"../../images/blue-boy.svg", date:"2025-19-09"},
-  {name:"piiw", img:"../../images/red-boy.svg", date:"2025-19-09"},
-  {name:"one", img:"../../images/white-boy2.svg", date:"2025-19-09"},
-  {name:"two", img:"../../images/white-boy.svg", date:"2025-19-09"},
-  {name:"three", img:"../../images/green-girl.svg", date:"2025-19-09"},
-  {name:"four", img:"../../images/purple-girl.svg", date:"2025-19-09"},
-  {name:"five", img:"../../images/dark-girl.svg", date:"2025-19-09"},
+  {name:"John", img:"../../public/blue-boy.svg", date:"2025-19-09"},
+  {name:"piiw", img:"../../public/red-boy.svg", date:"2025-19-09"},
+  {name:"one", img:"../../public/white-boy2.svg", date:"2025-19-09"},
+  {name:"two", img:"../../public/white-boy.svg", date:"2025-19-09"},
+  {name:"three", img:"../../public/green-girl.svg", date:"2025-19-09"},
+  {name:"four", img:"../../public/purple-girl.svg", date:"2025-19-09"},
+  {name:"five", img:"../../public/dark-girl.svg", date:"2025-19-09"},
 ];
 
 export default function Invitations() {
@@ -34,16 +34,11 @@ export default function Invitations() {
 
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
-      <div class="relative group">
+      <div class="arrow relative group">
         <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
           En
         </button>
-        <ul class="absolute mt-1 rounded-md hidden group-hover:block bg-black/80 p-2">
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">En</li>
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Fr</li>
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Ar</li>
-        </ul>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
       <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>

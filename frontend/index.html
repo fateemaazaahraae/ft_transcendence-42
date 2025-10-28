@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pong Legends</title>
-  <link rel="icon" href="/images/logo.svg" type="image/x-icon">
+  <link rel="icon" href="/public/logo.svg" type="image/x-icon">
   <link rel="stylesheet" href="./styles/index.css">
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap" rel="stylesheet">
    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
   <div id="stars" class="absolute top-0 left-0 w-full z-0 pointer-events-none"></div>
 
   <!-- Logo -->
-  <img src="/images/logo.svg" class="absolute top-2 left-3 md:top-8 md:left-8 w-[80px] md:w-[130px] h-auto z-10" />
+  <img src="/public/logo.svg" class="absolute top-2 left-3 md:top-8 md:left-8 w-[80px] md:w-[130px] h-auto z-10" />
 
   <!-- Main content -->
   <main id="app" class="relative z-[50] w-full h-screen text-white overflow-x-hidden"></main>
@@ -27,7 +27,14 @@
     shadow-[0_0_30px_15px_#D934B0] pointer-events-none transform -translate-x-1/2 -translate-y-1/2
     transition-transform duration-[50] ease-linear z-[9999]"></div>
 
-    <!-- Notification Bar (global) -->
+  <!-- Language Menu (global) -->
+  <ul id="languageMenu" class="hidden fixed top-16 right-[15%] md:right-[10%] lg:right-[9%] xl:right-[7.6%] rounded-md bg-black/80 p-2 z-[9000]">
+    <li class="px-1 py-1 text-white hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">En</li>
+    <li class="px-1 py-1 text-white hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Fr</li>
+    <li class="px-1 py-1 text-white hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Ar</li>
+  </ul>
+
+  <!-- Notification Bar (global) -->
   <div id="notificationBar" class="hidden fixed top-20 right-10 w-[300px] bg-primary/70 rounded-2xl shadow-lg p-3 flex-col gap-1 z-[9000]">
     <div class="text-white font-roboto font-semibold text-lg pb-3 pl-2">Notifications</div>
     <div id="notificationsContainer" class="flex flex-col gap-2 h-[300px] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 pr-4"></div>
