@@ -1,4 +1,4 @@
-import { users, createUser } from "../models/user.js";
+import {createUser, findUserByEmail, findUserByUserName } from "../models/user.js";
 
 export function registerRoutes(fastify) {
   fastify.post("/register", async (request, reply) => {
@@ -10,28 +10,21 @@ export function registerRoutes(fastify) {
       const email = (body.email || "").toLowerCase();
       const password = body.password || "";
       const confirmPassword = body.confirmPassword || "";
-      if (!firstName)
-        return reply.code(400).send({error: "First name is required"});
-      if (!lastName)
-        return reply.code(400).send({error: "Last name is required"});
-      if (!userName)
-        return reply.code(400).send({error: "User name is required"});
-      const userNameExists = [...users.values()].find(u => u.userName === userName);
+      if (!firstName || !lastName || !userName || !email || !password || !confirmPassword)
+        return reply.code(400).send({error: "All fields are required"});
+      const userNameExists = await findUserByUserName(userName);
       if(userNameExists)
-        return reply.code(409).send({error: "user name already exist"});
-      if (!email) 
-        return reply.code(400).send({ error: "Email is required" });
-      if (!password || !confirmPassword) 
-        return reply.code(400).send({ error: "Password and confirm password are required" });
-      if (users.has(email)) {
-        return reply.code(409).send({ error: "User already exists" });
+        return reply.code(409).send({error: "UserName already taken"});
+      const emailExists = await findUserByEmail(email);
+      if (emailExists) {
+        return reply.code(409).send({ error: "Email already registered" });
       }
       if(password !== body.confirmPassword)
         return reply.code(400).send({error: "Passwords do not match"});
 
-      const user = await createUser(firstName, lastName, userName, email, password);
+      const newuser = await createUser(firstName, lastName, userName, email, password);
 
-      return reply.code(201).send({ id: user.id, firstName: user.firstName, lastName: user.lastName, userName: user.userName, email: user.email });
+      return reply.code(201).send(newuser);
     } catch (err) {
       console.error(err);
       return reply.code(500).send({ error: "Internal Server Error" });

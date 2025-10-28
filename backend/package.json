@@ -8,6 +8,7 @@
     "bcryptjs": "^3.0.2",
     "fastify": "^5.6.1",
     "fastify-swagger": "^5.1.1",
+    "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "uuid": "^13.0.0"
   },
