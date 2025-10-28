@@ -241,9 +241,9 @@ export default function Home() {
   </div>
   <!-- Match history -->
     <div class="w-[70%] md:w-[60%] h-[2px] lg:w-0 lg:h-0 rounded-full bg-[#35C6DD] mt-[30%] md:mt-[18%] lg:mt-0 ml-[15%] md:ml-[20%] lg:ml-0  shadow-[0_0_20px_#35C6DD]"></div>
-  <div class = "flex flex-col lg:flex-row lg:gap-[5%] mt-[8%] md:mt-[3%] lg:mt-[15%] xl:mt-[10%] justify-center items-center">
+  <div class = "flex flex-col lg:flex-row lg:gap-[5%] mt-[8%] md:mt-[3%] lg:mt-[15%] xl:mt-[12%] justify-center items-center">
     <div class="flex flex-col lg:ml-[20%]">
-      <h1 class=" text-center font-glitch md:text-2xl xl:text-4xl xl:mr-[20%] lg:mb-1 xl:mb-6">Match history</h1>
+      <h1 class=" text-center font-glitch md:text-2xl xl:text-4xl lg:mb-1 xl:mb-6">Match history</h1>
   
       <!-- Scrollable container -->
         <div class="flex flex-col gap-4 w-[400px] h-[200px] md:w-[600px] xl:w-[750px] max-h-[250px] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4">
