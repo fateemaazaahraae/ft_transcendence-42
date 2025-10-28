@@ -14,9 +14,9 @@ export async function registerRoutes(fastify: FastifyInstance) {
   fastify.post("/register", async (request, reply) => {
     try {
       const body = request.body as RegisterBody;
-      const firstName =body.firstName || "";
-      const lastName =body.lastName || "";
-      const userName =body.userName || "";
+      const firstName = body.firstName || "";
+      const lastName = body.lastName || "";
+      const userName = body.userName || "";
       const email = (body.email || "").toLowerCase();
       const password = body.password || "";
       const confirmPassword = body.confirmPassword || "";
