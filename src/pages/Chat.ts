@@ -67,117 +67,111 @@ export default function Chat() {
         </div>
        
     
-      <div class="space-y-4 mt-3 mb-3 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent">
-          <div class="   scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
-            <div class="w-16 h-8 bg rounded-full flex items-center justify-center text-black font-bold">
-                <div class="relative w-12 h-12 flex-shrink-0">
-            <img src="../images/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-            <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
-            </div>
-            </div>
-            <div>
-              <p class="font-medium text-secondary ">Bouchra</p>
-              <p class="text-sm text-gray-200">Hey, how are you?</p>
-            </div>
-          </div>
-            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
-                <div class="relative w-12 h-12 flex-shrink-0">
-              <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
-              <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
-            </div>
-            <div>
-              <p class="font-medium text-secondary">Boy</p>
-              <p class="text-sm text-gray-200">Let's meet tomorrow</p>
-            </div>
-            </div>
-            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
-                <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
-                <div class="relative w-12 h-12 flex-shrink-0">
-                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-              <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
-                </div>                
-                </div>
-              <div>
-                <p class="font-medium text-secondary ">Boy</p>
-                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
-                <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
-                <div class="relative w-12 h-12 flex-shrink-0">
-                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
-                </div> 
-                </div>
-              <div>
-                <p class="font-medium text-secondary ">Boy</p>
-                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
-                <div class="w-16 h-8 bg rounded-full flex items-center justify-center text-black font-bold">
-                <div class="relative w-12 h-12 flex-shrink-0">
-                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
-                </div> 
-                </div>
-              <div>
-                <p class="font-medium text-secondary ">Boy</p>
-                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
-                <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
-                <div class="relative w-12 h-12 flex-shrink-0">
-                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
-                </div> 
-                </div>
-              <div>
-                <p class="font-medium text-secondary ">Boy</p>
-                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
-                <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
-                <div class="relative w-12 h-12 flex-shrink-0">
-                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
-                </div> 
-                </div>
-              <div>
-                <p class="font-medium text-secondary ">Boy</p>
-                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
-                <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
-                <div class="relative w-12 h-12 flex-shrink-0">
-                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
-                </div> 
-                </div>
-              <div>
-                <p class="font-medium text-secondary ">Boy</p>
-                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
-                <div class="w-16 h-8  bg rounded-full flex items-center justify-center text-black font-bold">
-                <div class="relative w-12 h-12 flex-shrink-0">
-                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
-                </div> 
-                </div>
-              <div>
-                <p class="font-medium text-secondary ">Boy</p>
-                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
-              </div>
-            </div>
+    <div class="space-y-4 mt-3 mb-3 pb-8 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent">
+                      <div class="   scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                                  <div class="relative w-12 h-12 flex-shrink-0">
+                                  <img src="../images/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                                  <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
+                                  </div>
+                                  <div>
+                                    <p class="font-medium text-secondary ">Bouchra</p>
+                                    <p class="text-sm text-gray-200">Hey, how are you?</p>
+                                  </div>
+                      </div>
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                                <div class="relative w-12 h-12 flex-shrink-0">
+                                  <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
+                                  <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
+                                </div>
+                                <div>
+                                  <p class="font-medium text-secondary">Boy</p>
+                                  <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                                </div>
+                      </div>
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                                <div class="relative w-12 h-12 flex-shrink-0">
+                                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                                <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
+                                </div>                
+                        
+                              <div>
+                                <p class="font-medium text-secondary ">Boy</p>
+                                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                              </div>
+                      </div>
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                                <div class="relative w-12 h-12 flex-shrink-0">
+                                <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                                <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
+                                </div> 
+                          
+                                <div>
+                                  <p class="font-medium text-secondary ">Boy</p>
+                                  <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                                </div>
+                      </div>
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                              <div class="relative w-12 h-12 flex-shrink-0">
+                              <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                              <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
+                              </div> 
+                          
+                              <div>
+                                <p class="font-medium text-secondary ">Boy</p>
+                                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                              </div>
+                      </div>
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                              <div class="relative w-12 h-12 flex-shrink-0">
+                              <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                              <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
+                              </div> 
+                          
+                              <div>
+                                <p class="font-medium text-secondary ">Boy</p>
+                                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                              </div>
+                      </div>
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                              <div class="relative w-12 h-12 flex-shrink-0">
+                              <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                              <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
+                              </div> 
+                          
+                              <div>
+                                <p class="font-medium text-secondary ">Boy</p>
+                                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                              </div>
+                      </div>
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                            <div class="relative w-12 h-12 flex-shrink-0">
+                            <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
+                            </div> 
+                          
+                          <div>
+                            <p class="font-medium text-secondary ">Boy</p>
+                            <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                          </div>
+                      </div>
+                        <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                            <div class="relative w-12 h-12 flex-shrink-0">
+                            <img src="../images/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full">
+                            </div>
+                            </div> 
+                            <div>
+                              <p class="font-medium text-secondary ">Boy</p>
+                              <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                            </div>
+                        </div>
     </div>
       </div>
 
       <!-- Main Chat Window -->
+      <div class="h-screen w-[80%]">
+    <div class="mr-[40px] w-[90%]  h-[600px] shadow-lg flex  overflow-hidden text-white">
+
       <div id="chatContainer" class="flex-1 rounded-xl flex flex-col ">
           <!--<i class="fa-solid fa-ellipsis-vertical  text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>-->
 
@@ -214,7 +208,7 @@ export default function Chat() {
     Block User
   </button>
 </div>
-      </div>
+</div>
 
 
         <!-- Messages -->
@@ -262,6 +256,8 @@ export default function Chat() {
                   class="w-full pl-16 pr-10 py-2 rounded-full bg-primary/65 text-white placeholder-white focus:outline-none">
               </div>
             </div>
+          </div>
+          </div>
           </div>
         
    </div>
