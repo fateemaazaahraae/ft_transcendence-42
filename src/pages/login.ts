@@ -1,11 +1,11 @@
 import { navigate } from "../main.ts";
 export default function Login() {
   return `
-    <div class="flex items-center justify-center gap-[170px] relative min-h-screen w-full"><!--bg-blue-600--> 
-    <div class="relative inset-0 items-center h-[620px] w-[900px] pt-[40px] pb-[60px] px-[250px] rounded-[50px] ml-[1580px] overflow-hidden ">
-    <div class="absolute inset-0 rounded-[50px] bg-[conic-gradient(from_90deg,_#F40CA4_0deg,_transparent_180deg),_conic-gradient(from_90deg,_#35C6DD_180deg,_transparent_360deg)] animate-spin-slower"></div>
+    <div class="flex items-center justify-center gap-[170px] relative min-h-screen w-full">
+    <!--<div class="relative inset-0 items-center  w-[90%] sm:w-[80%] md:w-[60%] lg:w-[900px] h-[620px] pt-[40px] pb-[60px] px-[250px] rounded-[50px] ml-[1580px] overflow-hidden ">-->
+    <!--<div class="absolute inset-0 rounded-[50px] bg-[conic-gradient(from_90deg,_#F40CA4_0deg,_transparent_180deg),_conic-gradient(from_90deg,_#35C6DD_180deg,_transparent_360deg)] animate-spin-slower"></div>-->
    
-    <div class="absolute inset-0 m-auto h-[600px] w-[480px] pt-[40px] pb-[60px] items-center px-[50px] bg-black rounded-[50px] backdrop-blur-[10px]">
+    <div class="absolute inset-0 m-auto w-[90%] sm:w-[80%] md:w-[60%] lg:w-[480px] h-auto min-h-[400px] px-4 sm:px-6 py-6 sm:py-10 pt-[40px] pb-[60px] items-center bg-black rounded-[50px] backdrop-blur-[10px]">
         <form action="">
           <h2
               class="text-white text-center font-glitch text-[1.5em] leading-[35px] tracking-[2px] mt-[5px] mb-[20px]">
@@ -84,11 +84,7 @@ export default function Login() {
       </div>
 
     </div>
-    
-
-
-    
-    <img src="/images/white_boy22.svg" class="w-[420px] h-[702px] mr-[1570px] drop-shadow-[0_0_20px_rgba(255,255,255,255.7)]">
+    <img src="/images/white_boy22.svg" class="w-[420px] h-[702px] mr-[1570px] drop-shadow-[0_0_20px_rgba(255,255,255,255.7)] hidden sm:block">
   </div>
   `;
 }
