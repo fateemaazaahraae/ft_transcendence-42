@@ -1,14 +1,22 @@
 import Fastify from "fastify";
+import dotenv from "dotenv";
+import fastifyJwt from "@fastify/jwt";
+import { googleAuthRoutes } from "./routes/googleAuth.js";
 import { registerRoutes } from "./routes/register.js";
 import { loginRoutes } from "./routes/login.js";
-import fastifyJwt from "@fastify/jwt";
+
+dotenv.config();
 
 const fastify = Fastify({ logger: true });
 
-fastify.register(fastifyJwt, {secret: "supersecretkey"});
+// JWT setup
+fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET });
 
+// Routes
 registerRoutes(fastify);
 loginRoutes(fastify);
+googleAuthRoutes(fastify);
+
 // Start server
 const start = async () => {
   try {

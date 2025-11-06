@@ -69,7 +69,9 @@ export default function Login() {
       </div>
 
         <div class="social-icons flex text-white text-[2.1em] gap-[15px] justify-center cursor-pointer mt-2">
-            <i class="fa-brands fa-google"></i>
+            <a href="http://localhost:3000/auth/google">
+                <i class="fa-brands fa-google"></i>
+            </a>
             <i class="fa-brands fa-github"></i>
         </div>
         <div class="text-white mt-9 text-center text-[0.9em] font-roboto font-semibold">

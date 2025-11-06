@@ -2,11 +2,7 @@ import { navigate } from "../main.ts";
 
 export default function Register() {
   return `<div class="flex items-center gap-[170px] relative">
-<<<<<<< HEAD:src/pages/register.ts
-        <img src="/images/blue-boy33.svg" alt="Blue Boy" class="w-[500px] h-auto mt-[7%] ml-[300px] drop-shadow-[0_0_17px_rgba(0,160,255,255.7)]">
-=======
         <img src="/public/blue-boy33.svg" alt="Blue Boy" class="w-[500px] h-auto mt-[7%] ml-[300px] drop-shadow-[0_0_17px_rgba(0,160,255,255.7)]">
->>>>>>> b0a02b0fc80573ebe4589c8905a7432f26ebe29d:frontend/src/pages/register.ts
         <div class="absolute z-0 rounded-full blur-[55px] opacity-100 w-[300px] h-[500px] bg-[#D02EA48A] right-[calc(50%-798px)] bottom-[20%] top-[43%] -rotate-[20deg]"></div>
         <div class="absolute z-0 rounded-full blur-[55px] opacity-100 w-[250px] h-[250px] bg-[#35C6DDE5] right-[calc(50%-410px)] top-[20%]"></div>
         <div class="relative w-[530px] mt-[7%] pt-[2%] pb-[2%] px-[50px] bg-black rounded-[50px] blur-[10]">
@@ -46,7 +42,9 @@ export default function Register() {
                     <div class="flex-1 border-b-2 border-[#35C6DDE5] opacity-70"></div>
                 </div>
                 <div class="social-icons flex text-white text-[1.9em] gap-[15px] justify-center cursor-pointer mt-2">
-                    <i class="fa-brands fa-google"></i>
+                    <a href="http://localhost:3000/auth/google">
+                        <i class="fa-brands fa-google"></i>
+                    </a>
                     <i class="fa-brands fa-github"></i>
                 </div>
                 <div class="text-white mt-5 text-center text-[1.0em] font-roboto font-semibold">

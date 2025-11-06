@@ -20,16 +20,8 @@ export async function registerRoutes(fastify: FastifyInstance) {
       const email = (body.email || "").toLowerCase();
       const password = body.password || "";
       const confirmPassword = body.confirmPassword || "";
-      if (!firstName)
-        return reply.code(400).send({error: "First name is required"});
-      if (!lastName)
-        return reply.code(400).send({error: "Last name is required"});
-      if (!userName)
-        return reply.code(400).send({error: "User name is required"});
-      if (!email) 
-        return reply.code(400).send({ error: "Email is required" });
-      if (!password || !confirmPassword) 
-        return reply.code(400).send({ error: "Password and confirm password are required" });
+      if (!firstName || !lastName || !userName || !email || !password || !confirmPassword)
+        return reply.code(400).send({error: "All fields are required"});
       if (users.has(email)) {
         return reply.code(409).send({ error: "User already exists" });
       }
