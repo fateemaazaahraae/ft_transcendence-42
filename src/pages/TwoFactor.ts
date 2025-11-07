@@ -1,36 +1,38 @@
 import { navigate } from "../main.ts";
 
 export default function TwoFactor() {
-  return `
-    <div class="flex items-center justify-center gap-[170px] relative min-h-screen w-full">
-    <div class="absolute  w-[255px] h-[180px] bg-cyan-300 rounded-full blur-[60px] opacity-90 rotate-[45deg] top-[350px] left-[420px]"></div>
-    <div class="absolute  w-[165px] h-[200px] bg-[rgb(208,46,164)] rounded-full blur-[80px] opacity-90 rotate-[45deg]  top-[500px] left-[740px]"></div>
+  return `<div class="min-h-screen w-full flex items-center justify-center gap-[8px] relative pt-[3%]">
 
-    <div class="relative h-[300px] w-[500px] pt-[40px] pb-[60px] items-center px-[50px] bg-black rounded-[50px] backdrop-blur-[10px] ml-[1580px] ">
-      <form action="">
-        <h2
-            class="text-white text-center font-glitch text-[1.4em] leading-[35px] tracking-[1px] mt-[5px] mb-[20px]">
-          Two-factor authentication
-        </h2>
-        <div class="input-box mb-[35px] mt-[30px]">
-          <input type="text" inputmode="numeric" pattern="[0-9]*"inputmode="numeric"  maxlength="6"
+    <div class="relative inset-0 items-center h-[550px] md:h-[750px] w-full md:w-[820px] pt-[110px] md:pt-[130px] rounded-[50px] overflow-hidden mr-[3%] ">
+
+        <div class="absolute rounded-full blur-[55px] opacity-80  w-[170px] h-[240px] md:w-[265px] md:h-[170px] bg-[#35C6DDE5] left-[calc(50%-175px)] md:left-[calc(50%-320px)]  top-[20%] md:top-[24%] -rotate-[20deg] md:rotate-[63deg]"></div>
+        <div class="absolute rounded-full blur-[55px] opacity-110 w-[90px] h-[300px] md:w-[300px] md:h-[220px] bg-[#D02EA48A] right-[calc(50%-106px)] md:left-[calc(50%-17px)] md:bottom-[60%] top-[33%] md:top-[42%] -rotate-[35deg] md:rotate-[45deg]"></div>
+
+        <div class="relative inset-0 m-auto w-[320px] md:w-[480px] lg:w-[480px] h-[230px] md:h-[300px] px-2 sm:px-6 py-6 sm:py-10 pt-[40px] pb-[60px] items-center bg-black rounded-[40px] md:rounded-[50px] backdrop-blur-[10px] mt-[50px]">
+          <form action="">
+            <h2
+                class="text-white text-center font-glitch text-[1.0em] md:text-[1.5em] leading-[10px] md:leading-[35px] tracking-[2px] mt-[5px] mb-[30px]">
+              Two-factor authentication
+            </h2>
+            <div class="input-box">
+            <input type="text" inputmode="numeric" pattern="[0-9]*"inputmode="numeric"  maxlength="6"
             required 
             placeholder="Enter 6-digits" 
-            class="flex w-[330px] h-[52px] px-[20px] py-[15px] items-center justify-center bg-black font-roboto text-white border-none rounded-[20px]
-              shadow-[0_0_10px_rgba(53,198,221,0.9)] 
-              focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] 
-              text-[1.1em] font-medium outline-none mx-3 
-              placeholder:text-[0.8em] placeholder:text-gray-400 
-              transition-shadow duration-400 ease-in-out">
+                class="block mx-auto w-[95%] h-[45px] md:h-[52px] px-5 items-center bg-black font-roboto text-white border-none rounded-[20px]
+                  shadow-[0_0_10px_rgba(53,198,221,0.9)] 
+                  focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] 
+                  text-[1.1em] md:text-[1.5em] font-medium outline-none
+                  placeholder:text-[0.8em] placeholder:text-gray-400 
+                  transition-shadow duration-400 ease-in-out">
+            </div>
+            <button type="submit" id="verify"
+              class="flex w-[45%] h-[37px] md:h-[43px] font-glitch items-center justify-center mx-auto leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[20px] py-[20px] rounded-[50px] cursor-pointer mt-7 md:mt-10 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
+              Verify
+            </button>
+          </form>
         </div>
-        <button type="submit" id="verify"
-          class="flex w-[45%] h-[43px] font-glitch items-center justify-center ml-[110px] leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[20px] py-[7px] rounded-[50px] cursor-pointer mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
-          Verify
-        </button>
-      </form>
-
-    </div>
-    <img src="/images/white_boy22.svg" class="w-[420px] h-[702px] mr-[1570px] drop-shadow-[0_0_20px_rgba(255,255,255,255.7)]">
+        </div>
+      <img src="/images/white_boy22.svg" class="hidden lg:flex md:items-center md:justify-center md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] pb-[120px]">
   </div>
   `;
 }
@@ -40,3 +42,40 @@ export function FactorEventListener(){
     verify?.addEventListener("click", () =>{navigate("/changepw");
     }); 
 }
+
+
+
+//   return `
+//     <div class="flex items-center justify-center gap-[170px] relative min-h-screen w-full">
+//     <div class="absolute  w-[255px] h-[180px] bg-cyan-300 rounded-full blur-[60px] opacity-90 rotate-[45deg] top-[350px] left-[420px]"></div>
+//     <div class="absolute  w-[165px] h-[200px] bg-[rgb(208,46,164)] rounded-full blur-[80px] opacity-90 rotate-[45deg]  top-[500px] left-[740px]"></div>
+
+//     <div class="relative h-[300px] w-[500px] pt-[40px] pb-[60px] items-center px-[50px] bg-black rounded-[50px] backdrop-blur-[10px] ml-[1580px] ">
+//       <form action="">
+//         <h2
+//             class="text-white text-center font-glitch text-[1.4em] leading-[35px] tracking-[1px] mt-[5px] mb-[20px]">
+//           Two-factor authentication
+//         </h2>
+//         <div class="input-box mb-[35px] mt-[30px]">
+//           <input type="text" inputmode="numeric" pattern="[0-9]*"inputmode="numeric"  maxlength="6"
+//             required 
+//             placeholder="Enter 6-digits" 
+//             class="flex w-[330px] h-[52px] px-[20px] py-[15px] items-center justify-center bg-black font-roboto text-white border-none rounded-[20px]
+//               shadow-[0_0_10px_rgba(53,198,221,0.9)] 
+//               focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] 
+//               text-[1.1em] font-medium outline-none mx-3 
+//               placeholder:text-[0.8em] placeholder:text-gray-400 
+//               transition-shadow duration-400 ease-in-out">
+//         </div>
+//         <button type="submit" id="verify"
+//           class="flex w-[45%] h-[43px] font-glitch items-center justify-center ml-[110px] leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[20px] py-[7px] rounded-[50px] cursor-pointer mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
+//           Verify
+//         </button>
+//       </form>
+
+//     </div>
+//     <img src="/images/white_boy22.svg" class="w-[420px] h-[702px] mr-[1570px] drop-shadow-[0_0_20px_rgba(255,255,255,255.7)]">
+//   </div>
+//   `;
+// }
+
