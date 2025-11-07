@@ -1,9 +1,13 @@
 import { navigate } from "../main.ts";
 export default function Login() {
-  return `
-    <div class="min-h-screen w-full flex items-center justify-center relative">
-      <div class="flex flex-col md:flex-row items-start md:items-center justify-center gap-[20px] md:gap-[190px]">
-        <div class="relative inset-0 w-full md:w-[480px] lg:w-[480px] h-[430px] md:h-full px-2 sm:px-6 py-6 sm:py-10 pt-[40px] pb-[60px] items-center bg-black rounded-[50px] backdrop-blur-[10px] mt-[50px]">
+  return `<div class="min-h-screen w-full flex items-center justify-center gap-[80px] relative pt-[7%] md:pt-[3%]">
+
+    <div class="relative inset-0 items-center h-[690px] md:h-full w-full md:w-[820px] pt-[80px] pb-[60px] px-[20px] md:px-[150px] rounded-[50px] overflow-hidden ml-[1%] ">
+
+        <div class="absolute rounded-full blur-[55px] opacity-80  w-[170px] h-[240px] md:w-[400px] md:h-[250px] bg-[#35C6DDE5] left-[calc(50%-175px)] md:left-[calc(50%-320px)]  top-[20%] md:top-[19%] -rotate-[20deg] md:rotate-[63deg]"></div>
+        <div class="absolute rounded-full blur-[55px] opacity-100 w-[130px] h-[260px] md:w-[400px] md:h-[250px] bg-[#D02EA48A] right-[calc(50%-146px)] md:left-[calc(50%-60px)] md:bottom-[60%] top-[50%] md:top-[53%] -rotate-[35deg] md:rotate-[45deg]"></div>
+
+        <div class="relative inset-0 m-auto w-[320px] md:w-[480px] lg:w-[480px] h-[430px] md:h-full px-2 sm:px-6 py-6 sm:py-10 pt-[40px] pb-[60px] items-center bg-black rounded-[40px] md:rounded-[50px] backdrop-blur-[10px] mt-[50px]">
           <form action="">
             <h2
                 class="text-white text-center font-glitch text-[1.1em] md:text-[1.5em] leading-[10px] md:leading-[35px] tracking-[2px] mt-[5px] mb-[25px]">
@@ -80,8 +84,8 @@ export default function Login() {
         <!--<div class="relative z-0 rounded-full blur-[65px] opacity-100 w-[300px] h-[200px] bg-[#D02EA4FF] top-[3%] bottom-[20%] left-240 right-[calc(50%-397px)] rotate-[140deg]"></div>-->
 
         </div>
+        </div>
       <img src="/images/white_boy22.svg" class="hidden lg:flex md:items-center md:justify-center md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)]">
-    </div>
   </div>
   `;
 }
@@ -101,5 +105,3 @@ export function LoginEventListener(){
 
     // <!--<div class="absolute inset-0 rounded-[50px] bg-[conic-gradient(from_90deg,_#F40CA4_0deg,_transparent_180deg),_conic-gradient(from_90deg,_#35C6DD_180deg,_transparent_360deg)] animate-spin-slower"></div>-->
   
-    // <!--<div class="absolute  w-[400px] h-[250px] bg-cyan-300 rounded-full blur-[60px] opacity-90 rotate-[45deg] top-[230px] left-[340px]"></div>-->
-    // <!--<div class="absolute  w-[400px] h-[250px] bg-[rgb(208,46,164)] rounded-full blur-[80px] opacity-90 rotate-[45deg]  top-[550px] left-[560px]"></div>-->
