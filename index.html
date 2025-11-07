@@ -65,5 +65,48 @@
   <script type="module" src="/src/main.ts"></script>
   <script type="module" src="./src/fixedComponent/stars.ts"></script>
   <script type="module" src="./src/fixedComponent/cursor.ts"></script>
+  <!-- <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const avatars = document.querySelectorAll(".avatar");
+    const avatarGrid = document.getElementById("avatar-grid");
+    const uploadInput = document.getElementById("avatarUpload");
+    const previewAvatar = document.getElementById("preview-avatar");
+    const backButton = document.getElementById("back-to-avatars");
+
+    // Handle default avatar selection
+    avatars.forEach((avatar) => {
+      avatar.addEventListener("click", () => {
+        avatars.forEach((a) => a.classList.remove("selected"));
+        avatar.classList.add("selected");
+        previewAvatar.style.display = "none";
+        avatarGrid.style.display = "grid";
+        backButton.classList.add("hidden");
+      });
+    });
+
+    // Handle image upload
+    uploadInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        previewAvatar.innerHTML = `<img src="${event.target.result}" alt="Custom Avatar">`;
+        previewAvatar.style.display = "flex";
+        avatarGrid.style.display = "none";
+        backButton.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Handle "Back to avatars"
+    backButton.addEventListener("click", () => {
+      previewAvatar.style.display = "none";
+      avatarGrid.style.display = "grid";
+      backButton.classList.add("hidden");
+      uploadInput.value = ""; // reset file input
+    });
+  });
+</script> -->
 </body>
 </html>
