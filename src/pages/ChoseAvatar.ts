@@ -56,7 +56,7 @@ export default function ChoseAvatar() {
               <input type="file" id="avatarUpload" accept="image/*" class="hidden" />
             </div>
 
-            <div id="preview-avatar" class="mx-auto h-[20px]"></div> <!-- I added here the height variable -->
+            <div id="preview-avatar" class="mx-auto"></div> <!-- I added here the height variable -->
 
             <button id="back-to-avatars"
               class="hidden mt-3 text-white bg-cyan-600 hover:bg-cyan-500 px-4 py-2 rounded-full transition">
@@ -81,8 +81,7 @@ export function ChoseAvatarEventListener() {
   sign?.addEventListener("click", () =>{navigate("/home");
   });
 
-
-
+  // to change the border color when an avatar is selected
   const avatarGrid = document.getElementById("avatar-grid") as HTMLElement | null; // we got avatarGrid id so after we will need to hide the avatars that's why
   if (!avatarGrid) return;
 
@@ -94,25 +93,37 @@ export function ChoseAvatarEventListener() {
     });
   });
 
+  // handle when the user enters an img input && preview that image with hiding other avatars && handle when back to avatars btn is clicked
+  const fileInput = document.getElementById("avatarUpload") as HTMLInputElement | null;
+  const previewEl = document.getElementById("preview-avatar") as HTMLElement | null;
+  const backBtn = document.getElementById("back-to-avatars") as HTMLButtonElement | null;
+
+  if (!fileInput || !previewEl || !backBtn) return;
+
+  fileInput.addEventListener("change", () => {
+    const files = fileInput.files;
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+    const AvatarUrl = URL.createObjectURL(file);
+
+    previewEl.innerHTML = `<img src="${AvatarUrl}" class="w-full h-[20px]" />`
+
+    avatarGrid.classList.add("hidden");
+    previewEl.classList.remove("hidden");
+    backBtn.classList.remove("hidden");
+  });
+
+
+  backBtn.addEventListener("click", () => {
+    fileInput.value = ""; // Clear the file input
+
+    avatarGrid.classList.remove("hidden");
+    previewEl.classList.add("hidden");
+    backBtn.classList.add("hidden");
+
+  });
 }
-
-// export function ChoseAvatarEventListener(){
-//     const sign= document.getElementById("sign");
-//     sign?.addEventListener("click", () =>{navigate("/home");
-//     });
-
-
-//   const avatars = document.querySelectorAll("#avatar-grid > div")
-//   avatars.forEach((avatar) => {
-//     const av = avatar as HTMLElement;
-//     av.addEventListener('click', () => {
-//       avatars.forEach((a) => (a as HTMLElement).dataset.selected = "false");
-//       av.dataset.selected = "true";
-//     });
-//   });
-
-// }
-
 
 
 //   return `
