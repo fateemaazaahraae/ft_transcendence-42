@@ -24,7 +24,22 @@ export function registerRoutes(fastify) {
 
       const newuser = await createUser(firstName, lastName, userName, email, password);
 
-      return reply.code(201).send(newuser);
+      const token = fastify.jwt.sign({
+        id: newuser.id,
+        email: newuser.email,
+        userName: newuser.userName,
+      });
+      return reply.code(201).send({
+        message: "User registred Successfully",
+        user: {
+          id: newuser.id,
+          firstName: newuser.firstName,
+          lastName: newuser.lastName,
+          userName: newuser.userName,
+          email: newuser.email,
+        },
+        token,
+      });
     } catch (err) {
       console.error(err);
       return reply.code(500).send({ error: "Internal Server Error" });
