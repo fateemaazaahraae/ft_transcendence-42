@@ -72,7 +72,9 @@ export default function Login() {
             <a href="http://localhost:3000/auth/google">
                 <i class="fa-brands fa-google"></i>
             </a>
-            <i class="fa-brands fa-github"></i>
+            <a href="http://localhost:3000/auth/42">
+              <img src="/public/intra42.png" class="mt-[15%] w-[45px]" />
+            </a>
         </div>
         <div class="text-white mt-9 text-center text-[0.9em] font-roboto font-semibold">
             <p>Don’t have an account? Click here to 
