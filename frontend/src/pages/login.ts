@@ -6,13 +6,13 @@ export default function Login() {
     <div class="absolute  w-[400px] h-[250px] bg-cyan-300 rounded-full blur-[60px] opacity-90 rotate-[45deg] top-[230px] left-[340px]"></div>
     <div class="absolute  w-[400px] h-[250px] bg-[rgb(208,46,164)] rounded-full blur-[80px] opacity-90 rotate-[45deg]  top-[550px] left-[560px]"></div>
     <div class="relative h-[600px] w-[480px] pt-[40px] pb-[60px] items-center px-[50px] bg-black rounded-[50px] backdrop-blur-[10px] ml-[1580px] ">
-      <form action="">
+      <form id="loginForm" action="">
         <h2
             class="text-white text-center font-glitch text-[1.5em] leading-[35px] tracking-[2px] mt-[5px] mb-[20px]">
           Step Into Your World ..
         </h2>
         <div class="input-box">
-          <input 
+          <input id="userName"
             type="text" 
             required 
             placeholder="User name" 
@@ -25,7 +25,7 @@ export default function Login() {
         </div>
 
         <div class="input-box mt-4">
-          <input 
+          <input id="password"
             type="password" 
             required 
             placeholder="Password" 
@@ -95,6 +95,14 @@ export function LoginEventListener(){
   const register=document.getElementById("register-link");
   register?.addEventListener("click", () => {navigate("/register");  
   });
+  // const form = document.getElementById("loginForm") as HTMLFormElement | null;
+  // if(!form){
+  //   console.error("login form not found in the DOM");
+  //   return;
+  // }
+  // form.addEventListener("login-btn", async (e) =>{
+  //   e.preventDefault();
+  // })
   const btn=document.getElementById("login-btn");
   btn?.addEventListener("click", () => {navigate("/home");
   });

@@ -1,13 +1,17 @@
+import "./config/env.js"
 import Fastify from "fastify";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import fastifyJwt from "@fastify/jwt";
 import fastifyCors from "@fastify/cors";
 import { registerRoutes } from "./routes/register.js";
 import { loginRoutes } from "./routes/login.js";
 import { googleAuthRoutes } from "./routes/googleAuth.js";
 import { intra42AuthRoutes } from "./routes/fortyTwoAuth.js";
+import { twoFactorRoutes } from "./routes/twoFactor.js"
+import { forgetPasswordRoute } from "./routes/forgetPassword.js";
+import { resetPasswordRoutes } from "./routes/resetPassword.js";
 
-dotenv.config();
+// dotenv.config();
 
 const fastify = Fastify({ logger: true });
 await fastify.register(fastifyCors, {
@@ -23,6 +27,9 @@ loginRoutes(fastify);
 googleAuthRoutes(fastify);
 fastify.register(intra42AuthRoutes);
 
+twoFactorRoutes(fastify)
+forgetPasswordRoute(fastify);
+resetPasswordRoutes(fastify);
 // Start server
 const start = async () => {
   try {
