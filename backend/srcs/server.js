@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import dotenv from "dotenv";
 import fastifyJwt from "@fastify/jwt";
+import fastifyCors from "@fastify/cors";
 import { registerRoutes } from "./routes/register.js";
 import { loginRoutes } from "./routes/login.js";
 import { googleAuthRoutes } from "./routes/googleAuth.js";
@@ -9,7 +10,10 @@ import { intra42AuthRoutes } from "./routes/fortyTwoAuth.js";
 dotenv.config();
 
 const fastify = Fastify({ logger: true });
-
+await fastify.register(fastifyCors, {
+  origin: "http://localhost:5173",
+  credentials: true,
+});
 // JWT setup
 fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET });
 
