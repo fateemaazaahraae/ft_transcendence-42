@@ -1,13 +1,13 @@
 import { navigate } from "../main.ts";
 export default function Login() {
-  return `<div class="min-h-screen w-full flex items-center justify-center gap-[80px] relative pt-[7%] md:pt-[3%]">
+  return `<div class="min-h-screen w-full flex items-center justify-center relative pt-[7%] md:pt-[2%]">
 
-    <div class="relative inset-0 items-center h-[690px] md:h-full w-full md:w-[820px] pt-[80px] pb-[60px] px-[20px] md:px-[150px] rounded-[50px] overflow-hidden ml-[1%] ">
+    <div class="relative inset-0 items-center h-[690px] md:h-full w-full md:w-[820px] pt-[60px] mr-30 pb-[60px] px-[20px] md:px-[150px] rounded-[50px] overflow-hidden ">
 
-        <div class="absolute rounded-full blur-[55px] opacity-80  w-[170px] h-[240px] md:w-[400px] md:h-[250px] bg-[#35C6DDE5] left-[calc(50%-175px)] md:left-[calc(50%-320px)]  top-[20%] md:top-[19%] -rotate-[20deg] md:rotate-[63deg]"></div>
+        <div class="absolute rounded-full blur-[55px] opacity-80  w-[170px] h-[240px] md:w-[400px] md:h-[250px] bg-[#35C6DDE5] left-[calc(50%-175px)] md:left-[calc(50%-320px)]  top-[15%] md:top-[19%] -rotate-[20deg] md:rotate-[63deg]"></div>
         <div class="absolute rounded-full blur-[55px] opacity-100 w-[130px] h-[260px] md:w-[400px] md:h-[250px] bg-[#D02EA48A] right-[calc(50%-146px)] md:left-[calc(50%-60px)] md:bottom-[60%] top-[50%] md:top-[53%] -rotate-[35deg] md:rotate-[45deg]"></div>
 
-        <div class="relative inset-0 m-auto w-[320px] md:w-[480px] lg:w-[480px] h-[430px] md:h-full px-2 sm:px-6 py-6 sm:py-10 pt-[40px] pb-[60px] items-center bg-black rounded-[40px] md:rounded-[50px] backdrop-blur-[10px] mt-[50px]">
+        <div class="relative inset-0 m-auto w-[320px] md:w-[480px] lg:w-[480px] h-[500px] md:h-full px-2 sm:px-6 py-6 sm:py-10 pt-[40px] pb-[60px] items-center bg-black rounded-[40px] md:rounded-[50px] backdrop-blur-[10px] mt-[50px]">
           <form action="">
             <h2
                 class="text-white text-center font-glitch text-[1.1em] md:text-[1.5em] leading-[10px] md:leading-[35px] tracking-[2px] mt-[5px] mb-[25px]">
@@ -18,11 +18,11 @@ export default function Login() {
                 type="text" 
                 required 
                 placeholder="User name" 
-                class="block mx-auto w-[95%] h-[45px] md:h-[52px] px-5 items-center bg-black font-roboto text-white border-none rounded-[20px]
+                class="block mx-auto w-[85%] h-[40px] md:h-[52px] px-5 items-center bg-black font-roboto text-white border-none rounded-[20px]
                   shadow-[0_0_10px_rgba(53,198,221,0.9)] 
                   focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] 
                   text-[1.1em] md:text-[1.5em] font-medium outline-none
-                  placeholder:text-[0.8em] placeholder:text-gray-400 
+                  placeholder:text-[0.7em] placeholder:text-gray-400 
                   transition-shadow duration-400 ease-in-out">
             </div>
 
@@ -31,11 +31,11 @@ export default function Login() {
                 type="password" 
                 required 
                 placeholder="Password" 
-                class="block mx-auto w-[95%] h-[45px] md:h-[52px] px-5 items-center bg-black font-roboto text-white border-none rounded-[20px]
+                class="block mx-auto w-[85%] h-[40px] md:h-[52px] px-5 items-center bg-black font-roboto text-white border-none rounded-[20px]
                   shadow-[0_0_10px_rgba(53,198,221,0.9)] 
                   focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] 
                   text-[1.1em] md:text-[1.5em] font-medium outline-none
-                  placeholder:text-[0.8em] placeholder:text-gray-400 
+                  placeholder:text-[0.7em] placeholder:text-gray-400 
                   transition-shadow duration-400 ease-in-out">
             </div>
             <div class="flex p-[20px] font-roboto items-center justify-between mt-3">
@@ -59,33 +59,31 @@ export default function Login() {
               </a>
             </div>
             <button type="submit" id="login-btn"
-              class="flex w-[45%] h-[37px] md:h-[43px] font-glitch items-center justify-center mx-auto leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[20px] py-[7px] rounded-[50px] cursor-pointer md:mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
+              class="flex w-[40%] h-[30px] md:h-[43px] font-glitch items-center justify-center mx-auto leading-[35px] bg-[#35C6DDB5] text-white text-[1.0em] tracking-[2px] px-[20px] py-[7px] rounded-[50px] cursor-pointer mt-4 md:mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
               Login
             </button>
-            <div class="flex items-center my-[15px] md:my-[30px]">
-            <div class="flex-1 border-b-2 border-[#35C6DDE5] opacity-70"></div>
+            <div class="flex items-center mt-[35px] mb-[20px] md:my-[30px]">
+            <div class="flex-1 border-b-[1px] md:border-b-2 ml-[15px] border-[#35C6DDE5] opacity-70"></div>
             <span class="px-3 text-[#35C6DDE5] font-roboto text-[0.7em] md:text-[1.0em] font-semibold">
               Or you can join with
             </span>
-            <div class="flex-1 border-b-2 border-[#35C6DDE5] opacity-70"></div>
+            <div class="flex-1 border-b-[1px] md:border-b-2 mr-[15px] border-[#35C6DDE5] opacity-70"></div>
           </div>
 
-            <div class="social-icons flex text-white text-[1.5em] md:text-[2.1em] gap-[15px] justify-center cursor-pointer mt-2">
+            <div class="social-icons flex text-white text-[1.5em] md:text-[2.1em] gap-[15px] justify-center cursor-pointer mb-[20px] md:mt-2">
                 <i class="fa-brands fa-google"></i>
                 <i class="fa-brands fa-github"></i>
             </div>
-            <div class="text-white mt-3 md:mt-9 text-center text-[0.7em] md:text-[0.9em] font-roboto font-semibold">
-                <p>Don’t have an account? Click here to 
-                <a href="" id="register-link" class="text-[#35C6DD] text-[0.7em] md:text-[0.9em] items-end font-bold border-b  hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">Register Now</a>
+            <div class="text-white mt-3 md:mt-9 text-center text-[0.8em] md:text-[0.9em] font-roboto font-semibold">
+                <p class="mb-[5px]">Don’t have an account? Click here to </p>
+                <a href="" id="register-link" class="text-[#35C6DD] text-[0.8em] md:text-[0.9em] items-end font-bold border-b  hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]"><p>Register Now</a>
                 </p>
 
             </div>
           </form>
-        <!--<div class="relative z-0 rounded-full blur-[65px] opacity-100 w-[300px] h-[200px] bg-[#D02EA4FF] top-[3%] bottom-[20%] left-240 right-[calc(50%-397px)] rotate-[140deg]"></div>-->
-
         </div>
         </div>
-      <img src="/images/white_boy22.svg" class="hidden lg:flex md:items-center md:justify-center md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)]">
+      <img src="/images/white_boy22.svg" class="hidden  lg:flex md:items-center md:justify-center mr-40 mt-[60px] md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)]">
   </div>
   `;
 }
@@ -102,6 +100,4 @@ export function LoginEventListener(){
   });
 }
 
-
-    // <!--<div class="absolute inset-0 rounded-[50px] bg-[conic-gradient(from_90deg,_#F40CA4_0deg,_transparent_180deg),_conic-gradient(from_90deg,_#35C6DD_180deg,_transparent_360deg)] animate-spin-slower"></div>-->
   
