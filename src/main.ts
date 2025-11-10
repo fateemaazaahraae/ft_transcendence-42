@@ -1,11 +1,12 @@
 import "./../styles/index.css";
 import Landing from "./pages/landing";
 import Chat, { OptionsChat ,closeChat} from './pages/Chat';
+import Home from "./pages/home.ts";
 
 
 
 // import Chat from "./pages/Chat";
-import Home from "./pages/home";
+
 import GameStyle from "./pages/gameStyle";
 import Game from "./pages/game";
 import Login from "./pages/login";
@@ -37,4 +38,25 @@ closeChat();
 // document.querySelector<HTMLDivElement>("#app")!.innerHTML = PageNotFound();
 
 
+export function navigate(path: string) {
+  window.location.href = path;
+}
 
+export function MoveToPage()
+{
+  const home = document.getElementById("home");
+  const settings = document.getElementById("settings");
+  
+  home?.addEventListener("click", () => {
+    navigate("home.ts");
+  });
+  
+  settings?.addEventListener("click", () => {
+    navigate("settings.ts");
+  });
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  MoveToPage();
+});

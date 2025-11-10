@@ -1,3 +1,6 @@
+import { MoveToPage } from '../main'
+MoveToPage();
+
 export default function Settings() {
   const user = {
     firstName: "Fatima-zahrae",

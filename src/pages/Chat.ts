@@ -1,5 +1,4 @@
-//working on online status && input chat modification &&
-// closing chat page && clean list &&  contact list scroll
+import { navigate } from "../main.ts";
 export default function Chat() {
  
   return `
@@ -12,16 +11,16 @@ export default function Chat() {
        flex justify-around md:justify-normal items-center py-3 md:py-0
        md:bg-transparent md:backdrop-blur-0 z-50">
 
-      <i class="fa-solid fa-house text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i id="home" class="fa-solid fa-house text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out  "></i>
+      <i id="trophy" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
 
-      <i class="fa-solid fa-user-group  text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i id="userGroups" class="fa-solid fa-user-group  text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
       
       <div class="md:w-[40px] md:h-[40px] w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center mt-2 md:mt-2">
-        <i class="fa-solid fa-comments text-black text-[18px]"></i>
+        <i id="comments" class="fa-solid fa-comments text-black text-[18px]"></i>
       </div>
 
-      <i class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i id="settings" class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
     </aside>
   
       <!-- Controls Icons -->
@@ -44,7 +43,7 @@ export default function Chat() {
   <!-- chat side -->
 
  <div class="ml-[60px] h-screen w-screen flex items-center justify-center">
-    <div class="w-[70%] h-[600px] shadow-lg flex gap-4 overflow-hidden text-white">
+    <div id="contacts_side" class=" w-[80%] h-[700px] shadow-lg flex gap-4 overflow-hidden text-white">
 
       <!-- Sidebar: Chat Profiles -->
       <div class="w-1/2.5 bg-primary/60 rounded-xl  border-blue p-4 ">
@@ -170,7 +169,7 @@ export default function Chat() {
 
       <!-- Main Chat Window -->
       <div class="h-screen w-[80%]">
-    <div class="mr-[40px] w-[90%]  h-[600px] shadow-lg flex  overflow-hidden text-white">
+    <div class="mr-[40px] w-[90%]  h-[700px] shadow-lg flex  overflow-hidden text-white">
 
       <div id="chatContainer" class="flex-1 rounded-xl flex flex-col ">
           <!--<i class="fa-solid fa-ellipsis-vertical  text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>-->
@@ -191,23 +190,20 @@ export default function Chat() {
         </button>
 
       <div id="dropdownMenu" class="hidden absolute right-3 top-12 bg-#35C6DD backdrop-blur-md rounded-lg shadow-lg py-2 w-40 z-50">
-  <button class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
-    <i class="fas fa-circle-info"></i>
-    Contact Info
-  </button>
-  <button class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
-    <i class="fa-regular fa-heart "></i>
-    Add To Favorites
-  </button>
-  <button id="closeChat" class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
-    <i class="fa-regular fa-times-circle"></i>
-    Close Chat
-  </button>
-  <button class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
-    <i class="fa fa-ban"></i>
-    Block User
-  </button>
-</div>
+        <button class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
+          <i class="fas fa-circle-info"></i>
+          Contact Info
+        </button>
+        
+        <button id="closeChat" class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
+          <i class="fa-regular fa-times-circle"></i>
+          Close Chat
+        </button>
+        <button class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
+          <i class="fa fa-ban"></i>
+          Block User
+        </button>
+    </div>
 </div>
 
 
@@ -309,5 +305,15 @@ export function closeChat()
     dropdown?.classList.add("hidden");
   });
   
+}
+
+export function MoveToPage()
+{
+  const home=document.getElementById("home");
+  const settings = document.getElementById("settings");
+  home?.addEventListener("click",()=> {navigate("/home");
+  });
+  settings?.addEventListener("click",()=> {navigate("/settings");
+  });
 }
 
