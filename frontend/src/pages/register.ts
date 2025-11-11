@@ -1,75 +1,80 @@
 import { navigate } from "../main.ts";
 
 export default function Register() {
-  return `<div class="flex items-center gap-[170px] relative">
-        <img src="/public/blue-boy33.svg" alt="Blue Boy" class="w-[500px] h-auto mt-[7%] ml-[300px] drop-shadow-[0_0_17px_rgba(0,160,255,255.7)]">
-        <div class="absolute z-0 rounded-full blur-[55px] opacity-100 w-[300px] h-[500px] bg-[#D02EA48A] right-[calc(50%-798px)] bottom-[20%] top-[43%] -rotate-[20deg]"></div>
-        <div class="absolute z-0 rounded-full blur-[55px] opacity-100 w-[250px] h-[250px] bg-[#35C6DDE5] right-[calc(50%-410px)] top-[20%]"></div>
-        <div class="relative w-[530px] mt-[7%] pt-[2%] pb-[2%] px-[50px] bg-black rounded-[50px] blur-[10]">
-            <form id="registerForm" action="">
-                <h2
-                class="font-glitch font-extralight w-full text-[1.5em] leading-[35px] tracking-[2px] text-white mb-[20px] text-center">
-                Register Now !</h2>
-                <div class="flex justify-between gap-[10px] pb-[3px] pr-[5px] pl-0 w-[430px] my-[30px] bg-none rounded-[20px] ">
-                    <span class="icon"></span>
-                    <input id="firstName" type="text" required placeholder="First name" class="w-full h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
-                    <span class="icon"></span>
-                    <input id="lastName" type="text" required placeholder="Last name" class="w-full h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
-                </div>
-                <div class="flex justify-between gap-[10px] pb-[3px] pr-[5px] pl-0 w-[430px] my-[30px] bg-none rounded-[20px] ">
-                    <span class="icon"></span>
-                    <input id="userName" type="text" required placeholder="User name" class="w-full h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
-                </div>
-                <div class="flex justify-between gap-[10px] pb-[3px] pr-[5px] pl-0 w-[430px] my-[30px] bg-none rounded-[20px] ">
-                    <span class="icon"></span>
-                    <input id="email" type="email" required placeholder="Email" class="w-full h-[52px] px-[20px] py-[15px] bg-black text font-roboto-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
-                </div>
-                <div class="flex justify-between gap-[10px] pb-[3px] pr-[5px] pl-0 w-[430px] my-[30px] bg-none rounded-[20px] ">
-                    <span class="icon"></span>
-                    <input id ="password" type="password" required placeholder="Password" class="w-full h-[52px] px-[20px] py-[15px] bg-black text font-roboto-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
-                    <span class="icon"></span>
-                    <input id="confirmPassword" type="password" required placeholder="Confirm Password" class="w-full h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
-                </div>
-                <button type="submit" id="submit"
-                    class="flex w-[45%] h-[50px] font-glitch justify-center items-center ml-[110px] leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[15px] py-[10px] rounded-[50px] cursor-pointer mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
-                    Submit
-                </button>
-                <div class="flex items-center my-[30px]">
-                    <div class="flex-1 border-b-2 border-[#35C6DDE5] opacity-70"></div>
-                    <span class="px-3 text-[#35C6DDE5] font-roboto text-[1.0em] font-semibold">
-                    Or you can join with
-                    </span>
-                    <div class="flex-1 border-b-2 border-[#35C6DDE5] opacity-70"></div>
-                </div>
-                <div class="social-icons flex text-white text-[1.9em] gap-[15px] justify-center cursor-pointer mt-2">
-                    <a href="http://localhost:3000/auth/google">
-                        <i class="fa-brands fa-google"></i>
-                    </a>
-                    <a href="http://localhost:3000/auth/42">
-                         <img src="/public/intra42.png" class="mt-[15%] w-[45px]" />
-                    </a>
-                </div>
-                <div class="text-white mt-5 text-center text-[1.0em] font-roboto font-semibold">
-                    <p>Already a member? 
-                    <a href="" id="login-link" class="text-[#35C6DD] text-[0.9em] items-end font-bold border-b  hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">Login</a>
-                     </p>
+  return `<div class="min-h-screen w-full flex items-center justify-center gap-[170px] relative pt-[7%] md:pt-[3%]">
+        <img src="blue-boy33.svg" alt="Blue Boy" class="hidden lg:flex md:items-center md:justify-center w-[500px] h-auto mt-[7%] ml-[300px] drop-shadow-[0_0_17px_rgba(0,160,255,255.7)]">
+    <div class="relative inset-0 items-center h-[650px] md:h-[900px] w-[360px] md:w-[820px] pt-[80px] pb-[60px] px-[20px] rounded-[50px] overflow-hidden ml-[1%] ">
 
-                </div>
-            </form>
+    <div class="absolute rounded-full blur-[55px] opacity-70  w-[170px] h-[240px] md:w-[250px] md:h-[350px] bg-[#35C6DDE5] left-[calc(50%-175px)] md:left-[calc(50%-320px)]  top-[20%] md:top-[15%] -rotate-[20deg]"></div>
+    <div class="absolute rounded-full blur-[55px] opacity-100 w-[130px] h-[260px] md:w-[300px] md:h-[500px] bg-[#D02EA48A] right-[calc(50%-155px)] md:left-[calc(50%-8px)] md:bottom-[60%] top-[57%] md:top-[33%] -rotate-[35deg]"></div>
+    
+    <div class="relative inset-0 m-auto h-[490px] md:h-[650px] w-full md:w-[530px] mt-[7%] pt-[2%] pb-[2%] px-[10px] md:px-[50px] items-center bg-black rounded-[40px] md:rounded-[50px] blur-[10]">
+    <form id="registerForm" action="">
+        <h2
+        class="font-glitch font-extralight w-full text-[1.3em] md:text-[1.5em] leading-[35px] tracking-[2px] text-white mb-[20px] text-center pt-3 md:pt-0">
+        Register Now !</h2>
+        <div class="flex items-center justify-between gap-[10px] pb-0 md:pb-[3px] pr-[5px] pl-0 w-[290px] md:w-[430px] my-[17px] md:my-[30px] mx-auto bg-none rounded-[20px] ">
+            <span class="icon"></span>
+            <input id="firstName" type="text" required placeholder="First name" class="w-full h-[45px] md:h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
+            <span class="icon"></span>
+            <input id="lastName" type="text" required placeholder="Last name" class="w-full h-[45px] md:h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
         </div>
+        <div class="flex items-center justify-between gap-[10px] pb-0 md:pb-[3px] pr-[5px] pl-0 w-[290px] md:w-[430px] my-[17px] md:my-[30px] mx-auto bg-none rounded-[20px] ">
+            <span class="icon"></span>
+            <input id="userName" type="text" required placeholder="User name" class="w-full h-[45px] md:h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
+        </div>
+        <div class="flex items-center justify-between gap-[10px] pb-0 md:pb-[3px] pr-[5px] pl-0 w-[290px] md:w-[430px] my-[17px] md:my-[30px] mx-auto bg-none rounded-[20px] ">
+            <span class="icon"></span>
+            <input id="email" type="email" required placeholder="Email" class="w-full h-[45px] md:h-[52px] px-[20px] py-[15px] bg-black text font-roboto-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.9em] ">
+        </div>
+        <div class="flex items-center justify-between gap-[10px] pb-0 md:pb-[3px] pr-[5px] pl-0 w-[290px] md:w-[430px] my-[17px] md:my-[30px] mx-auto bg-none rounded-[20px] ">
+            <span class="icon"></span>
+            <input id="password" type="password" required placeholder="Password" class="w-full h-[45px] md:h-[52px] px-[20px] py-[15px] bg-black text font-roboto-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.8em] ">
+            <span class="icon"></span>
+            <input id="confirmPassword" type="password" required placeholder="Confirm Password" class="w-full h-[45px] md:h-[52px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[20px] placeholder:text-[0.8em] ">
+        </div>
+        <button type="submit" id="submit"
+            class="flex w-[45%] h-[37px] md:h-[50px] font-glitch justify-center items-center mx-auto leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[15px] py-[20px] rounded-[50px] cursor-pointer mt-5 md:mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
+            Submit
+        </button>
+        <div class="flex items-center my-[15px] md:my-[30px]">
+            <div class="flex-1 border-b-2 border-[#35C6DDE5] opacity-70"></div>
+            <span class="px-3 text-[#35C6DDE5] font-roboto text-[0.7em] md:text-[1.0em] font-semibold">
+            Or you can join with
+            </span>
+            <div class="flex-1 border-b-2 border-[#35C6DDE5] opacity-70"></div>
+        </div>
+        <div class="social-icons flex text-white text-[1.5em] md:text-[1.9em] gap-[15px] justify-center cursor-pointer mt-2">
+            <a href="http://localhost:3000/auth/google">
+              <i class="fa-brands fa-google"></i>
+            </a>
+            <a href="http://localhost:3000/auth/42">
+              <img src="/public/intra42.png" class="mt-[15%] w-[45px]" />
+            </a>
+        </div>
+        <div class="text-white mt-3 md:mt-5 text-center text-[0.8em] md:text-[1.0em] font-roboto font-semibold">
+            <p>Already a member? 
+            <a href="" id="login-link" class="text-[#35C6DD] text-[0.8em] md:text-[1.0em] items-end font-bold border-b  hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">Login</a>
+             </p>
+
+        </div>
+    </form>
+</div>
     </div>
-    `;
+
+
+</div>
+`;
 }
+
 
 export function RegisterEventListener() {
   // Login link navigation
   const login = document.getElementById("login-link");
   login?.addEventListener("click", (e) => {
-    e.preventDefault(); // prevent default anchor behavior
+    e.preventDefault(); 
     navigate("/login");
   });
-
-  // Form submission
   const form = document.getElementById("registerForm") as HTMLFormElement | null;
   if (!form) {
     console.error("Register form not found in the DOM");
