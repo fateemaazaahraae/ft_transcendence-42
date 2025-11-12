@@ -77,8 +77,8 @@ export default function ChoseAvatar() {
 
 export function ChoseAvatarEventListener() {
 
-  const sign= document.getElementById("sign");
-  sign?.addEventListener("click", () =>{navigate("/home");
+  const sign = document.getElementById("sign");
+  sign?.addEventListener("click", () => { navigate("/login");
   });
 
   // to change the border color when an avatar is selected
@@ -124,7 +124,3 @@ export function ChoseAvatarEventListener() {
 
   });
 }
-
-
-        // <div class="absolute rounded-full blur-[55px] opacity-80  w-[170px] h-[240px] md:w-[265px] md:h-[170px] bg-[#35C6DDE5] left-[calc(50%-175px)] md:left-[calc(50%-320px)]  top-[15%] md:top-[24%] -rotate-[20deg] md:rotate-[63deg]"></div>
-        // <div class="absolute rounded-full blur-[55px] opacity-110 w-[90px] h-[300px] md:w-[300px] md:h-[250px] bg-[#D02EA48A] right-[calc(50%-106px)] md:left-[calc(50%-20px)] md:bottom-[60%] top-[40%] md:top-[48%] -rotate-[35deg] md:rotate-[45deg]"></div>

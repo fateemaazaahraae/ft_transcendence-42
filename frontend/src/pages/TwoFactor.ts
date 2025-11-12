@@ -39,7 +39,7 @@ export default function TwoFactor() {
 
 export function FactorEventListener(){
     const verify= document.getElementById("verify");
-    verify?.addEventListener("click", () =>{navigate("/changepw");
+    verify?.addEventListener("click", () =>{navigate("/home");
     }); 
 }
 

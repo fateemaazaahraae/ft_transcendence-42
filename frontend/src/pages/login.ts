@@ -93,8 +93,9 @@ export default function Login() {
 }
 
 export function LoginEventListener(){
-  const password=document.getElementById("pw");
-  password?.addEventListener("click", () => {navigate("/resetpw");
+  const password = document.getElementById("pw");
+  password?.addEventListener("click", () => {
+    navigate("/resetpw");
   });
   const register=document.getElementById("register-link");
   register?.addEventListener("click", (e) => {
@@ -127,7 +128,7 @@ export function LoginEventListener(){
     }
     catch(err){
       console.error("Network or server error:", err);
-      alert("Network error. Please try again.");
+      alert("Network hna error. Please try again." + err);
     }
   }) ;
   
