@@ -1,4 +1,6 @@
 import { navigate } from "../main.ts";
+import { showAlert } from "../utils/alert.ts";
+
 export default function Login() {
   return `<div class="min-h-screen w-full flex items-center justify-center relative pt-[7%] md:pt-[2%]">
 
@@ -92,7 +94,7 @@ export default function Login() {
   `;
 }
 
-export function LoginEventListener(){
+export function LoginEventListener() {
   const password = document.getElementById("pw");
   password?.addEventListener("click", () => {
     navigate("/resetpw");
@@ -103,7 +105,7 @@ export function LoginEventListener(){
     navigate("/register");  
   });
 
-  const  form = document.getElementById("loginForm") as HTMLFormElement | null;
+  const form = document.getElementById("loginForm") as HTMLFormElement | null;
   if (!form) {
     console.error("Register form not found in the DOM");
     return;
@@ -113,7 +115,7 @@ export function LoginEventListener(){
     const userName = (document.getElementById("userName") as HTMLInputElement).value;
     const password = (document.getElementById("password") as HTMLInputElement).value;
 
-    try{
+    try {
       const res = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: {"Content-Type": "application/json" },
@@ -121,14 +123,17 @@ export function LoginEventListener(){
       });
       const data = await res.json();
       if (!res.ok){
-        alert(data.error || "login failed");
+        showAlert(data.error || "login failed");
         return;
       }
+      localStorage.setItem("userId", data.userId);
+      localStorage.setItem("token", data.token);
+      await showAlert("Login goes successfully", "success");
       navigate("/TwoFactor");
     }
     catch(err){
       console.error("Network or server error:", err);
-      alert("Network hna error. Please try again." + err);
+      showAlert("Network hna error. Please try again." + err);
     }
   }) ;
   

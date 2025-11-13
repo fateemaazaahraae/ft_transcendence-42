@@ -13,8 +13,6 @@ export function loginRoutes(fastify) {
                 return reply.code(400).send({ error: "User name is required" });
             if (!password)
                 return reply.code(400).send({ error: "Password is required" });
-            console.log("\n\n------> here -------\n\n")
-            console.log("\n\n------> here -------\n\n")
             const user = await findUserByUserName(userName);
             if (!user) {
                 return reply.code(400).send({ error: "User name or password is incorrect" });

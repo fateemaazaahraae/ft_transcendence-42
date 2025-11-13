@@ -27,7 +27,7 @@ export function generate2FACode() {
 }
 
 export async function sendResetEmail(email, token) {
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`
+    const resetUrl = `${process.env.FRONTEND_URL}/changepw?token=${token}`
     await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: email,

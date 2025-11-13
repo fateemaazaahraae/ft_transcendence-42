@@ -1,4 +1,5 @@
 import { navigate } from "../main.ts";
+import { showAlert } from "../utils/alert.ts";
 
 export default function Register() {
   return `<div class="min-h-screen w-full flex items-center justify-center gap-[170px] relative pt-[7%] md:pt-[3%]">
@@ -101,16 +102,17 @@ export function RegisterEventListener() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.error || "Registration failed");
+        showAlert(data.error || "Registration failed");
         return;
       }
 
       // Registration successful
+      showAlert("Registration goes successfully", "success");
       navigate("/ChoseAvatar");
 
     } catch (err) {
       console.error("Network or server error:", err);
-      alert("Network error. Please try again.");
+      showAlert("Network error. Please try again.");
     }
   });
 }

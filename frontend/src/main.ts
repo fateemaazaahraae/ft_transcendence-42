@@ -83,9 +83,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
 const urlParams = new URLSearchParams(window.location.search);
 const token = urlParams.get("token");
-if (token) {
-  localStorage.setItem("jwt", token);
+// if (token) {
+//   localStorage.setItem("jwt", token);
 
-  window.history.replaceState({}, document.title, "/home");
-  window.location.href = "/home";
-}
+//   window.history.replaceState({}, document.title, "/home");
+//   window.location.href = "/home";
+// }

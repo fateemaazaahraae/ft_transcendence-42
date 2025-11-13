@@ -1,4 +1,5 @@
 import { navigate } from "../main.ts";
+import { showAlert } from "../utils/alert.ts";
 
 export default function TwoFactor() {
   return `<div class="min-h-screen w-full flex items-center justify-center gap-[8px] relative pt-[3%]">
@@ -9,13 +10,13 @@ export default function TwoFactor() {
         <div class="absolute rounded-full blur-[55px] opacity-110 w-[90px] h-[300px] md:w-[300px] md:h-[220px] bg-[#D02EA48A] right-[calc(50%-106px)] md:left-[calc(50%-17px)] md:bottom-[60%] top-[33%] md:top-[42%] -rotate-[35deg] md:rotate-[45deg]"></div>
 
         <div class="relative inset-0 m-auto w-[320px] md:w-[480px] lg:w-[480px] h-[230px] md:h-[300px] px-2 sm:px-6 py-6 sm:py-10 pt-[40px] pb-[60px] items-center bg-black rounded-[40px] md:rounded-[50px] backdrop-blur-[10px] mt-[50px]">
-          <form action="">
+          <form action="" id="2FAform">
             <h2
                 class="text-white text-center font-glitch text-[1.0em] md:text-[1.5em] leading-[10px] md:leading-[35px] tracking-[2px] mt-[5px] mb-[30px]">
               Two-factor authentication
             </h2>
             <div class="input-box">
-            <input type="text" inputmode="numeric" pattern="[0-9]*"inputmode="numeric"  maxlength="6"
+            <input id="2fa" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6"
             required 
             placeholder="Enter 6-digits" 
                 class="block mx-auto w-[95%] h-[45px] md:h-[52px] px-5 items-center bg-black font-roboto text-white border-none rounded-[20px]
@@ -37,10 +38,33 @@ export default function TwoFactor() {
   `;
 }
 
-export function FactorEventListener(){
-    const verify= document.getElementById("verify");
-    verify?.addEventListener("click", () =>{navigate("/home");
-    }); 
+export function FactorEventListener() {
+  const form = document.getElementById("2FAform") as HTMLFormElement | null;
+  if (!form) {
+    console.error("2FA form not found in DOM");
+    return ;
+  }
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const code = (document.getElementById("2fa") as HTMLInputElement).value;
+    try {
+      const userId = localStorage.getItem("userId");
+      const res = await fetch("http://localhost:3000/verify-2fa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, code })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showAlert(data.error || "2fa failed");
+        return ;
+      }
+      showAlert("2FA code verified successfully", "success");
+      navigate("/home")
+    }
+    catch(err) {
+      console.log("Network or server error: ", err);
+      showAlert("Network or server error: " + err);
+    }
+  }) 
 }
-
-

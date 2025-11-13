@@ -1,4 +1,6 @@
-import { navigate } from "../main.ts";
+// import { navigate } from "../main.ts";
+import { showAlert } from "../utils/alert.ts";
+
 export default function ResetPw() {
   return `<div class="min-h-screen w-full flex items-center justify-center gap-[8px] relative pt-[3%]">
 
@@ -58,14 +60,14 @@ export function ResetPwEventListener(){
       });
       const data = await res.json();
       if (!res.ok){
-        alert(data.error || "login failed");
+        showAlert(data.error || "login failed");
         return ;
       }
-      alert("Check your email we sent you a link to reset you password");
+      showAlert("Check your email we sent you a link to reset you password", "success");
     }
     catch(err) {
       console.log("Network or server error: ", err)
-      alert("Netword error. Please try again");
+      showAlert("Netword error. Please try again");
     }
   })
 }
