@@ -5,7 +5,7 @@ export function googleAuthRoutes(fastify) {
   fastify.get("/auth/google/callback", async (request, reply) => {
     try {
       const code = request.query.code;
-      if (!code) return reply.redirect(`http://localhost:5173/login`);
+      if (!code) return reply.redirect(`http://localhost/login`);
 
       const params = new URLSearchParams();
       params.append("code", code);
@@ -49,7 +49,7 @@ export function googleAuthRoutes(fastify) {
 
       const jwtToken = fastify.jwt.sign({ id: user.id, userName: user.userName });
 
-      return reply.redirect(`http://localhost:5173/?token=${jwtToken}`);
+      return reply.redirect(`http://localhost/home?token=${jwtToken}`);
     } catch (err) {
       console.error(err);
       return reply.code(500).send({ error: "Google OAuth failed" });
