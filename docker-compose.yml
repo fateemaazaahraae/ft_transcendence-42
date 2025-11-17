@@ -8,11 +8,21 @@ services:
     container_name: frontend
     volumes:
       - ./frontend:/app
-      - /app/node_modules
     networks:
       - ft_transcendence
     expose:
       - "5173"
+  
+  auth-service:
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile
+    image: auth-service
+    container_name: auth-service
+    ports:
+      - "3000:3000"
+    networks:
+      - ft_transcendence
 
   nginx:
     build:
@@ -24,8 +34,10 @@ services:
       - "80:80"
     depends_on:
       - frontend
+      - auth-service
     networks:
       - ft_transcendence
+
 
 networks:
   ft_transcendence:

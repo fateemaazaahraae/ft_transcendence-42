@@ -80,3 +80,12 @@ window.addEventListener("DOMContentLoaded", () => {
     LanguagesMenuEventListener();
     // viewFriend();
 });
+
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get("token");
+// if (token) {
+//   localStorage.setItem("jwt", token);
+
+//   window.history.replaceState({}, document.title, "/home");
+//   window.location.href = "/home";
+// }

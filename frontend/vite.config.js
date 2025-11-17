@@ -5,9 +5,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     allowedHosts: [
-      "sabrina-lateenrigged-unapprehensively.ngrok-free.dev"
+      "frontend", // <-- add this
+      "localhost",
+      "0.0.0.0",
     ],
-    host: true,
+    host: true, // already listens on all interfaces
     port: 5173,
     fs: {
       strict: false,
