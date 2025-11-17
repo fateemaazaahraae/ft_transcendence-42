@@ -63,7 +63,7 @@ export function intra42AuthRoutes(fastify) {
 
     const jwtToken = fastify.jwt.sign({ id: user.id, userName: user.userName });
 
-    return reply.redirect(`http://localhost:5173/?token=${jwtToken}`);
+    return reply.redirect(`http://localhost/home?token=${jwtToken}`);
   });
 
 }

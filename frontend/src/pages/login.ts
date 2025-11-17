@@ -82,9 +82,7 @@ export default function Login() {
             </div>
             <div class="text-white mt-3 md:mt-9 text-center text-[0.8em] md:text-[0.9em] font-roboto font-semibold">
                 <p class="mb-[5px]">Don’t have an account? Click here to </p>
-                <a href="" id="register-link" class="text-[#35C6DD] text-[0.8em] md:text-[0.9em] items-end font-bold border-b  hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]"><p>Register Now</a>
-                </p>
-
+                <a href="" id="register-link" class="text-[#35C6DD] text-[0.8em] md:text-[0.9em] items-end font-bold border-b  hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">Register Now</a>
             </div>
           </form>
         </div>
