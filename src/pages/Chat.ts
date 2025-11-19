@@ -73,8 +73,8 @@ export default function Chat() {
                                   <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
                                   </div>
                                   <div>
-                                    <p class="font-medium text-secondary ">Bouchra</p>
-                                    <p class="text-sm text-gray-200">Hey, how are you?</p>
+                                    <p class="font-medium text-sm text-secondary ">Bouchra</p>
+                                    <p class="text-xs text-gray-200">Hey, how are you?</p>
                                   </div>
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
@@ -83,8 +83,8 @@ export default function Chat() {
                                   <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
                                 </div>
                                 <div>
-                                  <p class="font-medium text-secondary">Boy</p>
-                                  <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                                  <p class="font-medium text-sm text-secondary">Boy</p>
+                                  <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                                 </div>
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
@@ -94,8 +94,8 @@ export default function Chat() {
                                 </div>                
                         
                               <div>
-                                <p class="font-medium text-secondary ">Boy</p>
-                                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                                <p class="font-medium text-sm text-secondary ">Boy</p>
+                                <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                               </div>
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
@@ -105,8 +105,8 @@ export default function Chat() {
                                 </div> 
                           
                                 <div>
-                                  <p class="font-medium text-secondary ">Boy</p>
-                                  <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                                  <p class="font-medium text-sm text-secondary ">Boy</p>
+                                  <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                                 </div>
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
@@ -116,8 +116,8 @@ export default function Chat() {
                               </div> 
                           
                               <div>
-                                <p class="font-medium text-secondary ">Boy</p>
-                                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                                <p class="font-medium text-sm text-secondary ">Boy</p>
+                                <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                               </div>
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
@@ -127,8 +127,8 @@ export default function Chat() {
                               </div> 
                           
                               <div>
-                                <p class="font-medium text-secondary ">Boy</p>
-                                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                                <p class="font-medium text-sm text-secondary ">Boy</p>
+                                <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                               </div>
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
@@ -138,8 +138,8 @@ export default function Chat() {
                               </div> 
                           
                               <div>
-                                <p class="font-medium text-secondary ">Boy</p>
-                                <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                                <p class="font-medium text-sm text-secondary ">Boy</p>
+                                <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                               </div>
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
@@ -149,8 +149,8 @@ export default function Chat() {
                             </div> 
                           
                           <div>
-                            <p class="font-medium text-secondary ">Boy</p>
-                            <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                            <p class="font-medium text-sm text-secondary ">Boy</p>
+                            <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                           </div>
                       </div>
                         <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
@@ -160,8 +160,8 @@ export default function Chat() {
                             </div>
                             </div> 
                             <div>
-                              <p class="font-medium text-secondary ">Boy</p>
-                              <p class="text-sm text-gray-200">Let's meet tomorrow</p>
+                              <p class="font-medium text-sm text-secondary ">Boy</p>
+                              <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                             </div>
                         </div>
     </div>
@@ -179,8 +179,8 @@ export default function Chat() {
         <div class="flex items-center gap-3">
           <img src="../images/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
           <div>
-            <p class=" text-secondary font-bold ">Bouchra</p>
-            <p class="text-sm text-gray-200">Online</p>
+            <p class=" text-secondary font-bold text-sm">Bouchra</p>
+            <p class="text-xs text-gray-200">Online</p>
           </div>
         </div>
         
@@ -212,24 +212,24 @@ export default function Chat() {
           
           <!-- Message from other user (left side - receiver) -->
           <div class="flex items-start">
-            <img src="../images/green-girl.svg" class="w-14 h-14 object-cover mr-3 border border-primary rounded-full flex-shrink-0">
-            <div class="bg-primary/65 text-white p-3 rounded-3xl max-w-[60%]">
+            <img src="../images/green-girl.svg" class="w-[50px] h-[50px] object-cover mr-3 border border-primary rounded-full flex-shrink-0">
+            <div class="bg-primary/65 text-sm text-white p-3 rounded-3xl max-w-[60%]">
               Hi Salma, how are you?
             </div>
           </div>
           
           <!-- Message from current user (right side - sender) -->
           <div class="flex items-start justify-end">
-            <div class="bg-primary/65 text-white p-3 rounded-3xl max-w-[60%]">
+            <div class="bg-primary/65 text-sm text-white p-3 rounded-3xl max-w-[60%]">
               Hey Bouchra! I'm doing great, thanks!
             </div>
-            <img src="../images/green-girl.svg" class="w-14 h-14 object-cover ml-3 border border-primary rounded-full flex-shrink-0">
+            <img src="../images/green-girl.svg" class="w-[50px] h-[50px] object-cover ml-3 border border-primary rounded-full flex-shrink-0">
           </div>
           
           <!-- Message from other user (left side - receiver) -->
           <div class="flex items-start">
-            <img src="../images/green-girl.svg" class="w-14 h-14 object-cover mr-3 border border-primary rounded-full flex-shrink-0">
-            <div class="bg-primary/65 text-white p-3 rounded-3xl max-w-[60%]">
+            <img src="../images/green-girl.svg" class="w-[50px] h-[50px] object-cover mr-3 border border-primary rounded-full flex-shrink-0">
+            <div class="bg-primary/65 text-sm text-white p-3 rounded-3xl max-w-[60%]">
               Want to catch up later?
             </div>
           </div>
