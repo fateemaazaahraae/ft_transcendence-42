@@ -1,4 +1,5 @@
 import { navigate } from "../main.ts";
+import { requiredAuth } from "../utils/authGuard.ts";
 
 let friendsList = [
   { name: "smith", color: "bg-greenAdd", img: "../../public/blue-boy.svg" },
@@ -10,6 +11,8 @@ let friendsList = [
 ];
 
 export default function Friends() {
+  if (!requiredAuth())
+    return "";
   return `
   <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
 

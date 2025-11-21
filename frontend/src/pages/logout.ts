@@ -25,7 +25,12 @@ export function initLogout(){
 
   cancel.addEventListener("click", hideModal);
   overlay.addEventListener("click", hideModal);
-  confirm?.addEventListener("click", ()=>{hideModal();
+  confirm?.addEventListener("click", () => {
+    hideModal();
+
+    localStorage.removeItem("userId");
+    localStorage.removeItem("token");
+    localStorage.clear();
     navigate("/");
   });
 }

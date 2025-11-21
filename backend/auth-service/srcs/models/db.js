@@ -15,7 +15,11 @@ export async function openDb(){
             lastName TEXT NOT NULL,
             userName TEXT NOT NULL,
             email TEXT NOT NULL,
-            passwordHash TEXT NOT NULL
+            passwordHash TEXT NOT NULL,
+            gender TEXT,
+            age INTEGER,
+            profileImage TEXT,
+            isTwoFactorEnabled INTEGER DEFAULT 0
             )`
     );
 

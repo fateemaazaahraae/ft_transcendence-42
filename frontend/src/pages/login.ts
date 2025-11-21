@@ -126,8 +126,16 @@ export function LoginEventListener() {
       }
       localStorage.setItem("userId", data.userId);
       localStorage.setItem("token", data.token);
-      await showAlert("Login goes successfully", "success");
-      navigate("/TwoFactor");
+      if (data.isTwoFactorEnabled === 1)
+      {
+        await showAlert("Check your email - Verification code sent", "success");
+        navigate("/TwoFactor");
+      }
+      else
+      {
+        await showAlert("Login goes successfully", "success");
+        navigate("/home");
+      }
     }
     catch(err){
       console.error("Network or server error:", err);

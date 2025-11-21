@@ -21,24 +21,34 @@ export function loginRoutes(fastify) {
             if (!passwordMatch)
                 return reply.code(400).send({ error: "User name or password is uncorrect" });
             
-            //2FA
-            const code = generate2FACode();
-            const expireAt = Date.now() + 5 * 60 * 1000;
-            
-            await save2FACode(user.id, code, expireAt);
-            await send2FACode(user.email, code);
-
             //generate JWT
             const token = fastify.jwt.sign(
                 {id: user.id, email: user.email},
                 { expiresIn: "7d"}
             )
 
-            return reply.code(201).send({
-                message: "Check you email, we sent a verification code",
+            //2FA
+            if (user.isTwoFactorEnabled === 1)
+            {
+                const code = generate2FACode();
+                const expireAt = Date.now() + 5 * 60 * 1000;
+                
+                await save2FACode(user.id, code, expireAt);
+                await send2FACode(user.email, code);
+                return reply.code(200).send({
+                    message: "Check your email, we sent a verification code",
+                    userId: user.id,
+                    token,
+                    isTwoFactorEnabled: user.isTwoFactorEnabled
+                });
+            }
+
+            return reply.code(200).send({
+                message: "Login successful",
                 userId: user.id,
-                token
-             });
+                token,
+                isTwoFactorEnabled: user.isTwoFactorEnabled
+            });
         }
         catch (err) {
             console.error(err);

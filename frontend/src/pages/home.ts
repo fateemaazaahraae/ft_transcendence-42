@@ -1,5 +1,9 @@
 import { navigate } from "../main.ts";
+import { requiredAuth } from "../utils/authGuard.ts";
+
 export default function Home() {
+  if (!requiredAuth())
+    return "";
   const user = {
     name: "Keltoum",
     username: "koki",

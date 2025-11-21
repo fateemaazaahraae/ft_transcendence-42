@@ -10,9 +10,9 @@ export async function createUser(firstName, lastName, userName, email, password)
   const id = uuidv4();
 
   await db.run(
-    `INSERT INTO users(id, firstName, lastName, userName, email, passwordHash)
-      VALUES(?, ?, ?, ?, ?, ?)`,
-      [id, firstName, lastName, userName, email,passwordHash]
+    `INSERT INTO users(id, firstName, lastName, userName, email, passwordHash, isTwoFactorEnabled)
+      VALUES(?, ?, ?, ?, ?, ?, ?)`,
+      [id, firstName, lastName, userName, email, passwordHash, 0]
   );
   return {id, firstName, lastName, userName, email, passwordHash};
 }

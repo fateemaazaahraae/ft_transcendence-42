@@ -1,5 +1,9 @@
-export default function Game(){
-  const game={
+import { requiredAuth } from "../utils/authGuard";
+
+export default function Game() {
+  if (!requiredAuth())
+    return "";
+  const game= {
     match:[
     {
       player1:{

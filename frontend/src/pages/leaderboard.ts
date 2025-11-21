@@ -1,4 +1,8 @@
+import { requiredAuth } from "../utils/authGuard";
+
 export default function Leaderboard() {
+  if (!requiredAuth())
+    return "";
   const topThree = [
     { rank: "1", name: "Smith", img: "../../public/blue-boy.svg", score: "6.359" },
     { rank: "2", name: "Kayla", img: "../../public/pink-girl.svg", score: "6.258" },
