@@ -33,7 +33,7 @@ export default function Chat() {
         <ul class="absolute mt-1 rounded-md hidden group-hover:block bg-black/80 p-2">
           <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">En</li>
           <li class=q"px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Fr</li>
-          <li class="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Ar</li>
+          <licontacts_sideclass="px-4 py-2 hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out">Ar</li>
         </ul>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
@@ -42,8 +42,8 @@ export default function Chat() {
 
   <!-- chat side -->
 
- <div class="ml-[60px] h-screen w-screen flex items-center justify-center">
-    <div id="contacts_side" class=" w-[80%] h-[700px] shadow-lg flex gap-4 overflow-hidden text-white">
+ <div class="ml-[60px]  h-screen w-screen flex items-center justify-center ml-0 md:ml-[60px]  md:h-screen flex items-center justify-center pt-23 pb-6 md:py-0 md:px-0">
+    <div id="contacts_side" class=" w-[90%] md:mx-auto h-[700px] shadow-lg flex gap-4 overflow-hidden text-white">
 
       <!-- Sidebar: Chat Profiles -->
       <div class="w-1/2.5 bg-primary/60 rounded-xl  border-blue p-4 ">
