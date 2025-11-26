@@ -168,8 +168,8 @@ export default function Chat() {
       </div>
 
       <!-- Main Chat Window -->
-      <div class="h-screen w-[80%]">
-    <div class="mr-[40px] w-[90%]  h-[700px] shadow-lg flex  overflow-hidden text-white">
+      <div class="h-screen w-[80%] ">
+    <div class="mr-10 md:mr-[40px] w-[90%]  h-[700px] shadow-lg flex  overflow-hidden text-white">
 
       <div id="chatContainer" class="flex-1 rounded-xl flex flex-col ">
           <!--<i class="fa-solid fa-ellipsis-vertical  text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>-->
