@@ -11,16 +11,16 @@ export default function Chat() {
        flex justify-around md:justify-normal items-center py-3 md:py-0
        md:bg-transparent md:backdrop-blur-0 z-50">
 
-      <i id="home" class="fa-solid fa-house text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out  "></i>
-      <i id="trophy" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i data-path="/home"  id="home" class="fa-solid fa-house text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out  "></i>
+      <i data-path="/leaderboard" id="trophy" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
 
-      <i id="userGroups" class="fa-solid fa-user-group  text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i  data-path="/friends" id="userGroups" class="fa-solid fa-user-group  text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
       
       <div class="md:w-[40px] md:h-[40px] w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center mt-2 md:mt-2">
-        <i id="comments" class="fa-solid fa-comments text-black text-[18px]"></i>
+        <i  data-path="/chat" id="comments" class="fa-solid fa-comments text-black text-[18px]"></i>
       </div>
 
-      <i id="settings" class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i data-path="/settings"  id="settings" class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
     </aside>
   
       <!-- Controls Icons -->
@@ -307,13 +307,7 @@ export function closeChat()
   
 }
 
-export function MoveToPage()
-{
-  const home=document.getElementById("home");
-  const settings = document.getElementById("settings");
-  home?.addEventListener("click",()=> {navigate("/home");
-  });
-  settings?.addEventListener("click",()=> {navigate("/settings");
-  });
+export function ChatEventListener() {
+    OptionsChat();
+    closeChat();
 }
-
