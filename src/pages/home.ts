@@ -115,12 +115,12 @@ export default function Home() {
          md:bg-transparent md:backdrop-blur-0 z-50">
 
          <div class="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center">
-          <i data-path="/home" class="fa-solid fa-house text-[18px] text-black"></i>
+          <i class="fa-solid fa-house text-[18px] text-black"></i>
         </div>
-        <i data-path="/leaderboard"  class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-        <i data-path="/friends"  class="fa-solid fa-user-group text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-        <i data-path="/chat"  class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-        <i data-path="/settings" class="fa-solid fa-gear text-primary hover:text-secondary transition-all duration-400 ease-in-out text-[18px]"></i>
+        <i class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+        <i class="fa-solid fa-user-group text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+        <i class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+        <i class="fa-solid fa-gear text-primary hover:text-secondary transition-all duration-400 ease-in-out text-[18px]"></i>
 
     </aside>
 

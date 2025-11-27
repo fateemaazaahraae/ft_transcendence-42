@@ -1,63 +1,62 @@
 import "./../styles/index.css";
 import Landing from "./pages/landing";
-import Home from "./pages/home";
-import Game from "./pages/game.ts";
+import Chat, { OptionsChat ,closeChat} from './pages/Chat';
+import Home from "./pages/home.ts";
+
+
+
+// import Chat from "./pages/Chat";
+
+import GameStyle from "./pages/gameStyle";
+import Game from "./pages/game";
+import Login from "./pages/login";
 import Leaderboard from "./pages/leaderboard";
+// import Settings from "./pages/zzz.ts";
 import Settings from "./pages/settings.ts";
-import Chat, { ChatEventListener } from "./pages/Chat.ts";
+import Friends from "./pages/friends.ts";
+import Invitations from "./pages/invitaions.ts";
+import Blocked from "./pages/blocked.ts";
+import gameStyle from "./pages/gameStyle";
+import PageNotFound from "./pages/pageNotFound.ts";
 
-import PageNotFound from "./pages/pageNotFound.ts"
-// import { notifications, notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
+document.querySelector<HTMLDivElement>("#app")!.innerHTML = Chat();
+OptionsChat(); 
+closeChat();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Landing();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Home();
 
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Landing();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Home();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = GameStyle();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Game();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Login();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Leaderboard();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Settings();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Friends();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Invitations();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = Blocked();
+// document.querySelector<HTMLDivElement>("#app")!.innerHTML = PageNotFound();
 
-const routes: Record<string, {render: () => string; setUp?: () => void}> = {
-    "/": {render: Landing},
-    "/home": {render: Home},
-    "/game": {render: Game},
-    "/leaderboard": {render: Leaderboard},
-    "/settings": {render: Settings},
-     "/chat": {render: Chat, setUp: ChatEventListener},
-    404: {render: PageNotFound},
-};
-
-function render(path: string) {
-    const app = document.querySelector<HTMLDivElement>("#app");
-    const page = routes[path] || routes[404];
-    app!.innerHTML = page.render();
-
-    requestAnimationFrame(() => {
-        window.scrollTo(0, 0);
-    });
-    sideBarListeners();
-    if (page.setUp)
-        page.setUp();
-    // renderNotifications(notifications);
-    // initLogout();
-}
-
-function sideBarListeners() {
-    const barIcons = document.querySelectorAll<HTMLElement>("aside i[data-path]");
-    barIcons.forEach(icon => {
-        icon.addEventListener("click", () => {
-            const path = icon.dataset.path!;
-            navigate(path);
-        });
-    });
-}
 
 export function navigate(path: string) {
-    console.log("rah 3eyto liya");
-    window.history.pushState({}, "", path);
-    render(path);
+  window.location.href = path;
 }
 
-window.addEventListener("popstate", () => {
-    render(window.location.pathname);
-})
+export function MoveToPage()
+{
+  const home = document.getElementById("home");
+  const settings = document.getElementById("settings");
+  
+  home?.addEventListener("click", () => {
+    navigate("home.ts");
+  });
+  
+  settings?.addEventListener("click", () => {
+    navigate("settings.ts");
+  });
+}
 
-window.addEventListener("DOMContentLoaded", () => {
-    render(window.location.pathname);
-    // notificationBarListeners();
-    // LanguagesMenuEventListener();
-    // viewFriend();
+
+document.addEventListener('DOMContentLoaded', () => {
+  MoveToPage();
 });
