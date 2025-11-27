@@ -97,7 +97,7 @@ export function LoginEventListener() {
   password?.addEventListener("click", () => {
     navigate("/resetpw");
   });
-  const register=document.getElementById("register-link");
+  const register = document.getElementById("register-link");
   register?.addEventListener("click", (e) => {
     e.preventDefault();
     navigate("/register");  
@@ -116,11 +116,11 @@ export function LoginEventListener() {
     try {
       const res = await fetch("http://localhost:3000/login", {
         method: "POST",
-        headers: {"Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({userName, password})
       });
       const data = await res.json();
-      if (!res.ok){
+      if (!res.ok) {
         showAlert(data.error || "login failed");
         return;
       }

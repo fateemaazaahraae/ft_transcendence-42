@@ -1,6 +1,5 @@
 import "./config/env.js"
 import Fastify from "fastify";
-// import dotenv from "dotenv";
 import fastifyJwt from "@fastify/jwt";
 import fastifyCors from "@fastify/cors";
 import { registerRoutes } from "./routes/register.js";

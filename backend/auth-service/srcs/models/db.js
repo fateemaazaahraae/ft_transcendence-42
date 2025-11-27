@@ -1,7 +1,7 @@
 import sqlite3 from "sqlite3"
-import {open} from "sqlite"
+import { open } from "sqlite"
 
-export async function openDb(){
+export async function openDb() {
 
     const db = await open({
         filename: "./database.sqlite",
@@ -16,8 +16,6 @@ export async function openDb(){
             userName TEXT NOT NULL,
             email TEXT NOT NULL,
             passwordHash TEXT NOT NULL,
-            gender TEXT,
-            age INTEGER,
             profileImage TEXT,
             isTwoFactorEnabled INTEGER DEFAULT 0
             )`
@@ -39,9 +37,7 @@ export async function openDb(){
         resetToken TEXT NOT NULL,
         resetTokenExpire INTEGER NOT NULL
     )`
-  );
-
+    );
     return db;
-
 }
   
