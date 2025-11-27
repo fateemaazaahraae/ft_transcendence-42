@@ -93,21 +93,14 @@ export default function Login() {
 }
 
 export function LoginEventListener() {
-  const password = document.getElementById("pw");
-  password?.addEventListener("click", () => {
-    navigate("/resetpw");
-  });
-  const register=document.getElementById("register-link");
+   const register = document.getElementById("register-link");
   register?.addEventListener("click", (e) => {
-    e.preventDefault();
-    navigate("/register");  
+    e.preventDefault(); 
+    navigate("/register");
   });
-
   const form = document.getElementById("loginForm") as HTMLFormElement | null;
-  if (!form) {
-    console.error("Register form not found in the DOM");
-    return;
-  }
+  if (!form) return;
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const userName = (document.getElementById("userName") as HTMLInputElement).value;
@@ -116,33 +109,30 @@ export function LoginEventListener() {
     try {
       const res = await fetch("http://localhost:3000/login", {
         method: "POST",
-        headers: {"Content-Type": "application/json" },
-        body: JSON.stringify({userName, password})
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName, password }),
       });
       const data = await res.json();
-      if (!res.ok){
-        showAlert(data.error || "login failed");
+
+      if (!res.ok) {
+        showAlert(data.error || "Login failed");
         return;
       }
-      localStorage.setItem("userId", data.userId);
+
+      // ✅ Store JWT in localStorage
       localStorage.setItem("token", data.token);
-      if (data.isTwoFactorEnabled === 1)
-      {
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      if (data.isTwoFactorEnabled === 1) {
         await showAlert("Check your email - Verification code sent", "success");
         navigate("/TwoFactor");
-      }
-      else
-      {
-        await showAlert("Login goes successfully", "success");
+      } else {
+        await showAlert("Login successful", "success");
         navigate("/home");
       }
+    } catch (err) {
+      console.error(err);
+      showAlert("Network or server error.");
     }
-    catch(err){
-      console.error("Network or server error:", err);
-      showAlert("Network hna error. Please try again." + err);
-    }
-  }) ;
-  
+  });
 }
-
-  
