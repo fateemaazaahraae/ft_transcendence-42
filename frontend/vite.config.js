@@ -7,6 +7,7 @@ export default defineConfig({
     allowedHosts: [
       "frontend", // <-- add this
       "localhost",
+      'carole-condescensive-lillie.ngrok-free.dev',
       "0.0.0.0",
     ],
     host: true, // already listens on all interfaces
