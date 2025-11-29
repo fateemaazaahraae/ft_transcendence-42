@@ -18,7 +18,7 @@ import PageNotFound from "./pages/pageNotFound.ts"
 import { notifications, notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
 import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
-import Chat from "./pages/Chat.ts";
+import Chat, {ChatEventListener } from "./pages/Chat.ts";
 import { showAlert } from "./utils/alert.ts";
 // import { viewFriend } from "./pages/viewFriend.ts";
 
@@ -38,7 +38,7 @@ const routes: Record<string, {render: () => string; setUp?: () => void}> = {
     "/friends": {render: Friends, setUp: FriendsEventListener},
     "/invitations": {render: Invitations, setUp: InvitationsEventListener},
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
-    "/chat": {render: Chat},
+    "/chat": {render: Chat, setUp: ChatEventListener},
     404: {render: PageNotFound},
 };
 

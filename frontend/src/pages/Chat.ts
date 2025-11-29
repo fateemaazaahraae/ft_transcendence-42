@@ -165,7 +165,7 @@ export default function Chat() {
 
       <!-- Main Chat Window -->
       <div class="h-screen w-[80%] ">
-    <div class="mr-10 md:mr-[40px] w-[90%]  h-[700px] shadow-lg flex  overflow-hidden text-white">
+    <div class="mr-2 md:mr-[40px] w-[90%]  h-[700px] shadow-lg flex  overflow-hidden text-white">
 
       <div id="chatContainer" class="flex-1 rounded-xl flex flex-col ">
           <!--<i class="fa-solid fa-ellipsis-vertical  text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>-->
@@ -259,7 +259,7 @@ export default function Chat() {
   `;
 }
 
-export function OptionsChat()
+export function ChatEventListener()
 {
 const menuToggle=document.getElementById("menuToggle");
 const dropdownMenu=document.getElementById("dropdownMenu");
@@ -271,18 +271,13 @@ menuToggle?.addEventListener("click",()=>
 
 document.addEventListener("click",(e)=>{
   const target = e.target as Node;
-  // const target = e.target as HTMLElement;
-
   if(!menuToggle?.contains(target) && !dropdownMenu?.contains(target))
   {
     dropdownMenu?.classList.add("hidden");
   }
 });
-}
 
-export function closeChat()
-{
-  const closebutton=document.getElementById("closeChat");
+const closebutton=document.getElementById("closeChat");
   const chatDiv = document.getElementById("chatContainer");
   closebutton?.addEventListener("click",()=>
   {
@@ -300,18 +295,7 @@ export function closeChat()
     const dropdown = document.getElementById("dropdownMenu");
     dropdown?.classList.add("hidden");
   });
-  
+
 }
 
-export function MoveToPage()
-{
-  const home = document.getElementById("home");
-  const settings = document.getElementById("settings");
-  home?.addEventListener("click", () => { 
-    navigate("/home");
-  });
-  settings?.addEventListener("click", () => {
-    navigate("/settings");
-  });
-}
 
