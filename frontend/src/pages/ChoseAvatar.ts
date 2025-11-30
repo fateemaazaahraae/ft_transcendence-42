@@ -49,7 +49,7 @@ export default function ChoseAvatar() {
             </div>
 
             <button id="back-to-avatars"
-              class="hidden mt-3 text-white bg-cyan-600 hover:bg-cyan-500 px-4 py-2 mb-[10px] rounded-full transition">
+              class="hidden mt-3 text-white bg-primary/60  hover:bg-primary-500 px-4 py-2 mb-[10px] rounded-full transition">
               <i class="fa-solid fa-arrow-left"></i>
             </button>
 
@@ -64,7 +64,7 @@ export default function ChoseAvatar() {
             </div>
 
             <button type="submit" id="sign"
-              class="flex w-[45%] h-[37px] md:h-[43px] font-glitch items-center justify-center mx-auto leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[20px] py-[20px] rounded-[50px] cursor-pointer mt-5 md:mt-6 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
+              class="flex w-[45%] h-[37px] md:h-[43px] font-glitch items-center justify-center mx-auto leading-[35px] bg-primary/60 text-white text-[1.2em] tracking-[2px] px-[20px] py-[20px] rounded-[50px] cursor-pointer mt-5 md:mt-6 hover:text-black  hover:bg-primary hover:transition hover:duration-300">
               Sign Up
             </button>
           </form>
