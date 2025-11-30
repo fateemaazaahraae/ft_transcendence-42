@@ -20,14 +20,14 @@
       });
 
 
-## In summary how the auth works : 
-# 1-first create server instance *but* before Import dependencies && Routes
-# 2-then configure Security && Plugins: ===> two things has been done: 
+# In summary how the auth works : 
+## 1-first create server instance *but* before Import dependencies && Routes
+## 2-then configure Security && Plugins: ===> two things has been done: 
 one-Allows frontend applications from any domain (origin: '*') to communicate with this server
 two-Configures JSON Web Token encryption using your secret key
-# 3-Register all Routes
+## 3-Register all Routes
 routes are like different phone numbers for diff departements and each route contain three things: urlPath+httpMethod+FuncToExecute
-# 4-Start The Server: 
+## 4-Start The Server: 
     fastify.log.info(`Server listening at ${address}`)
 
 
