@@ -36,13 +36,15 @@ export default function Chat() {
       <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
-  <!-- chat side -->
-
- <div class="h-screen w-screen ml-0 md:ml-[100px] md:h-screen flex items-center justify-center pt-24 pb-6 md:pt-28 md:px-0">
-    <div id="contacts_side" class=" w-[90%] md:mx-auto h-[700px] shadow-lg flex gap-4 overflow-hidden text-white">
-
-      <!-- Sidebar: Chat Profiles -->
-      <div class="w-1/2.5 bg-primary/60 rounded-xl  border-blue p-4 ">
+  <!-- chat side 
+  -->
+<div class="h-screen w-screen md:ml-[100px] flex items-center justify-center pt-24 pb-6 md:pt-28 md:px-0">
+    <div id="contacts_side" class="m-5 mb-4 w-full md:w-[90%] md:mx-auto h-[calc(100vh-12rem)] md:h-[700px] shadow-lg md:flex flex-col md:flex-row gap-4 overflow-hidden text-white">
+      
+   
+    
+    <!-- Sidebar: Chat Profiles -->
+      <div class=" md:w-1/5 bg-primary/60 rounded-xl border-blue p-4 flex flex-col h-full">
       
        <div class="relative ">
         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -62,8 +64,8 @@ export default function Chat() {
         </div>
        
     
-    <div class="space-y-4 mt-3 mb-3 pb-8 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent">
-                      <div class="   scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+    <div class="space-y-4 mt-3 mb-3 pb-8 h-full overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent">
+                      <div class="  scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
                                   <div class="relative w-12 h-12 flex-shrink-0">
                                   <img src="../../public/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                                   <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
@@ -73,7 +75,7 @@ export default function Chat() {
                                     <p class="text-xs text-gray-200">Hey, how are you?</p>
                                   </div>
                       </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
                                 <div class="relative w-12 h-12 flex-shrink-0">
                                   <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
                                   <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
@@ -83,7 +85,7 @@ export default function Chat() {
                                   <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                                 </div>
                       </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
                                 <div class="relative w-12 h-12 flex-shrink-0">
                                 <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                                 <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
@@ -94,7 +96,7 @@ export default function Chat() {
                                 <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                               </div>
                       </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
                                 <div class="relative w-12 h-12 flex-shrink-0">
                                 <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                                 <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
@@ -105,7 +107,7 @@ export default function Chat() {
                                   <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                                 </div>
                       </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
                               <div class="relative w-12 h-12 flex-shrink-0">
                               <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                               <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
@@ -116,7 +118,7 @@ export default function Chat() {
                                 <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                               </div>
                       </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
                               <div class="relative w-12 h-12 flex-shrink-0">
                               <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                               <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
@@ -127,7 +129,7 @@ export default function Chat() {
                                 <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                               </div>
                       </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
                               <div class="relative w-12 h-12 flex-shrink-0">
                               <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                               <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
@@ -138,7 +140,7 @@ export default function Chat() {
                                 <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                               </div>
                       </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
                             <div class="relative w-12 h-12 flex-shrink-0">
                             <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                             <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
@@ -149,7 +151,7 @@ export default function Chat() {
                             <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                           </div>
                       </div>
-                        <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
+                        <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
                             <div class="relative w-12 h-12 flex-shrink-0">
                             <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                             <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full">
@@ -160,12 +162,24 @@ export default function Chat() {
                               <p class="text-xs text-gray-200">Let's meet tomorrow</p>
                             </div>
                         </div>
+                        <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
+                            <div class="relative w-12 h-12 flex-shrink-0">
+                            <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full">
+                            </div>
+                            </div> 
+                            <div>
+                              <p class="font-medium text-sm text-secondary ">Boy</p>
+                              <p class="text-xs text-gray-200">Let's meet tomorrow</p>
+                            </div>
+                        </div>
+                        
     </div>
       </div>
 
       <!-- Main Chat Window -->
       <div class="h-screen w-[80%] ">
-    <div class="mr-2 md:mr-[40px] w-[90%]  h-[700px] shadow-lg flex  overflow-hidden text-white">
+    <div  id="main_chat" class="hidden mr-2 md:mr-[40px] w-[90%]  h-[78%] md:h-[700px] shadow-lg   md:flex  overflow-hidden text-white">
 
       <div id="chatContainer" class="flex-1 rounded-xl flex flex-col ">
           <!--<i class="fa-solid fa-ellipsis-vertical  text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>-->
