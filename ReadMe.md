@@ -1,6 +1,7 @@
 ## BACKEND workflow
 
 # What happens in authentication phase through registration form: 
+```
 👤 User fills form → 📦 Data sent to /register → 🧠 Your function runs:
     │
     ├── ✅ Check all fields are filled
@@ -19,7 +20,7 @@
         userName: newuser.userName,
       });
 
-
+```
 # In summary how the auth works : 
 ## 1-first create server instance *but* before Import dependencies && Routes
 ## 2-then configure Security && Plugins: ===> two things has been done: 
@@ -135,4 +136,5 @@ You can run and test the game server locally without rebuilding frontend assets,
                                         └─ Database (Postgres) for persistence
 ### APIs vs Microservices (How different are they?) down here a good resource
  https://youtu.be/zVdcxuM1LEo?si=iMxPiUcOs-K3Ucnz
+
                ===================
