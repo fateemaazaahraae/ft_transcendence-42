@@ -85,8 +85,10 @@ FRONTEND receives response
 const { playerName, gameType } = request.body;
 ```
 this one :  const gameId = Date.now();  It Create a unique id for the game, the what happens (what happen is like : 
+---
 Player 1 can say "I'm in game #123"
 Player 2 can say "I want to join game #123"
+---
 Server knows which game you're talking about
 Date.now() = Current timestamp in milliseconds (like 1701469200000)
 It's unique because time always moves forward!
@@ -94,11 +96,13 @@ It's unique because time always moves forward!
 ---
 ➡️
 Next : Creating a JavaScript object that represents a Pong game "const game"
+---
 id(The unique gameId)
 player1 and player2(No opponent yet)
 score(Starting with:0-0)
 status(Waiting for a game)
 createdAT(CreatedAt)
+---
 ```
 Here is a visualisation:
 ┌───────────────────────────┐
