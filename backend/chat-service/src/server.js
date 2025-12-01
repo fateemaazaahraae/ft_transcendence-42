@@ -15,7 +15,7 @@ const start = async () => {
   try {
     await app.listen({ 
       port: PORT, 
-      host: '0.0.0.0'  // This is crucial for Docker!
+      host: '0.0.0.0'  // This is crucial for Docker!!!!
     });
     console.log(`Chat service listening on port ${PORT}`);
   } catch (err) {

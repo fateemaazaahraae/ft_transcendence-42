@@ -34,7 +34,7 @@ services:
       - ft_transcendence
     
   #chat service
-  chat:
+  chat-service:
     build: ./backend/chat-service
     container_name: chat-service
     environment:
@@ -73,6 +73,7 @@ services:
     depends_on:
       - frontend
       - auth-service
+      - chat-service
       # - profile-service
     networks:
       - ft_transcendence

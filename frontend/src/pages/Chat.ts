@@ -296,6 +296,9 @@ const closebutton=document.getElementById("closeChat");
     dropdown?.classList.add("hidden");
   });
 
+
+  //
+
 }
 
 
