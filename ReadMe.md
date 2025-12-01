@@ -31,8 +31,7 @@ routes are like different phone numbers for diff departements and each route con
 ## 4-Start The Server: 
     fastify.log.info(`Server listening at ${address}`)
 
-
-
+```
 How things work::
 FRONTEND (React)
     ↓
@@ -55,6 +54,7 @@ Generate Response
 Send JSON back to frontend: {message: "Success!"}
     ↓
 FRONTEND receives response
+```
 
 
 
@@ -62,17 +62,28 @@ FRONTEND receives response
 
 ==================================================
 ## First creat server instance: 
-               ===================
-### WHAT server.js file has: 
-first importing the fastify library and creating server instance
-->
-next: in the file there is a GET and POST method what they are used for?
-GET /test = "Is the ping pong table available?"
-POST /create-game = "I want to start a ping pong match!"
-->
-next data send in body will be send in here :
+               *********************
+### WHAT `server.js` file has: 
+**1️⃣ First: Importing Fastify and creating the server instance**
+➡️ The server starts by importing the Fastify library and creating a server object.
+
+---
+
+**2️⃣ Next: The GET and POST routes — what they are used for**
+
+- **GET `/test`**  
+  `"Is the ping pong table available?"`
+
+- **POST `/create-game`**  
+  `"I want to start a ping pong match!"`
+
+---
+
+**3️⃣ Next: The data sent in the request body goes here**
+
+```js
 const { playerName, gameType } = request.body;
-->
+```
 this one :  const gameId = Date.now();  It Create a unique id for the game, the what happens (what happen is like : 
 Player 1 can say "I'm in game #123"
 Player 2 can say "I want to join game #123"
@@ -80,13 +91,15 @@ Server knows which game you're talking about
 Date.now() = Current timestamp in milliseconds (like 1701469200000)
 It's unique because time always moves forward!
 )
-->
+---
+➡️
 Next : Creating a JavaScript object that represents a Pong game "const game"
 id(The unique gameId)
 player1 and player2(No opponent yet)
 score(Starting with:0-0)
 status(Waiting for a game)
 createdAT(CreatedAt)
+```
 Here is a visualisation:
 ┌───────────────────────────┐
 │ PONG MATCH #1701469200000 │
@@ -96,13 +109,16 @@ Here is a visualisation:
 │ Player 2: (empty)   0     │
 │ Created: 2024-12-01 10:00 │
 └───────────────────────────┘
-->
+```
+➡️
 returning response  success: true
                     message: 'Game created'
                     gameId&&joinUrl
-
+---
 ### Soo *WHY* we need another server for the game:aka (Microservices)
+****
 #### ANSWER: A frontend (static or SSR) server handles HTTP requests and serves pages/assets, while a game server handles real-time, low-latency state, persistent connections (WebSockets), authoritative game state, and game logic. Splitting them improves performance, reliability, security, and scalability.
+****
 
 ### Why separate servers? (Concrete reasons)
 
@@ -129,12 +145,15 @@ The game server can be put behind more strict rules and only expose sockets. Sen
 #### 7- Easier testing & development
 You can run and test the game server locally without rebuilding frontend assets, and mock HTTP endpoints independently.
 
+```
 [Clients (browsers)]
    ├─ HTTP(S) ──> [Frontend Server / CDN]  (static files, REST APIs for profile, leaderboard)
    └─ WebSocket -> [Game Gateway / Matchmaker] -> [Game Server(s)]
                                         └─ Redis pub/sub (optional, for multi-instance sync)
                                         └─ Database (Postgres) for persistence
-### APIs vs Microservices (How different are they?) down here a good resource
- https://youtu.be/zVdcxuM1LEo?si=iMxPiUcOs-K3Ucnz
+```
 
-               ===================
+### APIs vs Microservices (How different are they?) down here a good resource
+https://youtu.be/zVdcxuM1LEo?si=iMxPiUcOs-K3Ucnz
+
+.               ===================
