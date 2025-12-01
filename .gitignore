@@ -1,2 +1,3 @@
 backend/auth-service/.env
 backend/profile-service/.env
+node_modules/
