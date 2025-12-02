@@ -9,7 +9,8 @@ import { intra42AuthRoutes } from "./routes/fortyTwoAuth.js";
 import { twoFactorRoutes } from "./routes/twoFactor.js"
 import { forgetPasswordRoute } from "./routes/forgetPassword.js";
 import { resetPasswordRoutes } from "./routes/resetPassword.js";
-
+import avatarRoutes from "./routes/avatar.js";
+import { authenticate } from "./plugins/auth.js";
 // dotenv.config();
 
 const fastify = Fastify({ logger: true });
@@ -22,6 +23,8 @@ fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET });
 
 // Routes
 registerRoutes(fastify);
+await authenticate(fastify);
+avatarRoutes(fastify);
 loginRoutes(fastify);
 googleAuthRoutes(fastify);
 fastify.register(intra42AuthRoutes);

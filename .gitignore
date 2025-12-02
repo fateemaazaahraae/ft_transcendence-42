@@ -1,2 +1,4 @@
 backend/auth-service/.env
 backend/profile-service/.env
+backend/chat-service/.env
+backend/game-service/.env
