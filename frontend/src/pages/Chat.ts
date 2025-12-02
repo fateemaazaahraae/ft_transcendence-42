@@ -38,14 +38,15 @@ export default function Chat() {
 
   <!-- chat side 
   -->
-<div class="h-screen w-screen md:ml-[100px] flex items-center justify-center pt-24 pb-6 md:pt-28 md:px-0">
-    <div id="contacts_side" class="m-5 mb-4 w-full md:w-[90%] md:mx-auto h-[calc(100vh-12rem)] md:h-[700px] shadow-lg md:flex flex-col md:flex-row gap-4 overflow-hidden text-white">
-      
+<div class="h-screen w-screen md:ml-[100px] flex items-center justify-center pt-24 pb-6 md:pt-28 md:px-0">  
+  <div id="chat_panels_wrapper" 
+         class="m-5 mb-4 w-full md:w-[90%] md:mx-auto h-[calc(100vh-12rem)] md:h-[700px] 
+                shadow-lg flex md:flex-row relative overflow-hidden text-white gap-4">
+    <div id="contacts_side" class="w-full h-full md:w-1/3 flex-shrink-0"> 
    
     
     <!-- Sidebar: Chat Profiles -->
-      <div class=" md:w-1/5 bg-primary/60 rounded-xl border-blue p-4 flex flex-col h-full">
-      
+     <div class="w-full bg-primary/60 rounded-xl border-blue p-4 flex flex-col h-full">
        <div class="relative ">
         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
             <svg class="w-4 h-4 text-gray-500 dark:text-secondary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -175,19 +176,24 @@ export default function Chat() {
                         </div>
                         
     </div>
+    </div>
       </div>
 
       <!-- Main Chat Window -->
-      <div class="h-screen w-[80%] ">
-    <div  id="main_chat" class="hidden mr-2 md:mr-[40px] w-[90%]  h-[78%] md:h-[700px] shadow-lg   md:flex  overflow-hidden text-white">
-
-      <div id="chatContainer" class="flex-1 rounded-xl flex flex-col ">
-          <!--<i class="fa-solid fa-ellipsis-vertical  text-secondary absolute right-3 top-1/2 -translate-y-1/2"></i>-->
-
-        <!-- Chat Header -->
-        <div class="relative flex items-center justify-between p-3 rounded-t-xl bg-primary/80">
-        <div class="flex items-center gap-3">
-          <img src="../../public/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
+ <div class="h-screen w-full md:w-[80%]"> 
+    
+   <div id="main_chat" 
+     class="w-full h-full 
+            absolute top-0 left-0  
+            shadow-lg overflow-hidden text-white 
+            hidden 
+            md:relative md:flex lg:w-[90%] md:w-[90%] md:h-full">
+        
+        <div id="chatContainer" class="w-full h-full flex flex-col">
+            <div class="relative flex items-center justify-between p-3 rounded-t-xl bg-primary/80"> <div class="flex items-center gap-3">
+            <i id="backToContacts"
+      class="fa-solid fa-arrow-left bg-primary cursor-pointer p-3 rounded-full text-white md:hidden"></i>
+<img src="../../public/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
           <div>
             <p class=" text-secondary font-bold text-sm">Bouchra</p>
             <p class="text-xs text-gray-200">Online</p>
@@ -218,7 +224,7 @@ export default function Chat() {
 
 
         <!-- Messages -->
-        <div class="flex-1 p-4 space-y-4 overflow-y-auto bg-primary/60">
+        <div class="flex-1 p-4 space-y-4 overflow-y-auto bg-primary/60 min-h-0">
           
           <!-- Message from other user (left side - receiver) -->
           <div class="flex items-start">
@@ -310,6 +316,79 @@ const closebutton=document.getElementById("closeChat");
     dropdown?.classList.add("hidden");
   });
 
+ const contacts = document.getElementById("contacts_side");
+const chat = document.getElementById("main_chat");
+const contactItems = document.querySelectorAll(".contact-item");
+const backToContactsBtn = document.getElementById('backToContacts'); 
+
+    const isMobile = () => window.innerWidth < 768;
+
+    // --- Mode Mobile: masque contacts, montre chat) ---
+    contactItems.forEach(item => {
+        item.addEventListener("click", () => {
+            if (isMobile()) {
+                contacts?.classList.add("hidden"); 
+                chat?.classList.remove("hidden");
+                chat?.classList.add("flex"); 
+            }
+        });
+    });
+
+    // --- clic sur le bouton retour (Mode Mobile: masque chat, montre contacts) ---
+    backToContactsBtn?.addEventListener("click", () => {
+        if (isMobile()) {
+            chat?.classList.add("hidden");
+            chat?.classList.remove("flex"); 
+            contacts?.classList.remove("hidden");
+        }
+    });
+
+    // --- gestion de l'événement de redimensionnement ---
+    window.addEventListener("resize", () => {
+        if (window.innerWidth >= 768) {
+            chat?.classList.remove("hidden"); 
+            chat?.classList.add("flex"); 
+            contacts?.classList.remove("hidden");
+        } else {
+            contacts?.classList.remove("hidden"); 
+            
+            //  masque le chat pour revenir à l'état initial mobile.
+            chat?.classList.add("hidden"); 
+            chat?.classList.remove("flex");
+        }
+    });
+
+// Ouvrir chat sur mobile
+// contactItems.forEach(item => {
+//   item.addEventListener("click", () => {
+//     if (window.innerWidth < 768) {
+//       console.log("clicked mobile 1");
+//       console.log("Classes du chat:", chat?.className);
+//       contacts?.classList.add("hidden");
+//       chat?.classList.remove("hidden");
+//       chat?.classList.add("flex","flex-col");  // ✅ IMPORTANT: ajouter flex
+//     }
+//   });
+// });
+
+// // Revenir aux contacts sur mobile
+// backBtn?.addEventListener("click", () => {
+//   if (window.innerWidth < 768) {
+//     console.log("clicked mobile");
+//     chat?.classList.add("hidden");
+//     chat?.classList.remove("flex");  // ✅ IMPORTANT: enlever flex
+//     contacts?.classList.remove("hidden");
+//   }
+// });
+
+// // Resize event pour réafficher chat en desktop
+// window.addEventListener("resize", () => {
+//   if (window.innerWidth >= 768) {
+//     chat?.classList.remove("hidden");
+//     chat?.classList.add("flex");  // ✅ Ajouter flex
+//     contacts?.classList.remove("hidden");
+//   }
+// });
 
   //
 
