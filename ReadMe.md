@@ -96,13 +96,15 @@ It's unique because time always moves forward!
 ---
 ➡️
 Next : Creating a JavaScript object that represents a Pong game "const game"
----
 id(The unique gameId)
+
 player1 and player2(No opponent yet)
+
 score(Starting with:0-0)
+
 status(Waiting for a game)
+
 createdAT(CreatedAt)
----
 ```
 Here is a visualisation:
 ┌───────────────────────────┐
