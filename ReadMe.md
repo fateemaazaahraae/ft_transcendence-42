@@ -84,16 +84,20 @@ FRONTEND receives response
 ```js
 const { playerName, gameType } = request.body;
 ```
-this one :  const gameId = Date.now();  It Create a unique id for the game, the what happens (what happen is like : 
----
+this one :     const gameId = Date.now();    It Create a unique id for the game, the what happens
+
+(what happen is like : 
+
 Player 1 can say "I'm in game #123"
+
 Player 2 can say "I want to join game #123"
----
+
 Server knows which game you're talking about
+
 Date.now() = Current timestamp in milliseconds (like 1701469200000)
-It's unique because time always moves forward!
-)
----
+
+It's unique because time always moves forward!)
+
 ➡️
 Next : Creating a JavaScript object that represents a Pong game "const game"
 id(The unique gameId)
@@ -116,15 +120,17 @@ Here is a visualisation:
 │ Created: 2024-12-01 10:00 │
 └───────────────────────────┘
 ```
+```
 ➡️
 returning response  success: true
                     message: 'Game created'
                     gameId&&joinUrl
----
+```
+
 ### Soo *WHY* we need another server for the game:aka (Microservices)
-****
+***
 #### ANSWER: A frontend (static or SSR) server handles HTTP requests and serves pages/assets, while a game server handles real-time, low-latency state, persistent connections (WebSockets), authoritative game state, and game logic. Splitting them improves performance, reliability, security, and scalability.
-****
+***
 
 ### Why separate servers? (Concrete reasons)
 
