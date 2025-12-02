@@ -102,31 +102,28 @@ if (fileInput && fileInput.files && fileInput.files.length > 0) {
     }
 
     try {
-const token = localStorage.getItem("token");
-if (!token) {
-  alert("You must be logged in to choose an avatar");
-  navigate("/login");
-  return;
-}
-
-const res = await fetch("http://localhost:3000/user/avatar", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${token}`, // ✅ send JWT
-  },
-  body: JSON.stringify({ profileImage: avatarToSend }),
-});
-
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.error || "Could not save avatar");
-        return;
-      }
-
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must be logged in to choose an avatar");
       navigate("/login");
+      return;
+    }
+
+    const res = await fetch("http://localhost:3000/user/avatar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify({ profileImage: avatarToSend }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || "Could not save avatar");
+      return;
+    }
+    navigate("/login");
     }
     catch (err) {
       alert("Network error while saving avatar");

@@ -1,8 +1,26 @@
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
+import { loadUser } from "../utils/loadUser.ts";
 
-export default function Home() {
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+export default async function Home() {
+  let user:any;
+  try{
+    const params = new URLSearchParams(window.location.search);
+    let token = params.get("token");
+    if (!token) 
+      token = localStorage.getItem("token");
+   const res = await fetch("http://localhost:3000/user/me", {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    const data = await res.json();
+    user = data.user;
+  }
+  catch
+  {
+    navigate("/login");
+  }
 
   return `
 <div class="relative w-full h-screen overflow-x-hidden px-6">
@@ -42,7 +60,7 @@ export default function Home() {
    <div class="flex justify center items-center">
       <!-- Avatar -->
       <img 
-        src=${user.profileImage}
+        src="${user.profileImage}" alt="waaaaaaaaaaaaaaaaaaaaa"
         class="object-cover w-[110px] h-[110px] md:w-[150px] md:h-[150px] xl:w-[220px] xl:h-[220px] rounded-full border-[3px] border-[#35C6DD]"
       >
 

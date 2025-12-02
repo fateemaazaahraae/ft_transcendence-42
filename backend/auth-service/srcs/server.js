@@ -28,11 +28,11 @@ await authenticate(fastify);
 avatarRoutes(fastify);
 loginRoutes(fastify);
 googleAuthRoutes(fastify);
-fastify.register(intra42AuthRoutes);
-
+intra42AuthRoutes(fastify);
 twoFactorRoutes(fastify)
 forgetPasswordRoute(fastify);
 resetPasswordRoutes(fastify);
+
 // Start server
 const start = async () => {
   try {

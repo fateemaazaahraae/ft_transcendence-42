@@ -3,17 +3,17 @@ import bcrypt from "bcryptjs";
 import { openDb } from "./db.js";
 
 
-export async function createUser(firstName, lastName, userName, email, password) {
+export async function createUser(firstName, lastName, userName, email, password, profileImage) {
   const db = await openDb();
   const passwordHash = await bcrypt.hash(password, 10);
   const id = uuidv4();
 
   await db.run(
-    `INSERT INTO users(id, firstName, lastName, userName, email, passwordHash, isTwoFactorEnabled,profileImage)
+    `INSERT INTO users(id, firstName, lastName, userName, email, passwordHash, isTwoFactorEnabled, profileImage)
       VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
-      [id, firstName, lastName, userName, email, passwordHash, 0, ""]
+      [id, firstName, lastName, userName, email, passwordHash, 0, profileImage]
   );
-  return {id, firstName, lastName, userName, email, passwordHash};
+  return {id, firstName, lastName, userName, email, passwordHash, profileImage};
 }
 
 export async function findUserByEmail(email) {
