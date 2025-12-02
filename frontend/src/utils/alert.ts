@@ -26,5 +26,5 @@ export function showAlert(message: string, type: "error" | "success" = "error") 
     // });
 
     //auto remove after 3s
-    setTimeout(() => alert.remove(), 3000);
+    setTimeout(() => alert.remove(), 2000);
 }

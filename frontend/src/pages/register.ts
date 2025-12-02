@@ -50,7 +50,7 @@ export default function Register() {
               <i class="fa-brands fa-google"></i>
             </a>
             <a href="http://localhost:3000/auth/42">
-              <img src="/public/intra42.png" class="mt-[15%] w-[45px]" />
+              <img src="/intra42.png" class="mt-[15%] w-[45px]" />
             </a>
         </div>
         <div class="text-white mt-3 md:mt-5 text-center text-[0.8em] md:text-[1.0em] font-roboto font-semibold">
@@ -62,15 +62,11 @@ export default function Register() {
     </form>
 </div>
     </div>
-
-
 </div>
 `;
 }
 
-
 export function RegisterEventListener() {
-  // Login link navigation
   const login = document.getElementById("login-link");
   login?.addEventListener("click", (e) => {
     e.preventDefault(); 
@@ -81,38 +77,37 @@ export function RegisterEventListener() {
     console.error("Register form not found in the DOM");
     return;
   }
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const firstName = (document.getElementById("firstName") as HTMLInputElement).value;
+  const lastName = (document.getElementById("lastName") as HTMLInputElement).value;
+  const userName = (document.getElementById("userName") as HTMLInputElement).value;
+  const email = (document.getElementById("email") as HTMLInputElement).value;
+  const password = (document.getElementById("password") as HTMLInputElement).value;
+  const confirmPassword = (document.getElementById("confirmPassword") as HTMLInputElement).value;
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  try {
+    const res = await fetch("http://localhost:3000/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ firstName, lastName, userName, email, password, confirmPassword }),
+    });
+    const data = await res.json();
 
-    const firstName = (document.getElementById("firstName") as HTMLInputElement).value;
-    const lastName = (document.getElementById("lastName") as HTMLInputElement).value;
-    const userName = (document.getElementById("userName") as HTMLInputElement).value;
-    const email = (document.getElementById("email") as HTMLInputElement).value;
-    const password = (document.getElementById("password") as HTMLInputElement).value;
-    const confirmPassword = (document.getElementById("confirmPassword") as HTMLInputElement).value;
-
-    try {
-      const res = await fetch("http://localhost:3000/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, userName, email, password, confirmPassword })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        showAlert(data.error || "Registration failed");
-        return;
-      }
-
-      // Registration successful
-      showAlert("Registration goes successfully", "success");
-      navigate("/ChoseAvatar");
-
-    } catch (err) {
-      console.error("Network or server error:", err);
-      showAlert("Network error. Please try again.");
+    if (!res.ok) {
+      showAlert(data.error || "Registration failed");
+      return;
     }
-  });
+
+    // ✅ Store JWT immediately
+    // localStorage.setItem("token", data.token);
+    // localStorage.setItem("userId", data.user.id);
+
+    showAlert("Registration successful", "success");
+    navigate("/ChoseAvatar");
+  } catch (err) {
+    console.error(err);
+    showAlert("Network error. Please try again.");
+  }
+});
 }

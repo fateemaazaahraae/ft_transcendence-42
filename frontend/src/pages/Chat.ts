@@ -65,7 +65,7 @@ export default function Chat() {
     <div class="space-y-4 mt-3 mb-3 pb-8 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent">
                       <div class="   scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                                   <div class="relative w-12 h-12 flex-shrink-0">
-                                  <img src="../../public/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                                  <img src="/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                                   <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
                                   </div>
                                   <div>
@@ -75,7 +75,7 @@ export default function Chat() {
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                                 <div class="relative w-12 h-12 flex-shrink-0">
-                                  <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
+                                  <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
                                   <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
                                 </div>
                                 <div>
@@ -85,7 +85,7 @@ export default function Chat() {
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                                 <div class="relative w-12 h-12 flex-shrink-0">
-                                <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                                <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                                 <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
                                 </div>                
                         
@@ -96,7 +96,7 @@ export default function Chat() {
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                                 <div class="relative w-12 h-12 flex-shrink-0">
-                                <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                                <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                                 <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
                                 </div> 
                           
@@ -107,7 +107,7 @@ export default function Chat() {
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                               <div class="relative w-12 h-12 flex-shrink-0">
-                              <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                              <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                               <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
                               </div> 
                           
@@ -118,7 +118,7 @@ export default function Chat() {
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                               <div class="relative w-12 h-12 flex-shrink-0">
-                              <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                              <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                               <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
                               </div> 
                           
@@ -129,7 +129,7 @@ export default function Chat() {
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                               <div class="relative w-12 h-12 flex-shrink-0">
-                              <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                              <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                               <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
                               </div> 
                           
@@ -140,7 +140,7 @@ export default function Chat() {
                       </div>
                       <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                             <div class="relative w-12 h-12 flex-shrink-0">
-                            <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                            <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                             <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
                             </div> 
                           
@@ -151,7 +151,7 @@ export default function Chat() {
                       </div>
                         <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded">
                             <div class="relative w-12 h-12 flex-shrink-0">
-                            <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
+                            <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
                             <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full">
                             </div>
                             </div> 
@@ -173,7 +173,7 @@ export default function Chat() {
         <!-- Chat Header -->
         <div class="relative flex items-center justify-between p-3 rounded-t-xl bg-primary/80">
         <div class="flex items-center gap-3">
-          <img src="../../public/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
+          <img src="/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
           <div>
             <p class=" text-secondary font-bold text-sm">Bouchra</p>
             <p class="text-xs text-gray-200">Online</p>
@@ -208,7 +208,7 @@ export default function Chat() {
           
           <!-- Message from other user (left side - receiver) -->
           <div class="flex items-start">
-            <img src="../../public/green-girl.svg" class="w-[50px] h-[50px] object-cover mr-3 border border-primary rounded-full flex-shrink-0">
+            <img src="/green-girl.svg" class="w-[50px] h-[50px] object-cover mr-3 border border-primary rounded-full flex-shrink-0">
             <div class="bg-primary/65 text-sm text-white p-3 rounded-3xl max-w-[60%]">
               Hi Salma, how are you?
             </div>
@@ -219,12 +219,12 @@ export default function Chat() {
             <div class="bg-primary/65 text-sm text-white p-3 rounded-3xl max-w-[60%]">
               Hey Bouchra! I'm doing great, thanks!
             </div>
-            <img src="../../public/green-girl.svg" class="w-[50px] h-[50px] object-cover ml-3 border border-primary rounded-full flex-shrink-0">
+            <img src="/green-girl.svg" class="w-[50px] h-[50px] object-cover ml-3 border border-primary rounded-full flex-shrink-0">
           </div>
           
           <!-- Message from other user (left side - receiver) -->
           <div class="flex items-start">
-            <img src="../../public/green-girl.svg" class="w-[50px] h-[50px] object-cover mr-3 border border-primary rounded-full flex-shrink-0">
+            <img src="/green-girl.svg" class="w-[50px] h-[50px] object-cover mr-3 border border-primary rounded-full flex-shrink-0">
             <div class="bg-primary/65 text-sm text-white p-3 rounded-3xl max-w-[60%]">
               Want to catch up later?
             </div>

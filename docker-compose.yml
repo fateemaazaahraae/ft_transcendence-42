@@ -11,7 +11,7 @@ services:
       - /app/node_modules
     depends_on:
       - auth-service
-      # - profile-service
+      - profile-service
     networks:
       - ft_transcendence
     expose:
@@ -33,21 +33,21 @@ services:
     networks:
       - ft_transcendence
 
-  # profile-service:
-  #   build:
-  #     context: ./backend/profile-service
-  #     dockerfile: Dockerfile
-  #   image: profile-service
-  #   container_name: profile-service
-  #   env_file:
-  #     - ./backend/profile-service/.env
-  #   volumes:
-  #     - ./backend/profile-service:/app
-  #     - /app/node_modules
-  #   ports:
-  #     - "3001:3001"
-  #   networks:
-  #     - ft_transcendence
+  profile-service:
+    build:
+      context: ./backend/profile-service
+      dockerfile: Dockerfile
+    image: profile-service
+    container_name: profile-service
+    env_file:
+      - ./backend/profile-service/.env
+    volumes:
+      - ./backend/profile-service:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    networks:
+      - ft_transcendence
 
   nginx:
     build:
@@ -56,11 +56,11 @@ services:
     image: nginx
     container_name: nginx
     ports:
-      - "443:443"
+      - "8443:443"
     depends_on:
       - frontend
       - auth-service
-      # - profile-service
+      - profile-service
     networks:
       - ft_transcendence
 

@@ -8,9 +8,7 @@ RUN apt-get update && \
     apt-get install -y build-essential python3 && \
     rm -rf /var/lib/apt/lists/*
 
-RUN npm install
-
-RUN npm rebuild sqlite3 --build-from-source
+RUN npm install --build-from-source sqlite3 && npm install
 
 COPY . .
 

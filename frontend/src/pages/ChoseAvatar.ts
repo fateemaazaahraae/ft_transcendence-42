@@ -1,5 +1,10 @@
 import { navigate } from "../main.ts";
+import { showAlert } from "../utils/alert.ts";
+import { requiredAuth } from "../utils/authGuard.ts";
+
 export default function ChoseAvatar() {
+  if (!requiredAuth())
+      return "";
   return `<div class="min-h-screen w-full flex items-center justify-center gap-[8px] relative pt-[3%]">
 
     <div class="relative inset-0 items-center h-[650px] md:h-[750px] w-full md:w-[820px] pt-[75px] md:pt-[130px] rounded-[50px] overflow-hidden">
@@ -24,27 +29,27 @@ export default function ChoseAvatar() {
               </div>
               <div class="relative w-[55px] h-[55px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border-[1px] md:border-[3px] border-[#35C6DD] cursor-pointer mb-[40px] md:mb-0 transform transition-transform duration-300 ease-in-out hover:scale-[1.2] md:hover:scale-[1.3] data-[selected=true]:border-[#D934B0]"
               data-selected="false">
-                <img src="/public/white-boy2.svg" class="w-full h-full object-cover"/>
+                <img src="/white-boy2.svg" class="w-full h-full object-cover"/>
               </div>
               <div class="relative w-[55px] h-[55px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border-[1px] md:border-[3px] border-[#35C6DD] cursor-pointer mb-[40px] md:mb-0 transform transition-transform duration-300 ease-in-out hover:scale-[1.2] md:hover:scale-[1.3] data-[selected=true]:border-[#D934B0]"
               data-selected="false">
-                <img src="/public/dark-girl.svg" class="w-full h-full object-cover"/>
+                <img src="/dark-girl.svg" class="w-full h-full object-cover"/>
               </div>
               <div class="relative w-[55px] h-[55px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border-[1px] md:border-[3px] border-[#35C6DD] cursor-pointer transform transition-transform duration-300 ease-in-out hover:scale-[1.2] md:hover:scale-[1.3] data-[selected=true]:border-[#D934B0]"
               data-selected="false">
-                <img src="/public/pink-girl.svg" class="w-full h-full object-cover"/>
+                <img src="/pink-girl.svg" class="w-full h-full object-cover"/>
               </div>
               <div class="relative w-[55px] h-[55px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border-[1px] md:border-[3px] border-[#35C6DD] cursor-pointer transform transition-transform duration-300 ease-in-out hover:scale-[1.2] md:hover:scale-[1.3] data-[selected=true]:border-[#D934B0]"
               data-selected="false">
-                <img src="/public/white-boy.svg" class="w-full h-full object-cover"/>
+                <img src="/white-boy.svg" class="w-full h-full object-cover"/>
               </div>
               <div class="relative w-[55px] h-[55px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border-[1px] md:border-[3px] border-[#35C6DD] cursor-pointer transform transition-transform duration-300 ease-in-out hover:scale-[1.2] md:hover:scale-[1.3] data-[selected=true]:border-[#D934B0]"
               data-selected="false">
-                <img src="/public/purple-girl.svg" class="w-full h-full object-cover"/>
+                <img src="/purple-girl.svg" class="w-full h-full object-cover"/>
               </div>
               <div class="relative w-[55px] h-[55px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border-[1px] md:border-[3px] border-[#35C6DD] cursor-pointer transform transition-transform duration-300 ease-in-out hover:scale-[1.2] md:hover:scale-[1.3] data-[selected=true]:border-[#D934B0]"
               data-selected="false">
-                <img src="/public/red-boy.svg" class="w-full h-full object-cover"/>
+                <img src="/red-boy.svg" class="w-full h-full object-cover"/>
               </div>
             </div>
 
@@ -78,14 +83,76 @@ export default function ChoseAvatar() {
 export function ChoseAvatarEventListener() {
 
   const sign = document.getElementById("sign");
-  sign?.addEventListener("click", () => { navigate("/login");
+  sign?.addEventListener("click", async(e) => {
+    e.preventDefault();
+
+    let avatarToSend = null;
+    const fileInput = document.getElementById("avatarUpload") as HTMLInputElement | null;
+
+if (fileInput && fileInput.files && fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+      avatarToSend = await convertToBase64(file);
+    }
+    else {
+      const selected = Array.from(document.querySelectorAll<HTMLDivElement>("#avatar-grid div"))
+    .find(div => div.dataset.selected === "true");
+
+      if (selected)
+        avatarToSend = selected.querySelector("img")?.getAttribute("src");
+    }
+
+    if (!avatarToSend) {
+      showAlert("Please choose an avatar");
+      return;
+    }
+
+    try {
+const token = localStorage.getItem("token");
+if (!token) {
+  showAlert("You must be logged in to choose an avatar");
+  navigate("/login");
+  return;
+}
+
+const res = await fetch("http://localhost:3000/user/avatar", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`, // ✅ send JWT
+  },
+  body: JSON.stringify({ profileImage: avatarToSend }),
+});
+
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        showAlert(data.error || "Could not save avatar");
+        return;
+      }
+
+      navigate("/login");
+    }
+    catch (err) {
+      showAlert("Network error while saving avatar");
+    }
   });
 
-  // to change the border color when an avatar is selected
-  const avatarGrid = document.getElementById("avatar-grid") as HTMLElement | null; // we got avatarGrid id so after we will need to hide the avatars that's why
+  function convertToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+}
+
+
+  // SELECT AVATAR WITH BORDER COLOR
+  const avatarGrid = document.getElementById("avatar-grid");
   if (!avatarGrid) return;
 
-  const avatars = Array.from(avatarGrid.querySelectorAll<HTMLElement>("div"));
+  const avatars = Array.from(avatarGrid.querySelectorAll("div"));
   avatars.forEach((avatar) => {
     avatar.addEventListener("click", () => {
       avatars.forEach((a) => (a.dataset.selected = "false"));
@@ -93,34 +160,32 @@ export function ChoseAvatarEventListener() {
     });
   });
 
-  // handle when the user enters an img input && preview that image with hiding other avatars && handle when back to avatars btn is clicked
-  const fileInput = document.getElementById("avatarUpload") as HTMLInputElement | null;
-  const previewEl = document.getElementById("preview-avatar") as HTMLElement | null;
-  const backBtn = document.getElementById("back-to-avatars") as HTMLButtonElement | null;
+  // UPLOAD PREVIEW
+  const fileInput = document.getElementById("avatarUpload") as HTMLInputElement | null;;
+  const previewEl = document.getElementById("preview-avatar");
+  const backBtn = document.getElementById("back-to-avatars");
 
   if (!fileInput || !previewEl || !backBtn) return;
 
   fileInput.addEventListener("change", () => {
-    const files = fileInput.files;
-    if (!files || files.length === 0) return;
+    const file = fileInput.files?.[0];
+    if (!file) return;
 
-    const file = files[0];
-    const AvatarUrl = URL.createObjectURL(file);
+    const url = URL.createObjectURL(file);
 
-    previewEl.innerHTML = `<img src="${AvatarUrl}" class="w-[90px] h-[90px] md:w-[120px] md:h-[120px] m-auto mb-[30px] md:mb-[50px] rounded-full border-[3px] border-[#D934B0] object-cover" />`
+    previewEl.innerHTML = `
+      <img src="${url}" class="w-[120px] h-[120px] m-auto rounded-full border-[3px] border-[#D934B0] object-cover" />
+    `;
 
     avatarGrid.classList.add("hidden");
     previewEl.classList.remove("hidden");
     backBtn.classList.remove("hidden");
   });
 
-
   backBtn.addEventListener("click", () => {
-    fileInput.value = ""; // Clear the file input
-
+    fileInput.value = "";
     avatarGrid.classList.remove("hidden");
     previewEl.classList.add("hidden");
     backBtn.classList.add("hidden");
-
   });
 }

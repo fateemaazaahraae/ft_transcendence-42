@@ -5,8 +5,6 @@ import { requiredAuth } from "../utils/authGuard";
 export default function Settings() {
   if (!requiredAuth())
     return "";
-  showAlert("settings rendered", "success")
-
   return `
   <div class="min-h-screen text-white font-roboto px-6 md:px-20 py-10 relative pb-[90px] overflow-y-auto">
 
@@ -49,7 +47,7 @@ export default function Settings() {
       <!-- Profile Image -->
       <div class="flex flex-col md:justify-start gap-12 w-[200px] h-[200px] md:w-[280px] md:h-[280px] lg:w-[350px] lg:h-[350px] mx-auto">
         <div class="relative">
-          <img src="../../public/pink-girl.svg" class="w-[200px] h-[200px] md:w-[280px] md:h-[280px] lg:w-[350px] lg:h-[350px] rounded-full border-2 border-primary/40 object-cover">
+          <img src="/pink-girl.svg" class="w-[200px] h-[200px] md:w-[280px] md:h-[280px] lg:w-[350px] lg:h-[350px] rounded-full border-2 border-primary/40 object-cover">
           <i class="fa-solid fa-pen-to-square absolute bottom-6 right-4 md:bottom-9 md:right-6 lg:bottom-16 text-[20px] text-primary/90 cursor-pointer"></i>
         </div>
       </div>
@@ -62,7 +60,7 @@ export default function Settings() {
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
               <label class="block text-[12px] font-medium mb-2">First Name</label>
-              <input id="firstName" type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[12px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="" />
+              <input id="firstName" type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[12px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="=" />
             </div>
             <div>
               <label class="block text-[12px] font-medium mb-2">Last Name</label>
@@ -101,12 +99,12 @@ export default function Settings() {
               <div class="flex flex-col gap-6">
                 <div>
                   <label class="block text-[12px] font-medium mb-2">Current Password</label>
-                  <input type="password" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[12px]" placeholder="Enter current password" />
+                  <input id="currentPassword" type="password" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[12px]" placeholder="Enter current password" />
                 </div>
 
                 <div>
                   <label class="block text-[12px] font-medium mb-2">New Password</label>
-                  <input type="password" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[12px]" placeholder="Enter new password" />
+                  <input id="newPassword" type="password" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[12px]" placeholder="Enter new password" />
                 </div>
               </div>
             </div>
@@ -138,13 +136,14 @@ export default function Settings() {
 async function fillSettingsPage()
 {
   const userId = localStorage.getItem("userId");
+  console.log("id --------- " + userId)
   if (!userId) {
     showAlert("Login first");
     navigate("/login");
   }
   try
   {
-    const res = await fetch(`http://localhost:3000/settings/${userId}`);
+    const res = await fetch(`http://localhost:3001/settings/${userId}`);
     const data = await res.json();
     
     // fill page
@@ -152,8 +151,8 @@ async function fillSettingsPage()
     (document.getElementById("lastName") as HTMLInputElement).value = data.lastName || "";
     (document.getElementById("userName") as HTMLInputElement).value = data.userName || "";
     (document.getElementById("email") as HTMLInputElement).value = data.email || "";
-    (document.getElementById("age") as HTMLInputElement).value = data.age || "";
-    (document.getElementById("gender") as HTMLInputElement).value = data.gender || "";
+    (document.getElementById("age") as HTMLInputElement).value = data.age?.toString() || "";
+    (document.getElementById("gender") as HTMLSelectElement).value = data.gender || "Female";
   }
   catch (err)
   {
@@ -163,6 +162,7 @@ async function fillSettingsPage()
 }
 
 export function SettingsEventListner() {
+  // showAlert("settings rendered", "success")
   fillSettingsPage();
   const settingsForm = document.getElementById("settings-form") as HTMLFormElement | null;
   if (!settingsForm)
@@ -182,28 +182,39 @@ export function SettingsEventListner() {
     const lastName = (document.getElementById("lastName") as HTMLInputElement).value;
     const userName = (document.getElementById("userName") as HTMLInputElement).value;
     const email = (document.getElementById("email") as HTMLInputElement).value;
-    const age = (document.getElementById("age") as HTMLInputElement).value;
-    const gender = (document.getElementById("gender") as HTMLInputElement).value;
+    const ageValue = Number((document.getElementById("age") as HTMLInputElement).value);
+    const genderValue = (document.getElementById("gender") as HTMLSelectElement).value;
+    const currentPassword = (document.getElementById("currentPassword") as HTMLInputElement).value;
+    const newPassword = (document.getElementById("newPassword") as HTMLInputElement).value;
 
+    const bodyData: any = {
+      firstName,
+      lastName,
+      userName,
+      email,
+      age: ageValue,
+      gender: genderValue
+    }
+
+    if (currentPassword && newPassword)
+    {
+      bodyData.currentPassword = currentPassword;
+      bodyData.newPassword = newPassword;
+    }
     try {
-      const res = await fetch(`http://localhost:3000/settings/${userId}`, {
+      const res = await fetch(`http://localhost:3001/settings/${userId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          userName,
-          email,
-          age,
-          gender
-        })
+        body: JSON.stringify(bodyData)
       });
       const data = await res.json();
       if (!res.ok) {
-        showAlert(data.error);
+        showAlert("Error: " + data.error);
         return;
       }
-      await showAlert("Profile Updating successfully", "success")
+      await showAlert("Profile Updating successfully", "success");
+      (document.getElementById("currentPassword") as HTMLInputElement).value = "";
+      (document.getElementById("newPassword") as HTMLInputElement).value = "";
     }
     catch(err)
     {

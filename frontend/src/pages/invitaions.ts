@@ -2,13 +2,13 @@ import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 
 let invitationsList = [
-  {name:"John", img:"../../public/blue-boy.svg", date:"2025-19-09"},
-  {name:"piiw", img:"../../public/red-boy.svg", date:"2025-19-09"},
-  {name:"one", img:"../../public/white-boy2.svg", date:"2025-19-09"},
-  {name:"two", img:"../../public/white-boy.svg", date:"2025-19-09"},
-  {name:"three", img:"../../public/green-girl.svg", date:"2025-19-09"},
-  {name:"four", img:"../../public/purple-girl.svg", date:"2025-19-09"},
-  {name:"five", img:"../../public/dark-girl.svg", date:"2025-19-09"},
+  {name:"John", img:"/blue-boy.svg", date:"2025-19-09"},
+  {name:"piiw", img:"/red-boy.svg", date:"2025-19-09"},
+  {name:"one", img:"/white-boy2.svg", date:"2025-19-09"},
+  {name:"two", img:"/white-boy.svg", date:"2025-19-09"},
+  {name:"three", img:"/green-girl.svg", date:"2025-19-09"},
+  {name:"four", img:"/purple-girl.svg", date:"2025-19-09"},
+  {name:"five", img:"/dark-girl.svg", date:"2025-19-09"},
 ];
 
 export default function Invitations() {

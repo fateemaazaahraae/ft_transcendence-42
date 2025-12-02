@@ -77,7 +77,7 @@ export default function Login() {
                 <i class="fa-brands fa-google"></i>
             </a>
             <a href="http://localhost:3000/auth/42">
-              <img src="/public/intra42.png" class="mt-[15%] w-[45px]" />
+              <img src="/intra42.png" class="mt-[15%] w-[45px]" />
             </a>
             </div>
             <div class="text-white mt-3 md:mt-9 text-center text-[0.8em] md:text-[0.9em] font-roboto font-semibold">
@@ -87,7 +87,7 @@ export default function Login() {
           </form>
         </div>
         </div>
-      <img src="/public/white_boy22.svg" class="hidden  lg:flex md:items-center md:justify-center mr-40 mt-[60px] md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)]">
+      <img src="/white_boy22.svg" class="hidden  lg:flex md:items-center md:justify-center mr-40 mt-[60px] md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)]">
   </div>
   `;
 }
@@ -99,15 +99,12 @@ export function LoginEventListener() {
   });
   const register = document.getElementById("register-link");
   register?.addEventListener("click", (e) => {
-    e.preventDefault();
-    navigate("/register");  
+    e.preventDefault(); 
+    navigate("/register");
   });
-
   const form = document.getElementById("loginForm") as HTMLFormElement | null;
-  if (!form) {
-    console.error("Register form not found in the DOM");
-    return;
-  }
+  if (!form) return;
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const userName = (document.getElementById("userName") as HTMLInputElement).value;
@@ -124,25 +121,21 @@ export function LoginEventListener() {
         showAlert(data.error || "login failed");
         return;
       }
-      localStorage.setItem("userId", data.userId);
+
+      // ✅ Store JWT in localStorage
       localStorage.setItem("token", data.token);
-      if (data.isTwoFactorEnabled === 1)
-      {
+      localStorage.setItem("userId", data.user.id);
+
+      if (data.isTwoFactorEnabled === 1) {
         await showAlert("Check your email - Verification code sent", "success");
         navigate("/TwoFactor");
-      }
-      else
-      {
-        await showAlert("Login goes successfully", "success");
+      } else {
+        // await showAlert("Login successful", "success");
         navigate("/home");
       }
+    } catch (err) {
+      console.error(err);
+      showAlert("Network or server error.");
     }
-    catch(err){
-      console.error("Network or server error:", err);
-      showAlert("Network hna error. Please try again." + err);
-    }
-  }) ;
-  
+  });
 }
-
-  

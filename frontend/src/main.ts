@@ -10,7 +10,7 @@ import TwoFactor, { FactorEventListener } from "./pages/TwoFactor.ts";
 import ChangePw, { ChangePwEventListener } from "./pages/changepw.ts";
 import ChoseAvatar, { ChoseAvatarEventListener } from "./pages/ChoseAvatar.ts";
 import Leaderboard from "./pages/leaderboard";
-import Settings from "./pages/settings.ts";
+import Settings, { SettingsEventListner } from "./pages/settings.ts";
 import Friends, {FriendsEventListener} from "./pages/friends.ts";
 import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
 import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
@@ -31,10 +31,10 @@ const routes: Record<string, {render: () => string; setUp?: () => void}> = {
     "/register": {render: Register, setUp: RegisterEventListener},
     "/resetpw": {render: ResetPw, setUp: ResetPwEventListener},
     "/changepw": {render: ChangePw, setUp: ChangePwEventListener},
-    "/TwoFactor": {render: TwoFactor, setUp:FactorEventListener},
-    "/ChoseAvatar": {render: ChoseAvatar, setUp:ChoseAvatarEventListener},
+    "/TwoFactor": {render: TwoFactor, setUp: FactorEventListener},
+    "/ChoseAvatar": {render: ChoseAvatar, setUp: ChoseAvatarEventListener},
     "/leaderboard": {render: Leaderboard},
-    "/settings": {render: Settings},
+    "/settings": {render: Settings, setUp: SettingsEventListner},
     "/friends": {render: Friends, setUp: FriendsEventListener},
     "/invitations": {render: Invitations, setUp: InvitationsEventListener},
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
