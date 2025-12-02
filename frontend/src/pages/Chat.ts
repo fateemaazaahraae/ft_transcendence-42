@@ -38,11 +38,11 @@ export default function Chat() {
 
   <!-- chat side 
   -->
-<div class="h-screen w-screen md:ml-[100px] flex items-center justify-center pt-24 pb-6 md:pt-28 md:px-0">  
+<div class="h-full w-screen md:ml-[100px] flex items-center justify-center pt-24 pb-6 md:pt-28 md:px-0">  
   <div id="chat_panels_wrapper" 
          class="m-5 mb-4 w-full md:w-[90%] md:mx-auto h-[calc(100vh-12rem)] md:h-[700px] 
-                shadow-lg flex md:flex-row relative overflow-hidden text-white gap-4">
-    <div id="contacts_side" class="w-full h-full md:w-1/3 flex-shrink-0"> 
+            shadow-lg flex md:flex-row relative overflow-hidden text-white gap-x-4">
+    <div id="contacts_side" class="w-full h-full md:w-1/3 flex-shrink-0 "> 
    
     
     <!-- Sidebar: Chat Profiles -->
@@ -180,14 +180,14 @@ export default function Chat() {
       </div>
 
       <!-- Main Chat Window -->
- <div class="h-screen w-full md:w-[80%]"> 
+ <div class="h-full w-full md:w-[80%] "> 
     
    <div id="main_chat" 
      class="w-full h-full 
             absolute top-0 left-0  
             shadow-lg overflow-hidden text-white 
             hidden 
-            md:relative md:flex lg:w-[90%] md:w-[90%] md:h-full">
+            md:relative md:flex lg:w-[90%] md:w-[90%] md:h-[700px]">
         
         <div id="chatContainer" class="w-full h-full flex flex-col">
             <div class="relative flex items-center justify-between p-3 rounded-t-xl bg-primary/80"> <div class="flex items-center gap-3">
