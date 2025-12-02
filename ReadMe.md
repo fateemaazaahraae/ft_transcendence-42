@@ -129,23 +129,17 @@ returning response  success: true
 #### 1- Separation of concerns
 Frontend server: serve HTML/CSS/JS, handle non-real-time REST endpoints, static assets.
 Game server: run game loop, manage real-time connections, authoritative physics/state, match logic.
-
 #### 2- Different protocols and performance needs
 HTTP(S) is request/response and stateless → great for login, fetching data, loading the app.
 WebSockets (or WebRTC) keep persistent connections → required for low-latency multiplayer updates (positions, inputs).
-
 #### 3- Scaling independently
 If many players join games, only game servers need more resources. If many visitors browse pages, only frontend/CDN needs scaling.
-
 #### 4- Authoritative game logic & fairness
 Keeping game rules on the server prevents cheating. Clients send inputs; server computes and broadcasts state.
-
 #### 5- Fault isolation & maintenance
 Deploying or restarting the frontend won’t kick players out of games if the game server is separate (and vice versa).
-
 #### 6- Security
 The game server can be put behind more strict rules and only expose sockets. Sensitive operations (matchmaking, anti-cheat) stay isolated.
-
 #### 7- Easier testing & development
 You can run and test the game server locally without rebuilding frontend assets, and mock HTTP endpoints independently.
 
