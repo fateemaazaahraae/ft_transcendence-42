@@ -2,7 +2,10 @@ import "./../styles/index.css";
 import Landing, { LandingEventListener } from "./pages/landing";
 import Home, { HomeEventListener } from "./pages/home";
 import GameStyle, { GameStyleEventListener } from "./pages/gameStyle.ts";
+import LocalGameStyle, { LocalGameStyleEventListener } from "./pages/LocalgameStyle.ts";
 import Game from "./pages/game.ts";
+import LocalGame, { LocalGameEventListener } from "./pages/Localgame.ts";
+import AiGame, { AiGameEventListener } from "./pages/Aigame.ts";
 import Login, { LoginEventListener } from "./pages/login";
 import Register, { RegisterEventListener } from "./pages/register.ts";
 import ResetPw, { ResetPwEventListener } from "./pages/resetpw.ts";
@@ -26,7 +29,10 @@ const routes: Record<string, {render: () => string; setUp?: () => void}> = {
     "/": {render: Landing, setUp: LandingEventListener},
     "/home": {render: Home, setUp: HomeEventListener},
     "/gameStyle": {render: GameStyle, setUp: GameStyleEventListener},
+    "/LocalgameStyle": {render: LocalGameStyle, setUp: LocalGameStyleEventListener},
     "/game": {render: Game},
+    "/Localgame": {render: LocalGame, setUp: LocalGameEventListener},
+    "/Aigame": {render: AiGame, setUp: AiGameEventListener},
     "/login": {render: Login, setUp: LoginEventListener},
     "/register": {render: Register, setUp: RegisterEventListener},
     "/resetpw": {render: ResetPw, setUp: ResetPwEventListener},

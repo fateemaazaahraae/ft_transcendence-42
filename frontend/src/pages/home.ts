@@ -76,15 +76,24 @@ export default function Home() {
             <span class="text-secondary ml-2">700</span>
             </p>
           </div>
+        <button id="play-btn" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out pt-[300px]">
+          PlayNow
+        </button>
       </div>
     </div>
     </div>
    `;
 }
 
-export function HomeEventListener()
-{
-  const btnPlay = document.getElementById("play-btn2");
-  btnPlay?.addEventListener("click", () => {navigate("/gameStyle");
-});
+export function HomeEventListener() {
+  setTimeout(() => {
+    const btnPlay = document.getElementById("play-btn");
+    if (btnPlay) {
+      btnPlay.addEventListener("click", () => {
+        console.log("play Button clicked");
+        navigate("/LocalgameStyle");
+      });
+    }
+  }, 100);
 }
+

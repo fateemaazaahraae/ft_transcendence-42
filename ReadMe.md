@@ -58,7 +58,11 @@ FRONTEND receives response
 
 
 
-# 🎮 GAME PART 🎮
+# 🎮 LOCAL GAME PART 🎮
+==================================================
+
+First step add the Event Listener to the play button..
+
 
 ==================================================
 ## First creat server instance: 
