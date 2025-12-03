@@ -1,15 +1,17 @@
 // import sqlite3 from sqlite3
 import Database from 'better-sqlite3';
+import fs from "fs";
+import path from "path";
+import dotenv from "dotenv";
+dotenv.config();
 
-// const Database = require('better-sqlite3')
-const fs = require('fs');
-const path = require('path');
-require('dotenv').config();
 
-const dbasePath = process.env.dbasePath || path.join(__dirname,'..','data','chat.db');
+const dbasePath = process.env.DATABASE_PATH || path.join(process.cwd(),"src","data","chat.db");
 const dir =path.dirname(dbasePath);
-if(!fs.existsSync(dir)) fs.mkdirSync(dir,{recursive: true});
-
+if(!fs.existsSync(dir)) 
+    {
+        fs.mkdirSync(dir,{recursive: true});
+    }
 const db = new Database(dbasePath);
 
 //init tables
