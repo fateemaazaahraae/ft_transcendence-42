@@ -37,7 +37,7 @@ export default function LocalGame() {
 
     <!-- Player Info & Score -->
     <div class="absolute flex top-[15%] md:top-[20%] lg:top-[23%] xl:top-[18%] left-[6%] md:left-[2%] lg:left-[11%] xl:left-[22%] md:translate-x-1/2">
-        <img src="${game.match[0].player1.avatar}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+        <i class="object-cover fa-solid fa-circle-user text-[50px] md:text-[50px] lg:text-[120px] xl:text-[95px] text-primary/90"></i>
         <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[3%] lg:ml-[10%] ">
           <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${game.match[0].player1.name} </h1>
           <span id="player1-score-display" class="w-[40px] h-[30px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-primary text-xl bg-black drop-shadow-cyann">0</span>
@@ -46,7 +46,7 @@ export default function LocalGame() {
           <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${game.match[0].player2.name} </h1>
           <span id="player2-score-display" class="w-[40px] h-[30px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-secondary text-xl bg-black drop-shadow-pink">0</span>
         </div>
-        <img src="${game.match[0].player2.avatar}" class="w-[60px] h-[60px] ml-[1%] md:ml-[3%] lg:ml-[10%] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-secondary object-cover border-[2px]"/>
+        <i class="object-cover fa-solid fa-circle-user text-[50px] md:text-[50px] lg:text-[120px]  ml-[1%] md:ml-[3%] lg:ml-[10%] xl:text-[95px] text-secondary/75"></i>
     </div>
 
 
@@ -74,33 +74,120 @@ export function LocalGameEventListener() {
     }
     
     // Get the canvas element
-    const canvas = document.getElementById('pongCanvas') as HTMLCanvasElement;
-    if (canvas) {
+    const canvas = document.getElementById('pongCanvas') as HTMLCanvasElement | null;
+    if (canvas)
+    {
       console.log("Canvas found! Ready to start game.");
       
-      // Set canvas size to match its display size
+      // The canvas size (height and width)
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
+      console.log(canvas.height);
       
       // Draw a simple test to see if canvas works
-      const ctx = canvas.getContext('2d');/// the rectangle size is: hight: 580 and width: 1335
+      const ctx = canvas.getContext('2d');/// the rectangle size is: hight: 580 and width: 1344
       if (ctx) {
-        // Drawing the paddles
-        ctx.fillStyle = '#35C6DDCC';
-        ctx.fillRect(8, 70, 10, 115);
+        const c = ctx;
+        var x = canvas.width / 2;
+        var y = canvas.height / 2;
+        const width = canvas ? canvas.width : 0;
+        const height = canvas ? canvas.height : 0;
 
-        ctx.fillStyle = '#F40CA4';
-        ctx.fillRect(1326, 395, 10, 115);
 
-        ctx.fillStyle = '#35C6DD66';
-        ctx.fillRect(667.5, 0, 3, 580);
+        var paddleWidth = 10;
+        var paddleHeight = 115;
+        var paddleLeftX = 8;
+        var paddleLeftY = 350;
+        var paddleRightX = width - paddleWidth - 8;
+        var paddleRightY = 345;
+        function drawScene() {
+          // Drawing Midle line
+          c.fillStyle = '#35C6DD66';
+          c.fillRect(width / 2, 0, 3, height);
+          
+          // Drawing the paddles
+          c.fillStyle = '#35C6DDCC';
+          c.fillRect(paddleLeftX, paddleLeftY, paddleWidth, paddleHeight);
 
-        // draw next the middle line at 530 in the field (width size)
-        
-        // Draw test text
-        // ctx.fillStyle = 'white';
-        // ctx.font = '20px Arial';
-        // ctx.fillText('Game Canvas Ready!', 100, 200);
+          c.fillStyle = '#F40CA4';
+          c.fillRect(paddleRightX, paddleRightY, paddleWidth, paddleHeight); /// the 70 and 395 value should be variables
+        }
+
+        function CollitionWithPaddle()
+        {
+          if (((x + 10 > paddleLeftX && y < paddleLeftY) || (x + 10 > paddleLeftX && y > paddleLeftY + paddleHeight))
+          || ((x + 10 > paddleRightX && y < paddleRightY) || (x + 10 > paddleRightX && y > paddleRightY - paddleHeight)))//////I have collision problem hereeeee!!!!!
+          {
+            console.log('supositly it should not have hit a paddle!!');
+            return 1;
+          }
+          console.log('It should have hit a paddle!!');
+          return 0;
+        }
+
+        let keys = {
+          'w': false,
+          's': false,
+          'ArrowUp': false,
+          'ArrowDown': false,
+        }
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'w') keys['w'] = true;
+          if (e.key === 's') keys['s'] = true;
+          if (e.key === 'ArrowUp') keys['ArrowUp'] = true;
+          if (e.key === 'ArrowDown') keys['ArrowDown'] = true;
+        });
+        document.addEventListener('keyup', (e) => {
+          if (e.key === 'w') keys['w'] = false;
+          if (e.key === 's') keys['s'] = false;
+          if (e.key === 'ArrowUp') keys['ArrowUp'] = false;
+          if (e.key === 'ArrowDown') keys['ArrowDown'] = false;
+        });
+
+        var mx = Math.random() < 0.5 ? 4 : -4;
+        var my = Math.random() < 0.5 ? 4 : -4;
+
+        function animate() {
+          requestAnimationFrame(animate);
+          c.clearRect(0, 0, width, height);
+          drawScene();
+
+          if (keys['w']) {
+            paddleLeftY -= 4;
+          }
+          if (keys['s']) {
+            paddleLeftY += 4;
+          }
+          if (keys['ArrowUp']) {
+            paddleRightY -= 4;
+          }
+          if (keys['ArrowDown']) {
+            paddleRightY += 4;
+          }
+
+          c.beginPath();
+          c.arc(x, y, 10, 0, Math.PI * 2, false);
+          c.fillStyle = 'white';
+          c.fill();
+          c.stroke();
+          if (y + 10 > height || y - 10 < 0) {
+            my = -my;
+          }
+          if ((x + 10 > width && CollitionWithPaddle()) || (x - 10 < 0 && CollitionWithPaddle())) { ///// add if the ball doesn't touch the paddle
+            x = width / 2;
+            y = height / 2; // Reset mx (horizontal speed)
+            mx = Math.random() < 0.5 ? 4 : -4;
+            my = Math.random() < 0.5 ? 4 : -4;
+          }
+          if ((x + 10 > paddleRightX && !CollitionWithPaddle()) || (x - 10 < paddleWidth + paddleLeftX && !CollitionWithPaddle()))
+          {
+            mx = -mx;
+          }
+          y += my;
+          x += mx;
+          // console.log('infinitly');
+        }
+        animate();
       }
     }
   }, 100);
