@@ -113,7 +113,7 @@ export default function Settings() {
             <div>
               <h2 class="text-[18px] font-semibold mb-4">Two-Factor Authentication</h2>
               <p class="text-[13px] max-w-[330px] mb-6"> Add an extra layer of protection to your account by requiring a verification code before access. </p>
-              <button class="text-[12px] w-[100px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-bold hover:bg-primary/60 hover:text-black transition-colors">
+              <button id="2fa-button" class="text-[12px] w-[100px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-bold hover:bg-primary/60 hover:text-black transition-colors">
                 Enable
               </button>
             </div>
@@ -136,7 +136,6 @@ export default function Settings() {
 async function fillSettingsPage()
 {
   const userId = localStorage.getItem("userId");
-  console.log("id --------- " + userId)
   if (!userId) {
     showAlert("Login first");
     navigate("/login");
@@ -161,12 +160,51 @@ async function fillSettingsPage()
   }
 }
 
+function handleTwoFactorButton(twoFactorButton: HTMLButtonElement) {
+  twoFactorButton.addEventListener("click", async(e) => {
+    e.preventDefault();
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      showAlert("Login first");
+      navigate("/login");
+      return;
+    }
+    try {
+      const res = await fetch(`http://localhost:3001/settings/${userId}/2fa`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+      })
+      const data = await res.json();
+      if (!res.ok) {
+        showAlert("Error: " + data.error);
+        return;
+      }
+      if (twoFactorButton.innerText.trim() === "Enable")
+        twoFactorButton.innerText = "Disable";
+      else
+        twoFactorButton.innerText = "Enable";
+      showAlert(data.message || "2FA status updated!", "success");
+    }
+    catch (err)
+    {
+      console.error(err);
+      showAlert("Netword error while enable/disable 2fa")
+    }
+  })
+}
+
 export function SettingsEventListner() {
   // showAlert("settings rendered", "success")
   fillSettingsPage();
   const settingsForm = document.getElementById("settings-form") as HTMLFormElement | null;
-  if (!settingsForm)
-  {
+  const twoFactorButton = document.getElementById("2fa-button") as HTMLButtonElement;
+  if (!twoFactorButton) {
+    console.error("2fa button not found in the DOM");
+    return;
+  }
+  else
+    handleTwoFactorButton(twoFactorButton);
+  if (!settingsForm) {
     console.error("Settings form not found in the DOM");
     return;
   }

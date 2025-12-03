@@ -52,20 +52,4 @@ export default function userRoutes(fastify) {
         );
         return { message: "Password updated successfully" };
     });
-
-    // ---- UPDATE THE 2FA
-    fastify.put("/users/:id/2fa", async (req, rep) => {
-        const { id } = req.params;
-        const db = await openDb();
-        const exists = await db.get("SELECT id FROM users WHERE id = ?", [id]);
-        if (!exists)
-            return rep.status(404).send({ message: "User not found" });
-        const old2FA = await db.get("SELECT isTwoFactorEnabled FROM users WHERE id = ?", [id])
-        const new2FA = !old2FA.isTwoFactorEnabled;
-        await db.run(
-            `UPDATE users SET isTwoFactorEnabled = ? WHERE id = ?`,
-            [new2FA, id]
-        )
-        return { message: "2FA updated", enabled: new2FA }
-    })
 }

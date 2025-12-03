@@ -59,6 +59,16 @@ export function settingsRoutes(fastify) {
         return { message: "Profile updated successfully :)" }
     });
 
+    fastify.put("/settings/:id/2fa", async (req, rep) => {
+        const { id } = req.params;
+        const res = await fetch(`http://auth-service:3000/users/${id}/2fa`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" }
+        })
+        const data = await res.json();
+        return rep.status(res.status).send(data);
+    })
+
     // ---- UPDATE PASSWORD ----
     // fastify.put("/settings/:id/password", async (req, rep) => {
     //     const { id } = req.params;
