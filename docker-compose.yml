@@ -33,10 +33,12 @@ services:
     networks:
       - ft_transcendence
     
-  #chat service
+  # chat service
   chat-service:
     build: ./backend/chat-service
     container_name: chat-service
+    env_file:
+      - ./backend/chat-service/.env
     environment:
       - JWT_SECRET=${JWT_SECRET}
       - API_URL=http://backend-api:3000
