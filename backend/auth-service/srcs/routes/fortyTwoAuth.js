@@ -47,16 +47,17 @@ export function intra42AuthRoutes(fastify) {
     });
     const profile = await userRes.json();
     const { login, first_name, last_name, email, image } = profile;
-    const profileImage = image?.link || "";
+    const profileImage =
+      image?.link ||
+      image?.versions?.large ||
+      "/blue-boy.svg";
 
     let user = await findUserByEmail(email);
     
     if (!user) {
-      
       await createUser(first_name, last_name, login, email, Math.random().toString(36), profileImage);
       user = await findUserByEmail(email); // <- RE-FETCH from DB to get proper stored values
     }
-    console.log("--------------------------------------------------------->>>>>>>>>>>>>>>> User profileImage stored in JWT:", user.profileImage);
 
     const jwtToken = fastify.jwt.sign({
         id: user.id,

@@ -60,7 +60,7 @@ export default async function Home() {
    <div class="flex justify center items-center">
       <!-- Avatar -->
       <img 
-        src="${user.profileImage}" alt="waaaaaaaaaaaaaaaaaaaaa"
+        src="${user.profileImage || 'default.png'}" alt="waaaaaaaaaaaaaaaaaaaaa"
         class="object-cover w-[110px] h-[110px] md:w-[150px] md:h-[150px] xl:w-[220px] xl:h-[220px] rounded-full border-[3px] border-[#35C6DD]"
       >
 

@@ -34,6 +34,14 @@ export async function updateAvatar(userId, profileImage) {
 
 }
 
+export async function updateUser(userId, firstName, lastName, userName, profileImage){
+  const db = await openDb();
+  await db.run(
+    `UPDATE users SET firstName = ?, lastName = ?, userName = ?, profileImage = ? WHERE id = ?`,
+    [firstName, lastName, userName, profileImage, userId]
+  );
+}
+
 // Find user by id
 export async function findUserById(userId) {
   const db = await openDb();
