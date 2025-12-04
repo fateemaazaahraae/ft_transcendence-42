@@ -3,8 +3,8 @@ import { showAlert } from "../utils/alert.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 
 export default function ChoseAvatar() {
-  if (!requiredAuth())
-      return "";
+  // if (!requiredAuth())
+  //     return "";
   return `<div class="min-h-screen w-full flex items-center justify-center gap-[8px] relative pt-[3%]">
 
     <div class="relative inset-0 items-center h-[650px] md:h-[750px] w-full md:w-[820px] pt-[75px] md:pt-[130px] rounded-[50px] overflow-hidden">
@@ -89,14 +89,13 @@ export function ChoseAvatarEventListener() {
     let avatarToSend = null;
     const fileInput = document.getElementById("avatarUpload") as HTMLInputElement | null;
 
-if (fileInput && fileInput.files && fileInput.files.length > 0) {
-    const file = fileInput.files[0];
-      avatarToSend = await convertToBase64(file);
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+        avatarToSend = await convertToBase64(file);
     }
     else {
       const selected = Array.from(document.querySelectorAll<HTMLDivElement>("#avatar-grid div"))
-    .find(div => div.dataset.selected === "true");
-
+      .find(div => div.dataset.selected === "true");
       if (selected)
         avatarToSend = selected.querySelector("img")?.getAttribute("src");
     }
@@ -107,30 +106,25 @@ if (fileInput && fileInput.files && fileInput.files.length > 0) {
     }
 
     try {
-const token = localStorage.getItem("token");
-if (!token) {
-  showAlert("You must be logged in to choose an avatar");
-  navigate("/login");
-  return;
-}
-
-const res = await fetch("http://localhost:3000/user/avatar", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${token}`, // ✅ send JWT
-  },
-  body: JSON.stringify({ profileImage: avatarToSend }),
-});
-
-
+      const token = localStorage.getItem("token");
+      if (!token) {
+        showAlert("You must be logged in to choose an avatar");
+        navigate("/login");
+        return;
+      }
+      const res = await fetch("http://localhost:3000/user/avatar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // ✅ send JWT
+        },
+        body: JSON.stringify({ profileImage: avatarToSend }),
+      });
       const data = await res.json();
-
       if (!res.ok) {
         showAlert(data.error || "Could not save avatar");
         return;
       }
-
       navigate("/login");
     }
     catch (err) {

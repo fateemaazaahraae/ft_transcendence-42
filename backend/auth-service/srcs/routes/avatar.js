@@ -5,18 +5,12 @@ export default async function avatarRoutes(fastify) {
 
  fastify.post("/user/avatar", { preHandler: fastify.authenticate }, async (req, reply) => {
   try {
-    console.log("req.user =", req.user);
-    console.log("body =", req.body);
     const userId = req.user.id;
     const { profileImage } = req.body;
-
-
     if (!profileImage) {
       return reply.status(400).send({ error: "Profile image is required" });
     }
-
     await updateAvatar(userId, profileImage);
-
     return reply.send({ message: "Profile image saved successfully" });
 
   } catch (err) {

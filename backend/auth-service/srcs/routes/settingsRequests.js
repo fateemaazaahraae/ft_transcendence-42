@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs"
 import { openDb } from "../models/db.js";
+import { updateAvatar } from "../models/user.js";
 
 // FOR PROFILE SERVICE REQUESTS
 export default function userRoutes(fastify) {
@@ -9,7 +10,7 @@ export default function userRoutes(fastify) {
         const { id } = req.params;
         const db = await openDb();
         const user = await db.get(
-            "SELECT id, firstName, lastName, userName, email, profileImage FROM users WHERE id = ?",
+            "SELECT id, firstName, lastName, userName, email, profileImage, isTwoFactorEnabled FROM users WHERE id = ?",
             [id]
         );
         if (!user)
@@ -67,5 +68,18 @@ export default function userRoutes(fastify) {
             [new2FA, id]
         )
         return { message: "2FA updated", enabled: new2FA }
-    })
+    });
+
+    // ---- Change profileImage ----
+    fastify.put("/users/:id/avatar", async (req, rep) => {
+        const { id } = req.params;
+        const { profileImage } = req.body;
+        if (!profileImage)
+            return rep.status(400).send({ error: "Profile image is required" });
+        await updateAvatar(id, profileImage);
+        return rep.status(200).send({
+            message: "Profile image saved successfully",
+            profileImage: profileImage
+        });
+    });
 }

@@ -98,9 +98,7 @@ form.addEventListener("submit", async (e) => {
       showAlert(data.error || "Registration failed");
       return;
     }
-
-    // ✅ Store JWT immediately
-    // localStorage.setItem("token", data.token);
+    localStorage.setItem("token", data.token);
     // localStorage.setItem("userId", data.user.id);
 
     showAlert("Registration successful", "success");

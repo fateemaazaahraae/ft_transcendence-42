@@ -124,13 +124,14 @@ export function LoginEventListener() {
 
       // ✅ Store JWT in localStorage
       localStorage.setItem("token", data.token);
-      localStorage.setItem("userId", data.user.id);
-
+      
       if (data.isTwoFactorEnabled === 1) {
+        localStorage.setItem("userId", data.userId);
         await showAlert("Check your email - Verification code sent", "success");
         navigate("/TwoFactor");
       } else {
         // await showAlert("Login successful", "success");
+        localStorage.setItem("userId", data.user.id);
         navigate("/home");
       }
     } catch (err) {

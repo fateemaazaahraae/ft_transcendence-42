@@ -21,7 +21,8 @@ export function settingsRoutes(fastify) {
             email: authUser.email,
             profileImage: authUser.profileImage,
             age: profile?.age || null,
-            gender: profile?.gender || null
+            gender: profile?.gender || null,
+            isTwoFactorEnabled: authUser.isTwoFactorEnabled
         };
     });
 
@@ -59,28 +60,26 @@ export function settingsRoutes(fastify) {
         return { message: "Profile updated successfully :)" }
     });
 
+    // ---- Enable/Disable 2fa ----
     fastify.put("/settings/:id/2fa", async (req, rep) => {
         const { id } = req.params;
         const res = await fetch(`http://auth-service:3000/users/${id}/2fa`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" }
+            method: "PUT"
         })
         const data = await res.json();
         return rep.status(res.status).send(data);
     })
 
-    // ---- UPDATE PASSWORD ----
-    // fastify.put("/settings/:id/password", async (req, rep) => {
-    //     const { id } = req.params;
-    //     const { currentPassword, newPassword } = req.body;
-
-    //     const response = await fetch(`http://auth-service:3000/users/${id}/password`, {
-    //         method: "PUT",
-    //         headers: { "Content-Type": "application/json" },
-    //         body: JSON.stringify({currentPassword, newPassword})
-    //     });
-
-    //     const data = await response.json();
-    //     return rep.status(response.status).send(data);
-    // });
+    // ---- Change profileImage ----
+    fastify.put("/settings/:id/avatar", async (req, rep) => {
+        const { id } = req.params;
+        const { profileImage } = req.body;
+        const res = await fetch(`http://auth-service:3000/users/${id}/avatar`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ profileImage })
+        })
+        const data = await res.json();
+        return rep.status(res.status).send(data);
+    });
 }
