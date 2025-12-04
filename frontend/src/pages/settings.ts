@@ -1,3 +1,4 @@
+import { read } from "fs";
 import { navigate } from "../main";
 import { showAlert } from "../utils/alert";
 import { requiredAuth } from "../utils/authGuard";
@@ -332,10 +333,15 @@ export function SettingsEventListner() {
       const target = event.target as HTMLInputElement;
       const file = target.files?.[0];
       if (!file) return;
-      selectedAvatar = URL.createObjectURL(file);
-      avatarOptions.forEach(a => a.setAttribute("data-selected", "false"));
-      modal.classList.remove("flex")
-      modal.classList.add("hidden")
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        selectedAvatar = reader.result as string;
+        avatarOptions.forEach(a => a.setAttribute("data-selected", "false"));
+        modal.classList.remove("flex")
+        modal.classList.add("hidden")
+      }
+      reader.readAsDataURL(file);
     });
 
     // sending the image to the backend
