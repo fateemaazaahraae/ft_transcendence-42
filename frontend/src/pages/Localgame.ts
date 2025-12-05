@@ -96,32 +96,35 @@ export function LocalGameEventListener() {
 
         var paddleWidth = 10;
         var paddleHeight = 115;
-        var paddleLeftX = 8;
-        var paddleLeftY = 350;
         var paddleRightX = width - paddleWidth - 8;
         var paddleRightY = 345;
+        var paddleLeftX = 8;
+        var paddleLeftY = 350;
         function drawScene() {
           // Drawing Midle line
           c.fillStyle = '#35C6DD66';
           c.fillRect(width / 2, 0, 3, height);
+
+          // c.fillStyle = '#fff';
+          // c.fillRect(1330, 570, 10, 10);
           
           // Drawing the paddles
-          c.fillStyle = '#35C6DDCC';
-          c.fillRect(paddleLeftX, paddleLeftY, paddleWidth, paddleHeight);
-
-          c.fillStyle = '#F40CA4';
+          c.fillStyle = '#F40CA4';////////right paddle
           c.fillRect(paddleRightX, paddleRightY, paddleWidth, paddleHeight); /// the 70 and 395 value should be variables
+
+          c.fillStyle = '#35C6DDCC';////////right paddle
+          c.fillRect(paddleLeftX, paddleLeftY, paddleWidth, paddleHeight);
         }
 
         function CollitionWithPaddle()
         {
-          if (((x + 10 > paddleLeftX && y < paddleLeftY) || (x + 10 > paddleLeftX && y > paddleLeftY + paddleHeight))
-          || ((x + 10 > paddleRightX && y < paddleRightY) || (x + 10 > paddleRightX && y > paddleRightY - paddleHeight)))//////I have collision problem hereeeee!!!!!
+          if ((x + 10 > paddleRightX &&  (y > paddleRightY && y < paddleRightY + paddleHeight))
+              || x - 10 < paddleLeftX + paddleWidth && (y > paddleLeftY && y < paddleLeftY + paddleHeight))
           {
-            console.log('supositly it should not have hit a paddle!!');
+            console.log('It should have hit a paddle!!');
             return 1;
           }
-          console.log('It should have hit a paddle!!');
+          console.log('supositly it should not have hit a paddle!!');
           return 0;
         }
 
@@ -152,16 +155,16 @@ export function LocalGameEventListener() {
           c.clearRect(0, 0, width, height);
           drawScene();
 
-          if (keys['w']) {
+          if (keys['w'] && paddleLeftY > 0) {
             paddleLeftY -= 4;
           }
-          if (keys['s']) {
+          if (keys['s'] && paddleLeftY + paddleHeight < height) {
             paddleLeftY += 4;
           }
-          if (keys['ArrowUp']) {
+          if (keys['ArrowUp'] && paddleRightY > 0) {
             paddleRightY -= 4;
           }
-          if (keys['ArrowDown']) {
+          if (keys['ArrowDown'] && paddleRightY + paddleHeight < height) {
             paddleRightY += 4;
           }
 
@@ -172,16 +175,16 @@ export function LocalGameEventListener() {
           c.stroke();
           if (y + 10 > height || y - 10 < 0) {
             my = -my;
-          }
-          if ((x + 10 > width && CollitionWithPaddle()) || (x - 10 < 0 && CollitionWithPaddle())) { ///// add if the ball doesn't touch the paddle
-            x = width / 2;
-            y = height / 2; // Reset mx (horizontal speed)
-            mx = Math.random() < 0.5 ? 4 : -4;
-            my = Math.random() < 0.5 ? 4 : -4;
-          }
-          if ((x + 10 > paddleRightX && !CollitionWithPaddle()) || (x - 10 < paddleWidth + paddleLeftX && !CollitionWithPaddle()))
+          }    ///// Condition for the right paddle         ///// Condition for the left paddle
+          if (CollitionWithPaddle())
           {
             mx = -mx;
+          }
+          if (x - 10 > width || x + 10 < 0) { ///// add if the ball doesn't touch the paddle
+            x = width / 2;
+            y = height / 2; // Reset mx (horizontal speed)
+            mx = Math.random() < 0.5 ? 5 : -5;
+            my = Math.random() < 0.5 ? 5 : -5;
           }
           y += my;
           x += mx;
