@@ -8,11 +8,13 @@ rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 
-RUN npm install
+# RUN npm install
 
-RUN npm install @fastify/multipart
+# RUN npm install @fastify/multipart
 
-RUN npm rebuild sqlite3 --build-from-source
+# RUN npm install --build-from-source=sqlite3
+
+RUN npm install --build-from-source=sqlite3
 
 COPY . .
 

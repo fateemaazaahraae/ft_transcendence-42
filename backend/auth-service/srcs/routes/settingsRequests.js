@@ -1,8 +1,6 @@
 import bcrypt from "bcryptjs"
 import { openDb } from "../models/db.js";
 import { updateAvatar } from "../models/user.js";
-import fastifyMultipart from "@fastify/multipart";
-fastify.register(fastifyMultipart);
 
 // FOR PROFILE SERVICE REQUESTS
 export default function userRoutes(fastify) {
