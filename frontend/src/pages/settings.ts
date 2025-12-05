@@ -355,12 +355,19 @@ export function SettingsEventListner() {
       }
 
       const formData = new FormData();
+      console.log("\n\n------ " + file + "\n\n\n")
       formData.append("image", file);
 
       try {
+        const token = localStorage.getItem("token")
         const res = await fetch(`http://localhost:3001/settings/${userId}/upload`, {
             method: "PUT",
-            body: formData
+            body: formData,
+            headers: {
+              // **Do not set Content-Type manually** when using FormData
+              // 'Content-Type': 'multipart/form-data' <-- remove this
+              'Authorization': `Bearer ${token}`,
+            },
         });
         const data = await res.json();
         if (!res.ok) {

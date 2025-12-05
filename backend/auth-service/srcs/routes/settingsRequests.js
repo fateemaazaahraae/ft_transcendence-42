@@ -85,6 +85,7 @@ export default function userRoutes(fastify) {
 
     // ---- Change profileImage (upload) ----
     fastify.put("/users/:id/upload", async (req, rep) => {
+        console.log(req.headers);
         const data = await req.file();
         if (!data)
             return rep.status(400).send({ error: "No file uploaded" });

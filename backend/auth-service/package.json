@@ -19,7 +19,7 @@
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "uuid": "^13.0.0",
-    "@fastify/multipart": "^8.0.0"
+    "@fastify/multipart": "^9.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
