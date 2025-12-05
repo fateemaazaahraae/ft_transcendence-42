@@ -1,4 +1,3 @@
-import { read } from "fs";
 import { navigate } from "../main";
 import { showAlert } from "../utils/alert";
 import { requiredAuth } from "../utils/authGuard";
@@ -329,20 +328,56 @@ export function SettingsEventListner() {
     });
 
     // upload button
-    fileInput.addEventListener("change", (event: Event) => {
-      const target = event.target as HTMLInputElement;
-      const file = target.files?.[0];
+    // fileInput.addEventListener("change", (event: Event) => {
+    //   const target = event.target as HTMLInputElement;
+    //   const file = target.files?.[0];
+    //   if (!file) return;
+
+    //   const reader = new FileReader();
+    //   reader.onload = () => {
+    //     selectedAvatar = reader.result as string;
+    //     avatarOptions.forEach(a => a.setAttribute("data-selected", "false"));
+    //     modal.classList.remove("flex")
+    //     modal.classList.add("hidden")
+    //   }
+    //   reader.readAsDataURL(file);
+    // });
+
+    fileInput.addEventListener("change", async () => {
+      const file = fileInput.files?.[0];
       if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        selectedAvatar = reader.result as string;
-        avatarOptions.forEach(a => a.setAttribute("data-selected", "false"));
-        modal.classList.remove("flex")
-        modal.classList.add("hidden")
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+          showAlert("Login first");
+          navigate("/login");
+          return;
       }
-      reader.readAsDataURL(file);
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      try {
+        const res = await fetch(`http://localhost:3001/settings/${userId}/upload`, {
+            method: "PUT",
+            body: formData
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            showAlert("Upload failed: " + data.error);
+            return;
+        }
+        // Update preview image
+        const myImg = document.getElementById("myImg") as HTMLImageElement;
+        myImg.src = data.profileImage;
+        showAlert("Profile image updated!", "success");
+      }
+      catch (error) {
+        console.error(error);
+        showAlert("Network error while uploading");
+      }
     });
+
 
     // sending the image to the backend
     saveButton.addEventListener("click", async () => {

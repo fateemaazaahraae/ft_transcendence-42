@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs"
 import { openDb } from "../models/db.js";
 import { updateAvatar } from "../models/user.js";
+import fastifyMultipart from "@fastify/multipart";
+fastify.register(fastifyMultipart);
 
 // FOR PROFILE SERVICE REQUESTS
 export default function userRoutes(fastify) {
@@ -70,7 +72,7 @@ export default function userRoutes(fastify) {
         return { message: "2FA updated", enabled: new2FA }
     });
 
-    // ---- Change profileImage ----
+    // ---- Change profileImage (avatar) ----
     fastify.put("/users/:id/avatar", async (req, rep) => {
         const { id } = req.params;
         const { profileImage } = req.body;
@@ -80,6 +82,28 @@ export default function userRoutes(fastify) {
         return rep.status(200).send({
             message: "Profile image saved successfully",
             profileImage: profileImage
+        });
+    });
+
+    // ---- Change profileImage (upload) ----
+    fastify.put("/users/:id/upload", async (req, rep) => {
+        const data = await req.file();
+        if (!data)
+            return rep.status(400).send({ error: "No file uploaded" });
+
+        const fileName = Date.now() + "-" + data.filename;
+        const filePath = "/uploads/" + fileName;
+
+        await pump(data.file, fs.createWriteStream("./uploads/" + fileName));
+
+        await db.run(
+            "UPDATE users SET profileImage = ? WHERE id = ?",
+            [filePath, req.params.id]
+        );
+
+        return rep.status(200).send({
+            message: "Image updated",
+            profileImage: filePath
         });
     });
 }

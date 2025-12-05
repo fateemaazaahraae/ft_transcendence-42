@@ -1,4 +1,5 @@
 import { openDb } from "../models/db.js"
+import FormData from "form-data";
 
 export function settingsRoutes(fastify) {
     // ---- GET USER INFORMATIONS ----
@@ -70,7 +71,7 @@ export function settingsRoutes(fastify) {
         return rep.status(res.status).send(data);
     })
 
-    // ---- Change profileImage ----
+    // ---- Change profileImage (avatar) ----
     fastify.put("/settings/:id/avatar", async (req, rep) => {
         const { id } = req.params;
         const { profileImage } = req.body;
@@ -82,4 +83,26 @@ export function settingsRoutes(fastify) {
         const data = await res.json();
         return rep.status(res.status).send(data);
     });
+
+    // ---- Change profileImage (upload) ----
+    fastify.put("/settings/:id/upload", async (req, rep) => {
+        const { id } = req.params;
+
+        const file = await req.file();
+        if (!file)
+            return rep.status(400).send({ error: "No file uploaded" });
+
+        const form = new FormData();
+        form.append("image", file.file, file.filename);
+
+        const res = await fetch(`http://auth-service:3000/users/${id}/upload`, {
+            method: "PUT",
+            body: form,
+            headers: form.getHeaders(),
+        });
+
+        const data = await res.json();
+        return rep.status(res.status).send(data);
+    });
+
 }

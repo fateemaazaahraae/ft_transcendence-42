@@ -10,6 +10,8 @@ COPY package*.json ./
 
 RUN npm install
 
+RUN npm install @fastify/multipart
+
 RUN npm rebuild sqlite3 --build-from-source
 
 COPY . .

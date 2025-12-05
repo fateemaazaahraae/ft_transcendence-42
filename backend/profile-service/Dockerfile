@@ -12,6 +12,8 @@ COPY package*.json ./
 
 RUN npm install
 
+RUN npm install form-data
+
 RUN npm rebuild sqlite3 --build-from-source
 
 COPY . .
