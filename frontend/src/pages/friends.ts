@@ -2,12 +2,12 @@ import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 
 let friendsList = [
-  { name: "smith", color: "bg-greenAdd", img: "../../public/blue-boy.svg" },
-  { name: "noah", color: "bg-redRemove", img: "../../public/white-boy.svg" },
-  { name: "salaoui", color: "bg-greenAdd", img: "../../public/purple-girl.svg" },
-  { name: "oliver", color: "bg-redRemove", img: "../../public/white-boy2.svg" },
-  { name: "fateemaazaahrae", color: "bg-greenAdd", img: "../../public/green-girl.svg" },
-  { name: "knacer", color: "bg-greenAdd", img: "../../public/dark-girl.svg" },
+  { name: "smith", color: "bg-greenAdd", img: "/blue-boy.svg" },
+  { name: "noah", color: "bg-redRemove", img: "/white-boy.svg" },
+  { name: "salaoui", color: "bg-greenAdd", img: "/purple-girl.svg" },
+  { name: "oliver", color: "bg-redRemove", img: "/white-boy2.svg" },
+  { name: "fateemaazaahrae", color: "bg-greenAdd", img: "/green-girl.svg" },
+  { name: "knacer", color: "bg-greenAdd", img: "/dark-girl.svg" },
 ];
 
 export default function Friends() {
@@ -26,7 +26,7 @@ export default function Friends() {
       <i data-path="/home" class="fa-solid fa-house text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
       <i data-path="/leaderboard" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
 
-      <div data-path="friends" class="md:w-[40px] md:h-[40px] w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center mt-2 md:mt-2">
+      <div data-path="/friends" class="md:w-[40px] md:h-[40px] w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center mt-2 md:mt-2">
         <i class="fa-solid fa-user-group text-black text-[18px]"></i>
       </div>
 

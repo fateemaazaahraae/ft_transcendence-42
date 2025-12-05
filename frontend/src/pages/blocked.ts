@@ -2,12 +2,12 @@ import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 
 let blockedList = [
-  {name: "smith", img: "../../public/blue-boy.svg"},
-  {name: "noah", img: "../../public/white-boy.svg"},
-  {name: "salaoui", img: "../../public/purple-girl.svg"},
-  {name: "oliver", img: "../../public/white-boy2.svg"},
-  {name: "fateemaazaahrae", img: "../../public/green-girl.svg"},
-  {name: "knacer", img: "../../public/dark-girl.svg"},
+  {name: "smith", img: "/blue-boy.svg"},
+  {name: "noah", img: "/white-boy.svg"},
+  {name: "salaoui", img: "/purple-girl.svg"},
+  {name: "oliver", img: "/white-boy2.svg"},
+  {name: "fateemaazaahrae", img: "/green-girl.svg"},
+  {name: "knacer", img: "/dark-girl.svg"},
 ];
 
 export default function Blocked() {

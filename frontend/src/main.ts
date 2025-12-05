@@ -10,7 +10,7 @@ import TwoFactor, { FactorEventListener } from "./pages/TwoFactor.ts";
 import ChangePw, { ChangePwEventListener } from "./pages/changepw.ts";
 import ChoseAvatar, { ChoseAvatarEventListener } from "./pages/ChoseAvatar.ts";
 import Leaderboard from "./pages/leaderboard";
-import Settings from "./pages/settings.ts";
+import Settings, { SettingsEventListner } from "./pages/settings.ts";
 import Friends, {FriendsEventListener} from "./pages/friends.ts";
 import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
 import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
@@ -18,6 +18,8 @@ import PageNotFound from "./pages/pageNotFound.ts"
 import { notifications, notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
 import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
+import Chat from "./pages/Chat.ts";
+import { showAlert } from "./utils/alert.ts";
 // import { viewFriend } from "./pages/viewFriend.ts";
 
 const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<void> }> = {
@@ -29,13 +31,14 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/register": {render: Register, setUp: RegisterEventListener},
     "/resetpw": {render: ResetPw, setUp: ResetPwEventListener},
     "/changepw": {render: ChangePw, setUp: ChangePwEventListener},
-    "/TwoFactor": {render: TwoFactor, setUp:FactorEventListener},
-    "/ChoseAvatar": {render: ChoseAvatar, setUp:ChoseAvatarEventListener},
+    "/TwoFactor": {render: TwoFactor, setUp: FactorEventListener},
+    "/ChoseAvatar": {render: ChoseAvatar, setUp: ChoseAvatarEventListener},
     "/leaderboard": {render: Leaderboard},
-    "/settings": {render: Settings},
+    "/settings": {render: Settings, setUp: SettingsEventListner},
     "/friends": {render: Friends, setUp: FriendsEventListener},
     "/invitations": {render: Invitations, setUp: InvitationsEventListener},
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
+    "/chat": {render: Chat},
     404: {render: PageNotFound},
 };
 

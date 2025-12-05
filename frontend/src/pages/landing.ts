@@ -12,9 +12,9 @@ export default function Landing() {
         <div class="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[400px] h-[9px] xl:w-[900px] xl:h-[22px] bg-[rgba(53,198,221)] blur-[12px] opacity-100 rounded-full"> </div>
       </div>
       <div class="w-full flex xl:gap-[10px] justify-center mt-15 items-center ">
-      <img src="/public/dark-girl.svg" class="drop-shadow-blue opacity-0 md:opacity-100 md:w-auto md:max-w-[170px] lg:max-w-[220px] xl:max-w-[400px] ">
-      <img src="/public/table1.png" class="mt-20 w-auto max-w-[320px] lg:max-w-[500px] xl:max-w-[600px] ">
-      <img src="/public/white-boy2.svg" class=" drop-shadow-blue opacity-0 md:opacity-100 md:w-auto md:max-w-[180px] lg:max-w-[220px] xl:max-w-[450px]">
+      <img src="/dark-girl.svg" class="drop-shadow-blue opacity-0 md:opacity-100 md:w-auto md:max-w-[170px] lg:max-w-[220px] xl:max-w-[400px] ">
+      <img src="/table1.png" class="mt-20 w-auto max-w-[320px] lg:max-w-[500px] xl:max-w-[600px] ">
+      <img src="/white-boy2.svg" class=" drop-shadow-blue opacity-0 md:opacity-100 md:w-auto md:max-w-[180px] lg:max-w-[220px] xl:max-w-[450px]">
       </div>
       <div class="relative inline-block group">
         <button id="play-btn"
@@ -23,7 +23,7 @@ export default function Landing() {
           Play now
         </button>
         <img 
-          src="/public/match.svg" 
+          src="/match.svg" 
           class="mt-5 absolute inset-0 mx-auto my-auto w-[120px] z-10 opacity-0 scale-0 
                 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100 pointer-events-none" 
         />
@@ -37,9 +37,9 @@ export default function Landing() {
       gameplay, every rally will push you to the limit!
       </p>
       <div class="mt-[30%] md:mt-[20%] xl:mt-[200px] w-full gap-2 xl:gap-5 flex justify-center items-center">
-      <img src="/public/purple-girl.svg" class="drop-shadow-purple w-auto max-w-[150px] md:max-w-[280px] lg:max-w-[350px] xl:max-w-[400px] -translate-y-[80px] lg:-translate-y-[120px] xl:-translate-y-[150px]">
-      <img src="/public/red-boy.svg" class=" drop-shadow-red w-auto max-w-[180px] md:max-w-[280px] lg:max-w-[350px] xl:max-w-[450px]">
-      <img src="/public/green-girl.svg" class="drop-shadow-green w-auto max-w-[160px] md:max-w-[280px] lg:max-w-[350px] xl:max-w-[400px] -translate-y-[80px] lg:-translate-y-[120px] xl:-translate-y-[150px]">
+      <img src="/purple-girl.svg" class="drop-shadow-purple w-auto max-w-[150px] md:max-w-[280px] lg:max-w-[350px] xl:max-w-[400px] -translate-y-[80px] lg:-translate-y-[120px] xl:-translate-y-[150px]">
+      <img src="/red-boy.svg" class=" drop-shadow-red w-auto max-w-[180px] md:max-w-[280px] lg:max-w-[350px] xl:max-w-[450px]">
+      <img src="/green-girl.svg" class="drop-shadow-green w-auto max-w-[160px] md:max-w-[280px] lg:max-w-[350px] xl:max-w-[400px] -translate-y-[80px] lg:-translate-y-[120px] xl:-translate-y-[150px]">
       </div>
       
       <h1 class=" text-black font-glitch text-3xl md:text-4xl lg:text-6xl mt-[25%] md:mt-[20%] xl:mt-[200px] text-shadow-white"
@@ -47,7 +47,7 @@ export default function Landing() {
       <div class="w-full gap-[5%] xl:gap-[100px] flex justify-center items-center mt-[10%]  xl:mt-20 pb-10 lg:pb-20">
       <!-- SALMA -->
       <div class="relative flex flex-col group">
-      <img src="/public/salma1.png" 
+      <img src="/salma1.png" 
             class="w-auto max-w-[80px] md:max-w-[150px] lg:max-w-[200px] xl:max-w-[500px] transition-all duration-300 group-hover:blur-[10px]" />
       <div class="absolute inset-0 flex flex-col items-center justify-center 
               opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -68,7 +68,7 @@ export default function Landing() {
       </div>
       <!-- FATI -->
       <div class="relative flex flex-col group">
-      <img src="/public/fati.png" 
+      <img src="/fati.png" 
             class="w-auto max-w-[80px] md:max-w-[150px] lg:max-w-[200px] xl:max-w-[500px] transition-all duration-300 group-hover:blur-[10px]">
       <div class="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
         <p class="text-white text-[8px] text-center md:text-[14px] lg:text-xl font-glitch mb-1 xl:mb-4">Fatima Zahrae Bazaz</p>
@@ -88,7 +88,7 @@ export default function Landing() {
       </div>
       <!-- KELTOUM -->
       <div class="relative flex flex-col group">
-      <img src="/public/keltoum1.png" 
+      <img src="/keltoum1.png" 
             class=" w-auto lg:max-w-[200px] md:max-w-[150px] max-w-[80px] xl:max-w-[500px] transition-all duration-300 group-hover:blur-[10px]">
       <div class="absolute inset-0 flex flex-col items-center justify-center 
               opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -109,7 +109,7 @@ export default function Landing() {
       </div>
       <!-- BOUCHRA -->
       <div class="relative flex flex-col group">
-      <img src="/public/boushra.png" 
+      <img src="/boushra.png" 
             class=" w-auto lg:max-w-[200px] md:max-w-[150px] max-w-[80px] xl:max-w-[500px] transition-all duration-300 group-hover:blur-[10px]">
       <div class="absolute inset-0 flex flex-col items-center justify-center 
               opacity-0 group-hover:opacity-100 transition-opacity duration-500">

@@ -1,9 +1,9 @@
 re:
-	docker compose down
+	docker compose down -v
 	docker compose up --build -d
 
 down:
-	docker compose down
+	docker compose down -v
 
 up:
 	docker compose up --build -d

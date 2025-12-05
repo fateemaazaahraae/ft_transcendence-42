@@ -8,12 +8,12 @@ rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --build-from-source sqlite3 && npm install
 
-RUN npm rebuild sqlite3 --build-from-source
+# RUN npm rebuild sqlite3 --build-from-source
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3001
 
 CMD [ "npm", "run", "dev" ]

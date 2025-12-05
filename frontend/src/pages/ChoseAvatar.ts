@@ -1,5 +1,10 @@
 import { navigate } from "../main.ts";
+import { showAlert } from "../utils/alert.ts";
+import { requiredAuth } from "../utils/authGuard.ts";
+
 export default function ChoseAvatar() {
+  if (!requiredAuth())
+      return "";
   return `<div class="min-h-screen w-full flex items-center justify-center gap-[8px] relative pt-[3%]">
 
     <div class="relative inset-0 items-center h-[650px] md:h-[750px] w-full md:w-[820px] pt-[75px] md:pt-[130px] rounded-[50px] overflow-hidden">
@@ -24,27 +29,27 @@ export default function ChoseAvatar() {
               </div>
               <div class="relative w-[55px] h-[55px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border-[1px] md:border-[3px] border-[#35C6DD] cursor-pointer mb-[40px] md:mb-0 transform transition-transform duration-300 ease-in-out hover:scale-[1.2] md:hover:scale-[1.3] data-[selected=true]:border-[#D934B0]"
               data-selected="false">
-                <img src="/public/white-boy2.svg" class="w-full h-full object-cover"/>
+                <img src="/white-boy2.svg" class="w-full h-full object-cover"/>
               </div>
               <div class="relative w-[55px] h-[55px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border-[1px] md:border-[3px] border-[#35C6DD] cursor-pointer mb-[40px] md:mb-0 transform transition-transform duration-300 ease-in-out hover:scale-[1.2] md:hover:scale-[1.3] data-[selected=true]:border-[#D934B0]"
               data-selected="false">
-                <img src="/public/dark-girl.svg" class="w-full h-full object-cover"/>
+                <img src="/dark-girl.svg" class="w-full h-full object-cover"/>
               </div>
               <div class="relative w-[55px] h-[55px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border-[1px] md:border-[3px] border-[#35C6DD] cursor-pointer transform transition-transform duration-300 ease-in-out hover:scale-[1.2] md:hover:scale-[1.3] data-[selected=true]:border-[#D934B0]"
               data-selected="false">
-                <img src="/public/pink-girl.svg" class="w-full h-full object-cover"/>
+                <img src="/pink-girl.svg" class="w-full h-full object-cover"/>
               </div>
               <div class="relative w-[55px] h-[55px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border-[1px] md:border-[3px] border-[#35C6DD] cursor-pointer transform transition-transform duration-300 ease-in-out hover:scale-[1.2] md:hover:scale-[1.3] data-[selected=true]:border-[#D934B0]"
               data-selected="false">
-                <img src="/public/white-boy.svg" class="w-full h-full object-cover"/>
+                <img src="/white-boy.svg" class="w-full h-full object-cover"/>
               </div>
               <div class="relative w-[55px] h-[55px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border-[1px] md:border-[3px] border-[#35C6DD] cursor-pointer transform transition-transform duration-300 ease-in-out hover:scale-[1.2] md:hover:scale-[1.3] data-[selected=true]:border-[#D934B0]"
               data-selected="false">
-                <img src="/public/purple-girl.svg" class="w-full h-full object-cover"/>
+                <img src="/purple-girl.svg" class="w-full h-full object-cover"/>
               </div>
               <div class="relative w-[55px] h-[55px] md:w-[90px] md:h-[90px] rounded-full overflow-hidden border-[1px] md:border-[3px] border-[#35C6DD] cursor-pointer transform transition-transform duration-300 ease-in-out hover:scale-[1.2] md:hover:scale-[1.3] data-[selected=true]:border-[#D934B0]"
               data-selected="false">
-                <img src="/public/red-boy.svg" class="w-full h-full object-cover"/>
+                <img src="/red-boy.svg" class="w-full h-full object-cover"/>
               </div>
             </div>
 
@@ -97,7 +102,7 @@ if (fileInput && fileInput.files && fileInput.files.length > 0) {
     }
 
     if (!avatarToSend) {
-      alert("Please choose an avatar");
+      showAlert("Please choose an avatar");
       return;
     }
 
@@ -126,7 +131,7 @@ if (fileInput && fileInput.files && fileInput.files.length > 0) {
     navigate("/login");
     }
     catch (err) {
-      alert("Network error while saving avatar");
+      showAlert("Network error while saving avatar");
     }
   });
 

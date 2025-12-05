@@ -50,7 +50,7 @@ export default function Register() {
               <i class="fa-brands fa-google"></i>
             </a>
             <a href="http://localhost:3000/auth/42">
-              <img src="/public/intra42.png" class="mt-[15%] w-[45px]" />
+              <img src="/intra42.png" class="mt-[15%] w-[45px]" />
             </a>
         </div>
         <div class="text-white mt-3 md:mt-5 text-center text-[0.8em] md:text-[1.0em] font-roboto font-semibold">
@@ -62,12 +62,9 @@ export default function Register() {
     </form>
 </div>
     </div>
-
-
 </div>
 `;
 }
-
 
 export function RegisterEventListener() {
   const login = document.getElementById("login-link");

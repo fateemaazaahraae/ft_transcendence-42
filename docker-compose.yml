@@ -8,25 +8,46 @@ services:
     container_name: frontend
     volumes:
       - ./frontend:/app
-      - /app/node_modules
+      # - /app/node_modules
+    depends_on:
+      - auth-service
+      - profile-service
     networks:
       - ft_transcendence
     expose:
-      - "5173"
+      - "5173:5173"
   
   auth-service:
+    platform: linux/amd64
     build:
       context: ./backend/auth-service
       dockerfile: Dockerfile
     image: auth-service
     container_name: auth-service
     env_file:
-      - ./backend/.env
+      - ./backend/auth-service/.env
     volumes:
       - ./backend/auth-service:/app
-      - /app/node_modules
+      # - /app/node_modules
     ports:
       - "3000:3000"
+    networks:
+      - ft_transcendence
+
+  profile-service:
+    platform: linux/amd64
+    build:
+      context: ./backend/profile-service
+      dockerfile: Dockerfile
+    image: profile-service
+    container_name: profile-service
+    env_file:
+      - ./backend/profile-service/.env
+    volumes:
+      - ./backend/profile-service:/app
+      # - /app/node_modules
+    ports:
+      - "3001:3001"
     networks:
       - ft_transcendence
 
@@ -38,10 +59,10 @@ services:
     container_name: nginx
     ports:
       - "8443:443"
-
     depends_on:
       - frontend
       - auth-service
+      - profile-service
     networks:
       - ft_transcendence
 

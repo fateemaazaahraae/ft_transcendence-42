@@ -77,7 +77,7 @@ export default function Login() {
                 <i class="fa-brands fa-google"></i>
             </a>
             <a href="http://localhost:3000/auth/42">
-              <img src="/public/intra42.png" class="mt-[15%] w-[45px]" />
+              <img src="/intra42.png" class="mt-[15%] w-[45px]" />
             </a>
             </div>
             <div class="text-white mt-3 md:mt-9 text-center text-[0.8em] md:text-[0.9em] font-roboto font-semibold">
@@ -87,13 +87,17 @@ export default function Login() {
           </form>
         </div>
         </div>
-      <img src="/public/white_boy22.svg" class="hidden  lg:flex md:items-center md:justify-center mr-40 mt-[60px] md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)]">
+      <img src="/white_boy22.svg" class="hidden  lg:flex md:items-center md:justify-center mr-40 mt-[60px] md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)]">
   </div>
   `;
 }
 
 export function LoginEventListener() {
-   const register = document.getElementById("register-link");
+  const password = document.getElementById("pw");
+  password?.addEventListener("click", () => {
+    navigate("/resetpw");
+  });
+  const register = document.getElementById("register-link");
   register?.addEventListener("click", (e) => {
     e.preventDefault(); 
     navigate("/register");
@@ -110,24 +114,23 @@ export function LoginEventListener() {
       const res = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userName, password }),
+        body: JSON.stringify({userName, password})
       });
       const data = await res.json();
-
       if (!res.ok) {
-        showAlert(data.error || "Login failed");
+        showAlert(data.error || "login failed");
         return;
       }
 
       // ✅ Store JWT in localStorage
       localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("userId", data.user.id);
 
       if (data.isTwoFactorEnabled === 1) {
         await showAlert("Check your email - Verification code sent", "success");
         navigate("/TwoFactor");
       } else {
-        await showAlert("Login successful", "success");
+        // await showAlert("Login successful", "success");
         navigate("/home");
       }
     } catch (err) {
