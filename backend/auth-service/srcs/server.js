@@ -12,6 +12,8 @@ import { resetPasswordRoutes } from "./routes/resetPassword.js";
 import avatarRoutes from "./routes/avatar.js";
 import { authenticate } from "./plugins/auth.js";
 import userRoutes from "./routes/settingsRequests.js";
+import fastifyMultipart from "@fastify/multipart";
+
 
 const fastify = Fastify({ logger: true });
 await fastify.register(fastifyCors, {
@@ -20,6 +22,9 @@ await fastify.register(fastifyCors, {
 });
 // JWT setup
 fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET });
+await fastify.register(fastifyMultipart, {
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
+});
 
 // Routes
 registerRoutes(fastify);

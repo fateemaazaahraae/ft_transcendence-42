@@ -3,8 +3,8 @@ import { showAlert } from "../utils/alert.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 
 export default function ChoseAvatar() {
-  if (!requiredAuth())
-      return "";
+  // if (!requiredAuth())
+  //     return "";
   return `<div class="min-h-screen w-full flex items-center justify-center gap-[8px] relative pt-[3%]">
 
     <div class="relative inset-0 items-center h-[650px] md:h-[750px] w-full md:w-[820px] pt-[75px] md:pt-[130px] rounded-[50px] overflow-hidden">
@@ -89,14 +89,13 @@ export function ChoseAvatarEventListener() {
     let avatarToSend = null;
     const fileInput = document.getElementById("avatarUpload") as HTMLInputElement | null;
 
-if (fileInput && fileInput.files && fileInput.files.length > 0) {
-    const file = fileInput.files[0];
-      avatarToSend = await convertToBase64(file);
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+        avatarToSend = await convertToBase64(file);
     }
     else {
       const selected = Array.from(document.querySelectorAll<HTMLDivElement>("#avatar-grid div"))
-    .find(div => div.dataset.selected === "true");
-
+      .find(div => div.dataset.selected === "true");
       if (selected)
         avatarToSend = selected.querySelector("img")?.getAttribute("src");
     }
@@ -128,7 +127,7 @@ if (fileInput && fileInput.files && fileInput.files.length > 0) {
       alert(data.error || "Could not save avatar");
       return;
     }
-    navigate("/login");
+    navigate("/home");
     }
     catch (err) {
       showAlert("Network error while saving avatar");
@@ -137,11 +136,17 @@ if (fileInput && fileInput.files && fileInput.files.length > 0) {
 
   function convertToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
+    if (file.size > 200 * 1024) {  // 200 KB limit
+      showAlert("Image too large, max 200KB");
+      reject("File too large");
+      return;
+    }
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
+
 }
 
 

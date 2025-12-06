@@ -47,7 +47,7 @@ export default function Settings() {
       <!-- Profile Image -->
       <div class="flex flex-col md:justify-start gap-12 w-[200px] h-[200px] md:w-[280px] md:h-[280px] lg:w-[350px] lg:h-[350px] mx-auto">
         <div class="relative">
-          <img src="/pink-girl.svg" class="w-[200px] h-[200px] md:w-[280px] md:h-[280px] lg:w-[350px] lg:h-[350px] rounded-full border-2 border-primary/40 object-cover">
+          <img src="" id="myImg" class="w-[200px] h-[200px] md:w-[280px] md:h-[280px] lg:w-[350px] lg:h-[350px] rounded-full border-2 border-primary/40 object-cover">
           <i class="fa-solid fa-pen-to-square absolute bottom-6 right-4 md:bottom-9 md:right-6 lg:bottom-16 text-[20px] text-primary/90 cursor-pointer"></i>
         </div>
       </div>
@@ -60,7 +60,7 @@ export default function Settings() {
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
               <label class="block text-[12px] font-medium mb-2">First Name</label>
-              <input id="firstName" type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[12px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="=" />
+              <input id="firstName" type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[12px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="" />
             </div>
             <div>
               <label class="block text-[12px] font-medium mb-2">Last Name</label>
@@ -126,7 +126,28 @@ export default function Settings() {
         </button>
       </form>
 
-
+      <div id="avatar-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm items-center justify-center z-50 hidden">
+        <div class="bg-black rounded-[20px] p-10 md:p-10 relative flex flex-col items-center w-[90%] max-w-[700px] drop-shadow-cyan">
+          <i id="close-avatar-modal" class="fa-solid fa-xmark absolute top-4 right-8 text-primary cursor-pointer text-xl"></i>
+          <h2 class="text-white text-center font-glitch text-[30px] mb-10">Change your avatar</h2>
+          <div class="grid grid-cols-4 gap-6" id="avatar-grid">
+            <div class="avatar w-[90px] h-[90px] rounded-full overflow-hidden border-[2px] border-primary hover:scale-[1.05] data-[selected=true]:border-secondary" data-selected="false"><img src="/pink-girl.svg" class="w-full h-full object-cover" /></div>
+            <div class="avatar w-[90px] h-[90px] rounded-full overflow-hidden border-[2px] border-primary hover:scale-[1.05] data-[selected=true]:border-secondary" data-selected="false"><img src="/dark-girl.svg" class="w-full h-full object-cover" /></div>
+            <div class="avatar w-[90px] h-[90px] rounded-full overflow-hidden border-[2px] border-primary hover:scale-[1.05] data-[selected=true]:border-secondary" data-selected="false"><img src="/green-girl.svg" class="w-full h-full object-cover" /></div>
+            <div class="avatar w-[90px] h-[90px] rounded-full overflow-hidden border-[2px] border-primary hover:scale-[1.05] data-[selected=true]:border-secondary" data-selected="false"><img src="/purple-girl.svg" class="w-full h-full object-cover" /></div>
+            <div class="avatar w-[90px] h-[90px] rounded-full overflow-hidden border-[2px] border-primary hover:scale-[1.05] data-[selected=true]:border-secondary" data-selected="false"><img src="/blue-boy.svg" class="w-full h-full object-cover" /></div>
+            <div class="avatar w-[90px] h-[90px] rounded-full overflow-hidden border-[2px] border-primary hover:scale-[1.05] data-[selected=true]:border-secondary" data-selected="false"><img src="/red-boy.svg" class="w-full h-full object-cover" /></div>
+            <div class="avatar w-[90px] h-[90px] rounded-full overflow-hidden border-[2px] border-primary hover:scale-[1.05] data-[selected=true]:border-secondary" data-selected="false"><img src="/white-boy.svg" class="w-full h-full object-cover" /></div>
+            <div class="avatar w-[90px] h-[90px] rounded-full overflow-hidden border-[2px] border-primary hover:scale-[1.05] data-[selected=true]:border-secondary" data-selected="false"><img src="/white-boy2.svg" class="w-full h-full object-cover" /></div>
+          </div>
+          <div class="flex items-center justify-center mt-7 text-center w-[20px] h-[20px] rounded-full border-[2px] border-primary">
+            <label class="cursor-pointer text-cyan-400 hover:text-cyan-300">+
+              <input type="file" id="avatarUpload" accept="image/*" class="hidden" />
+            </label>
+          </div>
+          <button id="avatar-submit" class="mt-7 w-[20%] text-white bg-black drop-shadow-cyan font-bold hover:bg-primary/60 hover:text-black transition-colors py-2 rounded-[25px]">Save</button>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -147,12 +168,17 @@ async function fillSettingsPage()
     const data = await res.json();
     
     // fill page
+    (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
     (document.getElementById("firstName") as HTMLInputElement).value = data.firstName || "";
     (document.getElementById("lastName") as HTMLInputElement).value = data.lastName || "";
     (document.getElementById("userName") as HTMLInputElement).value = data.userName || "";
     (document.getElementById("email") as HTMLInputElement).value = data.email || "";
     (document.getElementById("age") as HTMLInputElement).value = data.age?.toString() || "";
     (document.getElementById("gender") as HTMLSelectElement).value = data.gender || "Female";
+    const twoFactorButton = document.getElementById("2fa-button") as HTMLButtonElement;
+    if (twoFactorButton) {
+      twoFactorButton.innerText = data.isTwoFactorEnabled === 1 ? "Disable" : "Enable";
+    }
   }
   catch (err)
   {
@@ -172,8 +198,7 @@ function handleTwoFactorButton(twoFactorButton: HTMLButtonElement) {
     }
     try {
       const res = await fetch(`http://localhost:3001/settings/${userId}/2fa`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        method: "PUT"
       })
       const data = await res.json();
       if (!res.ok) {
@@ -261,4 +286,136 @@ export function SettingsEventListner() {
       showAlert("Netword error while updating settings")
     }
   })
+
+  // images handler
+  function setupAvatarModal() {
+    const penIcon = document.querySelector(".fa-pen-to-square");
+    const modal = document.getElementById("avatar-modal");
+    const closeButton = document.getElementById("close-avatar-modal");
+    const avatarGrid = document.getElementById("avatar-grid");
+    const fileInput = document.getElementById("avatarUpload") as HTMLInputElement;
+    const saveButton = document.getElementById("avatar-submit");
+
+    if (!penIcon || !modal || !closeButton || !avatarGrid || !saveButton || !fileInput) return;
+    let selectedAvatar: string | null = null;
+    // open modal
+    penIcon.addEventListener("click", () => {
+      modal.classList.add("flex");
+      modal.classList.remove("hidden");
+    });
+    // close modal when clicking the x
+    closeButton.addEventListener("click", () => {
+      modal.classList.remove("flex");
+      modal.classList.add("hidden");
+    });
+    // close modal when clicking outside the box
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal)
+      {
+        modal.classList.remove("flex");
+        modal.classList.add("hidden");
+      }
+    });
+
+    const avatarOptions = document.querySelectorAll(".avatar");
+    avatarOptions.forEach((avatar) => {
+      console.log("\n\n dkheeeeelt\n\n");
+      avatar.addEventListener("click", () => {
+        avatarOptions.forEach(a => a.setAttribute("data-selected", "false"));
+        avatar.setAttribute("data-selected", "true");
+        const img = avatar.querySelector("img") as HTMLImageElement;
+        selectedAvatar = img.src;
+      });
+    });
+
+    // upload button
+    // fileInput.addEventListener("change", (event: Event) => {
+    //   const target = event.target as HTMLInputElement;
+    //   const file = target.files?.[0];
+    //   if (!file) return;
+
+    //   const reader = new FileReader();
+    //   reader.onload = () => {
+    //     selectedAvatar = reader.result as string;
+    //     avatarOptions.forEach(a => a.setAttribute("data-selected", "false"));
+    //     modal.classList.remove("flex")
+    //     modal.classList.add("hidden")
+    //   }
+    //   reader.readAsDataURL(file);
+    // });
+
+    fileInput.addEventListener("change", async () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+          showAlert("Login first");
+          navigate("/login");
+          return;
+      }
+
+      const formData = new FormData();
+      console.log("\n\n------ " + file + "\n\n\n")
+      formData.append("image", file);
+
+      try {
+        const token = localStorage.getItem("token")
+        const res = await fetch(`http://localhost:3001/settings/${userId}/upload`, {
+            method: "PUT",
+            body: formData,
+            headers: {
+              // **Do not set Content-Type manually** when using FormData
+              // 'Content-Type': 'multipart/form-data' <-- remove this
+              'Authorization': `Bearer ${token}`,
+            },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            showAlert("Upload failed: " + data.error);
+            return;
+        }
+        // Update preview image
+        const myImg = document.getElementById("myImg") as HTMLImageElement;
+        myImg.src = data.profileImage;
+        showAlert("Profile image updated!", "success");
+      }
+      catch (error) {
+        console.error(error);
+        showAlert("Network error while uploading");
+      }
+    });
+
+
+    // sending the image to the backend
+    saveButton.addEventListener("click", async () => {
+      if (!selectedAvatar)
+      {
+        showAlert("Please choose an Avatar");
+        return;
+      }
+      const userId = localStorage.getItem("userId");
+      try {
+        const res = await fetch(`http://localhost:3001/settings/${userId}/avatar`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ profileImage: selectedAvatar })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+        showAlert("Error updating avatar");
+        return;
+      }
+        modal.classList.remove("flex");
+        modal.classList.add("hidden");
+        (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
+        showAlert("Avatar Updated successfully", "success");
+      }
+      catch (err) {
+        console.error(err);
+        showAlert("Netword error while updating settings")
+      }
+    });
+  }
+  setupAvatarModal();
 }

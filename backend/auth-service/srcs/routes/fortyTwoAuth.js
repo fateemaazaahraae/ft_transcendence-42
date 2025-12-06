@@ -56,7 +56,7 @@ export function intra42AuthRoutes(fastify) {
     
     if (!user) {
       await createUser(first_name, last_name, login, email, Math.random().toString(36), profileImage);
-      user = await findUserByEmail(email); // <- RE-FETCH from DB to get proper stored values
+      user = await findUserByEmail(email); 
     }
 
     const jwtToken = fastify.jwt.sign({

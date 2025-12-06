@@ -8,7 +8,7 @@ services:
     container_name: frontend
     volumes:
       - ./frontend:/app
-      # - /app/node_modules
+      - /app/node_modules
     depends_on:
       - auth-service
       - profile-service
@@ -28,7 +28,7 @@ services:
       - ./backend/auth-service/.env
     volumes:
       - ./backend/auth-service:/app
-      # - /app/node_modules
+      - /app/node_modules
     ports:
       - "3000:3000"
     networks:
@@ -45,7 +45,7 @@ services:
       - ./backend/profile-service/.env
     volumes:
       - ./backend/profile-service:/app
-      # - /app/node_modules
+      - /app/node_modules
     ports:
       - "3001:3001"
     networks:

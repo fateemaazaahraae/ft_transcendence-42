@@ -8,7 +8,7 @@ export function showAlert(message: string, type: "error" | "success" = "error") 
     alert.id = "custom alert";
     alert.innerHTML = 
     `
-    <div class="fixed inset-0 flex items-start justify-end mt-10 mr-10">
+    <div class="fixed inset-0 flex items-start justify-end mt-10 mr-10 z-[100]">
         <div class="animate-fade-in-down bg ${
             type === "error" ? "bg-redRemove/50" : "bg-greenAdd/50"
         } text-white rounded-xl px-12 py-4 text-center shadow-[0_0_15px_rgba(255,255,255,0.2)]">
