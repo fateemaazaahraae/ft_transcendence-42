@@ -142,7 +142,7 @@ export default function Settings() {
           </div>
           <div class="flex items-center justify-center mt-7 text-center w-[20px] h-[20px] rounded-full border-[2px] border-primary">
             <label class="cursor-pointer text-cyan-400 hover:text-cyan-300">+
-              <input type="file" id="avatarUpload" accept="image/*" class="hidden" />
+              <input type="file" id="avatarUpload" accept="image/*" name="image" class="hidden" />
             </label>
           </div>
           <button id="avatar-submit" class="mt-7 w-[20%] text-white bg-black drop-shadow-cyan font-bold hover:bg-primary/60 hover:text-black transition-colors py-2 rounded-[25px]">Save</button>
@@ -197,7 +197,7 @@ function handleTwoFactorButton(twoFactorButton: HTMLButtonElement) {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:3001/settings/${userId}/2fa`, {
+      const res = await fetch(`http://localhost:3000/users/${userId}/2fa`, {
         method: "PUT"
       })
       const data = await res.json();
@@ -220,7 +220,6 @@ function handleTwoFactorButton(twoFactorButton: HTMLButtonElement) {
 }
 
 export function SettingsEventListner() {
-  // showAlert("settings rendered", "success")
   fillSettingsPage();
   const settingsForm = document.getElementById("settings-form") as HTMLFormElement | null;
   const twoFactorButton = document.getElementById("2fa-button") as HTMLButtonElement;
@@ -324,60 +323,36 @@ export function SettingsEventListner() {
         avatarOptions.forEach(a => a.setAttribute("data-selected", "false"));
         avatar.setAttribute("data-selected", "true");
         const img = avatar.querySelector("img") as HTMLImageElement;
-        selectedAvatar = img.src;
+        selectedAvatar = img.getAttribute("src");
       });
     });
 
     // upload button
-    // fileInput.addEventListener("change", (event: Event) => {
-    //   const target = event.target as HTMLInputElement;
-    //   const file = target.files?.[0];
-    //   if (!file) return;
-
-    //   const reader = new FileReader();
-    //   reader.onload = () => {
-    //     selectedAvatar = reader.result as string;
-    //     avatarOptions.forEach(a => a.setAttribute("data-selected", "false"));
-    //     modal.classList.remove("flex")
-    //     modal.classList.add("hidden")
-    //   }
-    //   reader.readAsDataURL(file);
-    // });
-
     fileInput.addEventListener("change", async () => {
       const file = fileInput.files?.[0];
       if (!file) return;
-
       const userId = localStorage.getItem("userId");
       if (!userId) {
           showAlert("Login first");
           navigate("/login");
           return;
       }
-
       const formData = new FormData();
-      console.log("\n\n------ " + file + "\n\n\n")
       formData.append("image", file);
-
       try {
-        const token = localStorage.getItem("token")
-        const res = await fetch(`http://localhost:3001/settings/${userId}/upload`, {
+        const res = await fetch(`http://localhost:3000/users/${userId}/upload`, {
             method: "PUT",
-            body: formData,
-            headers: {
-              // **Do not set Content-Type manually** when using FormData
-              // 'Content-Type': 'multipart/form-data' <-- remove this
-              'Authorization': `Bearer ${token}`,
-            },
+            body: formData
         });
         const data = await res.json();
         if (!res.ok) {
             showAlert("Upload failed: " + data.error);
             return;
         }
-        // Update preview image
         const myImg = document.getElementById("myImg") as HTMLImageElement;
         myImg.src = data.profileImage;
+        selectedAvatar = data.profileImage;
+        modal.classList.add("hidden");
         showAlert("Profile image updated!", "success");
       }
       catch (error) {
@@ -385,7 +360,6 @@ export function SettingsEventListner() {
         showAlert("Network error while uploading");
       }
     });
-
 
     // sending the image to the backend
     saveButton.addEventListener("click", async () => {
@@ -396,16 +370,16 @@ export function SettingsEventListner() {
       }
       const userId = localStorage.getItem("userId");
       try {
-        const res = await fetch(`http://localhost:3001/settings/${userId}/avatar`, {
+        const res = await fetch(`http://localhost:3000/users/${userId}/avatar`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ profileImage: selectedAvatar })
         });
         const data = await res.json();
         if (!res.ok) {
-        showAlert("Error updating avatar");
-        return;
-      }
+          showAlert("Error updating avatar");
+          return;
+        }
         modal.classList.remove("flex");
         modal.classList.add("hidden");
         (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";

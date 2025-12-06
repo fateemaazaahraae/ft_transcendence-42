@@ -1,6 +1,9 @@
 import bcrypt from "bcryptjs"
 import { openDb } from "../models/db.js";
 import { updateAvatar } from "../models/user.js";
+import fs from "fs";
+import { pipeline } from "stream/promises"; // pump alternative
+
 
 // FOR PROFILE SERVICE REQUESTS
 export default function userRoutes(fastify) {
@@ -42,7 +45,6 @@ export default function userRoutes(fastify) {
         const exists = await db.get("SELECT id, passwordHash FROM users WHERE id = ?", [id]);
         if (!exists)
             return rep.status(404).send({ message: "User not found" });
-        console.log("user pass " + exists.passwordHash + " ---- current is " + currentPassword);
         const isValid = await bcrypt.compare(currentPassword, exists.passwordHash);
         if (!isValid)
             return rep.status(401).send({ message: "Password Incorrect" });
@@ -70,7 +72,7 @@ export default function userRoutes(fastify) {
         return { message: "2FA updated", enabled: new2FA }
     });
 
-    // ---- Change profileImage (avatar) ----
+    // ---- CHANGE PROFILE IMAGE (avatar) ----
     fastify.put("/users/:id/avatar", async (req, rep) => {
         const { id } = req.params;
         const { profileImage } = req.body;
@@ -83,26 +85,28 @@ export default function userRoutes(fastify) {
         });
     });
 
-    // ---- Change profileImage (upload) ----
+    // ---- CHANGE PROFILE IMAGE (upload) ----
     fastify.put("/users/:id/upload", async (req, rep) => {
-        console.log(req.headers);
-        const data = await req.file();
-        if (!data)
-            return rep.status(400).send({ error: "No file uploaded" });
-
-        const fileName = Date.now() + "-" + data.filename;
-        const filePath = "/uploads/" + fileName;
-
-        await pump(data.file, fs.createWriteStream("./uploads/" + fileName));
-
-        await db.run(
-            "UPDATE users SET profileImage = ? WHERE id = ?",
-            [filePath, req.params.id]
-        );
-
-        return rep.status(200).send({
-            message: "Image updated",
-            profileImage: filePath
-        });
+        try {
+            const file = await req.file();
+            if (!file)
+                return rep.status(400).send({ error: "No file uploaded" });
+            const db = await openDb();
+            const fileName = Date.now() + "-" + file.filename;
+            const fullPath = "./uploads/" + fileName;
+            await pipeline(file.file, fs.createWriteStream(fullPath));
+            await db.run(
+                "UPDATE users SET profileImage = ? WHERE id = ?",
+                ["/uploads/" + fileName, req.params.id]
+            );
+            return rep.status(200).send({
+                message: "Image updated",
+                profileImage: "/uploads/" + fileName
+            });
+        }
+        catch (err) {
+            console.error(err);
+            return rep.status(500).send({ error: "Upload failed", details: err.message });
+        }
     });
 }

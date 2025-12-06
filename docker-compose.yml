@@ -29,6 +29,7 @@ services:
     volumes:
       - ./backend/auth-service:/app
       - /app/node_modules
+      - uploads:/app/uploads
     ports:
       - "3000:3000"
     networks:
@@ -63,9 +64,13 @@ services:
       - frontend
       - auth-service
       - profile-service
+    volumes:
+      - uploads:/app/uploads
     networks:
       - ft_transcendence
 
+volumes:
+  uploads:
 
 networks:
   ft_transcendence:

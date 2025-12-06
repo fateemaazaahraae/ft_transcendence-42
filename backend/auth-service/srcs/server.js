@@ -19,11 +19,16 @@ const fastify = Fastify({ logger: true });
 await fastify.register(fastifyCors, {
   origin: '*',
   credentials: true,
+  methods: ['GET','PUT','POST','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 });
 // JWT setup
 fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET });
 await fastify.register(fastifyMultipart, {
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
+    attachFieldsToBody: false,
+    limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB
+    },
 });
 
 // Routes

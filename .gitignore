@@ -3,3 +3,4 @@ backend/profile-service/.env
 backend/chat-service/.env
 backend/game-service/.env
 node_modules/
+backend/auth-service/uploads/
