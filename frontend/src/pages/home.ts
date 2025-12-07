@@ -13,7 +13,7 @@ export default async function Home() {
       localStorage.setItem("token", token);
       window.history.replaceState({}, document.title, "/home");
     }
-    if (!token) 
+    if (!token)
       token = localStorage.getItem("token");
    const res = await fetch("http://localhost:3000/user/me", {
       headers: {
@@ -22,8 +22,7 @@ export default async function Home() {
     });
     const data = await res.json();
     user = data.user;
-    if (!localStorage.getItem("userId"))
-      localStorage.setItem("userId", data.user.id);
+    localStorage.setItem("userId", data.user.id);
   }
   catch
   {
@@ -69,7 +68,7 @@ export default async function Home() {
    <div class="flex justify center items-center">
       <!-- Avatar -->
       <img 
-        src=${user.profileImage || "default.png"}
+        src=${user.profileImage}
         class="object-cover w-[110px] h-[110px] md:w-[150px] md:h-[150px] xl:w-[220px] xl:h-[220px] rounded-full border-[3px] border-[#35C6DD]"
       >
 

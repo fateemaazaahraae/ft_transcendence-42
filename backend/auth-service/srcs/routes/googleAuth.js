@@ -51,12 +51,12 @@ export function googleAuthRoutes(fastify) {
       const userName = email.split("@")[0];
       let profileImage = userInfo.picture .replace("s96-c", "s400-c");
       console.log("-------------> profile image : ", profileImage);
-      if (profileImage.length < 100)
-      {
-        profileImage = "";
-      }
       let user = await findUserByEmail(email);
       if (!user) {
+        if (profileImage.length < 100)
+        {
+          profileImage = "https://localhost:8443/default.png";
+        }
         user = await createUser(
           firstName,
           lastName,
@@ -66,9 +66,9 @@ export function googleAuthRoutes(fastify) {
           profileImage
         );
       }
-      else{
-        await updateUser(user.id, firstName, lastName, userName, profileImage);
-      }
+      // else{
+      //   await updateUser(user.id, firstName, lastName, userName, profileImage);
+      // }
       user = await findUserByEmail(email);
       console.log("---------------first name: ", user.firstName);
       console.log("---------------last name: ", user.lastName);
