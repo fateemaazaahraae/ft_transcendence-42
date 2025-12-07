@@ -2,7 +2,7 @@ import { setLang, getSavedLang, translatePage, type Lang } from "../i18n/index";
 
 export function LanguagesMenuEventListener() {
     const btn = document.getElementById("languageMenu");
-    const currentLangBtn = document.getElementById("currentLang");
+    // const currentLangBtn = document.getElementById("currentLang");
 
     document.addEventListener("click", (e) => {
         console.log("Language menu clicked");
@@ -24,11 +24,12 @@ export function LanguagesMenuEventListener() {
             const lang = (item.dataset.lang || "en") as Lang;
             setLang(lang);
             btn.classList.add("hidden");
+            const currentLangBtn = document.getElementById("currentLang");
             if (currentLangBtn)
                 currentLangBtn.innerHTML = `<i class="fa-solid fa-chevron-down text-xs"></i> ${lang.toUpperCase()}`;
+            translatePage(getSavedLang());
         })
     });
-    if (currentLangBtn)
-        currentLangBtn.innerHTML = `<i class="fa-solid fa-chevron-down text-xs"></i> ${getSavedLang().toUpperCase()}`;
-    translatePage(getSavedLang());
+    // if (currentLangBtn)
+    //     currentLangBtn.innerHTML = `<i class="fa-solid fa-chevron-down text-xs"></i> ${getSavedLang().toUpperCase()}`;
 }

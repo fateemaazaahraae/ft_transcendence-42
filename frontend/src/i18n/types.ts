@@ -1,6 +1,29 @@
+import Invitations from "../pages/invitaions";
+
 export interface translateDict {
     logout_confirm: string;
     notifications: string;
     cancel: string;
     confirm: string;
+    friends: string;
+    invitations: string;
+    blocked: string;
+    unblock: string;
+    remove: string;
+    leaderboard: string;
+    settings: string;
+    info: string;
+    firstName: string;
+    lastName: string;
+    userName: string;
+    email: string;
+    gender: string;
+    age: string;
+    changePass: string;
+    curr: string;
+    new: string;
+    twoFA: string;
+    FAdesc: string;
+    save: string;
+    changeAvt: string;
 }

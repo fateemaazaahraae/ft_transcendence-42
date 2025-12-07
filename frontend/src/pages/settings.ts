@@ -1,3 +1,4 @@
+import { getSavedLang } from "../i18n";
 import { navigate } from "../main";
 import { showAlert } from "../utils/alert";
 import { requiredAuth } from "../utils/authGuard";
@@ -5,6 +6,8 @@ import { requiredAuth } from "../utils/authGuard";
 export default function Settings() {
   if (!requiredAuth())
     return "";
+
+  const currentLang = getSavedLang().toUpperCase();
   return `
   <div class="min-h-screen text-white font-roboto px-6 md:px-20 py-10 relative pb-[90px] overflow-y-auto">
 
@@ -29,9 +32,9 @@ export default function Settings() {
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
+        <button id="currentLang" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
+          ${currentLang}
         </button>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
@@ -39,7 +42,7 @@ export default function Settings() {
     </div>
 
     <!-- Title -->
-    <h1 class="text-4xl md:text-5xl font-glitch text-center mt-20 mb-14">Settings</h1>
+    <h1 data-i18n="settings" class="text-4xl md:text-5xl font-glitch text-center mt-20 mb-14"></h1>
 
     <!-- Content Wrapper -->
     <div class="grid grid-cols-1 lg:grid-cols-[1fr_2fr] max-w-[1600px] mx-auto lg:items-center">
@@ -55,34 +58,34 @@ export default function Settings() {
       <!-- Form -->
       <form id="settings-form" class="flex flex-col gap-16 md:px-20">
         <section>
-          <h2 class="text-[22px] font-bold mb-6">Information</h2>
+          <h2 data-i18n="info" class="text-[22px] font-bold mb-6"></h2>
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
-              <label class="block text-[12px] font-medium mb-2">First Name</label>
+              <label data-i18n="firstName" class="block text-[12px] font-medium mb-2"></label>
               <input id="firstName" type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[12px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="" />
             </div>
             <div>
-              <label class="block text-[12px] font-medium mb-2">Last Name</label>
+              <label data-i18n="lastName" class="block text-[12px] font-medium mb-2"></label>
               <input id="lastName" type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[12px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="" />
             </div>
             <div>
-              <label class="block text-[12px] font-medium mb-2">Username</label>
+              <label data-i18n="userName" class="block text-[12px] font-medium mb-2"></label>
               <input id="userName" type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[12px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="" />
             </div>
             <div>
-              <label class="block text-[12px] font-medium mb-2">Email</label>
+              <label data-i18n="email" class="block text-[12px] font-medium mb-2"></label>
               <input id="email" type="text" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[12px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="" />
             </div>
             <div>
-              <label class="block text-[12px] font-medium mb-2">Gender</label>
+              <label data-i18n="gender" class="block text-[12px] font-medium mb-2"></label>
               <select id="gender" class="w-full px-4 py-2 rounded-[15px] drop-shadow-cyan bg-black font-sansroboto text-[12px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]">
                 <option value="Female">Female</option>
                 <option value="Male">Male</option>
               </select>
             </div>
             <div>
-              <label class="block text-[12px] font-medium mb-2">Age</label>
+              <label data-i18n="age" class="block text-[12px] font-medium mb-2"></label>
               <input id="age" type="number" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-sansroboto text-[12px] focus:outline-none focus:drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" value="" />
             </div>
           </div>
@@ -94,16 +97,16 @@ export default function Settings() {
 
             <!-- Change Password -->
             <div>
-              <h2 class="text-[18px] font-semibold mb-4">Change Password</h2>
+              <h2 data-i18n="changePass" class="text-[18px] font-semibold mb-4"></h2>
 
               <div class="flex flex-col gap-6">
                 <div>
-                  <label class="block text-[12px] font-medium mb-2">Current Password</label>
+                  <label data-i18n="curr" class="block text-[12px] font-medium mb-2"></label>
                   <input id="currentPassword" type="password" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[12px]" placeholder="Enter current password" />
                 </div>
 
                 <div>
-                  <label class="block text-[12px] font-medium mb-2">New Password</label>
+                  <label data-i18n="new" class="block text-[12px] font-medium mb-2"></label>
                   <input id="newPassword" type="password" class="w-full bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 text-[12px]" placeholder="Enter new password" />
                 </div>
               </div>
@@ -111,25 +114,21 @@ export default function Settings() {
 
             <!-- 2FA -->
             <div>
-              <h2 class="text-[18px] font-semibold mb-4">Two-Factor Authentication</h2>
-              <p class="text-[13px] max-w-[330px] mb-6"> Add an extra layer of protection to your account by requiring a verification code before access. </p>
-              <button id="2fa-button" class="text-[12px] w-[100px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-bold hover:bg-primary/60 hover:text-black transition-colors">
-                Enable
-              </button>
+              <h2 data-i18n="twoFA" class="text-[18px] font-semibold mb-4"></h2>
+              <p data-i18n="FAdesc" class="text-[13px] max-w-[330px] mb-6"></p>
+              <button id="2fa-button" class="text-[12px] w-[100px] bg-black drop-shadow-cyan rounded-[15px] px-4 py-2 font-bold hover:bg-primary/60 hover:text-black transition-colors"></button>
             </div>
 
           </div>
         </section>
 
-        <button type="submit" class="text-[15px] w-[150px] h-[50px] bg-primary/40 drop-shadow-cyan rounded-[25px] text-black font-bold hover:bg-primary/60 hover:text-black transition-colors">
-          Save Changes
-        </button>
+        <button data-i18n="save" type="submit" class="text-[18px] w-[150px] h-[50px] bg-primary/40 drop-shadow-cyan rounded-[25px] text-black font-bold hover:bg-primary/60 hover:text-black transition-colors"></button>
       </form>
 
       <div id="avatar-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm items-center justify-center z-50 hidden">
         <div class="bg-black rounded-[20px] p-10 md:p-10 relative flex flex-col items-center w-[90%] max-w-[700px] drop-shadow-cyan">
           <i id="close-avatar-modal" class="fa-solid fa-xmark absolute top-4 right-8 text-primary cursor-pointer text-xl"></i>
-          <h2 class="text-white text-center font-glitch text-[30px] mb-10">Change your avatar</h2>
+          <h2 data-i18n="changeAvt" class="text-white text-center font-glitch text-[30px] mb-10"></h2>
           <div class="grid grid-cols-4 gap-6" id="avatar-grid">
             <div class="avatar w-[90px] h-[90px] rounded-full overflow-hidden border-[2px] border-primary hover:scale-[1.05] data-[selected=true]:border-secondary" data-selected="false"><img src="/pink-girl.svg" class="w-full h-full object-cover" /></div>
             <div class="avatar w-[90px] h-[90px] rounded-full overflow-hidden border-[2px] border-primary hover:scale-[1.05] data-[selected=true]:border-secondary" data-selected="false"><img src="/dark-girl.svg" class="w-full h-full object-cover" /></div>
@@ -145,7 +144,7 @@ export default function Settings() {
               <input type="file" id="avatarUpload" accept="image/*" name="image" class="hidden" />
             </label>
           </div>
-          <button id="avatar-submit" class="mt-7 w-[20%] text-white bg-black drop-shadow-cyan font-bold hover:bg-primary/60 hover:text-black transition-colors py-2 rounded-[25px]">Save</button>
+          <button data-i18n="save" id="avatar-submit" class="mt-7 w-[20%] text-white bg-black drop-shadow-cyan font-bold hover:bg-primary/60 hover:text-black transition-colors py-2 rounded-[25px] text-[13px]"></button>
         </div>
       </div>
 
@@ -157,9 +156,8 @@ export default function Settings() {
 async function fillSettingsPage()
 {
   const userId = localStorage.getItem("userId");
-  showAlert("here is the id " + userId)
   if (!userId) {
-    // showAlert("Login first");
+    showAlert("Login first");
     navigate("/login");
   }
   try

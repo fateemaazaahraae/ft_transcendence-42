@@ -1,3 +1,4 @@
+import { getSavedLang, setLang } from "../i18n/index.ts";
 import { navigate } from "../main.ts";
 export function initLogout(){
     const logoutIcon = document.getElementById("logout-icon");
@@ -30,7 +31,9 @@ export function initLogout(){
 
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
+    const lang = getSavedLang();
     localStorage.clear();
+    setLang(lang);
     navigate("/");
   });
 }

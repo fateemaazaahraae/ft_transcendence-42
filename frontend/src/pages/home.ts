@@ -112,6 +112,7 @@ export default async function Home() {
 export function HomeEventListener()
 {
   const btnPlay = document.getElementById("play-btn2");
-  btnPlay?.addEventListener("click", () => {navigate("/gameStyle");
-});
+  btnPlay?.addEventListener("click", () => {
+    navigate("/gameStyle");
+  });
 }
