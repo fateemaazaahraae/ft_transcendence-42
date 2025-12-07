@@ -4,7 +4,7 @@ import { showAlert } from "../utils/alert.ts";
 export default function Login() {
   return `<div class="min-h-screen w-full flex items-center justify-center relative pt-[7%] md:pt-[2%]">
 
-    <div class="relative inset-0 items-center h-[690px] md:h-full w-full md:w-[820px] pt-[60px] mr-30 pb-[60px] px-[20px] md:px-[150px] rounded-[50px] overflow-hidden ">
+    <div class="relative inset-0 items-center h-[690px] md:h-full w-full md:w-[820px] pt-[60px] mr-30 pb-[60px] px-[20px] md:px-[150px] rounded-[50px] overflow-hidden">
 
         <div class="absolute rounded-full blur-[55px] opacity-80  w-[170px] h-[240px] md:w-[400px] md:h-[250px] bg-[#35C6DDE5] left-[calc(50%-175px)] md:left-[calc(50%-320px)]  top-[15%] md:top-[19%] -rotate-[20deg] md:rotate-[63deg]"></div>
         <div class="absolute rounded-full blur-[55px] opacity-100 w-[130px] h-[260px] md:w-[400px] md:h-[250px] bg-[#D02EA48A] right-[calc(50%-146px)] md:left-[calc(50%-60px)] md:bottom-[60%] top-[50%] md:top-[53%] -rotate-[35deg] md:rotate-[45deg]"></div>
@@ -56,12 +56,12 @@ export default function Login() {
                 </span>
                 <span class="font-thin text-[0.7em] md:text-[0.92em]">Remember Me</span>
               </label>
-              <a href="" id="pw" class="text-[#35C6DD] text-[0.67em] md:text-[0.8em] font-semibold border-b hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">
+              <a href="" id="pw" class="text-primary/60 text-[0.67em] md:text-[0.8em] font-semibold border-b   hover:text-primary hover:border-primary border-primary/60">
                 Forget password?
               </a>
             </div>
             <button type="submit" id="submit"
-              class="flex w-[40%] h-[30px] md:h-[43px] font-glitch items-center justify-center mx-auto leading-[35px] bg-[#35C6DDB5] text-white text-[1.0em] tracking-[2px] px-[20px] py-[7px] rounded-[50px] cursor-pointer mt-4 md:mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
+              class="flex w-[40%] h-[30px] md:h-[43px] font-glitch items-center justify-center mx-auto leading-[35px] bg-primary/60 text-white text-[1.0em] tracking-[2px] px-[20px] py-[7px] rounded-[50px] cursor-pointer mt-4 md:mt-2 hover:text-black hover:bg-primary hover:transition hover:duration-300">
               Login
             </button>
             <div class="flex items-center mt-[35px] mb-[20px] md:my-[30px]">
@@ -82,7 +82,7 @@ export default function Login() {
             </div>
             <div class="text-white mt-3 md:mt-9 text-center text-[0.8em] md:text-[0.9em] font-roboto font-semibold">
                 <p class="mb-[5px]">Don’t have an account? Click here to </p>
-                <a href="" id="register-link" class="text-[#35C6DD] text-[0.8em] md:text-[0.9em] items-end font-bold border-b  hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">Register Now</a>
+                <a href="" id="register-link" class="text-primary/60 text-[0.8em] md:text-[0.9em] items-end font-bold border-b  hover:text-primary hover:border-primary border-primary/60">Register Now</a>
             </div>
           </form>
         </div>
