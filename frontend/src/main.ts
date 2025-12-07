@@ -20,9 +20,10 @@ import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
 import Chat from "./pages/Chat.ts";
 import { showAlert } from "./utils/alert.ts";
+import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
 // import { viewFriend } from "./pages/viewFriend.ts";
 
-const routes: Record<string, {render: () => string; setUp?: () => void}> = {
+const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<void> }> = {
     "/": {render: Landing, setUp: LandingEventListener},
     "/home": {render: Home, setUp: HomeEventListener},
     "/gameStyle": {render: GameStyle, setUp: GameStyleEventListener},
@@ -42,20 +43,24 @@ const routes: Record<string, {render: () => string; setUp?: () => void}> = {
     404: {render: PageNotFound},
 };
 
-function render(path: string) {
+async function render(path: string) {
     const app = document.querySelector<HTMLDivElement>("#app");
     const page = routes[path] || routes[404];
-    app!.innerHTML = page.render();
 
-    requestAnimationFrame(() => {
-        window.scrollTo(0, 0);
-    });
+    // render the page
+    app!.innerHTML = await page.render();  // in case render becomes async
+
+    requestAnimationFrame(() => window.scrollTo(0, 0));
     sideBarListeners();
-    if (page.setUp)
-        page.setUp();
+
+    // run setup if exists
+    if (page.setUp) await page.setUp();
+
+    translatePage(getSavedLang());
     renderNotifications(notifications);
     initLogout();
 }
+
 
 function sideBarListeners() {
     const barIcons = document.querySelectorAll<HTMLElement>("aside i[data-path]");
@@ -67,20 +72,21 @@ function sideBarListeners() {
     });
 }
 
-export function navigate(path: string) {
+export async function navigate(path: string) {
     console.log("rah 3eyto liya");
     window.history.pushState({}, "", path);
-    render(path);
+    await render(path);
 }
 
-window.addEventListener("popstate", () => {
-    render(window.location.pathname);
+window.addEventListener("popstate", async() => {
+    await render(window.location.pathname);
 })
 
-window.addEventListener("DOMContentLoaded", () => {
-    render(window.location.pathname);
+window.addEventListener("DOMContentLoaded", async() => {
+    await render(window.location.pathname);
     notificationBarListeners();
     LanguagesMenuEventListener();
+    translatePage(getSavedLang());
     // viewFriend();
 });
 

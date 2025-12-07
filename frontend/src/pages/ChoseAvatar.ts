@@ -106,26 +106,28 @@ export function ChoseAvatarEventListener() {
     }
 
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        showAlert("You must be logged in to choose an avatar");
-        navigate("/login");
-        return;
-      }
-      const res = await fetch("http://localhost:3000/user/avatar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`, // ✅ send JWT
-        },
-        body: JSON.stringify({ profileImage: avatarToSend }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        showAlert(data.error || "Could not save avatar");
-        return;
-      }
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must be logged in to choose an avatar");
       navigate("/login");
+      return;
+    }
+
+    const res = await fetch("http://localhost:3000/user/avatar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify({ profileImage: avatarToSend }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || "Could not save avatar");
+      return;
+    }
+    navigate("/home");
     }
     catch (err) {
       showAlert("Network error while saving avatar");
@@ -134,11 +136,17 @@ export function ChoseAvatarEventListener() {
 
   function convertToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
+    if (file.size > 200 * 1024) {  // 200 KB limit
+      showAlert("Image too large, max 200KB");
+      reject("File too large");
+      return;
+    }
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
+
 }
 
 

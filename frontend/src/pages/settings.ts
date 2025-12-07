@@ -157,8 +157,9 @@ export default function Settings() {
 async function fillSettingsPage()
 {
   const userId = localStorage.getItem("userId");
+  showAlert("here is the id " + userId)
   if (!userId) {
-    showAlert("Login first");
+    // showAlert("Login first");
     navigate("/login");
   }
   try
@@ -182,7 +183,7 @@ async function fillSettingsPage()
   catch (err)
   {
     console.log(err);
-    showAlert("Error while fetching data: " + err);
+    // showAlert("Error while fetching data: " + err);
   }
 }
 

@@ -43,27 +43,31 @@ export function intra42AuthRoutes(fastify) {
     }
 
     const userRes = await fetch("https://api.intra.42.fr/v2/me", {
-      headers: { Authorization: `Bearer ${tokenData.access_token}` }
+    headers: { Authorization: `Bearer ${tokenData.access_token}` }
     });
-
     const profile = await userRes.json();
-    const email = profile.email;
+    const { login, first_name, last_name, email, image } = profile;
+    const profileImage =
+      image?.link ||
+      image?.versions?.large ||
+      "/blue-boy.svg";
 
     let user = await findUserByEmail(email);
-
+    
     if (!user) {
-      user = await createUser(
-        profile.first_name,
-        profile.last_name,
-        profile.login,
-        profile.email,
-        Math.random().toString(36)
-      );
+      await createUser(first_name, last_name, login, email, Math.random().toString(36), profileImage);
+      user = await findUserByEmail(email); 
     }
 
-    const jwtToken = fastify.jwt.sign({ id: user.id, userName: user.userName });
+    const jwtToken = fastify.jwt.sign({
+        id: user.id,
+        userName: user.userName,
+        fullName: `${user.firstName} ${user.lastName}`,
+        profileImage: user.profileImage
+    });
 
-    return reply.redirect(`http://localhost/home?token=${jwtToken}`);
+    return reply.redirect(`https://localhost:8443/home?token=${jwtToken}`);
+
   });
 
 }

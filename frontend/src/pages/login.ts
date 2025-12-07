@@ -131,7 +131,8 @@ export function LoginEventListener() {
         navigate("/TwoFactor");
       } else {
         // await showAlert("Login successful", "success");
-        localStorage.setItem("userId", data.user.id);
+        if (!localStorage.getItem("userId"))
+          localStorage.setItem("userId", data.user.id);
         navigate("/home");
       }
     } catch (err) {
