@@ -1,4 +1,5 @@
 
+import { getSavedLang } from "../i18n/index.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 import { loadUser } from "../utils/loadUser.ts";
@@ -30,6 +31,8 @@ export default async function Home() {
     navigate("/login");
   }
 
+  const currentLang: string = getSavedLang().toUpperCase();
+
   return `
 <div class="relative w-full h-screen overflow-x-hidden px-6">
 
@@ -50,13 +53,12 @@ export default async function Home() {
 
     </aside>
 
-
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
+        <button id="currentLang" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
+          ${currentLang}
         </button>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
@@ -68,7 +70,7 @@ export default async function Home() {
    <div class="flex justify center items-center">
       <!-- Avatar -->
       <img 
-        src=${user.profileImage}
+        src="${user.profileImage}"
         class="object-cover w-[110px] h-[110px] md:w-[150px] md:h-[150px] xl:w-[220px] xl:h-[220px] rounded-full border-[3px] border-[#35C6DD]"
       >
 

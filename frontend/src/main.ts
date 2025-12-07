@@ -20,6 +20,7 @@ import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
 import Chat from "./pages/Chat.ts";
 import { showAlert } from "./utils/alert.ts";
+import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
 // import { viewFriend } from "./pages/viewFriend.ts";
 
 const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<void> }> = {
@@ -55,6 +56,7 @@ async function render(path: string) {
     // run setup if exists
     if (page.setUp) await page.setUp();
 
+    translatePage(getSavedLang());
     renderNotifications(notifications);
     initLogout();
 }
@@ -84,6 +86,7 @@ window.addEventListener("DOMContentLoaded", async() => {
     await render(window.location.pathname);
     notificationBarListeners();
     LanguagesMenuEventListener();
+    translatePage(getSavedLang());
     // viewFriend();
 });
 

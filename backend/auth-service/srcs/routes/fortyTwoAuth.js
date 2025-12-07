@@ -43,14 +43,13 @@ export function intra42AuthRoutes(fastify) {
     }
 
     const userRes = await fetch("https://api.intra.42.fr/v2/me", {
-    headers: { Authorization: `Bearer ${tokenData.access_token}` }
+      headers: { Authorization: `Bearer ${tokenData.access_token}` }
     });
     const profile = await userRes.json();
     const { login, first_name, last_name, email, image } = profile;
     const profileImage =
       image?.link ||
-      image?.versions?.large ||
-      "/blue-boy.svg";
+      image?.versions?.large;
 
     let user = await findUserByEmail(email);
     
