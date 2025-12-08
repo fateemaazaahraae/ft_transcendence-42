@@ -2,7 +2,10 @@ import "./../styles/index.css";
 import Landing, { LandingEventListener } from "./pages/landing";
 import Home, { HomeEventListener } from "./pages/home";
 import GameStyle, { GameStyleEventListener } from "./pages/gameStyle.ts";
+import LocalGameStyle, { LocalGameStyleEventListener } from "./pages/LocalgameStyle.ts";
 import Game from "./pages/game.ts";
+import LocalGame, { LocalGameEventListener } from "./pages/Localgame.ts";
+import AiGame, { AiGameEventListener } from "./pages/Aigame.ts";
 import Login, { LoginEventListener } from "./pages/login";
 import Register, { RegisterEventListener } from "./pages/register.ts";
 import ResetPw, { ResetPwEventListener } from "./pages/resetpw.ts";
@@ -10,7 +13,7 @@ import TwoFactor, { FactorEventListener } from "./pages/TwoFactor.ts";
 import ChangePw, { ChangePwEventListener } from "./pages/changepw.ts";
 import ChoseAvatar, { ChoseAvatarEventListener } from "./pages/ChoseAvatar.ts";
 import Leaderboard from "./pages/leaderboard";
-import Settings from "./pages/settings.ts";
+import Settings, { SettingsEventListner } from "./pages/settings.ts";
 import Friends, {FriendsEventListener} from "./pages/friends.ts";
 import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
 import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
@@ -20,21 +23,25 @@ import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
 import Chat, {ChatEventListener } from "./pages/Chat.ts";
 import { showAlert } from "./utils/alert.ts";
+import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
 // import { viewFriend } from "./pages/viewFriend.ts";
 
-const routes: Record<string, {render: () => string; setUp?: () => void}> = {
+const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<void> }> = {
     "/": {render: Landing, setUp: LandingEventListener},
     "/home": {render: Home, setUp: HomeEventListener},
     "/gameStyle": {render: GameStyle, setUp: GameStyleEventListener},
+    "/LocalgameStyle": {render: LocalGameStyle, setUp: LocalGameStyleEventListener},
     "/game": {render: Game},
+    "/Localgame": {render: LocalGame, setUp: LocalGameEventListener},
+    "/Aigame": {render: AiGame, setUp: AiGameEventListener},
     "/login": {render: Login, setUp: LoginEventListener},
     "/register": {render: Register, setUp: RegisterEventListener},
     "/resetpw": {render: ResetPw, setUp: ResetPwEventListener},
     "/changepw": {render: ChangePw, setUp: ChangePwEventListener},
-    "/TwoFactor": {render: TwoFactor, setUp:FactorEventListener},
-    "/ChoseAvatar": {render: ChoseAvatar, setUp:ChoseAvatarEventListener},
+    "/TwoFactor": {render: TwoFactor, setUp: FactorEventListener},
+    "/ChoseAvatar": {render: ChoseAvatar, setUp: ChoseAvatarEventListener},
     "/leaderboard": {render: Leaderboard},
-    "/settings": {render: Settings},
+    "/settings": {render: Settings, setUp: SettingsEventListner},
     "/friends": {render: Friends, setUp: FriendsEventListener},
     "/invitations": {render: Invitations, setUp: InvitationsEventListener},
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
@@ -42,20 +49,24 @@ const routes: Record<string, {render: () => string; setUp?: () => void}> = {
     404: {render: PageNotFound},
 };
 
-function render(path: string) {
+async function render(path: string) {
     const app = document.querySelector<HTMLDivElement>("#app");
     const page = routes[path] || routes[404];
-    app!.innerHTML = page.render();
 
-    requestAnimationFrame(() => {
-        window.scrollTo(0, 0);
-    });
+    // render the page
+    app!.innerHTML = await page.render();  // in case render becomes async
+
+    requestAnimationFrame(() => window.scrollTo(0, 0));
     sideBarListeners();
-    if (page.setUp)
-        page.setUp();
+
+    // run setup if exists
+    if (page.setUp) await page.setUp();
+
+    translatePage(getSavedLang());
     renderNotifications(notifications);
     initLogout();
 }
+
 
 function sideBarListeners() {
     const barIcons = document.querySelectorAll<HTMLElement>("aside i[data-path]");
@@ -67,20 +78,21 @@ function sideBarListeners() {
     });
 }
 
-export function navigate(path: string) {
+export async function navigate(path: string) {
     console.log("rah 3eyto liya");
     window.history.pushState({}, "", path);
-    render(path);
+    await render(path);
 }
 
-window.addEventListener("popstate", () => {
-    render(window.location.pathname);
+window.addEventListener("popstate", async() => {
+    await render(window.location.pathname);
 })
 
-window.addEventListener("DOMContentLoaded", () => {
-    render(window.location.pathname);
+window.addEventListener("DOMContentLoaded", async() => {
+    await render(window.location.pathname);
     notificationBarListeners();
     LanguagesMenuEventListener();
+    translatePage(getSavedLang());
     // viewFriend();
 });
 

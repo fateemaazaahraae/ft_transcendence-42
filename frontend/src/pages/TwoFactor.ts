@@ -27,13 +27,13 @@ export default function TwoFactor() {
                   transition-shadow duration-400 ease-in-out">
             </div>
             <button type="submit" id="verify"
-              class="flex w-[45%] h-[37px] md:h-[43px] font-glitch items-center justify-center mx-auto leading-[35px] bg-[#35C6DDB5] text-white text-[1.2em] tracking-[2px] px-[20px] py-[20px] rounded-[50px] cursor-pointer mt-7 md:mt-10 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
+              class="flex w-[45%] h-[37px] md:h-[43px] font-glitch items-center justify-center mx-auto leading-[35px] bg-primary/60 text-white text-[1.2em] tracking-[2px] px-[20px] py-[20px] rounded-[50px] cursor-pointer mt-7 md:mt-10 hover:text-black hover:bg-primary hover:transition hover:duration-300">
               Verify
             </button>
           </form>
         </div>
         </div>
-      <img src="/public/white_boy22.svg" class="hidden lg:flex md:items-center md:justify-center md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] pb-[120px]">
+      <img src="/white_boy22.svg" class="hidden lg:flex md:items-center md:justify-center md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] pb-[120px]">
   </div>
   `;
 }

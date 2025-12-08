@@ -11,13 +11,14 @@ services:
       - /app/node_modules
     depends_on:
       - auth-service
-      # - profile-service
+      - profile-service
     networks:
       - ft_transcendence
     expose:
-      - "5173"
+      - "5173:5173"
   
   auth-service:
+    platform: linux/amd64
     build:
       context: ./backend/auth-service
       dockerfile: Dockerfile
@@ -28,6 +29,7 @@ services:
     volumes:
       - ./backend/auth-service:/app
       - /app/node_modules
+      - uploads:/app/uploads
     ports:
       - "3000:3000"
     networks:
@@ -43,26 +45,42 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - API_URL=http://backend-api:3000
     ports:
-      - "4000:3000"
+      - "4000:4000"
     networks:
       - ft_transcendence
     restart: always
 
-  # profile-service:
-  #   build:
-  #     context: ./backend/profile-service
-  #     dockerfile: Dockerfile
-  #   image: profile-service
-  #   container_name: profile-service
+
+  # chat-service:
+  #   build: ./backend/chat-service
+  #   container_name: chat-service
   #   env_file:
-  #     - ./backend/profile-service/.env
-  #   volumes:
-  #     - ./backend/profile-service:/app
-  #     - /app/node_modules
+  #     - ./backend/chat-service/.env
+  #   environment:
+  #     - JWT_SECRET=${JWT_SECRET}
+  #     - API_URL=http://backend-api:3000
   #   ports:
-  #     - "3001:3001"
+  #     - "4000:4000"
   #   networks:
   #     - ft_transcendence
+  #   restart: always
+
+  profile-service:
+    platform: linux/amd64
+    build:
+      context: ./backend/profile-service
+      dockerfile: Dockerfile
+    image: profile-service
+    container_name: profile-service
+    env_file:
+      - ./backend/profile-service/.env
+    volumes:
+      - ./backend/profile-service:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    networks:
+      - ft_transcendence
 
   nginx:
     build:
@@ -75,11 +93,16 @@ services:
     depends_on:
       - frontend
       - auth-service
-      - chat-service
+      - profile-service
+      # - chat-service
+    volumes:
+      - uploads:/app/uploads
       # - profile-service
     networks:
       - ft_transcendence
 
+volumes:
+  uploads:
 
 networks:
   ft_transcendence:

@@ -23,9 +23,17 @@ export function loginRoutes(fastify) {
             
             //generate JWT
             const token = fastify.jwt.sign(
-                {id: user.id, email: user.email},
-                { expiresIn: "7d"}
-            )
+            {
+                id: user.id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                userName: user.userName,
+                profileImage: user.profileImage
+            },
+            { expiresIn: "7d" }
+            );
+
 
             //2FA
             if (user.isTwoFactorEnabled === 1)
@@ -45,9 +53,15 @@ export function loginRoutes(fastify) {
 
             return reply.code(200).send({
                 message: "Login successful",
-                userId: user.id,
                 token,
-                isTwoFactorEnabled: user.isTwoFactorEnabled
+                isTwoFactorEnabled: user.isTwoFactorEnabled,
+                user: {
+                    id: user.id,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    userName: user.userName,
+                    profileImage: user.profileImage
+                }
             });
         }
         catch (err) {

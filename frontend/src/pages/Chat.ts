@@ -1,10 +1,8 @@
-// This is your frontend file (e.g., chat.js or wherever ChatEventListener resides)
 
-import { navigate } from "../main.ts"; // Keeping your original import
+import { navigate } from "../main.ts"; 
 
 export default function Chat() {
  
-  // ... (Your existing Chat HTML code goes here, it's unchanged) ...
  
   return `
   <div class="class="h-screen overflow-hidden flex items-center justify-center text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
@@ -60,6 +58,7 @@ export default function Chat() {
     
     <div class="space-y-4 mt-3 mb-3 pb-8 h-full overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent">
         </div>
+
     </div>
       </div>
 
@@ -109,6 +108,7 @@ export default function Chat() {
           <div class="flex-1 flex items-center justify-center h-full">
                <h1 class="text-center text-primary/65  font-bold text-4xl ">Ping Pong<br>Chat</h1>
           </div>
+
         </div>
 
         <div class="relative">
@@ -139,7 +139,6 @@ export default function Chat() {
 
 export function ChatEventListener()
 {
-    // --- Configuration and State ---
     const API_BASE_URL: string = 'https://localhost:8443/api';
 const WS_URL: string = 'wss://localhost:8443/ws';
     const CURRENT_USER_ID: number = 1; 
@@ -150,8 +149,6 @@ const WS_URL: string = 'wss://localhost:8443/ws';
     
     let chatWebSocket: WebSocket | null = null;
 
-    // --- DOM Elements ---
-    // All DOM elements must be explicitly typed as HTMLElement or HTMLInputElement or null
     const menuToggle: HTMLElement | null = document.getElementById("menuToggle");
     const dropdownMenu: HTMLElement | null = document.getElementById("dropdownMenu");
     const closebutton: HTMLElement | null = document.getElementById("closeChat");
@@ -162,12 +159,10 @@ const WS_URL: string = 'wss://localhost:8443/ws';
     const sendButton: HTMLElement | null = document.getElementById("sendMessageBtn");
     const backToContactsBtn: HTMLElement | null = document.getElementById('backToContacts'); 
     
-    // Header elements to update
     const chatUsername: HTMLElement | null = document.getElementById('chatContactUsername');
     const chatStatus: HTMLElement | null = document.getElementById('chatContactStatus');
     const chatAvatar: HTMLImageElement | null = document.getElementById('chatContactAvatar') as HTMLImageElement | null;
 
-    // Type for the incoming data object (defining a structure to avoid implicit any)
     interface WebSocketMessage {
         type: 'chat' | 'status' | 'error';
         sender_id: number;
@@ -187,7 +182,7 @@ const WS_URL: string = 'wss://localhost:8443/ws';
         chatWebSocket.onopen = (): void => console.log("WebSocket connected.");
         
         chatWebSocket.onmessage = (event: MessageEvent): void => {
-            // Need to assert the type of data coming in from the server
+            //  assert the type of data coming in from the server
             const data: Partial<WebSocketMessage> = JSON.parse(event.data);
             handleIncomingData(data);
         };
@@ -205,7 +200,7 @@ const WS_URL: string = 'wss://localhost:8443/ws';
             const isSender: boolean = data.sender_id === CURRENT_USER_ID;
             
             if (data.sender_id === ACTIVE_CHAT_CONTACT_ID || data.receiver_id === ACTIVE_CHAT_CONTACT_ID) {
-                // Must ensure data is treated as the full message object for rendering
+                //  ensure data is treated as the full message object for rendering
                 renderSingleMessage(data as WebSocketMessage, isSender);
             }
             fetchContacts(); 
@@ -231,7 +226,7 @@ const WS_URL: string = 'wss://localhost:8443/ws';
         }
     }
 
-    // Function type definition for map callback
+    // function type definition for map callback
     interface Contact {
         id: number;
         username: string;
@@ -275,7 +270,7 @@ const WS_URL: string = 'wss://localhost:8443/ws';
             .catch((err: Error) => console.error('Error fetching contacts:', err));
     }
 
-    // Type definition for message object
+    // type definition for message object
     interface ChatMessage {
         id: number;
         sender_id: number;
@@ -301,10 +296,8 @@ const WS_URL: string = 'wss://localhost:8443/ws';
     }
 
     function attachContactClickListeners(): void {
-        // QuerySelectorAll returns a NodeListOf<Element>, which is iterable
         document.querySelectorAll(".contact-item").forEach((item: Element) => {
             item.addEventListener("click", () => {
-                // Assert item is HTMLElement to safely access getAttribute
                 const htmlItem = item as HTMLElement; 
                 const contactId: number = parseInt(htmlItem.getAttribute('data-contact-id') || '0');
                 const username: string = htmlItem.getAttribute('data-contact-username') || '';
@@ -334,13 +327,10 @@ const WS_URL: string = 'wss://localhost:8443/ws';
     function renderSingleMessage(message: ChatMessage, isSender: boolean): void {
         if (!messagesPanel) return;
         
-        // Use sender_id if it's not the current user, or receiver_id if it is the current user
         const otherUserId: number = isSender ? message.receiver_id : message.sender_id;
         
-        // Safely query for the contact item using the user ID
         const contactItem: Element | null = document.querySelector(`.contact-item[data-contact-id="${otherUserId}"]`);
         
-        // Get the avatar from the data attribute on the contact list item
         const otherUserAvatar: string = contactItem?.getAttribute('data-contact-avatar') || '../../public/default.svg';
         
         const messageAvatar: string = isSender ? CURRENT_USER_AVATAR : otherUserAvatar;
@@ -374,11 +364,6 @@ const WS_URL: string = 'wss://localhost:8443/ws';
         }
     }
 
-    // =======================================================
-    // #4. INITIALIZATION AND EXISTING UI LISTENERS
-    // =======================================================
-
-    // Send button listener
     sendButton?.addEventListener('click', (): void => {
         const content: string = messageInput?.value.trim() || '';
         if (content && ACTIVE_CHAT_CONTACT_ID) {
@@ -386,7 +371,7 @@ const WS_URL: string = 'wss://localhost:8443/ws';
         }
     });
 
-    // Mobile back button logic (existing)
+
     backToContactsBtn?.addEventListener("click", (): void => {
         const isMobile = (): boolean => window.innerWidth < 768;
         if (isMobile()) {
@@ -396,7 +381,7 @@ const WS_URL: string = 'wss://localhost:8443/ws';
         }
     });
     
-    // Window resize logic (existing)
+
     window.addEventListener("resize", (): void => {
         if (window.innerWidth >= 768) {
             chat?.classList.remove("hidden"); 
@@ -409,7 +394,7 @@ const WS_URL: string = 'wss://localhost:8443/ws';
         }
     });
     
-    // Existing menu/dropdown logic
+
     menuToggle?.addEventListener("click", (): void => { dropdownMenu?.classList.toggle("hidden"); });
     document.addEventListener("click", (e: MouseEvent): void => {
         const target: EventTarget | null = e.target;
@@ -418,7 +403,7 @@ const WS_URL: string = 'wss://localhost:8443/ws';
         }
     });
 
-    // Existing close chat logic
+
     closebutton?.addEventListener("click", (): void => {
         const chatDiv: HTMLElement | null = document.getElementById("chatContainer");
         if(chatDiv) {
@@ -429,7 +414,6 @@ const WS_URL: string = 'wss://localhost:8443/ws';
         document.getElementById("dropdownMenu")?.classList.add("hidden");
     });
     
-    // --- Start the chat application ---
     connectWS();
     fetchContacts();
 }

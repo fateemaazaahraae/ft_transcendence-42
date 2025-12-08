@@ -3,18 +3,17 @@ import bcrypt from "bcryptjs";
 import { openDb } from "./db.js";
 
 
-// Helper to create a new user
-export async function createUser(firstName, lastName, userName, email, password) {
+export async function createUser(firstName, lastName, userName, email, password, profileImage) {
   const db = await openDb();
   const passwordHash = await bcrypt.hash(password, 10);
   const id = uuidv4();
 
   await db.run(
-    `INSERT INTO users(id, firstName, lastName, userName, email, passwordHash, isTwoFactorEnabled)
-      VALUES(?, ?, ?, ?, ?, ?, ?)`,
-      [id, firstName, lastName, userName, email, passwordHash, 0]
+    `INSERT INTO users(id, firstName, lastName, userName, email, passwordHash, isTwoFactorEnabled, profileImage)
+      VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
+      [id, firstName, lastName, userName, email, passwordHash, 0, profileImage]
   );
-  return {id, firstName, lastName, userName, email, passwordHash};
+  return {id, firstName, lastName, userName, email, passwordHash, profileImage};
 }
 
 export async function findUserByEmail(email) {
@@ -27,3 +26,24 @@ export async function findUserByUserName(userName)
   const db = await openDb();
   return db.get(`SELECT * FROM users WHERE userName = ?`, [userName]);
 }
+
+// Update avatar
+export async function updateAvatar(userId, profileImage) {
+  const db = await openDb();
+  await db.run(`UPDATE users SET profileImage = ? WHERE id = ?`, [profileImage, userId]);
+}
+
+export async function updateUser(userId, firstName, lastName, userName, profileImage){
+  const db = await openDb();
+  await db.run(
+    `UPDATE users SET firstName = ?, lastName = ?, userName = ?, profileImage = ? WHERE id = ?`,
+    [firstName, lastName, userName, profileImage, userId]
+  );
+}
+
+// Find user by id
+export async function findUserById(userId) {
+  const db = await openDb();
+  return db.get(`SELECT * FROM users WHERE id = ?`, [userId]);
+}
+

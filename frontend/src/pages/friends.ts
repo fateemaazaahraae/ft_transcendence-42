@@ -2,12 +2,12 @@ import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 
 let friendsList = [
-  { name: "smith", color: "bg-greenAdd", img: "../../public/blue-boy.svg" },
-  { name: "noah", color: "bg-redRemove", img: "../../public/white-boy.svg" },
-  { name: "salaoui", color: "bg-greenAdd", img: "../../public/purple-girl.svg" },
-  { name: "oliver", color: "bg-redRemove", img: "../../public/white-boy2.svg" },
-  { name: "fateemaazaahrae", color: "bg-greenAdd", img: "../../public/green-girl.svg" },
-  { name: "knacer", color: "bg-greenAdd", img: "../../public/dark-girl.svg" },
+  { name: "smith", color: "bg-greenAdd", img: "/blue-boy.svg" },
+  { name: "noah", color: "bg-redRemove", img: "/white-boy.svg" },
+  { name: "salaoui", color: "bg-greenAdd", img: "/purple-girl.svg" },
+  { name: "oliver", color: "bg-redRemove", img: "/white-boy2.svg" },
+  { name: "fateemaazaahrae", color: "bg-greenAdd", img: "/green-girl.svg" },
+  { name: "knacer", color: "bg-greenAdd", img: "/dark-girl.svg" },
 ];
 
 export default function Friends() {

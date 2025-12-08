@@ -4,7 +4,7 @@ import { showAlert } from "../utils/alert.ts";
 export default function Login() {
   return `<div class="min-h-screen w-full flex items-center justify-center relative pt-[7%] md:pt-[2%]">
 
-    <div class="relative inset-0 items-center h-[690px] md:h-full w-full md:w-[820px] pt-[60px] mr-30 pb-[60px] px-[20px] md:px-[150px] rounded-[50px] overflow-hidden ">
+    <div class="relative inset-0 items-center h-[690px] md:h-full w-full md:w-[820px] pt-[60px] mr-30 pb-[60px] px-[20px] md:px-[150px] rounded-[50px] overflow-hidden">
 
         <div class="absolute rounded-full blur-[55px] opacity-80  w-[170px] h-[240px] md:w-[400px] md:h-[250px] bg-[#35C6DDE5] left-[calc(50%-175px)] md:left-[calc(50%-320px)]  top-[15%] md:top-[19%] -rotate-[20deg] md:rotate-[63deg]"></div>
         <div class="absolute rounded-full blur-[55px] opacity-100 w-[130px] h-[260px] md:w-[400px] md:h-[250px] bg-[#D02EA48A] right-[calc(50%-146px)] md:left-[calc(50%-60px)] md:bottom-[60%] top-[50%] md:top-[53%] -rotate-[35deg] md:rotate-[45deg]"></div>
@@ -56,12 +56,12 @@ export default function Login() {
                 </span>
                 <span class="font-thin text-[0.7em] md:text-[0.92em]">Remember Me</span>
               </label>
-              <a href="" id="pw" class="text-[#35C6DD] text-[0.67em] md:text-[0.8em] font-semibold border-b hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">
+              <a href="" id="pw" class="text-primary/60 text-[0.67em] md:text-[0.8em] font-semibold border-b   hover:text-primary hover:border-primary border-primary/60">
                 Forget password?
               </a>
             </div>
             <button type="submit" id="submit"
-              class="flex w-[40%] h-[30px] md:h-[43px] font-glitch items-center justify-center mx-auto leading-[35px] bg-[#35C6DDB5] text-white text-[1.0em] tracking-[2px] px-[20px] py-[7px] rounded-[50px] cursor-pointer mt-4 md:mt-2 hover:text-black hover:bg-cyan-800 hover:transition hover:duration-300">
+              class="flex w-[40%] h-[30px] md:h-[43px] font-glitch items-center justify-center mx-auto leading-[35px] bg-primary/60 text-white text-[1.0em] tracking-[2px] px-[20px] py-[7px] rounded-[50px] cursor-pointer mt-4 md:mt-2 hover:text-black hover:bg-primary hover:transition hover:duration-300">
               Login
             </button>
             <div class="flex items-center mt-[35px] mb-[20px] md:my-[30px]">
@@ -77,17 +77,17 @@ export default function Login() {
                 <i class="fa-brands fa-google"></i>
             </a>
             <a href="http://localhost:3000/auth/42">
-              <img src="/public/intra42.png" class="mt-[15%] w-[45px]" />
+              <img src="/intra42.png" class="mt-[15%] w-[45px]" />
             </a>
             </div>
             <div class="text-white mt-3 md:mt-9 text-center text-[0.8em] md:text-[0.9em] font-roboto font-semibold">
                 <p class="mb-[5px]">Don’t have an account? Click here to </p>
-                <a href="" id="register-link" class="text-[#35C6DD] text-[0.8em] md:text-[0.9em] items-end font-bold border-b  hover:text-cyan-800 hover:border-cyan-800 border-[#35C6DDE5]">Register Now</a>
+                <a href="" id="register-link" class="text-primary/60 text-[0.8em] md:text-[0.9em] items-end font-bold border-b  hover:text-primary hover:border-primary border-primary/60">Register Now</a>
             </div>
           </form>
         </div>
         </div>
-      <img src="/public/white_boy22.svg" class="hidden  lg:flex md:items-center md:justify-center mr-40 mt-[60px] md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)]">
+      <img src="/white_boy22.svg" class="hidden  lg:flex md:items-center md:justify-center mr-40 mt-[60px] md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)]">
   </div>
   `;
 }
@@ -99,15 +99,12 @@ export function LoginEventListener() {
   });
   const register = document.getElementById("register-link");
   register?.addEventListener("click", (e) => {
-    e.preventDefault();
-    navigate("/register");  
+    e.preventDefault(); 
+    navigate("/register");
   });
-
   const form = document.getElementById("loginForm") as HTMLFormElement | null;
-  if (!form) {
-    console.error("Register form not found in the DOM");
-    return;
-  }
+  if (!form) return;
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const userName = (document.getElementById("userName") as HTMLInputElement).value;
@@ -124,25 +121,23 @@ export function LoginEventListener() {
         showAlert(data.error || "login failed");
         return;
       }
-      localStorage.setItem("userId", data.userId);
+
+      // ✅ Store JWT in localStorage
       localStorage.setItem("token", data.token);
-      if (data.isTwoFactorEnabled === 1)
-      {
+      
+      if (data.isTwoFactorEnabled === 1) {
+        localStorage.setItem("userId", data.userId);
         await showAlert("Check your email - Verification code sent", "success");
         navigate("/TwoFactor");
-      }
-      else
-      {
-        await showAlert("Login goes successfully", "success");
+      } else {
+        // await showAlert("Login successful", "success");
+        if (!localStorage.getItem("userId"))
+          localStorage.setItem("userId", data.user.id);
         navigate("/home");
       }
+    } catch (err) {
+      console.error(err);
+      showAlert("Network or server error.");
     }
-    catch(err){
-      console.error("Network or server error:", err);
-      showAlert("Network hna error. Please try again." + err);
-    }
-  }) ;
-  
+  });
 }
-
-  
