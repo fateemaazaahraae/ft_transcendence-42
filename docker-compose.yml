@@ -43,7 +43,7 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - API_URL=http://backend-api:3000
     ports:
-      - "4000:4000"
+      - "4000:3000"
     networks:
       - ft_transcendence
     restart: always
