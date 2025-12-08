@@ -2,7 +2,10 @@ import "./../styles/index.css";
 import Landing, { LandingEventListener } from "./pages/landing";
 import Home, { HomeEventListener } from "./pages/home";
 import GameStyle, { GameStyleEventListener } from "./pages/gameStyle.ts";
+import LocalGameStyle, { LocalGameStyleEventListener } from "./pages/LocalgameStyle.ts";
 import Game from "./pages/game.ts";
+import LocalGame, { LocalGameEventListener } from "./pages/Localgame.ts";
+import AiGame, { AiGameEventListener } from "./pages/Aigame.ts";
 import Login, { LoginEventListener } from "./pages/login";
 import Register, { RegisterEventListener } from "./pages/register.ts";
 import ResetPw, { ResetPwEventListener } from "./pages/resetpw.ts";
@@ -18,7 +21,7 @@ import PageNotFound from "./pages/pageNotFound.ts"
 import { notifications, notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
 import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
-import Chat from "./pages/Chat.ts";
+import Chat, {ChatEventListener } from "./pages/Chat.ts";
 import { showAlert } from "./utils/alert.ts";
 import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
 // import { viewFriend } from "./pages/viewFriend.ts";
@@ -27,7 +30,10 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/": {render: Landing, setUp: LandingEventListener},
     "/home": {render: Home, setUp: HomeEventListener},
     "/gameStyle": {render: GameStyle, setUp: GameStyleEventListener},
+    "/LocalgameStyle": {render: LocalGameStyle, setUp: LocalGameStyleEventListener},
     "/game": {render: Game},
+    "/Localgame": {render: LocalGame, setUp: LocalGameEventListener},
+    "/Aigame": {render: AiGame, setUp: AiGameEventListener},
     "/login": {render: Login, setUp: LoginEventListener},
     "/register": {render: Register, setUp: RegisterEventListener},
     "/resetpw": {render: ResetPw, setUp: ResetPwEventListener},
@@ -39,7 +45,7 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/friends": {render: Friends, setUp: FriendsEventListener},
     "/invitations": {render: Invitations, setUp: InvitationsEventListener},
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
-    "/chat": {render: Chat},
+    "/chat": {render: Chat, setUp: ChatEventListener},
     404: {render: PageNotFound},
 };
 
@@ -56,7 +62,8 @@ async function render(path: string) {
     // run setup if exists
     if (page.setUp) await page.setUp();
 
-    const lang = getSavedLang();
+    const lang = await getSavedLang();
+    // const lang = localStorage.getItem(:);
     translatePage(lang);
 
     const currentLangBtn = document.getElementById("currentLang");
@@ -89,11 +96,11 @@ window.addEventListener("popstate", async() => {
 })
 
 window.addEventListener("DOMContentLoaded", async() => {
-    setLang(getSavedLang());
+    const lang = await getSavedLang();
+    translatePage(lang);
     await render(window.location.pathname);
     notificationBarListeners();
     LanguagesMenuEventListener();
-    translatePage(getSavedLang());
     // viewFriend();
 });
 

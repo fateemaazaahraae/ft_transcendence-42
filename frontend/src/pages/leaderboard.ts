@@ -1,7 +1,7 @@
 import { getSavedLang } from "../i18n";
 import { requiredAuth } from "../utils/authGuard";
 
-export default function Leaderboard() {
+export default async function Leaderboard() {
   if (!requiredAuth())
     return "";
   const topThree = [
@@ -10,7 +10,7 @@ export default function Leaderboard() {
     { rank: "3", name: "John", img: "/white-boy.svg", score: "6.158" }
   ];
 
-  const currentLang = getSavedLang().toUpperCase();
+  const currentLang = (await getSavedLang()).toUpperCase();
   return `
   <div class="min-h-screen text-white font-roboto px-6 md:px-20 py-10 relative pb-[90px] overflow-y-auto">
 

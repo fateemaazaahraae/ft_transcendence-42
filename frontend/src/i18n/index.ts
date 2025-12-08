@@ -1,3 +1,4 @@
+import { showAlert } from "../utils/alert"
 import en from "./en"
 import fr from "./fr"
 import sp from "./sp"
@@ -17,11 +18,33 @@ export function translatePage(lang: Lang) {
     });
 }
 
-export function getSavedLang(): Lang {
-    return (localStorage.getItem("lang") as Lang) || "en";
+export async function getSavedLang(): Promise<Lang> {
+    const local = localStorage.getItem("lang") as Lang | null;
+    if (local) return local;
+    const userId = localStorage.getItem("userId");
+    if (!userId)
+        return 'en';
+
+    try {
+        const res = await fetch(`http://localhost:3000/users/${userId}/language`)
+        if (!res.ok) { return 'en'; }
+        const data = await res.json();
+        return (data.lang as Lang) || "en";
+    }
+    catch (err) { return 'en'; }
 }
 
-export function setLang(lang: Lang) {
+export async function setLang(lang: Lang) {
+    const userId = localStorage.getItem("userId");
+    if (!userId)
+        return 'en';
+    
+    const res = await fetch(`http://localhost:3000/users/${userId}/language`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lang })
+    });
+    const data = await res.json();
     localStorage.setItem("lang", lang);
-    translatePage(lang);
+    translatePage(lang)
 }

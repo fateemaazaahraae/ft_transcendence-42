@@ -12,10 +12,10 @@ let invitationsList = [
   {name:"five", img:"/dark-girl.svg", date:"2025-19-09"},
 ];
 
-export default function Invitations() {
+export default async function Invitations() {
   if (!requiredAuth())
     return "";
-  const currentLang: string = getSavedLang().toUpperCase();
+  const currentLang = (await getSavedLang()).toUpperCase();
   return `
   <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
 

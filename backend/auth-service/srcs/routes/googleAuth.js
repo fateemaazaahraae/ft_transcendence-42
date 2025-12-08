@@ -49,37 +49,29 @@ export function googleAuthRoutes(fastify) {
       const firstName = userInfo.given_name || "Unknown";
       const lastName = userInfo.family_name || "";
       const userName = email.split("@")[0];
-      let profileImage = userInfo.picture .replace("s96-c", "s400-c");
-      console.log("-------------> profile image : ", profileImage);
-      if (profileImage.length < 100)
-      {
-        profileImage = "";
-      }
+      let profileImage = userInfo.picture;
       let user = await findUserByEmail(email);
       if (!user) {
-        user = await createUser(
-          firstName,
-          lastName,
-          userName,
-          email,
-          Math.random().toString(36),
-          profileImage
-        );
-      }
-      else{
-        await updateUser(user.id, firstName, lastName, userName, profileImage);
-      }
-      user = await findUserByEmail(email);
-      console.log("---------------first name: ", user.firstName);
-      console.log("---------------last name: ", user.lastName);
-      console.log("------> after creating user: ", user.profileImage);
+        if (profileImage.length < 100)
+            profileImage = "https://localhost:8443/default.png";
+          user = await createUser(
+            firstName,
+            lastName,
+            userName,
+            email,
+            Math.random().toString(36),
+            profileImage
+          );
+          user = await findUserByEmail(email);
+        }
+        console.log("-------------> profile image : ", user.profileImage);
       
-      const jwtToken = fastify.jwt.sign({
+     const jwtToken = fastify.jwt.sign({
         id: user.id,
         userName: user.userName,
         fullName: `${user.firstName} ${user.lastName}`,
         profileImage: user.profileImage
-      });
+    });
 
       return reply.redirect(`https://localhost:8443/home?token=${jwtToken}`);
     } catch (err) {

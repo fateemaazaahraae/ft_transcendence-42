@@ -11,10 +11,10 @@ let friendsList = [
   { name: "knacer", color: "bg-greenAdd", img: "/dark-girl.svg" },
 ];
 
-export default function Friends() {
+export default async function Friends() {
   if (!requiredAuth())
     return "";
-  const currentLang: string = getSavedLang().toUpperCase();
+  const currentLang = (await getSavedLang()).toUpperCase();
   return `
   <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
 
@@ -57,7 +57,7 @@ export default function Friends() {
 
     <!-- Friends List (Horizontal Scroll) -->
     <div class="max-w-[1000px] mx-auto px-4 md:px-8 pb-20">
-      <div class="grid grid-cols-1 gap-6 md:gap-8 overflow-y-auto md:flex md:py-8 md:overflow-x-auto md:scrollbar-thin md:scrollbar-thumb-primary/60 md:scrollbar-track-transparent">
+      <div class="grid grid-cols-1 gap-8 md:gap-6 overflow-y-auto md:flex md:py-8 md:overflow-x-auto md:scrollbar-thin md:scrollbar-thumb-primary/60 md:scrollbar-track-transparent">
 
         ${friendsList
           .map(

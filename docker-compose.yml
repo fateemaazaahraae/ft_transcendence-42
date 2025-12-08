@@ -34,6 +34,21 @@ services:
       - "3000:3000"
     networks:
       - ft_transcendence
+    
+  # chat service
+  # chat-service:
+  #   build: ./backend/chat-service
+  #   container_name: chat-service
+  #   env_file:
+  #     - ./backend/chat-service/.env
+  #   environment:
+  #     - JWT_SECRET=${JWT_SECRET}
+  #     - API_URL=http://backend-api:3000
+  #   ports:
+  #     - "4000:4000"
+  #   networks:
+  #     - ft_transcendence
+  #   restart: always
 
   profile-service:
     platform: linux/amd64
@@ -64,8 +79,10 @@ services:
       - frontend
       - auth-service
       - profile-service
+      # - chat-service
     volumes:
       - uploads:/app/uploads
+      # - profile-service
     networks:
       - ft_transcendence
 

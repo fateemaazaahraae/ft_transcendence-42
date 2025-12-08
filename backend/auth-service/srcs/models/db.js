@@ -16,10 +16,11 @@ export async function openDb() {
             userName TEXT NOT NULL,
             email TEXT NOT NULL,
             passwordHash TEXT NOT NULL,
-            profileImage LONGTEXT,
-            isTwoFactorEnabled INTEGER DEFAULT 0
+            profileImage TEXT,
+            isTwoFactorEnabled INTEGER DEFAULT 0,
+            language TEXT DEFAULT 'en'
             )`
-    );
+        );
 
     //2FA table
     await db.exec(

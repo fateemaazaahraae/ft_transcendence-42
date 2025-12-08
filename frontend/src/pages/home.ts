@@ -14,7 +14,7 @@ export default async function Home() {
       localStorage.setItem("token", token);
       window.history.replaceState({}, document.title, "/home");
     }
-    if (!token) 
+    if (!token)
       token = localStorage.getItem("token");
    const res = await fetch("http://localhost:3000/user/me", {
       headers: {
@@ -23,8 +23,7 @@ export default async function Home() {
     });
     const data = await res.json();
     user = data.user;
-    if (!localStorage.getItem("userId"))
-      localStorage.setItem("userId", data.user.id);
+    localStorage.setItem("userId", data.user.id);
   }
   catch
   {
@@ -32,7 +31,7 @@ export default async function Home() {
     navigate("/login");
   }
 
-  const currentLang: string = getSavedLang().toUpperCase();
+  const currentLang = (await getSavedLang()).toUpperCase();
 
   return `
 <div class="relative w-full h-screen overflow-x-hidden px-6">
@@ -71,7 +70,7 @@ export default async function Home() {
    <div class="flex justify center items-center">
       <!-- Avatar -->
       <img 
-        src=${user.profileImage || "default.png"}
+        src="${user.profileImage}"
         class="object-cover w-[110px] h-[110px] md:w-[150px] md:h-[150px] xl:w-[220px] xl:h-[220px] rounded-full border-[3px] border-[#35C6DD]"
       >
 
@@ -103,16 +102,24 @@ export default async function Home() {
             <span class="text-secondary ml-2">700</span>
             </p>
           </div>
+        <button id="play-btn" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out pt-[300px]">
+          PlayNow
+        </button>
       </div>
     </div>
     </div>
    `;
 }
 
-export function HomeEventListener()
-{
-  const btnPlay = document.getElementById("play-btn2");
-  btnPlay?.addEventListener("click", () => {
-    navigate("/gameStyle");
-  });
+export function HomeEventListener() {
+  setTimeout(() => {
+    const btnPlay = document.getElementById("play-btn");
+    if (btnPlay) {
+      btnPlay.addEventListener("click", () => {
+        console.log("play Button clicked");
+        navigate("/LocalgameStyle");
+      });
+    }
+  }, 100);
 }
+

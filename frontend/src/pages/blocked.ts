@@ -11,10 +11,10 @@ let blockedList = [
   {name: "knacer", img: "/dark-girl.svg"},
 ];
 
-export default function Blocked() {
+export default async function Blocked() {
   if (!requiredAuth())
     return "";
-  const currentLang: string = getSavedLang().toUpperCase();
+  const currentLang = (await getSavedLang()).toUpperCase();
   return `
   <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
 
@@ -83,19 +83,16 @@ export function BlockedEventListener() {
   const invitations = document.getElementById("invitationsButton");
 
   friends?.addEventListener("click", () => {
-    console.log("Friends Button Clicked");
     navigate("/friends");
   })
 
   invitations?.addEventListener("click", () => {
-    console.log("Invitations Button Clicked");
     navigate("/invitations");
   })
 
   const unblockFriends = document.querySelectorAll(".unblock-btn");
   unblockFriends.forEach((button) => {
     button.addEventListener("click", () => {
-      console.log("Unblock button clicked");
       const name = button.getAttribute("data-name");
       blockedList = blockedList.filter((block) => block.name !== name);
       navigate("/blocked");

@@ -1,13 +1,14 @@
 import { getSavedLang } from "../i18n";
+import { translateMsg } from "../i18n/translateBack";
 import { navigate } from "../main";
 import { showAlert } from "../utils/alert";
 import { requiredAuth } from "../utils/authGuard";
 
-export default function Settings() {
+export  default async function Settings() {
   if (!requiredAuth())
     return "";
 
-  const currentLang = getSavedLang().toUpperCase();
+  const currentLang = (await getSavedLang()).toUpperCase();
   return `
   <div class="min-h-screen text-white font-roboto px-6 md:px-20 py-10 relative pb-[90px] overflow-y-auto">
 
@@ -175,13 +176,13 @@ async function fillSettingsPage()
     (document.getElementById("gender") as HTMLSelectElement).value = data.gender || "Female";
     const twoFactorButton = document.getElementById("2fa-button") as HTMLButtonElement;
     if (twoFactorButton) {
-      twoFactorButton.innerText = data.isTwoFactorEnabled === 1 ? "Disable" : "Enable";
+      twoFactorButton.innerText = data.isTwoFactorEnabled === 1 ? await translateMsg("DISABLE") : await translateMsg("ENABLE");
     }
   }
   catch (err)
   {
     console.log(err);
-    // showAlert("Error while fetching data: " + err);
+    showAlert("Error while fetching data: " + err);
   }
 }
 
@@ -199,20 +200,21 @@ function handleTwoFactorButton(twoFactorButton: HTMLButtonElement) {
         method: "PUT"
       })
       const data = await res.json();
+      const translatedMsg = await translateMsg(data.code);
       if (!res.ok) {
-        showAlert("Error: " + data.error);
+        showAlert("Error: " + translatedMsg);
         return;
       }
-      if (twoFactorButton.innerText.trim() === "Enable")
-        twoFactorButton.innerText = "Disable";
+      if (twoFactorButton.innerText.trim() === await translateMsg("ENABLE"))
+        twoFactorButton.innerText =  await translateMsg("DISABLE");
       else
-        twoFactorButton.innerText = "Enable";
-      showAlert(data.message || "2FA status updated!", "success");
+        twoFactorButton.innerText =  await translateMsg("ENABLE");
+      showAlert(translatedMsg, "success");
     }
     catch (err)
     {
       console.error(err);
-      showAlert("Netword error while enable/disable 2fa")
+      showAlert(await translateMsg("NETWORK_ERROR"))
     }
   })
 }
@@ -269,18 +271,19 @@ export function SettingsEventListner() {
         body: JSON.stringify(bodyData)
       });
       const data = await res.json();
+      const translatedMsg = await translateMsg(data.code);
       if (!res.ok) {
-        showAlert("Error: " + data.error);
+        showAlert("Error: " + translatedMsg);
         return;
       }
-      await showAlert("Profile Updating successfully", "success");
+      await showAlert(translatedMsg, "success");
       (document.getElementById("currentPassword") as HTMLInputElement).value = "";
       (document.getElementById("newPassword") as HTMLInputElement).value = "";
     }
     catch(err)
     {
       console.error(err);
-      showAlert("Netword error while updating settings")
+      showAlert(await translateMsg("NETWORK_ERROR"))
     }
   })
 
@@ -316,7 +319,6 @@ export function SettingsEventListner() {
 
     const avatarOptions = document.querySelectorAll(".avatar");
     avatarOptions.forEach((avatar) => {
-      console.log("\n\n dkheeeeelt\n\n");
       avatar.addEventListener("click", () => {
         avatarOptions.forEach(a => a.setAttribute("data-selected", "false"));
         avatar.setAttribute("data-selected", "true");
@@ -343,19 +345,20 @@ export function SettingsEventListner() {
             body: formData
         });
         const data = await res.json();
+        const translatedMsg = await translateMsg(data.code);
         if (!res.ok) {
-            showAlert("Upload failed: " + data.error);
+            showAlert(translatedMsg);
             return;
         }
         const myImg = document.getElementById("myImg") as HTMLImageElement;
         myImg.src = data.profileImage;
         selectedAvatar = data.profileImage;
         modal.classList.add("hidden");
-        showAlert("Profile image updated!", "success");
+        showAlert(translatedMsg, "success");
       }
       catch (error) {
         console.error(error);
-        showAlert("Network error while uploading");
+        showAlert(await translateMsg("NETWORK_ERROR"));
       }
     });
 
@@ -363,7 +366,8 @@ export function SettingsEventListner() {
     saveButton.addEventListener("click", async () => {
       if (!selectedAvatar)
       {
-        showAlert("Please choose an Avatar");
+        const translatedMsg = await translateMsg("CHOOSE_AVATAR");
+        showAlert(translatedMsg);
         return;
       }
       const userId = localStorage.getItem("userId");
@@ -374,6 +378,7 @@ export function SettingsEventListner() {
           body: JSON.stringify({ profileImage: selectedAvatar })
         });
         const data = await res.json();
+        const translatedMsg = await translateMsg(data.code);
         if (!res.ok) {
           showAlert("Error updating avatar");
           return;
@@ -381,11 +386,11 @@ export function SettingsEventListner() {
         modal.classList.remove("flex");
         modal.classList.add("hidden");
         (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
-        showAlert("Avatar Updated successfully", "success");
+        showAlert(translatedMsg, "success");
       }
       catch (err) {
         console.error(err);
-        showAlert("Netword error while updating settings")
+        showAlert(await translateMsg("NETWORK_ERROR"))
       }
     });
   }
