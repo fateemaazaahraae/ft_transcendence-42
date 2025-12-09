@@ -139,8 +139,8 @@ export default function Chat() {
 
 export function ChatEventListener()
 {
-    const API_BASE_URL: string = 'https://localhost:8443/api';
-const WS_URL: string = 'wss://localhost:8443/ws';
+    const API_BASE_URL: string = 'http://localhost:4000/api';
+const WS_URL: string = 'ws://localhost:4000';
     const CURRENT_USER_ID: number = 1; 
     
     let ACTIVE_CHAT_CONTACT_ID: number | null = null; 
@@ -193,6 +193,67 @@ const WS_URL: string = 'wss://localhost:8443/ws';
         };
         chatWebSocket.onerror = (e: Event): void => console.error("WS Error:", e);
     }
+
+    // ------------------ search / contacts integration ------------------
+    function debounce<T extends (...args: any[]) => void>(fn: T, wait = 250) {
+        let t: number | undefined;
+        return (...args: Parameters<T>) => {
+            if (t) window.clearTimeout(t);
+            t = window.setTimeout(() => fn(...args), wait) as unknown as number;
+        };
+    }
+
+    async function searchUsers(q: string) {
+        if (!q || q.trim().length === 0) {
+            fetchContacts();
+            return;
+        }
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/users/search?q=${encodeURIComponent(q)}&userId=${CURRENT_USER_ID}`);
+            const users = await res.json();
+            renderSearchResults(users);
+        } catch (err) {
+            console.error('search error', err);
+        }
+    }
+
+    function renderSearchResults(users: Array<{id:number,username:string,avatar:string,status:string}>) {
+        const contactsListDiv: HTMLElement | null | undefined = contactsSide?.querySelector('.space-y-4');
+        if (!contactsListDiv) return;
+
+        contactsListDiv.innerHTML = users.map(u => {
+            const statusClass = (u.status === 'online') ? 'bg-greenAdd' : 'bg-redRemove';
+            const avatar = u.avatar || '../../public/default.svg';
+            const lastMessage = 'Search result';
+            return `
+                <div class="scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item"
+                     data-contact-id="${u.id}"
+                     data-contact-username="${u.username}"
+                     data-contact-avatar="${avatar}"
+                     data-contact-status="${u.status}">
+                    <div class="relative w-12 h-12 flex-shrink-0">
+                        <img src="${avatar}" class="w-12 h-12 object-cover border border-primary rounded-full">
+                        <div id="status-${u.id}" class="absolute bottom-0 right-0 w-3 h-3 rounded-full ${statusClass}"></div>
+                    </div>
+                    <div>
+                        <p class="font-medium text-sm text-secondary ">${u.username}</p>
+                        <p class="text-xs text-gray-200">${lastMessage}</p>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        attachContactClickListeners();
+    }
+
+    // search input
+    const searchInput: HTMLInputElement | null = document.getElementById('default-search') as HTMLInputElement | null;
+    const onSearch = debounce((e: Event) => {
+        const v = (e.target as HTMLInputElement).value;
+        searchUsers(v);
+    }, 250);
+    searchInput?.addEventListener('input', onSearch);
 
     function handleIncomingData(data: Partial<WebSocketMessage>): void {
         

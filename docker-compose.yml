@@ -43,7 +43,7 @@ services:
       - ./backend/chat-service/.env
     environment:
       - JWT_SECRET=${JWT_SECRET}
-      - API_URL=http://backend-api:3000
+      - API_URL=http://auth-service:3000
     ports:
       - "4000:4000"
     networks:
