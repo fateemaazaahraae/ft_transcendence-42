@@ -49,7 +49,38 @@ export default function LocalGame() {
         <i class="object-cover fa-solid fa-circle-user text-[50px] md:text-[50px] lg:text-[120px]  ml-[1%] md:ml-[3%] lg:ml-[10%] xl:text-[95px] text-secondary/75"></i>
     </div>
 
+    <!-- PAUSE BUTTON -->
+    <div class="absolute top-[10%] left-1/2 transform -translate-x-1/2 z-10">
+      <button id="pause-btn" class="px-6 py-3 bg-gray-800 hover:bg-gray-600 text-white rounded-lg font-roboto transition-all duration-300 flex items-center gap-2">
+        <i class="fa-solid fa-pause"></i>
+        Pause
+      </button>
+    </div>
 
+    <!-- PAUSE OVERLAY (Hidden by default) -->
+    <div id="pause-overlay" class="absolute inset-0 bg-black/80 z-20 hidden flex-col items-center justify-center">
+      <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl max-w-md w-[90%] text-center">
+        <h2 class="text-3xl font-glitch text-primary mb-2">Game Paused</h2>
+        <p class="text-gray-300 mb-6">Take a break, adjust settings, or resume</p>
+        
+        <div class="space-y-4">
+          <button id="resume-btn" class="w-full py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
+            <i class="fa-solid fa-play mr-2"></i>
+            Resume Game
+          </button>
+          
+          <button id="restart-btn" class="w-full py-3 bg-secondary/80 hover:bg-secondary text-white rounded-lg font-roboto transition-all duration-300">
+            <i class="fa-solid fa-rotate-right mr-2"></i>
+            Restart Game
+          </button>
+          
+          <button id="quit-btn" class="w-full py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-roboto transition-all duration-300">
+            <i class="fa-solid fa-sign-out mr-2"></i>
+            Quit to Menu
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- GAME CANVAS AREA -->
     <div class="absolute top-[26%] lg:top-[37%] xl:top-[32%] md:top-[32%] left-[15%] w-[70%] h-[65%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
@@ -73,13 +104,33 @@ export default function LocalGame() {
 export function LocalGameEventListener() {
   setTimeout(() => {
     // Back button
-    const backBtn = document.getElementById('back-btn');
-    if (backBtn) {
-      backBtn.addEventListener('click', () => {
-        // navigate('/LocalgameStyle');
-      });
-    }
+    // const backBtn = document.getElementById('back-btn');
+    // if (backBtn) {
+    //   backBtn.addEventListener('click', () => {
+    //     // navigate('/LocalgameStyle');
+    //   });
+    // }
     
+    let gameRunning = true;
+    let animationId: number | null = null;
+    let player1Score = 0;
+    let player2Score = 0;
+    const WINNING_SCORE = 5; /// later I will add checking if player win and then annonce how win 
+
+    const pauseBtn = document.getElementById('pause-btn') as HTMLButtonElement;
+    const pauseOverlay = document.getElementById('pause-overlay') as HTMLDivElement;
+    const resumeBtn = document.getElementById('resume-btn') as HTMLButtonElement;
+    const restartBtn = document.getElementById('restart-btn') as HTMLButtonElement;
+    const quitBtn = document.getElementById('quit-btn') as HTMLButtonElement;
+    const player1ScoreDisplay = document.getElementById('player1-score-display') as HTMLSpanElement;
+    const player2ScoreDisplay = document.getElementById('player2-score-display') as HTMLSpanElement;
+
+    function updateScoreDisplay() {
+      if (player1ScoreDisplay) player1ScoreDisplay.textContent = player1Score.toString();
+      if (player2ScoreDisplay) player2ScoreDisplay.textContent = player2Score.toString();
+    }
+
+
     const canvas = document.getElementById('pongCanvas') as HTMLCanvasElement | null;
     if (canvas)
     {
@@ -127,12 +178,71 @@ export function LocalGameEventListener() {
           keys[k] = true;
           if (k === 'arrowup' || k === 'arrowdown') e.preventDefault();
         }
+
+        // for the pause button
+        if (k === ' ' || k === 'escape') {
+          e.preventDefault();
+          togglePause();
+        }
       });
 
       window.addEventListener('keyup', (e) => {
         const k = e.key.toLowerCase();
         if (k === 'w' || k === 's' || k === 'arrowup' || k === 'arrowdown') keys[k] = false;
       });
+  ////////////////////
+
+      function togglePause() {
+        gameRunning = !gameRunning;
+
+        if (!gameRunning) {
+          pauseOverlay.classList.remove('hidden');
+          pauseOverlay.classList.add('flex');
+          if (pauseBtn) {
+            pauseBtn.innerHTML = '<i class="fa-solid fa-play"></i> Resume';
+          }
+        } else {
+          pauseOverlay.classList.add('hidden');
+          pauseOverlay.classList.remove('flex');
+          if (pauseBtn) {
+            pauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
+          }
+          if (!animationId) {
+            last = performance.now();
+            animationId = requestAnimationFrame(animate);
+          }
+        }
+      }
+
+      if (pauseBtn) {
+        pauseBtn.addEventListener('click', togglePause);
+      }
+      if (resumeBtn) {
+        resumeBtn.addEventListener('click', togglePause);
+      }
+      if (restartBtn) {
+        restartBtn.addEventListener('click', restartGame);
+      }
+      if (quitBtn) {
+        quitBtn.addEventListener('click', () => {
+          navigate('/LocalgameStyle');
+          // console.log('Quit lacal game style');
+        });
+      }
+
+      function restartGame() {
+        player1Score = 0;
+        player2Score = 0;
+        updateScoreDisplay();
+
+        resetGameBall();
+
+        if (!gameRunning) {
+          togglePause();
+        }
+        console.log('Game Restarting');
+      }
+/////////////////////////
 
       function drawMyScene() {
         // Drawing Midle line
@@ -184,7 +294,13 @@ export function LocalGameEventListener() {
       resetGameBall();
       let last = performance.now(); // this one needed to calculate delta time(it's the time between frames)
       console.log('the last var is: ', last);
+
       function animate(now = performance.now()) {
+        if (!gameRunning) {
+          animationId = null;
+          return;
+        }
+
         const dt = Math.min((now - last) / 1000, 0.04);  // kan7sbo delta time li hia lwa9t bin kola frame w frame kan9smoh 3la 1000 to get the value in milliseconds // then kanakhdo l min value between time btw frames and 0.04 so always 0.04 is the max value can be chosing
         // console.log('the dt var is: ', dt);
         last = now; // update the last time value
@@ -248,9 +364,14 @@ export function LocalGameEventListener() {
         }
 
         if (ball.x - ball.r > width) {
+          player1Score++;
+          updateScoreDisplay();
+          // add a condition to check if player got a score of 5points
           resetGameBall(false);
         }
         else if (ball.x + ball.r < 0) {
+          player2Score++;
+          updateScoreDisplay();
           resetGameBall(true);
         }
         c.clearRect(0, 0, width, height);// clean my scene
@@ -268,7 +389,6 @@ export function LocalGameEventListener() {
       }
       last = performance.now();
       requestAnimationFrame(animate);
-
     }
   }, 100);
 }
