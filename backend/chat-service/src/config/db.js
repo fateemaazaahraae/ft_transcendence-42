@@ -54,6 +54,15 @@ try {
     db.prepare(`INSERT OR IGNORE INTO users (id, userName, profileImage, status) VALUES (?, ?, ?, ?);`).run('1', 'user_A', null, 'offline');
     db.prepare(`INSERT OR IGNORE INTO users (id, userName, profileImage, status) VALUES (?, ?, ?, ?);`).run('2', 'user_B', null, 'offline');
     db.prepare(`INSERT OR IGNORE INTO users (id, userName, profileImage, status) VALUES (?, ?, ?, ?);`).run('3', 'user_C', null, 'offline');
+    
+    // seed sample conversation between user 1 and user 2
+    const { nanoid } = await import('nanoid');
+    const convoId = nanoid();
+    db.prepare(`INSERT OR IGNORE INTO conversations (id, user_a, user_b) VALUES (?, ?, ?);`).run(convoId, '1', '2');
+    
+    // seed a sample message
+    const msgId = nanoid();
+    db.prepare(`INSERT OR IGNORE INTO messages (id, conversation_id, sender_id, content) VALUES (?, ?, ?, ?);`).run(msgId, convoId, '1', 'Hello from user A!');
 } catch (e) {
     // ignore
 }
