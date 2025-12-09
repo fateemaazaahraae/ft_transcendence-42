@@ -61,13 +61,13 @@ FRONTEND receives response
 # 🎮 LOCAL GAME PART 🎮
 ==================================================
 
-First step add the Event Listener to the play button..
+First step add the Event Listener to the play button ofc..
 then apply the Alg ccd
-## what is lmachakil li f dcd
+### Why we stopped using dcd algorithm: lmachakil li f dcd
 there is two main problems: 
-### first: hight velocity: 
+#### first: hight velocity: 
 we'll see more of what is velocity later, and when there is a hight velocity (the object's speed is large in the game's units per second. ===> the faster the object, the further is will move during one frame) to get distance moved per frame: distance = speed * dt;
-### second: tunneling:
+#### second: tunneling:
 is when one object completly pass through another object without ever overlapping at simpled instance at a t
 in arabic: 
 تداخل مجسم في مجسم أو مرور واحد عبر الآخر
