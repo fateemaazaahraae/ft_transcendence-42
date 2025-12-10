@@ -1,5 +1,7 @@
 
-import { navigate } from "../main.ts"; 
+import { navigate } from "../main.ts";
+import { connectWS, sendMessage as sendWSMessage } from "../utils/websocketHandler.ts";
+import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../utils/searchHandler.ts"; 
 
 export default function Chat() {
  
@@ -137,344 +139,314 @@ export default function Chat() {
   `;
 }
 
-export function ChatEventListener()
-{
+// MESSAGE HANDLING FUNCTIONS 
+interface ChatMessage {
+    id: number;
+    sender_id: number;
+    receiver_id: number;
+    content: string;
+    timestamp: string;
+}
+
+function renderSingleMessage(
+    message: ChatMessage | any,
+    isSender: boolean,
+    messagesPanel: HTMLElement
+): void {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `flex ${isSender ? 'justify-end' : 'justify-start'} mb-2`;
+    msgDiv.innerHTML = `
+        <div class="${isSender ? 'bg-secondary text-black' : 'bg-primary/65 text-white'} rounded-lg px-4 py-2 max-w-xs">
+            <p class="text-sm break-words">${message.content || ''}</p>
+            <p class="text-xs opacity-70 mt-1">${new Date(message.timestamp || Date.now()).toLocaleTimeString()}</p>
+        </div>
+    `;
+    messagesPanel?.appendChild(msgDiv);
+    messagesPanel?.scrollTo(0, messagesPanel.scrollHeight);
+}
+
+function fetchMessages(
+    API_BASE_URL: string,
+    CURRENT_USER_ID: number,
+    contactId: number,
+    messagesPanel: HTMLElement,
+    onComplete?: () => void
+): void {
+    fetch(`${API_BASE_URL}/chats/messages/${CURRENT_USER_ID}/${contactId}`)
+        .then((res) => res.json())
+        .then((messages: ChatMessage[]) => {
+            if (messagesPanel) {
+                messagesPanel.innerHTML = '';
+            }
+            
+            messages.forEach((msg: ChatMessage) => {
+                const isSender = msg.sender_id === CURRENT_USER_ID;
+                renderSingleMessage(msg, isSender, messagesPanel);
+            });
+            
+            messagesPanel?.scrollTo(0, messagesPanel.scrollHeight);
+            if (onComplete) onComplete();
+        })
+        .catch((err) => {
+            console.error('Error fetching messages:', err);
+        });
+}
+
+function updateContactStatusUI(userId: number, status: string): void {
+    const statusElement = document.getElementById(`status-${userId}`);
+    if (statusElement) {
+        statusElement.className = `absolute bottom-0 right-0 w-3 h-3 rounded-full ${
+            status === 'online' ? 'bg-greenAdd' : 'bg-redRemove'
+        }`;
+    }
+}
+
+function updateChatHeader(
+    chatUsername: HTMLElement | null,
+    chatStatus: HTMLElement | null,
+    chatAvatar: HTMLImageElement | null,
+    username: string,
+    status: string,
+    avatar: string
+): void {
+    if (chatUsername) chatUsername.textContent = username;
+    if (chatStatus) chatStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+    if (chatAvatar) chatAvatar.src = avatar;
+}
+
+// UI EVENT HANDLERS 
+function attachContactClickListeners(
+    contactsListDiv: HTMLElement,
+    onContactSelect: (contactId: number, username: string, avatar: string, status: string) => void
+): void {
+    document.querySelectorAll(".contact-item").forEach((item: Element) => {
+        item.addEventListener("click", () => {
+            const htmlItem = item as HTMLElement;
+            const contactId: number = parseInt(htmlItem.getAttribute('data-contact-id') || '0');
+            const username: string = htmlItem.getAttribute('data-contact-username') || '';
+            const avatar: string = htmlItem.getAttribute('data-contact-avatar') || '';
+            const status: string = htmlItem.getAttribute('data-contact-status') || '';
+
+            if (contactId) {
+                onContactSelect(contactId, username, avatar, status);
+            }
+        });
+    });
+}
+
+function setupMenuToggle(menuToggle: HTMLElement, dropdownMenu: HTMLElement): void {
+    menuToggle.addEventListener("click", (): void => {
+        dropdownMenu.classList.toggle("hidden");
+    });
+}
+
+function setupDropdownClose(dropdownMenu: HTMLElement): void {
+    document.addEventListener("click", (e: MouseEvent): void => {
+        const target: EventTarget | null = e.target;
+        if (
+            target instanceof HTMLElement &&
+            !target.closest("#dropdownMenu") &&
+            !target.closest("#menuToggle")
+        ) {
+            dropdownMenu.classList.add("hidden");
+        }
+    });
+}
+
+function setupCloseChat(closeButton: HTMLElement, onClose: () => void): void {
+    closeButton?.addEventListener("click", (): void => {
+        onClose();
+    });
+}
+
+function setupBackToContacts(backButton: HTMLElement, onBack: () => void): void {
+    backButton?.addEventListener("click", (): void => {
+        onBack();
+    });
+}
+
+function setupMessageSend(
+    sendButton: HTMLElement,
+    messageInput: HTMLInputElement,
+    onSend: (content: string) => void
+): void {
+    sendButton?.addEventListener('click', (): void => {
+        const content = messageInput?.value.trim() || '';
+        if (content) {
+            onSend(content);
+        }
+    });
+}
+
+function setupWindowResize(onResize: () => void): void {
+    window.addEventListener("resize", (): void => {
+        onResize();
+    });
+}
+
+//  CHAT EVENT LISTENER 
+export function ChatEventListener() {
+    
     const API_BASE_URL: string = 'http://localhost:4000/api';
-const WS_URL: string = 'ws://localhost:4000';
-    const CURRENT_USER_ID: number = 1; 
+    const WS_URL: string = 'ws://localhost:4000';
+    const CURRENT_USER_ID: number = 1;
     
-    let ACTIVE_CHAT_CONTACT_ID: number | null = null; 
     
-    let CURRENT_USER_AVATAR: string = '../../public/green-girl.svg'; 
+    let ACTIVE_CHAT_CONTACT_ID: number | null = null;
+    let CURRENT_USER_AVATAR: string = '../../public/green-girl.svg';
+
     
-    let chatWebSocket: WebSocket | null = null;
-
-    const menuToggle: HTMLElement | null = document.getElementById("menuToggle");
-    const dropdownMenu: HTMLElement | null = document.getElementById("dropdownMenu");
-    const closebutton: HTMLElement | null = document.getElementById("closeChat");
-    const contactsSide: HTMLElement | null = document.getElementById("contacts_side");
-    const chat: HTMLElement | null = document.getElementById("main_chat");
-    const messagesPanel: HTMLElement | null = document.getElementById("messagesPanel");
-    const messageInput: HTMLInputElement | null = document.getElementById("messageInput") as HTMLInputElement | null;
-    const sendButton: HTMLElement | null = document.getElementById("sendMessageBtn");
-    const backToContactsBtn: HTMLElement | null = document.getElementById('backToContacts'); 
+    const menuToggle = document.getElementById("menuToggle");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    const closeButton = document.getElementById("closeChat");
+    const contactsSide = document.getElementById("contacts_side");
+    const chat = document.getElementById("main_chat");
+    const messagesPanel = document.getElementById("messagesPanel");
+    const messageInput = document.getElementById("messageInput") as HTMLInputElement | null;
+    const sendButton = document.getElementById("sendMessageBtn");
+    const backToContactsBtn = document.getElementById('backToContacts');
     
-    const chatUsername: HTMLElement | null = document.getElementById('chatContactUsername');
-    const chatStatus: HTMLElement | null = document.getElementById('chatContactStatus');
-    const chatAvatar: HTMLImageElement | null = document.getElementById('chatContactAvatar') as HTMLImageElement | null;
+    const chatUsername = document.getElementById('chatContactUsername');
+    const chatStatus = document.getElementById('chatContactStatus');
+    const chatAvatar = document.getElementById('chatContactAvatar') as HTMLImageElement | null;
+    const searchInput = document.getElementById('default-search') as HTMLInputElement | null;
 
-    interface WebSocketMessage {
-        type: 'chat' | 'status' | 'error';
-        sender_id: number;
-        receiver_id: number;
-        content: string;
-        timestamp: string;
-        user_id: number;
-        status: 'online' | 'offline';
-        id: number;
-    }
+    // contacts list div
+    const contactsListDiv = contactsSide?.querySelector('.space-y-4') as HTMLElement | null;
 
-    function connectWS(): void {
-        if (chatWebSocket) chatWebSocket.close();
-        
-        chatWebSocket = new WebSocket(`${WS_URL}?user_id=${CURRENT_USER_ID}`);
-        
-        chatWebSocket.onopen = (): void => console.log("WebSocket connected.");
-        
-        chatWebSocket.onmessage = (event: MessageEvent): void => {
-            //  assert the type of data coming in from the server
-            const data: Partial<WebSocketMessage> = JSON.parse(event.data);
-            handleIncomingData(data);
-        };
-        
-        chatWebSocket.onclose = (): void => {
-            console.log("WebSocket disconnected. Attempting to reconnect in 5s...");
-            setTimeout(connectWS, 5000);
-        };
-        chatWebSocket.onerror = (e: Event): void => console.error("WS Error:", e);
-    }
-
-    // ------------------ search / contacts integration ------------------
-    function debounce<T extends (...args: any[]) => void>(fn: T, wait = 250) {
-        let t: number | undefined;
-        return (...args: Parameters<T>) => {
-            if (t) window.clearTimeout(t);
-            t = window.setTimeout(() => fn(...args), wait) as unknown as number;
-        };
-    }
-
-    async function searchUsers(q: string) {
-        if (!q || q.trim().length === 0) {
-            fetchContacts();
-            return;
-        }
-
-        try {
-            const res = await fetch(`${API_BASE_URL}/users/search?q=${encodeURIComponent(q)}&userId=${CURRENT_USER_ID}`);
-            const users = await res.json();
-            renderSearchResults(users);
-        } catch (err) {
-            console.error('search error', err);
-        }
-    }
-
-    function renderSearchResults(users: Array<{id:number,username:string,avatar:string,status:string}>) {
-        const contactsListDiv: HTMLElement | null | undefined = contactsSide?.querySelector('.space-y-4');
-        if (!contactsListDiv) return;
-
-        contactsListDiv.innerHTML = users.map(u => {
-            const statusClass = (u.status === 'online') ? 'bg-greenAdd' : 'bg-redRemove';
-            const avatar = u.avatar || '../../public/default.svg';
-            const lastMessage = 'Search result';
-            return `
-                <div class="scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item"
-                     data-contact-id="${u.id}"
-                     data-contact-username="${u.username}"
-                     data-contact-avatar="${avatar}"
-                     data-contact-status="${u.status}">
-                    <div class="relative w-12 h-12 flex-shrink-0">
-                        <img src="${avatar}" class="w-12 h-12 object-cover border border-primary rounded-full">
-                        <div id="status-${u.id}" class="absolute bottom-0 right-0 w-3 h-3 rounded-full ${statusClass}"></div>
-                    </div>
-                    <div>
-                        <p class="font-medium text-sm text-secondary ">${u.username}</p>
-                        <p class="text-xs text-gray-200">${lastMessage}</p>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        attachContactClickListeners();
-    }
-
-    // search input
-    const searchInput: HTMLInputElement | null = document.getElementById('default-search') as HTMLInputElement | null;
-    const onSearch = debounce((e: Event) => {
-        const v = (e.target as HTMLInputElement).value;
-        searchUsers(v);
-    }, 250);
-    searchInput?.addEventListener('input', onSearch);
-
-    function handleIncomingData(data: Partial<WebSocketMessage>): void {
-        
+    //--websocket handler 
+    const handleIncomingMessage = (data: any) => {
         if (data.type === 'chat' && data.sender_id !== undefined && data.receiver_id !== undefined) {
-            const isSender: boolean = data.sender_id === CURRENT_USER_ID;
+            const isSender = data.sender_id === CURRENT_USER_ID;
             
             if (data.sender_id === ACTIVE_CHAT_CONTACT_ID || data.receiver_id === ACTIVE_CHAT_CONTACT_ID) {
-                //  ensure data is treated as the full message object for rendering
-                renderSingleMessage(data as WebSocketMessage, isSender);
+                if (messagesPanel) {
+                    renderSingleMessage(data, isSender, messagesPanel);
+                }
             }
-            fetchContacts(); 
-
+            
+            //refreshing contacts to update last message
+            if (contactsListDiv) {
+                fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv);
+            }
         } else if (data.type === 'status' && data.user_id !== undefined && data.status !== undefined) {
             updateContactStatusUI(data.user_id, data.status);
         }
-    }
+    };
 
-    function sendMessage(receiverId: number, content: string): void {
-        if (content && chatWebSocket && chatWebSocket.readyState === WebSocket.OPEN) {
-            const message: object = {
-                type: 'chat',
-                receiver_id: receiverId,
-                content: content
-            };
-            chatWebSocket.send(JSON.stringify(message));
-            if (messageInput) {
-                 messageInput.value = '';
+    // --connect to websocket 
+    connectWS(CURRENT_USER_ID, WS_URL, handleIncomingMessage);
+
+    // --search handler 
+    const debouncedSearch = debounce((query: string) => {
+        if (!query.trim()) {
+            if (contactsListDiv) {
+                fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv);
             }
-        } else {
-            console.warn('Cannot send message: WebSocket not ready or no active chat.');
+            return;
         }
+        
+        searchUsers(query, API_BASE_URL, CURRENT_USER_ID, (results) => {
+            if (contactsListDiv) {
+                renderSearchResults(results, contactsListDiv);
+                attachContactClickListeners(contactsListDiv, handleContactSelect);
+            }
+        });
+    }, 250);
+
+    searchInput?.addEventListener('input', (e: Event) => {
+        const value = (e.target as HTMLInputElement).value;
+        debouncedSearch(value);
+    });
+
+    // --contact select handler
+    const handleContactSelect = (contactId: number, username: string, avatar: string, status: string) => {
+        ACTIVE_CHAT_CONTACT_ID = contactId;
+        
+        // update chat header
+        updateChatHeader(chatUsername, chatStatus, chatAvatar, username, status, avatar);
+        
+        // fetchi and display messages
+        if (messagesPanel) {
+            fetchMessages(API_BASE_URL, CURRENT_USER_ID, contactId, messagesPanel);
+        }
+        
+        // Show chat on mobile
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) {
+            contactsSide?.classList.add("hidden");
+            chat?.classList.remove("hidden");
+            chat?.classList.add("flex");
+        }
+    };
+
+   //--message send handler 
+    const handleSendMessage = (content: string) => {
+        if (content && ACTIVE_CHAT_CONTACT_ID) {
+            sendWSMessage(ACTIVE_CHAT_CONTACT_ID, content);
+            if (messageInput) {
+                messageInput.value = '';
+            }
+        }
+    };
+
+    //UI event listener 
+    
+    // send button
+    if (sendButton && messageInput) {
+        setupMessageSend(sendButton, messageInput, handleSendMessage);
     }
 
-    // function type definition for map callback
-    interface Contact {
-        id: number;
-        username: string;
-        status: 'online' | 'offline';
-        avatar: string;
-        last_message: string | null;
-    }
-
-    function fetchContacts(): void {
-        fetch(`${API_BASE_URL}/chats/contacts/${CURRENT_USER_ID}`)
-            .then((res: Response) => res.json())
-            .then((contacts: Contact[]) => {
-                const contactsListDiv: HTMLElement | null | undefined = contactsSide?.querySelector('.space-y-4');
-                if (!contactsListDiv) return;
-
-                contactsListDiv.innerHTML = contacts.map((contact: Contact) => {
-                    const statusClass: string = contact.status === 'online' ? 'bg-greenAdd' : 'bg-redRemove';
-                    const lastMessage: string = contact.last_message || 'No messages yet.';
-                    const contactAvatar: string = contact.avatar || '../../public/default.svg';
-                    
-                    return `
-                        <div class="scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item" 
-                             data-contact-id="${contact.id}" 
-                             data-contact-username="${contact.username}"
-                             data-contact-avatar="${contactAvatar}"
-                             data-contact-status="${contact.status}">
-                            <div class="relative w-12 h-12 flex-shrink-0">
-                                <img src="${contactAvatar}" class="w-12 h-12 object-cover border border-primary rounded-full">
-                                <div id="status-${contact.id}" class="absolute bottom-0 right-0 w-3 h-3 rounded-full ${statusClass}"></div>
-                            </div>
-                            <div>
-                                <p class="font-medium text-sm text-secondary ">${contact.username}</p>
-                                <p class="text-xs text-gray-200">${lastMessage}</p>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                attachContactClickListeners();
-            })
-            .catch((err: Error) => console.error('Error fetching contacts:', err));
-    }
-
-    // type definition for message object
-    interface ChatMessage {
-        id: number;
-        sender_id: number;
-        receiver_id: number;
-        content: string;
-        timestamp: string;
-    }
-
-    function fetchMessages(contactId: number): void {
-        fetch(`${API_BASE_URL}/chats/messages/${CURRENT_USER_ID}/${contactId}`)
-            .then((res: Response) => res.json())
-            .then((messages: ChatMessage[]) => {
-                if (messagesPanel) {
-                    messagesPanel.innerHTML = '';
-                }
-                messages.forEach((msg: ChatMessage) => {
-                    const isSender: boolean = msg.sender_id === CURRENT_USER_ID;
-                    renderSingleMessage(msg, isSender);
-                });
-                messagesPanel?.scrollTo(0, messagesPanel.scrollHeight);
-            })
-            .catch((err: Error) => console.error('Error fetching messages:', err));
-    }
-
-    function attachContactClickListeners(): void {
-        document.querySelectorAll(".contact-item").forEach((item: Element) => {
-            item.addEventListener("click", () => {
-                const htmlItem = item as HTMLElement; 
-                const contactId: number = parseInt(htmlItem.getAttribute('data-contact-id') || '0');
-                const username: string = htmlItem.getAttribute('data-contact-username') || '';
-                const avatar: string = htmlItem.getAttribute('data-contact-avatar') || '';
-                const status: string = htmlItem.getAttribute('data-contact-status') || '';
-
-                if (contactId) {
-                    ACTIVE_CHAT_CONTACT_ID = contactId;
-                    
-                    if (chatUsername) chatUsername.textContent = username;
-                    if (chatStatus) chatStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-                    if (chatAvatar) chatAvatar.src = avatar;
-
-                    fetchMessages(contactId);
-                }
-                
-                const isMobile = (): boolean => window.innerWidth < 768;
-                if (isMobile()) {
-                    contactsSide?.classList.add("hidden"); 
-                    chat?.classList.remove("hidden");
-                    chat?.classList.add("flex"); 
-                }
-            });
+    // back to contacts button
+    if (backToContactsBtn) {
+        setupBackToContacts(backToContactsBtn, () => {
+            const isMobile = window.innerWidth < 768;
+            if (isMobile) {
+                chat?.classList.add("hidden");
+                chat?.classList.remove("flex");
+                contactsSide?.classList.remove("hidden");
+            }
         });
     }
 
-    function renderSingleMessage(message: ChatMessage, isSender: boolean): void {
-        if (!messagesPanel) return;
-        
-        const otherUserId: number = isSender ? message.receiver_id : message.sender_id;
-        
-        const contactItem: Element | null = document.querySelector(`.contact-item[data-contact-id="${otherUserId}"]`);
-        
-        const otherUserAvatar: string = contactItem?.getAttribute('data-contact-avatar') || '../../public/default.svg';
-        
-        const messageAvatar: string = isSender ? CURRENT_USER_AVATAR : otherUserAvatar;
-
-        const messageHTML: string = `
-            <div class="flex items-start ${isSender ? 'justify-end' : ''}">
-                ${!isSender ? `<img src="${messageAvatar}" class="w-[50px] h-[50px] object-cover mr-3 border border-primary rounded-full flex-shrink-0">` : ''}
-                <div class="bg-primary/65 text-sm text-white p-3 rounded-3xl max-w-[60%]">
-                    ${message.content}
-                    <span class="text-[10px] text-gray-400 block text-right">${new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                </div>
-                ${isSender ? `<img src="${messageAvatar}" class="w-[50px] h-[50px] object-cover ml-3 border border-primary rounded-full flex-shrink-0">` : ''}
-            </div>
-        `;
-        messagesPanel.insertAdjacentHTML('beforeend', messageHTML);
-        messagesPanel.scrollTo(0, messagesPanel.scrollHeight);
-    }
-    
-    function updateContactStatusUI(id: number, status: 'online' | 'offline'): void {
-        const statusElement: HTMLElement | null = document.getElementById(`status-${id}`);
-        if (statusElement) {
-            statusElement.classList.remove('bg-greenAdd', 'bg-redRemove');
-            statusElement.classList.add(status === 'online' ? 'bg-greenAdd' : 'bg-redRemove');
-            
-            const contactItem: Element | null = document.querySelector(`.contact-item[data-contact-id="${id}"]`);
-            contactItem?.setAttribute('data-contact-status', status);
-        }
-
-        if (id === ACTIVE_CHAT_CONTACT_ID && chatStatus) {
-            chatStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-        }
-    }
-
-    sendButton?.addEventListener('click', (): void => {
-        const content: string = messageInput?.value.trim() || '';
-        if (content && ACTIVE_CHAT_CONTACT_ID) {
-            sendMessage(ACTIVE_CHAT_CONTACT_ID, content);
-        }
-    });
-
-
-    backToContactsBtn?.addEventListener("click", (): void => {
-        const isMobile = (): boolean => window.innerWidth < 768;
-        if (isMobile()) {
-            chat?.classList.add("hidden");
-            chat?.classList.remove("flex"); 
-            contactsSide?.classList.remove("hidden");
-        }
-    });
-    
-
-    window.addEventListener("resize", (): void => {
+    // window resize
+    setupWindowResize(() => {
         if (window.innerWidth >= 768) {
-            chat?.classList.remove("hidden"); 
-            chat?.classList.add("flex"); 
+            chat?.classList.remove("hidden");
+            chat?.classList.add("flex");
             contactsSide?.classList.remove("hidden");
         } else {
-            contactsSide?.classList.remove("hidden"); 
-            chat?.classList.add("hidden"); 
+            contactsSide?.classList.remove("hidden");
+            chat?.classList.add("hidden");
             chat?.classList.remove("flex");
         }
     });
-    
 
-    menuToggle?.addEventListener("click", (): void => { dropdownMenu?.classList.toggle("hidden"); });
-    document.addEventListener("click", (e: MouseEvent): void => {
-        const target: EventTarget | null = e.target;
-        if(target instanceof Node && menuToggle && dropdownMenu && !menuToggle.contains(target) && !dropdownMenu.contains(target)) { 
-            dropdownMenu.classList.add("hidden"); 
-        }
-    });
+    // side menu 
+    if (menuToggle && dropdownMenu) {
+        setupMenuToggle(menuToggle, dropdownMenu);
+        setupDropdownClose(dropdownMenu);
+    }
 
+    //  chat button
+    if (closeButton) {
+        setupCloseChat(closeButton, () => {
+            const chatDiv = document.getElementById("chatContainer");
+            if (chatDiv) {
+                chatDiv.innerHTML = `<div class="flex-1 flex items-center justify-center p-4 rounded-2xl overflow-y-auto bg-primary/60">
+                    <h1 class="text-center text-primary/65 font-bold text-4xl">Ping Pong<br>Chat</h1>
+                </div>`;
+            }
+            document.getElementById("dropdownMenu")?.classList.add("hidden");
+        });
+    }
 
-    closebutton?.addEventListener("click", (): void => {
-        const chatDiv: HTMLElement | null = document.getElementById("chatContainer");
-        if(chatDiv) {
-            chatDiv.innerHTML=`<div class="flex-1 flex items-center justify-center p-4 rounded-2xl overflow-y-auto bg-primary/60">
-                <h1 class="text-center text-primary/65  font-bold text-4xl ">Ping Pong<br>Chat</h1>
-            </div>`;
-        } 
-        document.getElementById("dropdownMenu")?.classList.add("hidden");
-    });
-    
-    connectWS();
-    fetchContacts();
+    // --initial load of contacts
+    if (contactsListDiv) {
+        fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv);
+        // attach click listeners 
+        setTimeout(() => {
+            attachContactClickListeners(contactsListDiv, handleContactSelect);
+        }, 100);
+    }
 }

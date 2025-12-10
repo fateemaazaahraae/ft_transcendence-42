@@ -16,15 +16,21 @@ await app.register(fastifyCors, {
   origin: "*"
 });
 
-// JWT (si tu en as besoin)
+// JWT (si en besoin)
 await app.register(fastifyJwt, {
   secret: process.env.JWT_SECRET || "supersecret"
 });
 
-// Routes
+// routes
 try {
   await app.register(router,{prefix: "/api"});
   console.log('Router registered successfully');
+  try {
+    // print routes for debugging
+    console.log('Fastify routes:\n' + app.printRoutes());
+  } catch (e) {
+    console.error('Failed to print routes:', e);
+  }
 } catch (err) {
   console.error('Failed to register router:', err);
 }
@@ -33,7 +39,7 @@ app.get('/', async (request, reply) => {
   return { status: 'Chat service running' };
 });
 
-// IMPORTANT: Listen on 0.0.0.0, not localhost
+// Listen on 0.0.0.0, not localhost
 const start = async () => {
   try {
     await app.listen({ 
