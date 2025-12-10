@@ -1,7 +1,9 @@
 
 import { navigate } from "../main.ts";
 import { connectWS, sendMessage as sendWSMessage } from "../utils/websocketHandler.ts";
-import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../utils/searchHandler.ts"; 
+import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../utils/searchHandler.ts";
+import { blockUser, unblockUser } from "../utils/blockHandler.ts";
+import { error } from "console";
 
 export default function Chat() {
  
@@ -36,10 +38,10 @@ export default function Chat() {
   <div id="chat_panels_wrapper" 
          class="m-5 mb-4 w-full md:w-[90%] md:mx-auto h-[calc(100vh-12rem)] md:h-[700px] 
             shadow-lg flex md:flex-row relative overflow-hidden text-white gap-x-4">
-    <div id="contacts_side" class="w-full h-full md:w-1/3 flex-shrink-0 "> 
+    <div id="contacts_side" class="w-full h-full md:w-1/3 flex-shrink-0 overflow-hidden"> 
    
     
-    <div class="w-full bg-primary/60 rounded-xl border-blue p-4 flex flex-col h-full">
+    <div class="w-full bg-primary/60 rounded-xl border-blue p-4 flex flex-col h-full overflow-hidden">
        <div class="relative ">
         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
             <svg class="w-4 h-4 text-gray-500 dark:text-secondary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -58,7 +60,7 @@ export default function Chat() {
         </div>
        
     
-    <div class="space-y-4 mt-3 mb-3 pb-8 h-full overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent">
+    <div class="space-y-4 mt-3 pb-8 h-full overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-secondary scrollbar-track-primary/20">
         </div>
 
     </div>
@@ -98,7 +100,7 @@ export default function Chat() {
           <i class="fa-regular fa-times-circle"></i>
           Close Chat
         </button>
-        <button class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
+        <button id="blockUserBtn"  class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
           <i class="fa fa-ban"></i>
           Block User
         </button>
@@ -114,7 +116,7 @@ export default function Chat() {
         </div>
 
         <div class="relative">
-            <div class="p-4 bg-primary/60 rounded-b-xl">
+            <div id="messageInputContainer" class="p-4 bg-primary/60 rounded-b-xl">
               <div class="relative">
                 
                 <i id="sendMessageBtn" class="fa-regular fa-paper-plane text-secondary absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"></i>
@@ -128,9 +130,14 @@ export default function Chat() {
                   class="w-full pl-16 pr-10 py-2 rounded-full bg-primary/65 text-white placeholder-white focus:outline-none">
               </div>
             </div>
-          </div>
-          </div>
-          </div>
+
+            <div id="blockeddiv" class="hidden ">
+            <button id="unblockUserBtn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-b-xl">
+                Unblock User
+            </button>
+        </div>
+        </div>
+        </div>
         
    </div>
     </div>
@@ -284,12 +291,14 @@ function setupWindowResize(onResize: () => void): void {
     });
 }
 
+
 //  CHAT EVENT LISTENER 
 export function ChatEventListener() {
     
     const API_BASE_URL: string = 'http://localhost:4000/api';
     const WS_URL: string = 'ws://localhost:4000';
     const CURRENT_USER_ID: number = 1;
+    // const CURRENT_USER_ID = localStorage.getItem('userId');
     
     
     let ACTIVE_CHAT_CONTACT_ID: number | null = null;
@@ -310,10 +319,33 @@ export function ChatEventListener() {
     const chatStatus = document.getElementById('chatContactStatus');
     const chatAvatar = document.getElementById('chatContactAvatar') as HTMLImageElement | null;
     const searchInput = document.getElementById('default-search') as HTMLInputElement | null;
+    
+    const blockBtn = document.getElementById("blockUserBtn");
+     //block button
+    if(blockBtn){
+        blockBtn.addEventListener("click", (): void => {
+         const constactUsername =document.getElementById('chatContactUsername')?.textContent || '';  
+            //call a blockuser function
+            if(ACTIVE_CHAT_CONTACT_ID)
+                blockUser(CURRENT_USER_ID,ACTIVE_CHAT_CONTACT_ID);
+        
+        });
+    }
+
+    const unblockBtn = document.getElementById("unblockUserBtn");
+if (unblockBtn) {
+    unblockBtn.addEventListener('click', () => {
+        if (ACTIVE_CHAT_CONTACT_ID) {
+            unblockUser(CURRENT_USER_ID, ACTIVE_CHAT_CONTACT_ID);
+        }
+    });
+}
 
     // contacts list div
     const contactsListDiv = contactsSide?.querySelector('.space-y-4') as HTMLElement | null;
 
+
+   
     //--websocket handler 
     const handleIncomingMessage = (data: any) => {
         if (data.type === 'chat' && data.sender_id !== undefined && data.receiver_id !== undefined) {
