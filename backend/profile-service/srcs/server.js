@@ -2,11 +2,18 @@ import "./config/env.js"
 import Fastify from "fastify"
 import fastifyCors from "@fastify/cors"
 import { settingsRoutes } from "./routes/settings.js"
+import fastifyMultipart from "@fastify/multipart";
 
 const fastify = Fastify({ logger: true });
 await fastify.register(fastifyCors, {
     origin: '*',
     credentials: true,
+});
+await fastify.register(fastifyMultipart, {
+    attachFieldsToBody: false,
+    limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB
+    },
 });
 
 settingsRoutes(fastify);

@@ -11,15 +11,25 @@ import { forgetPasswordRoute } from "./routes/forgetPassword.js";
 import { resetPasswordRoutes } from "./routes/resetPassword.js";
 import avatarRoutes from "./routes/avatar.js";
 import { authenticate } from "./plugins/auth.js";
-// dotenv.config();
+import userRoutes from "./routes/settingsRequests.js";
+import fastifyMultipart from "@fastify/multipart";
+
 
 const fastify = Fastify({ logger: true });
 await fastify.register(fastifyCors, {
   origin: '*',
   credentials: true,
+  methods: ['GET','PUT','POST','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 });
 // JWT setup
 fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET });
+await fastify.register(fastifyMultipart, {
+    attachFieldsToBody: false,
+    limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB
+    },
+});
 
 // Routes
 registerRoutes(fastify);
@@ -27,11 +37,11 @@ await authenticate(fastify);
 avatarRoutes(fastify);
 loginRoutes(fastify);
 googleAuthRoutes(fastify);
-fastify.register(intra42AuthRoutes);
-
+intra42AuthRoutes(fastify);
 twoFactorRoutes(fastify)
 forgetPasswordRoute(fastify);
 resetPasswordRoutes(fastify);
+userRoutes(fastify);
 // Start server
 const start = async () => {
   try {

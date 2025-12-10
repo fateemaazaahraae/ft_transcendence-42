@@ -1,10 +1,37 @@
+
+import { getSavedLang } from "../i18n/index.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
+import { loadUser } from "../utils/loadUser.ts";
 
-export default function Home() {
-  if (!requiredAuth())
-    return "";
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+export default async function Home() {
+  let user:any;
+  try{
+    const params = new URLSearchParams(window.location.search);
+    let token = params.get("token");
+    if (token)
+    {
+      localStorage.setItem("token", token);
+      window.history.replaceState({}, document.title, "/home");
+    }
+    if (!token)
+      token = localStorage.getItem("token");
+   const res = await fetch("http://localhost:3000/user/me", {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    const data = await res.json();
+    user = data.user;
+    localStorage.setItem("userId", data.user.id);
+  }
+  catch
+  {
+    console.log("fetch user/me error");
+    navigate("/login");
+  }
+
+  const currentLang = (await getSavedLang()).toUpperCase();
 
   return `
 <div class="relative w-full h-screen overflow-x-hidden px-6">
@@ -26,25 +53,24 @@ export default function Home() {
 
     </aside>
 
-
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
+        <button id="currentLang" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
+          ${currentLang}
         </button>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
       <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
-    <!-- HOME -->
+       <!-- HOME -->
   <div class ="relative flex lg:flex-row flex-col justify-center items-center lg:left-[7%] xl:left-0 top-[20%]">
    <div class="flex justify center items-center">
       <!-- Avatar -->
       <img 
-        src=${user.profileImage}
+        src="${user.profileImage}"
         class="object-cover w-[110px] h-[110px] md:w-[150px] md:h-[150px] xl:w-[220px] xl:h-[220px] rounded-full border-[3px] border-[#35C6DD]"
       >
 

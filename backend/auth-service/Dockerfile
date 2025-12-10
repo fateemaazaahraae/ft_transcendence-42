@@ -2,19 +2,19 @@ FROM node:20-bullseye-slim
 
 WORKDIR /app
 
+RUN apt-get update && \
+apt-get install -y build-essential python3 && \
+rm -rf /var/lib/apt/lists/*
+
 COPY package*.json ./
 
-# Install tools required to compile native Node modules (like sqlite3)
-# The 'sqlite3' package typically requires 'build-essential' and sometimes 'python'
-RUN apt-get update && \
-    apt-get install -y build-essential python3 && \
-    rm -rf /var/lib/apt/lists/*
+# RUN npm install
 
-# Install all dependencies
-RUN npm install
+# RUN npm install @fastify/multipart
 
-# Rebuild sqlite3 explicitly for the running architecture
-RUN npm rebuild sqlite3 --build-from-source
+# RUN npm install --build-from-source=sqlite3
+
+RUN npm install --build-from-source=sqlite3
 
 COPY . .
 

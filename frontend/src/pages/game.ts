@@ -7,12 +7,12 @@ export default function Game() {
     match:[
     {
       player1:{
-        avatar: "/public/pink-girl.svg",
+        avatar: "/pink-girl.svg",
         name: "Keltoum",
         score: 4,
       }, 
       player2:{
-        avatar: "/public/purple-girl.svg",
+        avatar: "/purple-girl.svg",
         name: "timaa",
         score: 0, 
       },
@@ -53,7 +53,7 @@ export default function Game() {
     <div class="absolute top-[26%] lg:top-[37%] xl:top-[32%] md:top-[32%] left-[15%] w-[70%] h-[65%] lg:w-[70%] lg:h-[50%] xl:h-[60%] bg-black rounded-3xl drop-shadow-cyan lg:flex flex flex-col justify-between items-center overflow-hidden">
         <div class="w-[25%] h-[10px] lg:w-[10px] lg:h-[20%]  bg-primary/80 lg:mr-[98%] lg:mt-[5%] "></div>
         <div class="absolute top-1/2 left-0 lg:left-1/2 lg:top-0 w-full h-[3px] lg:w-[3px] lg:h-full bg-[#35C6DD]/40  "></div>
-        <img src="../../public/ball.png" class ="absolute w-[20px] lg:w-[30px] top-1/4 lg:top-1/2 lg:left-1/3 -translate-x-1/2 -translate-y-1/2"/>
+        <img src="/ball.png" class ="absolute w-[20px] lg:w-[30px] top-1/4 lg:top-1/2 lg:left-1/3 -translate-x-1/2 -translate-y-1/2"/>
         <div class="w-[25%] h-[10px] lg:w-[10px] lg:h-[20%]  bg-secondary lg:ml-[98%] lg:mb-[5%] "></div>
     </div>
     </div>

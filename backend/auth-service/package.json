@@ -18,12 +18,13 @@
     "nodemailer": "^7.0.10",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
-    "uuid": "^13.0.0"
+    "uuid": "^13.0.0",
+    "@fastify/multipart": "^9.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/node-fetch": "^2.6.13",
-    "nodemon": "^3.1.10",
+    "nodemon": "^3.1.11",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },

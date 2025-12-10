@@ -1,19 +1,21 @@
+import { getSavedLang } from "../i18n/index.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 
 let invitationsList = [
-  {name:"John", img:"../../public/blue-boy.svg", date:"2025-19-09"},
-  {name:"piiw", img:"../../public/red-boy.svg", date:"2025-19-09"},
-  {name:"one", img:"../../public/white-boy2.svg", date:"2025-19-09"},
-  {name:"two", img:"../../public/white-boy.svg", date:"2025-19-09"},
-  {name:"three", img:"../../public/green-girl.svg", date:"2025-19-09"},
-  {name:"four", img:"../../public/purple-girl.svg", date:"2025-19-09"},
-  {name:"five", img:"../../public/dark-girl.svg", date:"2025-19-09"},
+  {name:"John", img:"/blue-boy.svg", date:"2025-19-09"},
+  {name:"piiw", img:"/red-boy.svg", date:"2025-19-09"},
+  {name:"one", img:"/white-boy2.svg", date:"2025-19-09"},
+  {name:"two", img:"/white-boy.svg", date:"2025-19-09"},
+  {name:"three", img:"/green-girl.svg", date:"2025-19-09"},
+  {name:"four", img:"/purple-girl.svg", date:"2025-19-09"},
+  {name:"five", img:"/dark-girl.svg", date:"2025-19-09"},
 ];
 
-export default function Invitations() {
+export default async function Invitations() {
   if (!requiredAuth())
     return "";
+  const currentLang = (await getSavedLang()).toUpperCase();
   return `
   <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
 
@@ -38,9 +40,9 @@ export default function Invitations() {
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
+        <button id="currentLang" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
+          ${currentLang}
         </button>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
@@ -49,15 +51,9 @@ export default function Invitations() {
 
     <!-- Buttons -->
     <div class="flex flex-row justify-center items-center gap-2 pt-48 md:gap-5 mb-16">
-      <button id="friendsButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
-        Friends
-      </button>
-      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-black drop-shadow-cyan rounded-3xl text-primary/40 font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
-        Invitations
-      </button>
-      <button id="blockedButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
-        Blocked
-      </button>
+      <button data-i18n="friends" id="friendsButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center"></button>
+      <button data-i18n="invitations" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-black drop-shadow-cyan rounded-3xl text-primary/40 font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center"></button>
+      <button data-i18n="blocked" id="blockedButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center"></button>
     </div>
 
     <!-- Invitations list -->

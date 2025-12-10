@@ -1,3 +1,4 @@
+import { translateMsg } from "../i18n/translateBack.ts";
 import { navigate } from "../main.ts";
 import { showAlert } from "../utils/alert.ts";
 
@@ -33,7 +34,7 @@ export default function TwoFactor() {
           </form>
         </div>
         </div>
-      <img src="/public/white_boy22.svg" class="hidden lg:flex md:items-center md:justify-center md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] pb-[120px]">
+      <img src="/white_boy22.svg" class="hidden lg:flex md:items-center md:justify-center md:w-1/2 max-w-[420px] w-full h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] pb-[120px]">
   </div>
   `;
 }
@@ -59,12 +60,11 @@ export function FactorEventListener() {
         showAlert(data.error || "2fa failed");
         return ;
       }
-      showAlert("2FA code verified successfully", "success");
+      showAlert(await translateMsg("TWOFA_VERIFY"), "success");
       navigate("/home")
     }
     catch(err) {
-      console.log("Network or server error: ", err);
-      showAlert("Network or server error: " + err);
+      showAlert(await translateMsg("NETWORK_ERROR"));
     }
   }) 
 }
