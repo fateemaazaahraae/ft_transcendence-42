@@ -115,7 +115,7 @@ export function LocalGameEventListener() {
     let animationId: number | null = null;
     let player1Score = 0;
     let player2Score = 0;
-    const WINNING_SCORE = 5; /// later I will add checking if player win and then annonce how win 
+    const WINNING_SCORE = 2; // Check which player WINS the match score 5
 
     const pauseBtn = document.getElementById('pause-btn') as HTMLButtonElement;
     const pauseOverlay = document.getElementById('pause-overlay') as HTMLDivElement;
@@ -316,7 +316,7 @@ export function LocalGameEventListener() {
         const NewX = ball.x + ball.vx * dt;// following the rule : position' = position + velocity * dt; (to calculate value in px)
         const NewY = ball.y + ball.vy * dt;
 
-        if (NewY - ball.r <= 0 || NewY + ball.r >= height) {// if the ball hit my top or bottom barriers
+        if (NewY - ball.r < 0 || NewY + ball.r > height) {// if the ball hit my top or bottom barriers
           ball.vy = -ball.vy
         }
 
@@ -363,15 +363,74 @@ export function LocalGameEventListener() {
           ball.y = NewY;
         }
 
+        function displayWinner() {
+          const winner = player1Score >= WINNING_SCORE ? "player1" : "player2";
+            const winnerOverlay = document.createElement('div');
+            winnerOverlay.id = 'winner-overlay';
+            winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
+            winnerOverlay.innerHTML = `
+              <div class="bg-gray-900 p-10 rounded-2xl shadow-2xl max-w-md w-[90%] text-center">
+                <h2 class="text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
+                <p class="text-2xl text-gray-300 mb-2">Final Score</p>
+                <div class="flex justify-center items-center gap-8 mb-8">
+                  <div class="text-center">
+                    <p class="text-primary text-3xl">${player1Score}</p>
+                    <p class="text-gray-400">Player1</p>
+                  </div>
+                  <span class="text-3xl text-white">-</span>
+                  <div class="text-center">
+                    <p class="text-secondary text-3xl">${player2Score}</p>
+                    <p class="text-gray-400">Player2</p>
+                  </div>
+                </div>
+                <div class="space-y-4">
+                  <button id="play-again-btn" class="w-full py-3 bg-primary hover:bg-primary/80 text-white rounded-lg font-roboto transition-all duration-300">
+                    <i class="fa-solid fa-rotate-right mr-2"></i>
+                    Play Again
+                  </button>
+                  <button id="main-menu-btn" class="w-full py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-roboto transition-all duration-300">
+                    <i class="fa-solid fa-home mr-2"></i>
+                    Main Menu
+                  </button>
+                </div>
+              </div>
+            `;
+            
+            document.querySelector('.relative')?.appendChild(winnerOverlay);
+
+              const playAgainBtn = document.getElementById('play-again-btn');
+              const mainMenuBtn = document.getElementById('main-menu-btn');
+              
+              if (playAgainBtn) {
+                playAgainBtn.addEventListener('click', () => {
+                  winnerOverlay.remove();
+                  restartGame();
+                });
+              }
+              
+              if (mainMenuBtn) {
+                mainMenuBtn.addEventListener('click', () => {
+                  navigate('/LocalgameStyle');
+                });
+              }
+        }
+
         if (ball.x - ball.r > width) {
           player1Score++;
           updateScoreDisplay();
-          // add a condition to check if player got a score of 5points
+          if (player1Score >= WINNING_SCORE) {
+            gameRunning = false;
+            displayWinner();
+          }
           resetGameBall(false);
         }
         else if (ball.x + ball.r < 0) {
           player2Score++;
           updateScoreDisplay();
+          if (player2Score >= WINNING_SCORE) {
+            gameRunning = false;
+            displayWinner();
+          }
           resetGameBall(true);
         }
         c.clearRect(0, 0, width, height);// clean my scene
