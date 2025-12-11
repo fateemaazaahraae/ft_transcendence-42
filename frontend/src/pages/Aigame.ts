@@ -304,12 +304,12 @@ export function AiGameEventListener() {
       function updateAI(dt: number) {
         // Only start reacting once the ball crosses the canvas center (and ball moving toward AI)
         if (ball.x < (width / 2) + 150 || ball.vx <= 0) {
-          // optionally slowly return paddle to center when idle:
-          const idleTarget = height / 2 - paddleHeight / 2;
-          const toIdle = idleTarget - paddleRightY;
-          paddleRightY += Math.sign(toIdle) * Math.min(Math.abs(toIdle), PaddleSpeed * 0.3 * dt);
-          // clamp and return
-          paddleRightY = Math.max(0, Math.min(height - paddleHeight, paddleRightY));
+          // // optionally slowly return paddle to center when idle:
+          // const idleTarget = height / 2 - paddleHeight / 2;
+          // const toIdle = idleTarget - paddleRightY;
+          // paddleRightY += Math.sign(toIdle) * Math.min(Math.abs(toIdle), PaddleSpeed * 0.3 * dt);
+          // // clamp and return
+          // paddleRightY = Math.max(0, Math.min(height - paddleHeight, paddleRightY));
           return;
         }
 
