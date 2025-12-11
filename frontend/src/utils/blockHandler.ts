@@ -1,3 +1,16 @@
+const API_BASE = window.location.origin.replace(/\/$/, "");
+
+export function checkIfBlocked(blockerId: number, blockedId: number, callback: (isBlocked: boolean) => void) {
+    fetch(`${API_BASE}/api/is-blocked/${blockerId}/${blockedId}`)
+        .then(response => response.json())
+        .then(data => {
+            callback(data.isBlocked);
+        })
+        .catch(error => {
+            console.error("Error check if blocked:", error);
+            callback(false);
+        });
+}
 
 export function showBlockedMessage(){
     //hide message input area 
@@ -20,7 +33,7 @@ export function showBlockedMessage(){
 
 export function blockUser(blockerId:number,blockedId:number){
     //send request to backend
-    fetch('http://localhost:4000/api/block',{
+    fetch(`${API_BASE}/api/block`,{
         method:'POST',
         headers:{
             'Content-Type':'application/json',
@@ -56,7 +69,7 @@ export function showMessageInput()
 }
 export function unblockUser(blockerId:number,blockedId:number)
 {
-    fetch('http://localhost:4000/api/unblock',{
+    fetch(`${API_BASE}/api/unblock`,{
         method:'POST',
         headers:{
             'Content-Type':'application/json',

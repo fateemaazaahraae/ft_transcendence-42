@@ -3,6 +3,7 @@ import db from "../config/db.js";
 import conversationModel from "../models/conversation.js";
 import friendsModel from "../models/friends.js";
 import blockedModel from "../models/blocked.js";
+import { error } from "node:console";
 
 const API_URL = process.env.API_URL || 'http://auth-service:3000';
 
@@ -142,6 +143,23 @@ export default fp(async (fastify) => {
     }
   });
 
+  fastify.get('/api/is-blocked/:blockerId/:blockedId', async (request, reply) => {
+    try{
+      const blockerId=String(request.params.blockerId || '');
+      const blockedId=String(request.params.blockedId || '');
+      if(!blockerId || !blockedId){
+        return reply.code(400).send({error:'missing blockerId or blockedId'});
+      }
+      const isBlocked=blockedModel.isBlocked(blockerId, blockedId);
+      return reply.code(200).send({ isBlocked });
+      
+    }catch(err){
+      fastify.log.error(err);
+      return reply.code(500).send({ error: 'check failed', details: err.message });
+    
+    }
+
+  });
   // Unblock a user
   fastify.post('/api/unblock', async (request, reply) => {
     try {
@@ -157,4 +175,3 @@ export default fp(async (fastify) => {
     }
   });
 });
-

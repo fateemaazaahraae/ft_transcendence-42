@@ -5,7 +5,13 @@ export let chatWebSocket: WebSocket | null = null;
 export function connectWS(userId: number, WS_URL: string, onMessageCallback: (data: any) => void): void {
     if (chatWebSocket) chatWebSocket.close();
     
-    chatWebSocket = new WebSocket(`${WS_URL}?user_id=${userId}`);
+    // Auto-detect WS URL based on current protocol
+    let resolvedWsUrl = WS_URL;
+    if (window.location.protocol === 'https:') {
+        resolvedWsUrl = `wss://${window.location.host}/ws`;
+    }
+    
+    chatWebSocket = new WebSocket(`${resolvedWsUrl}?user_id=${userId}`);
     
     chatWebSocket.onopen = (): void => console.log("WebSocket connected.");
     

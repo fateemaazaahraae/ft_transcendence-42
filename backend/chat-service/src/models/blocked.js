@@ -16,15 +16,23 @@ const deleteBlockedStmt = db.prepare(
 export default {
   block: (blocker, blocked) => {
     const id = nanoid();
-    insertBlockedStmt.run(id, blocker, blocked);
-    return { id, blocker_id: blocker, blocked_id: blocked };
+    const blockerStr = String(blocker);
+    const blockedStr = String(blocked);
+    insertBlockedStmt.run(id, blockerStr, blockedStr);
+    return { id, blocker_id: blockerStr, blocked_id: blockedStr };
   },
 
   unblock: (blocker, blocked) => {
-    deleteBlockedStmt.run(blocker, blocked);
+    const blockerStr = String(blocker);
+    const blockedStr = String(blocked);
+    deleteBlockedStmt.run(blockerStr, blockedStr);
   },
 
   isBlocked: (blocker, blocked) => {
-    return !!isBlockedStmt.get(blocker, blocked);
+    const blockerStr = String(blocker);
+    const blockedStr = String(blocked);
+    const result = isBlockedStmt.get(blockerStr, blockedStr);
+    console.log(`isBlocked check: blocker=${blockerStr}, blocked=${blockedStr}, result=`, result);
+    return !!result;
   }
 };

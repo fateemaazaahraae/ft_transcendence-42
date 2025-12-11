@@ -2,7 +2,8 @@
 import { navigate } from "../main.ts";
 import { connectWS, sendMessage as sendWSMessage } from "../utils/websocketHandler.ts";
 import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../utils/searchHandler.ts";
-import { blockUser, unblockUser } from "../utils/blockHandler.ts";
+import { blockUser, unblockUser,checkIfBlocked, showMessageInput , showBlockedMessage,} from "../utils/blockHandler.ts";
+
 import { error } from "console";
 
 export default function Chat() {
@@ -296,7 +297,7 @@ function setupWindowResize(onResize: () => void): void {
 export function ChatEventListener() {
     
     const API_BASE_URL: string = 'http://localhost:4000/api';
-    const WS_URL: string = 'ws://localhost:4000';
+    const WS_URL: string = 'ws://localhost:8443/ws';
     const CURRENT_USER_ID: number = 1;
     // const CURRENT_USER_ID = localStorage.getItem('userId');
     
@@ -342,7 +343,8 @@ if (unblockBtn) {
 }
 
     // contacts list div
-    const contactsListDiv = contactsSide?.querySelector('.space-y-4') as HTMLElement | null;
+    const contactsListDiv = document.querySelector('#contacts_side .space-y-4') as HTMLElement | null;
+    console.log('contactsListDiv found:', contactsListDiv);  // debug
 
 
    
@@ -402,6 +404,16 @@ if (unblockBtn) {
         if (messagesPanel) {
             fetchMessages(API_BASE_URL, CURRENT_USER_ID, contactId, messagesPanel);
         }
+        
+        // Check if contact is blocked
+        checkIfBlocked(CURRENT_USER_ID, contactId, (isBlocked) => {
+            console.log(`Is contact (ID: ${contactId}) blocked?`, isBlocked); // debug
+            if (isBlocked) {
+                showBlockedMessage();
+            } else {
+                showMessageInput();
+            }
+        });
         
         // Show chat on mobile
         const isMobile = window.innerWidth < 768;

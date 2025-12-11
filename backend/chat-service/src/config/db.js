@@ -12,11 +12,12 @@ if(!fs.existsSync(dir))
     {
         fs.mkdirSync(dir,{recursive: true});
     }
-const db = new Database(dbasePath);
+
 
 //init tables
-
-db.exec(`
+console.log('📋 Creating tables...');
+try {
+    db.exec(`
     CREATE TABLE IF NOT EXISTS conversations(
         id TEXT PRIMARY KEY,
         user_a TEXT NOT NULL,
@@ -58,19 +59,25 @@ db.exec(`
         UNIQUE(user_a, user_b)
     );
 `);
+    } catch (e) {
+    console.error(' Error creating tables:', e.message);
+    process.exit(1);
+    }
 
 // ========== SEED EXAMPLE DATA FOR TESTING ==========
 // These users and friends are sample data for development/testing only
 // remove or comment out the entire try-catch block in production
-try {
-    db.prepare(`INSERT OR IGNORE INTO users (id, userName, profileImage, status) VALUES (?, ?, ?, ?);`).run('1', 'user_A', null, 'offline');
-    db.prepare(`INSERT OR IGNORE INTO users (id, userName, profileImage, status) VALUES (?, ?, ?, ?);`).run('2', 'user_B', null, 'offline');
-    db.prepare(`INSERT OR IGNORE INTO users (id, userName, profileImage, status) VALUES (?, ?, ?, ?);`).run('3', 'user_C', null, 'offline');
-    db.prepare(`INSERT OR IGNORE INTO users (id, userName, profileImage, status) VALUES (?, ?, ?, ?);`).run('4', 'user_D', null, 'online');
-    db.prepare(`INSERT OR IGNORE INTO users (id, userName, profileImage, status) VALUES (?, ?, ?, ?);`).run('5', 'user_E', null, 'online');
-    
-    // ========== EXAMPLE: Conversation between user_A and user_B ==========
-    const { nanoid } = await import('nanoid');
+(async () => {
+    try {
+        console.log('🌱 Seeding test data...');
+        db.prepare(`INSERT OR IGNORE INTO users (id, userName, profileImage, status) VALUES (?, ?, ?, ?);`).run('1', 'user_A', null, 'offline');
+        db.prepare(`INSERT OR IGNORE INTO users (id, userName, profileImage, status) VALUES (?, ?, ?, ?);`).run('2', 'user_B', null, 'offline');
+        db.prepare(`INSERT OR IGNORE INTO users (id, userName, profileImage, status) VALUES (?, ?, ?, ?);`).run('3', 'user_C', null, 'offline');
+        db.prepare(`INSERT OR IGNORE INTO users (id, userName, profileImage, status) VALUES (?, ?, ?, ?);`).run('4', 'user_D', null, 'online');
+        db.prepare(`INSERT OR IGNORE INTO users (id, userName, profileImage, status) VALUES (?, ?, ?, ?);`).run('5', 'user_E', null, 'online');
+        
+        // ========== EXAMPLE: Conversation between user_A and user_B ==========
+        const { nanoid } = await import('nanoid');
     const convoId = nanoid();
     db.prepare(`INSERT OR IGNORE INTO conversations (id, user_a, user_b) VALUES (?, ?, ?);`).run(convoId, '1', '2');
     
@@ -103,11 +110,13 @@ try {
     // create conversation between user 1 and user 5
     const convoId3 = nanoid();
     db.prepare(`INSERT OR IGNORE INTO conversations (id, user_a, user_b) VALUES (?, ?, ?);`).run(convoId3, '1', '5');
-    const msgId4 = nanoid();
-    db.prepare(`INSERT OR IGNORE INTO messages (id, conversation_id, sender_id, content) VALUES (?, ?, ?, ?);`).run(msgId4, convoId3, '1', 'Hello user E!');
-} catch (e) {
-    // ignore - examples already exist
-}
+        const msgId4 = nanoid();
+        db.prepare(`INSERT OR IGNORE INTO messages (id, conversation_id, sender_id, content) VALUES (?, ?, ?, ?);`).run(msgId4, convoId3, '1', 'Hello user E!');
+        console.log('✅ Test data seeded successfully');
+    } catch (e) {
+        console.log('ℹ️  Test data already exists or seed failed:', e.message);
+    }
+})();
 // ========== END SEED EXAMPLE DATA ==========
 
 export default db;

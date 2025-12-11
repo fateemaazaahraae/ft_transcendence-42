@@ -44,6 +44,8 @@ services:
     environment:
       - JWT_SECRET=${JWT_SECRET}
       - API_URL=http://auth-service:3000
+    volumes:
+      - ./backend/chat-service/chat.sqlite:/app/chat.sqlite
     ports:
       - "4000:4000"
     networks:
