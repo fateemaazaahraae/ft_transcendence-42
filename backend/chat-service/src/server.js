@@ -1,58 +1,39 @@
 import Fastify from "fastify";
 import fastifyJwt from "@fastify/jwt";
 import fastifyCors from "@fastify/cors";
-
 import router from "./routes/router-simple.js";
 import { initSocket } from "./controllers/wsManager.js";
-import db from "./config/db.js"
+import db from "./config/db.js";
 
-const app =Fastify({
-    logger: true
-});
+const app = Fastify({ logger: true });
 const PORT = process.env.PORT || 4000;
 
-// CORS
-await app.register(fastifyCors, {
-  origin: "*"
-});
+await app.register(fastifyCors, { origin: "*" });
+await app.register(fastifyJwt, { secret: process.env.JWT_SECRET || "supersecret" });
 
-// JWT (si en besoin)
-await app.register(fastifyJwt, {
-  secret: process.env.JWT_SECRET || "supersecret"
-});
-
-// routes
 try {
-  await app.register(router,{prefix: "/api"});
-  console.log('Router registered successfully');
+  await app.register(router, { prefix: "/api" });
+  console.log("Router registered successfully");
   try {
-    // print routes for debugging
-    console.log('Fastify routes:\n' + app.printRoutes());
+    console.log("Fastify routes:\n" + app.printRoutes());
   } catch (e) {
-    console.error('Failed to print routes:', e);
+    console.error("Failed to print routes:", e);
   }
 } catch (err) {
-  console.error('Failed to register router:', err);
+  console.error("Failed to register router:", err);
 }
 
-app.get('/', async (request, reply) => {
-  return { status: 'Chat service running' };
-});
+app.get("/", (request, reply) => ({ status: "Chat service running" }));
 
-// Listen on 0.0.0.0, not localhost
 const start = async () => {
   try {
-    await app.listen({ 
-      port: PORT, 
-      host: '0.0.0.0'  // This is crucial for Docker!!!!
-    });
+    await app.listen({ port: PORT, host: "0.0.0.0" });
     console.log(`Chat service listening on port ${PORT}`);
-    // initialize socket.io server
     try {
       initSocket(app.server);
-      console.log('Socket.io initialized');
+      console.log("Socket.io initialized");
     } catch (e) {
-      console.error('Failed to initialize socket.io', e);
+      console.error("Failed to initialize socket.io", e);
     }
   } catch (err) {
     app.log.error(err);

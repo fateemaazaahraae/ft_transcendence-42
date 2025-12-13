@@ -13,6 +13,9 @@ if(!fs.existsSync(dir))
         fs.mkdirSync(dir,{recursive: true});
     }
 
+// initialize database
+const db = new Database(dbasePath);
+
 
 //init tables
 console.log('📋 Creating tables...');
