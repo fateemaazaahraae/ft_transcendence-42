@@ -4,11 +4,13 @@ import { connectWS, sendMessage as sendWSMessage } from "../utils/websocketHandl
 import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../utils/searchHandler.ts";
 import { blockUser, unblockUser,checkIfBlocked, showMessageInput , showBlockedMessage,} from "../utils/blockHandler.ts";
 
+import { error } from "console";
+
 export default function Chat() {
  
  
   return `
-    <div class="h-screen overflow-hidden flex items-center justify-center text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
+  <div class="class="h-screen overflow-hidden flex items-center justify-center text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
     <aside class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
        bottom-0 left-0 w-full bg-black/40 backdrop-blur-md md:w-auto
        flex justify-around md:justify-normal items-center py-3 md:py-0
@@ -67,15 +69,12 @@ export default function Chat() {
 
       <div class="h-full w-full md:w-[80%] "> 
     
-   <div id="main_chat" 
+    <div id="main_chat" 
      class="w-full h-full 
             absolute top-0 left-0  
-            shadow-lg overflow-hidden text-white 
-            hidden 
-            md:relative md:flex lg:w-[90%] md:w-[90%] md:h-[700px]">
-        
-        <div id="chatContainer" class="w-full h-full flex flex-col">
-            <div class="relative flex items-center justify-between p-3 rounded-t-xl bg-primary/80"> <div class="flex items-center gap-3">
+            shadow-lg overflow-hidden text-white rounded-xl
+            md:relative md:flex lg:w-[90%] md:w-[90%] md:h-[700px]">        <div id="chatContainer" class="w-full h-full flex flex-col">
+            <div id="chatHeader" class="hidden relative flex items-center justify-between p-3 rounded-t-xl bg-primary/80"> <div class="flex items-center gap-3">
             <i id="backToContacts"
       class="fa-solid fa-arrow-left bg-primary cursor-pointer p-3 rounded-full text-white md:hidden"></i>
 <img id="chatContactAvatar" src="../../public/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
@@ -115,7 +114,7 @@ export default function Chat() {
         </div>
 
         <div class="relative">
-            <div id="messageInputContainer" class="p-4 bg-primary/60 rounded-b-xl">
+            <div id="messageInputContainer" class="hidden p-4 bg-primary/60 rounded-b-xl">
               <div class="relative">
                 
                 <i id="sendMessageBtn" class="fa-regular fa-paper-plane text-secondary absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"></i>
@@ -154,7 +153,6 @@ interface ChatMessage {
     timestamp: string;
 }
 
-// Render one message bubble and scroll to bottom
 function renderSingleMessage(
     message: ChatMessage | any,
     isSender: boolean,
@@ -172,7 +170,6 @@ function renderSingleMessage(
     messagesPanel?.scrollTo(0, messagesPanel.scrollHeight);
 }
 
-// Load history for a conversation via REST
 function fetchMessages(
     API_BASE_URL: string,
     CURRENT_USER_ID: number,
@@ -312,6 +309,9 @@ export function ChatEventListener() {
     const contactsSide = document.getElementById("contacts_side");
     const chat = document.getElementById("main_chat");
     const messagesPanel = document.getElementById("messagesPanel");
+    const chatHeader = document.getElementById("chatHeader");
+    const messageInputContainer = document.getElementById("messageInputContainer");
+    const blockedDiv = document.getElementById("blockeddiv");
     const messageInput = document.getElementById("messageInput") as HTMLInputElement | null;
     const sendButton = document.getElementById("sendMessageBtn");
     const backToContactsBtn = document.getElementById('backToContacts');
@@ -320,6 +320,18 @@ export function ChatEventListener() {
     const chatStatus = document.getElementById('chatContactStatus');
     const chatAvatar = document.getElementById('chatContactAvatar') as HTMLImageElement | null;
     const searchInput = document.getElementById('default-search') as HTMLInputElement | null;
+
+    // toggle header/input for welcome vs active chat
+    const setChatUIState = (hasActiveChat: boolean) => {
+        if (hasActiveChat) {
+            chatHeader?.classList.remove("hidden");
+            messageInputContainer?.classList.remove("hidden");
+        } else {
+            chatHeader?.classList.add("hidden");
+            messageInputContainer?.classList.add("hidden");
+            blockedDiv?.classList.add("hidden");
+        }
+    };
     
     const blockBtn = document.getElementById("blockUserBtn");
      //block button
@@ -346,10 +358,10 @@ if (unblockBtn) {
     const contactsListDiv = document.querySelector('#contacts_side .space-y-4') as HTMLElement | null;
     console.log('contactsListDiv found:', contactsListDiv);  // debug
 
+    // default to welcome view (no active chat)
+    setChatUIState(false);
 
-   
     //--websocket handler 
-    // Handle messages arriving from the websocket
     const handleIncomingMessage = (data: any) => {
         if (data.type === 'chat' && data.sender_id !== undefined && data.receiver_id !== undefined) {
             const isSender = data.sender_id === CURRENT_USER_ID;
@@ -397,6 +409,14 @@ if (unblockBtn) {
     // --contact select handler
     const handleContactSelect = (contactId: number, username: string, avatar: string, status: string) => {
         ACTIVE_CHAT_CONTACT_ID = contactId;
+        setChatUIState(true);
+        if (window.innerWidth < 768) {
+        contactsSide?.classList.add("hidden");
+        } else {
+        contactsSide?.classList.remove("hidden");
+        }
+        chat?.classList.remove("hidden");
+        chat?.classList.add("flex");
         
         // update chat header
         updateChatHeader(chatUsername, chatStatus, chatAvatar, username, status, avatar);
@@ -426,7 +446,6 @@ if (unblockBtn) {
     };
 
    //--message send handler 
-    // Send a chat message via websocket
     const handleSendMessage = (content: string) => {
         if (content && ACTIVE_CHAT_CONTACT_ID) {
             sendWSMessage(ACTIVE_CHAT_CONTACT_ID, content);
@@ -446,25 +465,30 @@ if (unblockBtn) {
     // back to contacts button
     if (backToContactsBtn) {
         setupBackToContacts(backToContactsBtn, () => {
-            const isMobile = window.innerWidth < 768;
-            if (isMobile) {
-                chat?.classList.add("hidden");
-                chat?.classList.remove("flex");
-                contactsSide?.classList.remove("hidden");
-            }
+            ACTIVE_CHAT_CONTACT_ID = null;
+            setChatUIState(false);
+            contactsSide?.classList.remove("hidden");
+            chat?.classList.remove("hidden");
+            chat?.classList.add("flex");
         });
     }
 
     // window resize
     setupWindowResize(() => {
-        if (window.innerWidth >= 768) {
+        if (!ACTIVE_CHAT_CONTACT_ID) {
+            // Default: show welcome view and contacts
             chat?.classList.remove("hidden");
             chat?.classList.add("flex");
             contactsSide?.classList.remove("hidden");
+            return;
+        }
+        // Active chat: show chat; hide contacts on mobile only
+        chat?.classList.remove("hidden");
+        chat?.classList.add("flex");
+        if (window.innerWidth < 768) {
+            contactsSide?.classList.add("hidden");
         } else {
             contactsSide?.classList.remove("hidden");
-            chat?.classList.add("hidden");
-            chat?.classList.remove("flex");
         }
     });
 
@@ -477,12 +501,17 @@ if (unblockBtn) {
     //  chat button
     if (closeButton) {
         setupCloseChat(closeButton, () => {
-            const chatDiv = document.getElementById("chatContainer");
+            ACTIVE_CHAT_CONTACT_ID = null;
+            setChatUIState(false);
+            const chatDiv = document.getElementById("messagesPanel");
             if (chatDiv) {
-                chatDiv.innerHTML = `<div class="flex-1 flex items-center justify-center p-4 rounded-2xl overflow-y-auto bg-primary/60">
+                chatDiv.innerHTML = `<div class="flex-1 flex items-center justify-center h-full">
                     <h1 class="text-center text-primary/65 font-bold text-4xl">Ping Pong<br>Chat</h1>
                 </div>`;
             }
+            contactsSide?.classList.remove("hidden");
+            chat?.classList.remove("hidden");
+            chat?.classList.add("flex");
             document.getElementById("dropdownMenu")?.classList.add("hidden");
         });
     }
