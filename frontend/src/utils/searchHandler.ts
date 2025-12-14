@@ -2,7 +2,7 @@
 // Search and contacts management
 
 export const debounce = <T extends (...args: any[]) => void>(fn: T, wait = 250) => {
-    let t: NodeJS.Timeout;
+    let t: number;
     return (...args: Parameters<T>) => {
         clearTimeout(t);
         t = setTimeout(() => fn(...args), wait);

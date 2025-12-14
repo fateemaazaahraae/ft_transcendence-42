@@ -4,13 +4,11 @@ import { connectWS, sendMessage as sendWSMessage } from "../utils/websocketHandl
 import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../utils/searchHandler.ts";
 import { blockUser, unblockUser,checkIfBlocked, showMessageInput , showBlockedMessage,} from "../utils/blockHandler.ts";
 
-import { error } from "console";
-
 export default function Chat() {
  
  
   return `
-  <div class="class="h-screen overflow-hidden flex items-center justify-center text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
+    <div class="h-screen overflow-hidden flex items-center justify-center text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
     <aside class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
        bottom-0 left-0 w-full bg-black/40 backdrop-blur-md md:w-auto
        flex justify-around md:justify-normal items-center py-3 md:py-0
@@ -156,6 +154,7 @@ interface ChatMessage {
     timestamp: string;
 }
 
+// Render one message bubble and scroll to bottom
 function renderSingleMessage(
     message: ChatMessage | any,
     isSender: boolean,
@@ -173,6 +172,7 @@ function renderSingleMessage(
     messagesPanel?.scrollTo(0, messagesPanel.scrollHeight);
 }
 
+// Load history for a conversation via REST
 function fetchMessages(
     API_BASE_URL: string,
     CURRENT_USER_ID: number,
@@ -349,6 +349,7 @@ if (unblockBtn) {
 
    
     //--websocket handler 
+    // Handle messages arriving from the websocket
     const handleIncomingMessage = (data: any) => {
         if (data.type === 'chat' && data.sender_id !== undefined && data.receiver_id !== undefined) {
             const isSender = data.sender_id === CURRENT_USER_ID;
@@ -425,6 +426,7 @@ if (unblockBtn) {
     };
 
    //--message send handler 
+    // Send a chat message via websocket
     const handleSendMessage = (content: string) => {
         if (content && ACTIVE_CHAT_CONTACT_ID) {
             sendWSMessage(ACTIVE_CHAT_CONTACT_ID, content);

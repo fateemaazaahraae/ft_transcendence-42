@@ -1,8 +1,9 @@
 import { setLang, getSavedLang, translatePage, type Lang } from "../i18n/index";
+import { showAlert } from "../utils/alert";
 
 export function LanguagesMenuEventListener() {
     const btn = document.getElementById("languageMenu");
-    const currentLangBtn = document.getElementById("currentLang");
+    // const currentLangBtn = document.getElementById("currentLang");
 
     document.addEventListener("click", (e) => {
         console.log("Language menu clicked");
@@ -20,15 +21,18 @@ export function LanguagesMenuEventListener() {
     if (!btn) return;
     const items = btn.querySelectorAll<HTMLLIElement>("li");
     items.forEach((item) => {
-        item.addEventListener("click", () => {
+        item.addEventListener("click", async() => {
             const lang = (item.dataset.lang || "en") as Lang;
-            setLang(lang);
+            await setLang(lang);
+            // showAlert("heeeereee XD " );
+            // const l = localStorage.getItem("lang")
             btn.classList.add("hidden");
+            const currentLangBtn = document.getElementById("currentLang");
             if (currentLangBtn)
                 currentLangBtn.innerHTML = `<i class="fa-solid fa-chevron-down text-xs"></i> ${lang.toUpperCase()}`;
+            translatePage(lang);
         })
     });
-    if (currentLangBtn)
-        currentLangBtn.innerHTML = `<i class="fa-solid fa-chevron-down text-xs"></i> ${getSavedLang().toUpperCase()}`;
-    translatePage(getSavedLang());
+    // if (currentLangBtn)
+    //     currentLangBtn.innerHTML = `<i class="fa-solid fa-chevron-down text-xs"></i> ${getSavedLang().toUpperCase()}`;
 }

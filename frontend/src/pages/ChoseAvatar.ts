@@ -108,7 +108,7 @@ export function ChoseAvatarEventListener() {
     try {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("You must be logged in to choose an avatar");
+      showAlert("Invalid token");
       navigate("/login");
       return;
     }

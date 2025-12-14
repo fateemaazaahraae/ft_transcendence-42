@@ -31,7 +31,7 @@ export default async function Home() {
     navigate("/login");
   }
 
-  const currentLang: string = getSavedLang().toUpperCase();
+  const currentLang = (await getSavedLang()).toUpperCase();
 
   return `
 <div class="relative w-full h-screen overflow-x-hidden px-6">

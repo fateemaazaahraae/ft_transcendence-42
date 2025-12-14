@@ -1,3 +1,4 @@
+import { getSavedLang } from "../i18n/index.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 
@@ -10,9 +11,10 @@ let blockedList = [
   {name: "knacer", img: "/dark-girl.svg"},
 ];
 
-export default function Blocked() {
+export default async function Blocked() {
   if (!requiredAuth())
     return "";
+  const currentLang = (await getSavedLang()).toUpperCase();
   return `
   <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
 
@@ -37,9 +39,9 @@ export default function Blocked() {
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
+        <button id="currentLang" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
+          ${currentLang}
         </button>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
@@ -48,15 +50,9 @@ export default function Blocked() {
 
     <!-- Buttons -->
     <div class="flex flex-row justify-center items-center gap-2 pt-48 md:gap-5 mb-16">
-      <button id="friendsButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
-      Friends
-      </button>
-      <button id="invitationsButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
-      Invitations
-      </button>
-      <button class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-black drop-shadow-cyan rounded-3xl text-primary/40 font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center">
-        Blocked
-      </button>
+      <button data-i18n="friends" id="friendsButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center"></button>
+      <button data-i18n="invitations" id="invitationsButton" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-primary/40 rounded-3xl text-black font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center"></button>
+      <button data-i18n="blocked" class="md:w-[250px] md:h-[50px] lg:w-[300px] w-[150px] h-[40px] bg-black drop-shadow-cyan rounded-3xl text-primary/40 font-roboto font-extrabold tracking-[1px] text-[15px] md:text-[25px] flex items-center justify-center"></button>
     </div>
 
       <!-- Blocked list -->
@@ -70,9 +66,7 @@ export default function Blocked() {
             <img src="${blocked.img}" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]" />
             <div class="font-roboto font-bold truncate w-[180px] text-center">${blocked.name}</div>
             <div class="flex flex-row items-center gap-6 mb-6">
-              <button class="unblock-btn w-[100px] md:w-[110px] h-[35px] bg-primary/50 rounded-2xl font-roboto font-bold text-[14px] md:text-[15px] hover:bg-greenAdd transition-all duration-400 ease-in-out" data-name="${blocked.name}">
-                Unblock
-              </button>
+              <button data-i18n="unblock" class="unblock-btn w-[100px] md:w-[110px] h-[35px] bg-primary/50 rounded-2xl font-roboto font-bold text-[14px] md:text-[15px] hover:bg-greenAdd transition-all duration-400 ease-in-out" data-name="${blocked.name}"></button>
             </div>
           </div>`
           )
@@ -89,19 +83,16 @@ export function BlockedEventListener() {
   const invitations = document.getElementById("invitationsButton");
 
   friends?.addEventListener("click", () => {
-    console.log("Friends Button Clicked");
     navigate("/friends");
   })
 
   invitations?.addEventListener("click", () => {
-    console.log("Invitations Button Clicked");
     navigate("/invitations");
   })
 
   const unblockFriends = document.querySelectorAll(".unblock-btn");
   unblockFriends.forEach((button) => {
     button.addEventListener("click", () => {
-      console.log("Unblock button clicked");
       const name = button.getAttribute("data-name");
       blockedList = blockedList.filter((block) => block.name !== name);
       navigate("/blocked");

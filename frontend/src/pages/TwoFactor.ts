@@ -1,3 +1,4 @@
+import { translateMsg } from "../i18n/translateBack.ts";
 import { navigate } from "../main.ts";
 import { showAlert } from "../utils/alert.ts";
 
@@ -59,12 +60,11 @@ export function FactorEventListener() {
         showAlert(data.error || "2fa failed");
         return ;
       }
-      showAlert("2FA code verified successfully", "success");
+      showAlert(await translateMsg("TWOFA_VERIFY"), "success");
       navigate("/home")
     }
     catch(err) {
-      console.log("Network or server error: ", err);
-      showAlert("Network or server error: " + err);
+      showAlert(await translateMsg("NETWORK_ERROR"));
     }
   }) 
 }

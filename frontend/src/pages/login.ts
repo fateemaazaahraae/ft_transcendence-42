@@ -1,3 +1,4 @@
+import { getSavedLang } from "../i18n/index.ts";
 import { navigate } from "../main.ts";
 import { showAlert } from "../utils/alert.ts";
 
@@ -129,13 +130,15 @@ export function LoginEventListener() {
         localStorage.setItem("userId", data.userId);
         await showAlert("Check your email - Verification code sent", "success");
         navigate("/TwoFactor");
-      } else {
-        // await showAlert("Login successful", "success");
+      }
+      else {
         if (!localStorage.getItem("userId"))
           localStorage.setItem("userId", data.user.id);
+        localStorage.setItem("lang", await getSavedLang());
         navigate("/home");
       }
-    } catch (err) {
+    }
+    catch (err) {
       console.error(err);
       showAlert("Network or server error.");
     }

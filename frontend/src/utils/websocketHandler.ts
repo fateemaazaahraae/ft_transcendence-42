@@ -2,41 +2,43 @@
 
 export let chatWebSocket: WebSocket | null = null;
 
+// Open the chat websocket and pipe incoming frames to a callback
 export function connectWS(userId: number, WS_URL: string, onMessageCallback: (data: any) => void): void {
-    if (chatWebSocket) chatWebSocket.close();
+	if (chatWebSocket) chatWebSocket.close();
     
-    // Auto-detect WS URL based on current protocol
-    let resolvedWsUrl = WS_URL;
-    if (window.location.protocol === 'https:') {
-        resolvedWsUrl = `wss://${window.location.host}/ws`;
-    }
+	// Auto-detect WS URL based on current protocol
+	let resolvedWsUrl = WS_URL;
+	if (window.location.protocol === 'https:') {
+		resolvedWsUrl = `wss://${window.location.host}/ws`;
+	}
     
-    chatWebSocket = new WebSocket(`${resolvedWsUrl}?user_id=${userId}`);
+	chatWebSocket = new WebSocket(`${resolvedWsUrl}?user_id=${userId}`);
     
-    chatWebSocket.onopen = (): void => console.log("WebSocket connected.");
+	chatWebSocket.onopen = (): void => console.log("WebSocket connected.");
     
-    chatWebSocket.onmessage = (event: MessageEvent): void => {
-        const data = JSON.parse(event.data);
-        onMessageCallback(data);
-    };
+	chatWebSocket.onmessage = (event: MessageEvent): void => {
+		const data = JSON.parse(event.data);
+		onMessageCallback(data);
+	};
     
-    chatWebSocket.onclose = (): void => {
-        console.log("WebSocket disconnected. Attempting to reconnect in 5s...");
-        setTimeout(() => connectWS(userId, WS_URL, onMessageCallback), 5000);
-    };
+	chatWebSocket.onclose = (): void => {
+		console.log("WebSocket disconnected. Attempting to reconnect in 5s...");
+		setTimeout(() => connectWS(userId, WS_URL, onMessageCallback), 5000);
+	};
     
-    chatWebSocket.onerror = (e: Event): void => console.error("WS Error:", e);
+	chatWebSocket.onerror = (e: Event): void => console.error("WS Error:", e);
 }
 
+// Send a chat payload over the websocket
 export function sendMessage(receiverId: number, content: string): void {
-    if (content && chatWebSocket && chatWebSocket.readyState === WebSocket.OPEN) {
-        const message = {
-            type: 'chat',
-            receiver_id: receiverId,
-            content: content
-        };
-        chatWebSocket.send(JSON.stringify(message));
-    } else {
-        console.warn('Cannot send message: WebSocket not ready or no active chat.');
-    }
+	if (content && chatWebSocket && chatWebSocket.readyState === WebSocket.OPEN) {
+		const message = {
+			type: 'chat',
+			receiver_id: receiverId,
+			content: content
+		};
+		chatWebSocket.send(JSON.stringify(message));
+	} else {
+		console.warn('Cannot send message: WebSocket not ready or no active chat.');
+	}
 }

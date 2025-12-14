@@ -102,6 +102,7 @@ form.addEventListener("submit", async (e) => {
     // ✅ Store JWT immediately
     localStorage.setItem("token", data.token);
     localStorage.setItem("userId", data.user.id);
+    localStorage.setItem("lang", "en");
 
     showAlert("Registration successful", "success");
     navigate("/ChoseAvatar");
