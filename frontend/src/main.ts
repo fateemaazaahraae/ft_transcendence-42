@@ -23,6 +23,7 @@ import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
 import Chat, {ChatEventListener } from "./pages/Chat.ts";
 import { showAlert } from "./utils/alert.ts";
+import RemoteGame, { RemoteGameEventListener } from "./pages/RemoteGame.ts";////
 import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
 // import { viewFriend } from "./pages/viewFriend.ts";
 
@@ -46,6 +47,7 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/invitations": {render: Invitations, setUp: InvitationsEventListener},
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
     "/chat": {render: Chat, setUp: ChatEventListener},
+    "/remote-game": { render: RemoteGame, setUp: RemoteGameEventListener },///
     404: {render: PageNotFound},
 };
 

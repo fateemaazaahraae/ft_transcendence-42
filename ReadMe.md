@@ -98,7 +98,7 @@ P0 = (x0, y0) current ball position before this frame.
 
 P1 = (x0 + vx * dt, y0 + vy * dt) intended new position.
 ```
-#### why will need the time of impact?
+#### why will need TOI ? the *time of impact*
 good question so the fine the Y axis(interY) btw ball and paddle (after the alg ccd)we use the relation:
 ```
 interY = prevY + (newY - prevY) * t; //<==== here we need to calculate t
@@ -131,7 +131,7 @@ So dt is used in and dt = 1/fps
     const newY = ball.y + ball.vy * dt;
 
 
-#### Next we'll see the concept of velocity, what's that?
+#### Next we'll see the concept of *velocity*, what's that?
 Ok and what vx, vy (and why not moving by 4px example: newx = ball.x + 5)
 Alright alright 1-vx and xy mean===> v meaning the *velocity* so the velocity is a vector(represented as arrow geometrically) that's providing instruction as to where the next position of the particule(the ball in our case) should be. Position' = Position + velocity * dt;(NextPosition = PrevPosition + velocity * dt;) *and when there is acceleration the velocity changes* (with velocity' = velocity + acceleration)
 and x-> ball moving left/right y-> ball moving up/down
@@ -259,7 +259,8 @@ just to ensure that the Ai paddle's doesn't leave the screen
 
 # 🎮 REMOTE GAME PART 🎮
 ==================================================
-## First creat server instance: 
+## First creat server instance:
+Ok done but why
                *********************
 ### WHAT `server.js` file has: 
 **1️⃣ First: Importing Fastify and creating the server instance**
@@ -296,7 +297,39 @@ Date.now() = Current timestamp in milliseconds (like 1701469200000)
 
 It's unique because time always moves forward!)
 
-➡️
+## Second Read about *Websocket* and *socket.io* 
+### Here is a good reference from the official socket.io documentation:--> https://socket.io/docs
+
+** What socket.io is:
+Socket.IO is a library that enables low-latency, bidirectional and event-based communication between a client and a server.
+
+The Socket.IO connection can be established with different low-level transports:
+
+HTTP long-polling
+WebSocket
+WebTransport
+
+Socket.IO will automatically pick the best available option, depending on:
+
+the capabilities of the browser (see here and here)
+the network (some networks block WebSocket and/or WebTransport connections)
+
+what we did 
+* first I installed the socket.io in the frontend the use the emet and event listeners
+* and then I call it in the backend
+
+#### then: I found out that I should add event listener to the button that's taking me to the remote game
+how I did that: 
+* check if user has JWT
+* if yes pass to Creates a WebSocket connection to my game server 3003
+* and sends the JWT token as part of handshake
+* then The token is sent automatically in the connection request
+* and When connection is successfully established I get: A unique socket.id assigned by server
+#### What Happens on the Server Side:
+When the game server receives connection:
+
+
+<!-- ➡️
 Next : Creating a JavaScript object that represents a Pong game "const game"
 id(The unique gameId)
 
@@ -323,7 +356,7 @@ Here is a visualisation:
 returning response  success: true
                     message: 'Game created'
                     gameId&&joinUrl
-```
+``` -->
 
 ### Soo *WHY* we need another server for the game:aka (Microservices)
 ***
