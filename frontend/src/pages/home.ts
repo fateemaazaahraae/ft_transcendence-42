@@ -138,7 +138,7 @@ export function HomeEventListener() {
           return;
         }
 
-        const socket = getGameSocket(token);
+        const socket = getGameSocket(token); /// here is the key to send request to our game server
 
         if (!socket.hasListeners("match_found")) {
             

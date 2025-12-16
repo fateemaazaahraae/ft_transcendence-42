@@ -103,13 +103,6 @@ export default function LocalGame() {
 
 export function LocalGameEventListener() {
   setTimeout(() => {
-    // Back button
-    // const backBtn = document.getElementById('back-btn');
-    // if (backBtn) {
-    //   backBtn.addEventListener('click', () => {
-    //     // navigate('/LocalgameStyle');
-    //   });
-    // }
     
     let gameRunning = true;
     let animationId: number | null = null;

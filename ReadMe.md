@@ -259,6 +259,47 @@ just to ensure that the Ai paddle's doesn't leave the screen
 
 # 🎮 REMOTE GAME PART 🎮
 ==================================================
+
+## Before any thing I want to go over why using multiple servers(microservices)
+
+### Why separate servers? (Concrete reasons)
+
+#### 1- Separation of concerns
+Frontend server: serve HTML/CSS/JS, handle non-real-time REST endpoints, static assets.
+Game server: run game loop, manage real-time connections, authoritative physics/state, match logic.
+#### 2- Different protocols and performance needs
+HTTP(S) is request/response and stateless → great for login, fetching data, loading the app.
+WebSockets (or WebRTC) keep persistent connections → required for low-latency multiplayer updates (positions, inputs).
+#### 3- Scaling independently
+If many players join games, only game servers need more resources. If many visitors browse pages, only frontend/CDN needs scaling.
+#### 4- Authoritative game logic & fairness
+Keeping game rules on the server prevents cheating. Clients send inputs; server computes and broadcasts state.
+#### 5- Fault isolation & maintenance
+Deploying or restarting the frontend won’t kick players out of games if the game server is separate (and vice versa).
+#### 6- Security
+The game server can be put behind more strict rules and only expose sockets. Sensitive operations (matchmaking, anti-cheat) stay isolated.
+#### 7- Easier testing & development
+You can run and test the game server locally without rebuilding frontend assets, and mock HTTP endpoints independently.
+
+APIs vs Microservices (How different are they?) down here a good resource:
+-https://youtu.be/zVdcxuM1LEo?si=iMxPiUcOs-K3Ucnz
+
+### Soo WHY we need another server for the game:aka (Microservices)
+***
+#### ANSWER: A frontend (static or SSR) server handles HTTP requests and serves pages/assets, while a game server handles real-time, low-latency state, persistent connections (WebSockets), authoritative game state, and game logic. Splitting them improves performance, reliability, security, and scalability.
+***
+```
+[Clients (browsers)]
+   ├─ HTTP(S) ──> [Frontend Server / CDN]  (static files, REST APIs for profile, leaderboard)
+   └─ WebSocket -> [Game Gateway / Matchmaker] -> [Game Server(s)]
+                                        └─ Redis pub/sub (optional, for multi-instance sync)
+                                        └─ Database (Postgres) for persistence
+```
+
+
+                ===================
+now let's comfortably go through the steps I follow to make this remote game playable 💪🔥
+
 ## First creat server instance:
 Ok done but why
                *********************
@@ -314,23 +355,85 @@ Socket.IO will automatically pick the best available option, depending on:
 the capabilities of the browser (see here and here)
 the network (some networks block WebSocket and/or WebTransport connections)
 
-what we did 
-* first I installed the socket.io in the frontend the use the emet and event listeners
-* and then I call it in the backend
+## third: Now we'll see the steps until I have the front pong table game running 🔥 (we'll go through the process from clicking the button creating server and more)
+
+#### first I installed the socket.io in the frontend the use the emet and event listeners
+#### and then I call it in the backend
 
 #### then: I found out that I should add event listener to the button that's taking me to the remote game
 how I did that: 
-* check if user has JWT
+* check if user has JWT // That means the user is registered and has an account
 * if yes pass to Creates a WebSocket connection to my game server 3003
 * and sends the JWT token as part of handshake
 * then The token is sent automatically in the connection request
 * and When connection is successfully established I get: A unique socket.id assigned by server
 #### What Happens on the Server Side:
-When the game server receives connection:
+* in the server side of the game I created a server that listen for any connection comming from the port 3003.
+
+* check if this connection has jwt (that mean the connection is comming from my game) only Socket.IO level not via curl.
+
+* then next I add the player to my queue: 
+    ```
+        socket.on('join_queue', () => {
+            if (waitingQueue.find(s => s.id === socket.id)) { // if the tocken already in my array return 
+                return;
+            }
+            // if not push it
+            waitingQueue.push(socket);
+    ```
+
+* Okkk now when my *waitingQueue* will reach two players we'll create a *game* instance if not wait for second player:
+    ```
+    if (waitingQueue.length >= 2) {
+        const player1 = waitingQueue.shift();
+        const player2 = waitingQueue.shift();
+
+        const matchId = `match_${Date.now()}`; 
+        console.log(`Match found! ${player1.data.userId} vs ${player2.data.userId}`);
+
+        // this is what is make screen switch to Game Screen yaaaay
+        player1.emit('match_found', { matchId: matchId, opponentId: player2.data.userId });
+        player2.emit('match_found', { matchId: matchId, opponentId: player1.data.userId });
+
+        // GAME IS ONNN
+        const game = new GameRoom(io, matchId, player1, player2);
+        game.start();
+        }
+    else {// mazal mawslna l joj dial players
+        socket.emit('waiting_for_match', { message: `Waiting for opponent... Current queue: ${waitingQueue.length}` });
+    }
+    ```
+* lastly handle if a player disconnect.
+
+### So a quick summary until now: 
+```
+I click the button "Remote Play"
+        ↓
+Then the ft getGameSocket(token) get called
+        ↓
+Create a socket object with io("localhost:3003", { auth }) // ThisIsHowTheTokenReachesTheServer
+        ↓
+HTTP handshake + token // kandiro wa7d lhandshake m3a lbrowser fiha token
+        ↓
+Server io.on("connection") // server kaytkonecta m3ana
+        ↓
+connect event fires // the server we listen for events like: "join_queue"
+        ↓
+emit join_queue // and InThe Client Li Howa Fin Kayn Lbutton Diana "home.ts"file Kansifto socket.emit('join_queue'); to call events
+        ↓
+Server matchmaking
+        ↓
+match_found
+        ↓
+navigate("/remote-game")
+
+(so when ever I type socket.emit('Myevent', ...) I fire an event and when I type socket.on(('Myevent'), () => {}); I handle that event I fired).
+```
+
+### sf db mnin kanjm3o two players with there unique id from the socket and one unique Game Room we'll call the frontend game pong table
 
 
-<!-- ➡️
-Next : Creating a JavaScript object that represents a Pong game "const game"
+### ➡️ In this part we saw that we Creating a JavaScript object that represents a Pong game "const game"
 id(The unique gameId)
 
 player1 and player2(No opponent yet)
@@ -356,41 +459,26 @@ Here is a visualisation:
 returning response  success: true
                     message: 'Game created'
                     gameId&&joinUrl
-``` -->
-
-### Soo *WHY* we need another server for the game:aka (Microservices)
-***
-#### ANSWER: A frontend (static or SSR) server handles HTTP requests and serves pages/assets, while a game server handles real-time, low-latency state, persistent connections (WebSockets), authoritative game state, and game logic. Splitting them improves performance, reliability, security, and scalability.
-***
-
-### Why separate servers? (Concrete reasons)
-
-#### 1- Separation of concerns
-Frontend server: serve HTML/CSS/JS, handle non-real-time REST endpoints, static assets.
-Game server: run game loop, manage real-time connections, authoritative physics/state, match logic.
-#### 2- Different protocols and performance needs
-HTTP(S) is request/response and stateless → great for login, fetching data, loading the app.
-WebSockets (or WebRTC) keep persistent connections → required for low-latency multiplayer updates (positions, inputs).
-#### 3- Scaling independently
-If many players join games, only game servers need more resources. If many visitors browse pages, only frontend/CDN needs scaling.
-#### 4- Authoritative game logic & fairness
-Keeping game rules on the server prevents cheating. Clients send inputs; server computes and broadcasts state.
-#### 5- Fault isolation & maintenance
-Deploying or restarting the frontend won’t kick players out of games if the game server is separate (and vice versa).
-#### 6- Security
-The game server can be put behind more strict rules and only expose sockets. Sensitive operations (matchmaking, anti-cheat) stay isolated.
-#### 7- Easier testing & development
-You can run and test the game server locally without rebuilding frontend assets, and mock HTTP endpoints independently.
-
-```
-[Clients (browsers)]
-   ├─ HTTP(S) ──> [Frontend Server / CDN]  (static files, REST APIs for profile, leaderboard)
-   └─ WebSocket -> [Game Gateway / Matchmaker] -> [Game Server(s)]
-                                        └─ Redis pub/sub (optional, for multi-instance sync)
-                                        └─ Database (Postgres) for persistence
 ```
 
-### APIs vs Microservices (How different are they?) down here a good resource
-https://youtu.be/zVdcxuM1LEo?si=iMxPiUcOs-K3Ucnz
+### in this step I create the file GameRoom.js WHY??
 
-                ===================
+So this file will be watching all the movement inside my game room (ball position, paddles position and more) so he can brodcast positions to the users in the same room 30 times each second. (so he is the one resposible for the movements and will contain the game logic prolly I will do the ccd alg same as local game)
+```
+    start() {
+      console.log(`🎮 Game Room ${this.roomId} started!`);
+      
+      // update with new position 30 times each 1 second (u may think it's a lot but it is good)
+      this.interval = setInterval(() => {
+        this.update();     // move the object
+        this.broadcast();  // and send new positions
+      }, 1000 / 30); 
+    }
+```
+### I also create the file RemoteGame.ts in the front WHY??
+In this file we listen to the key press (w/s/up/down) and send those events to the server side and he will update the position and then send the new positions to the frontend hhh it's called (Server Authority) 😈
+
+So in summary we press a key the frontend detect that and send it to the server(backend) reads what has been clicked then moves the corresponding paddle following the corresponding movement and sends back the new positions to the frontend
+
+
+
