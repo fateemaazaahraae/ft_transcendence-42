@@ -62,6 +62,7 @@ const start = async () => {
         console.log(`user disconnected: ${socket.data.userId}`);
         // socket.emit('game_over');
 
+
         const index = waitingQueue.findIndex(s => s.id === socket.id);
         if (index !== -1) {
           waitingQueue.splice(index, 1);// splice (index) from where start removing and (1) how many to remove

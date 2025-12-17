@@ -480,5 +480,12 @@ In this file we listen to the key press (w/s/up/down) and send those events to t
 
 So in summary we press a key the frontend detect that and send it to the server(backend) reads what has been clicked then moves the corresponding paddle following the corresponding movement and sends back the new positions to the frontend
 
+### Then I did what should be done 
+* Draw a ball
+* Make it move
+* Draw paddles
+* Make them move following the movement of w/s or up/down
+* Handle collision
 
+I am thinking next maybe I should apply the ccd alg like I did in local game
 

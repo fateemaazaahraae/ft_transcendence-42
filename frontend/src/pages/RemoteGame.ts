@@ -87,20 +87,28 @@ export function RemoteGameEventListener() {
   const quitBtn = document.getElementById('quit-btn') as HTMLButtonElement;
   // const cancelbtn = document.getElementById('cancel-btn') as HTMLButtonElement;
 
-  socket.on("game_update", (gameState) => {
+  socket.on("game_update", (gameState) => {// listen for a socket.emit('game_update') with the new positions
     if (!ctx || !canvas) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // B. Draw Ball (using data from server!)
-    ctx.fillStyle = "#35C6DD";
     ctx.beginPath();
     ctx.arc(gameState.ball.x, gameState.ball.y, 10, 0, Math.PI * 2);
+    ctx.fillStyle = 'white'
     ctx.fill();
+    ctx.strokeStyle = '#ccc';
+    ctx.stroke();
 
-    // C. Draw Paddles (Optional for this step, but easy to add)
-    ctx.fillRect(10, gameState.paddle1.y, 10, 100); // Left Paddle
-    ctx.fillRect(canvas.width - 20, gameState.paddle2.y, 10, 100); // Right Paddle
+    ctx.fillStyle = '#35C6DD66';
+    ctx.fillRect(canvas.width / 2 - 1.5, 0, 3, canvas.height);
+    
+    ctx.fillStyle = '#35C6DDCC';////////left paddle
+    ctx.fillRect(8, gameState.paddle1.y, 10, 115);
+
+    ctx.fillStyle = '#F40CA4';////////right paddle
+    ctx.fillRect(canvas.width - 18, gameState.paddle2.y, 10, 115);
+    // ctx.fillRect(10, gameState.paddle1.y, 10, 100); // Left Paddle
+    // ctx.fillRect(canvas.width - 20, gameState.paddle2.y, 10, 100); // Right Paddle
   });
 
   socket.on("game_over", () => {  
@@ -108,68 +116,38 @@ export function RemoteGameEventListener() {
       navigate("/home");
   });
 
+  const handleKey = (e: KeyboardEvent, isPressed: boolean) => {
+      if (e.key === "ArrowUp" || e.key === "w") {
+          socket.emit('input_update', { input: 'UP', isPressed });
+      }
+      if (e.key === "ArrowDown" || e.key === "s") {
+          socket.emit('input_update', { input: 'DOWN', isPressed });
+      }
+  };
+
+  window.addEventListener('keydown', (e) => handleKey(e, true));
+  window.addEventListener('keyup', (e) => handleKey(e, false));
+
+  
   document.getElementById("leave-btn")?.addEventListener("click", () => {
     LeaveOverlay.classList.remove('hidden');
     LeaveOverlay.classList.add('flex');
   });
+
   if (quitBtn) {
     quitBtn.addEventListener('click', () => {
       socket.disconnect();
       navigate("/home");
     });
   }
+
   document.getElementById("cancel-btn")?.addEventListener("click", () => {
     LeaveOverlay.classList.remove('flex');
     LeaveOverlay.classList.add('hidden');
   });
+
+  return () => {
+     window.removeEventListener('keydown', (e) => handleKey(e, true));
+     window.removeEventListener('keyup', (e) => handleKey(e, false));
+  };
 }
-
-
-// export function RemoteGameEventListener() {
-//   const socket = getGameSocket(localStorage.getItem("token"));
-//   const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
-//   const ctx = canvas?.getContext("2d");
-
-//   // 1. Draw Loop (Render what server sends)
-//   socket.on("game_update", (gameState) => {
-//     if (!ctx || !canvas) return;
-
-//     // Clear
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-//     // Draw Ball
-//     ctx.fillStyle = "#35C6DD";
-//     ctx.beginPath();
-//     ctx.arc(gameState.ball.x, gameState.ball.y, 10, 0, Math.PI * 2);
-//     ctx.fill();
-
-//     // --- NEW: Draw Paddles ---
-//     ctx.fillStyle = "#FFFFFF";
-//     // Paddle 1 (Left) - x=10, width=10, height=100
-//     ctx.fillRect(10, gameState.paddle1.y, 10, 100); 
-    
-//     // Paddle 2 (Right) - x=780, width=10, height=100
-//     ctx.fillRect(780, gameState.paddle2.y, 10, 100);
-//   });
-
-//   // 2. Input Handling (Send Keys to Server)
-//   const handleKey = (e: KeyboardEvent, isPressed: boolean) => {
-//       // Only care about Arrow Keys (or W/S)
-//       if (e.key === "ArrowUp" || e.key === "w") {
-//           socket.emit('input_update', { input: 'UP', isPressed });
-//       }
-//       if (e.key === "ArrowDown" || e.key === "s") {
-//           socket.emit('input_update', { input: 'DOWN', isPressed });
-//       }
-//   };
-
-//   // Add Listeners
-//   window.addEventListener('keydown', (e) => handleKey(e, true));
-//   window.addEventListener('keyup', (e) => handleKey(e, false));
-
-//   // Cleanup when leaving page (Important!)
-//   return () => {
-//      window.removeEventListener('keydown', (e) => handleKey(e, true));
-//      window.removeEventListener('keyup', (e) => handleKey(e, false));
-//   };
-// }
