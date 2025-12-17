@@ -121,33 +121,24 @@ export function RemoteGameEventListener() {
 
 
       function displayWinner() {
-    const winner = player1Score >= WINNING_SCORE ? "player1" : "player2";
+      const winner = player1Score >= WINNING_SCORE ? "salma" : "salma2";
+      // const winnerAvatar = player1Score >= WINNING_SCORE ? ${game.match[0].player1.avatar} : ${game.match[0].player2.avatar};
       const winnerOverlay = document.createElement('div');
       winnerOverlay.id = 'winner-overlay';
       winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
       winnerOverlay.innerHTML = `
         <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
-          <h2 class="text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
-          <p class="font-roboto text-2xl text-gray-300 mb-2">Final Score</p>
+          <h2 class="text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 We Have A Winner! 🏆</h2>
           <div class="flex justify-center items-center gap-8 mb-8">
-            <div class="text-center">
-              <p class="text-primary text-3xl">${player1Score}</p>
-              <p class="font-roboto text-gray-400">Player1</p>
-            </div>
-            <span class="text-3xl text-white">-</span>
-            <div class="text-center">
-              <p class="text-secondary text-3xl">${player2Score}</p>
-              <p class="font-roboto text-gray-400">Player2</p>
-            </div>
+            <img src="/public/purple-girl.svg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+              <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[3%] lg:ml-[10%] ">
+                <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${winner} </h1>
+              </div>
           </div>
-          <div class="space-y-4">
-            <button id="play-again-btn" class="w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
-              <i class="fa-solid fa-rotate-right mr-2"></i>
-              Play Again
-            </button>
-            <button id="main-menu-btn" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all duration-300">
-              <i class="fa-solid fa-home mr-2"></i>
-              Main Menu
+          <div class="space-y-4 mt-10">
+            <button id="quit" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
+              <i class="fa-solid fa-sign-out mr-2"></i>
+              Exit
             </button>
           </div>
         </div>
@@ -155,19 +146,12 @@ export function RemoteGameEventListener() {
       
       document.querySelector('.relative')?.appendChild(winnerOverlay);
 
-        const playAgainBtn = document.getElementById('play-again-btn');
-        const mainMenuBtn = document.getElementById('main-menu-btn');
+        const ExitBtn = document.getElementById('quit');
+
         
-        if (playAgainBtn) {
-          playAgainBtn.addEventListener('click', () => {
-            winnerOverlay.remove();
-            // restartGame();
-          });
-        }
-        
-        if (mainMenuBtn) {
-          mainMenuBtn.addEventListener('click', () => {
-            navigate('/LocalgameStyle');
+        if (ExitBtn) {
+          ExitBtn.addEventListener('click', () => {
+            navigate('/home');
           });
         }
   }
@@ -186,6 +170,9 @@ export function RemoteGameEventListener() {
       if (player2Score >= WINNING_SCORE) {
         displayWinner();
       }
+    }
+    if (gameState.score.p1 >= WINNING_SCORE || gameState.score.p2 >= WINNING_SCORE) {
+        displayWinner();
     }
     // ctx.fillRect(10, gameState.paddle1.y, 10, 100); // Left Paddle
     // ctx.fillRect(canvas.width - 20, gameState.paddle2.y, 10, 100); // Right Paddle
