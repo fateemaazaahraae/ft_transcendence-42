@@ -3,6 +3,7 @@ import db from "../config/db.js";
 import conversationModel from "../models/conversation.js";
 import friendsModel from "../models/friends.js";
 import blockedModel from "../models/blocked.js";
+import history from "../services/history.js";
 
 const API_URL = process.env.API_URL || 'http://auth-service:3000';
 
@@ -111,4 +112,22 @@ export default fp(async (fastify) => {
       return reply.code(500).send({ error: 'unblock failed', details: err.message });
     }
   });
-});
+
+  //fetch history between users 
+  fastify.get('/api/chats/history/:userId1/:userId2',async (request,reply)=>{
+    try{
+      const userId1=String(request.params.userId1 || '');
+      const userId2=String(request.params.userId2 || '');
+      if(!userId1 || !userId2){
+        return reply.code(400).send({ error: 'missing userId1 or userId2' });
+      }
+      const {convo,messages}= history.getHistory(userId1,userId2,200);
+      return reply.code(200).send({convo,messages});
+    }
+    catch(err){
+      fastify.log.error(err);
+      return reply.code(500).send({ error: 'history fetch failed', details: err.message });
+
+    }
+  });
+ });
