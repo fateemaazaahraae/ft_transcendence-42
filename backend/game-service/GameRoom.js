@@ -7,9 +7,16 @@ class GameRoom {
     this.player1 = player1Socket;
     this.player2 = player2Socket;
 
-    // my canvas size, 1430x850
+    // my canvas size, 1344x580//(x, y)
     this.gameState = {// contain the new positions for ball and paddles
       ball: { x: 672, y: 290, dx: 5, dy: 5 },
+      // ball: {
+      // x: width / 2,
+      // y: height / 2,
+      // r: 10,
+      // vx: (Math.random() < 0.5 ? 1 : -1) * 300,
+      // vy: (Math.random() < 0.5 ? 1 : -1) * 200,
+      // },
       paddle1: { y: 250 },
       paddle2: { y: 250 },
       score: { p1: 0, p2: 0 }
@@ -40,7 +47,7 @@ class GameRoom {
     console.log(`🎮 Game Room ${this.roomId} started!`);
 
     // update with new position 30 times each 1 second (u may think it's a lot but it is good)
-    let last = performance.now();
+    // let last = performance.now();
     this.interval = setInterval(() => {
       this.update();     // move the object
       this.broadcast();  // and send new positions
@@ -57,32 +64,84 @@ class GameRoom {
     this.gameState.ball.x += this.gameState.ball.dx;
     this.gameState.ball.y += this.gameState.ball.dy;
 
-      if (this.input[this.player1.id].up) {
-          this.gameState.paddle1.y = Math.max(0, this.gameState.paddle1.y - SPEED);
-      }
-      if (this.input[this.player1.id].down) {
-          this.gameState.paddle1.y = Math.min(CANVAS_HEIGHT - PADDLE_HEIGHT, this.gameState.paddle1.y + SPEED);
-      }
+    // const dt = Math.min((now - last) / 1000, 0.04);
+    // last = now;
 
-      if (this.input[this.player2.id].up) {
-          this.gameState.paddle2.y = Math.max(0, this.gameState.paddle2.y - SPEED);
-      }
-      if (this.input[this.player2.id].down) {
-          this.gameState.paddle2.y = Math.min(CANVAS_HEIGHT - PADDLE_HEIGHT, this.gameState.paddle2.y + SPEED);
-      }
+    // const PrevX = ball.x;
+    // const PrevY = ball.y;
+    // const NewX = ball.x + ball.vx * dt;// following the rule : position' = position + velocity * dt; (to calculate value in px)
+    // const NewY = ball.y + ball.vy * dt;
 
-      this.gameState.ball.x += this.gameState.ball.dx;
-      this.gameState.ball.y += this.gameState.ball.dy;
+
+    if (this.input[this.player1.id].up) {
+      this.gameState.paddle1.y = Math.max(0, this.gameState.paddle1.y - SPEED);
+    }
+    if (this.input[this.player1.id].down) {
+      this.gameState.paddle1.y = Math.min(CANVAS_HEIGHT - PADDLE_HEIGHT, this.gameState.paddle1.y + SPEED);
+    }
+    if (this.input[this.player2.id].up) {
+      this.gameState.paddle2.y = Math.max(0, this.gameState.paddle2.y - SPEED);
+    }
+    if (this.input[this.player2.id].down) {
+      this.gameState.paddle2.y = Math.min(CANVAS_HEIGHT - PADDLE_HEIGHT, this.gameState.paddle2.y + SPEED);
+    }
+
+
+    this.gameState.ball.x += this.gameState.ball.dx;
+    this.gameState.ball.y += this.gameState.ball.dy;
+
+    if (this.gameState.ball.y - BALL_SIZE <= 0 || this.gameState.ball.y + BALL_SIZE >= CANVAS_HEIGHT) {
+      this.gameState.ball.dy *= -1;
+    }
+
+    // Later we will check for paddle collisions here
+    // if (this.gameState.ball.x - BALL_SIZE <= 0 || this.gameState.ball.x + BALL_SIZE >= CANVAS_WIDTH) {
+    //   this.gameState.ball.dx *= -1;
+    // }
+    if (
+      this.gameState.ball.dx < 0 && // Only check if moving left
+      this.gameState.ball.x - BALL_SIZE <= 18 && // Ball hit the paddle's right edge
+      this.gameState.ball.x + BALL_SIZE >= 10 && // Ball isn't behind the paddle
+      this.gameState.ball.y >= this.gameState.paddle1.y &&
+      this.gameState.ball.y <= this.gameState.paddle1.y + PADDLE_HEIGHT
+    ) {
+      this.gameState.ball.dx *= -1;
+      // Speed up slightly for fun
+      this.gameState.ball.dx *= 0.9; 
+      this.gameState.ball.dy *= 0.9;
+    }
+
+    if (
+      this.gameState.ball.dx > 0 && // Only check if moving right
+      this.gameState.ball.x + BALL_SIZE >= CANVAS_WIDTH - 18 && // Ball hit the paddle's left edge
+      this.gameState.ball.x - BALL_SIZE <= CANVAS_WIDTH - 10 && // Ball isn't behind
+      this.gameState.ball.y >= this.gameState.paddle2.y &&
+      this.gameState.ball.y <= this.gameState.paddle2.y + PADDLE_HEIGHT
+    ) {
+      this.gameState.ball.dx *= -1;
+      this.gameState.ball.dx *= 0.9; 
+      this.gameState.ball.dy *= 0.9;
+    }
+
+    if (this.gameState.ball.x < 0) {
+      this.gameState.score.p2 += 1;
+      this.resetBall(false);
+    }
+
+    // Ball went off the Right side (Player 1 scores)
+    else if (this.gameState.ball.x > CANVAS_WIDTH) {
+      this.gameState.score.p1 += 1;
+      this.resetBall(true);
+    }
+    
+  }
   
-      if (this.gameState.ball.y - BALL_SIZE <= 0 || this.gameState.ball.y + BALL_SIZE >= CANVAS_HEIGHT) {
-        this.gameState.ball.dy *= -1;
-      }
-      
-      // Simple Bounce (Left/Right) - JUST FOR TESTING
-      // Later we will check for paddle collisions here
-      if (this.gameState.ball.x - BALL_SIZE <= 0 || this.gameState.ball.x + BALL_SIZE >= CANVAS_WIDTH) {
-        this.gameState.ball.dx *= -1;
-      }
+  resetBall (moveTo = null) {
+    this.gameState.ball = { x: 672, y: 290, dx: 5, dy: 5 };
+    // Serve to the player who lost the point (or random)
+    const dir = typeof MoveTo === 'boolean' ? (MoveTo ? 1 : -1) : (Math.random() < 0.5 ? 1 : -1); // if a boolean value is entred si nn randomly right or left
+    this.gameState.ball.dx *= dir;
+    this.gameState.ball.dy *= dir;
   }
 
   broadcast() {

@@ -77,6 +77,10 @@ export function RemoteGameEventListener() {
   const socket = getGameSocket(localStorage.getItem("token"));
   const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
   const ctx = canvas?.getContext("2d");
+  
+  let player1Score = 0;
+  let player2Score = 0;
+  const WINNING_SCORE = 2;
 
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
@@ -86,6 +90,13 @@ export function RemoteGameEventListener() {
   const LeaveOverlay = document.getElementById('leave-overlay') as HTMLDivElement;
   const quitBtn = document.getElementById('quit-btn') as HTMLButtonElement;
   // const cancelbtn = document.getElementById('cancel-btn') as HTMLButtonElement;
+  const player1ScoreDisplay = document.getElementById('player1-score-display') as HTMLSpanElement;
+  const player2ScoreDisplay = document.getElementById('player2-score-display') as HTMLSpanElement;
+
+  function updateScoreDisplay() {
+    if (player1ScoreDisplay) player1ScoreDisplay.textContent = player1Score.toString();
+    if (player2ScoreDisplay) player2ScoreDisplay.textContent = player2Score.toString();
+  }
 
   socket.on("game_update", (gameState) => {// listen for a socket.emit('game_update') with the new positions
     if (!ctx || !canvas) return;
@@ -107,6 +118,75 @@ export function RemoteGameEventListener() {
 
     ctx.fillStyle = '#F40CA4';////////right paddle
     ctx.fillRect(canvas.width - 18, gameState.paddle2.y, 10, 115);
+
+
+      function displayWinner() {
+    const winner = player1Score >= WINNING_SCORE ? "player1" : "player2";
+      const winnerOverlay = document.createElement('div');
+      winnerOverlay.id = 'winner-overlay';
+      winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
+      winnerOverlay.innerHTML = `
+        <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
+          <h2 class="text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
+          <p class="font-roboto text-2xl text-gray-300 mb-2">Final Score</p>
+          <div class="flex justify-center items-center gap-8 mb-8">
+            <div class="text-center">
+              <p class="text-primary text-3xl">${player1Score}</p>
+              <p class="font-roboto text-gray-400">Player1</p>
+            </div>
+            <span class="text-3xl text-white">-</span>
+            <div class="text-center">
+              <p class="text-secondary text-3xl">${player2Score}</p>
+              <p class="font-roboto text-gray-400">Player2</p>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <button id="play-again-btn" class="w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
+              <i class="fa-solid fa-rotate-right mr-2"></i>
+              Play Again
+            </button>
+            <button id="main-menu-btn" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all duration-300">
+              <i class="fa-solid fa-home mr-2"></i>
+              Main Menu
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.querySelector('.relative')?.appendChild(winnerOverlay);
+
+        const playAgainBtn = document.getElementById('play-again-btn');
+        const mainMenuBtn = document.getElementById('main-menu-btn');
+        
+        if (playAgainBtn) {
+          playAgainBtn.addEventListener('click', () => {
+            winnerOverlay.remove();
+            // restartGame();
+          });
+        }
+        
+        if (mainMenuBtn) {
+          mainMenuBtn.addEventListener('click', () => {
+            navigate('/LocalgameStyle');
+          });
+        }
+  }
+
+
+    if (gameState.score.p1 > player1Score) {
+      player1Score++;
+      updateScoreDisplay();
+      if (player1Score >= WINNING_SCORE) {
+        displayWinner();
+      }
+    }
+    if (gameState.score.p2 > player2Score) {
+      player2Score++;
+      updateScoreDisplay();
+      if (player2Score >= WINNING_SCORE) {
+        displayWinner();
+      }
+    }
     // ctx.fillRect(10, gameState.paddle1.y, 10, 100); // Left Paddle
     // ctx.fillRect(canvas.width - 20, gameState.paddle2.y, 10, 100); // Right Paddle
   });
