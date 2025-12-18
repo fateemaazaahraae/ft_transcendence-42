@@ -1,4 +1,4 @@
-// backend/game-service/GameRoom.js
+const { getDb } = require('./db');
 
 class GameRoom {
   constructor(io, roomId, player1Socket, player2Socket) {
@@ -68,7 +68,7 @@ class GameRoom {
       });
 
       socket.on('leave_game', () => {
-        console.log(`🚪 Player ${socket.data.userId} left the game`);
+        console.log(`Player ${socket.data.userId} left the game`);
         this.handlePlayerDisconnect(socket);
       });
 
@@ -181,7 +181,7 @@ class GameRoom {
     
   }
 
-  endGame(winnerId) {
+  async endGame(winnerId) {
     console.log(`🏆 Game Over! Winner: ${winnerId}`);
     
     // Tell everyone who won
@@ -190,6 +190,34 @@ class GameRoom {
       score: this.gameState.score 
     });
     
+    try {
+        const db = await getDb(); // Get the connection
+        const matchId = this.roomId; // We can use the room ID as the match ID
+        const timestamp = Date.now();
+
+        // SQL Injection Safe Query (?)
+        // We use '?' as placeholders, and pass the values in an array.
+        // This is safer and cleaner than string concatenation.
+        await db.run(
+            `INSERT INTO matches (id, player1Id, player2Id, score1, score2, winnerId, timestamp)
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [
+                matchId,
+                this.player1.data.userId,
+                this.player2.data.userId,
+                this.gameState.score.p1,
+                this.gameState.score.p2,
+                winnerId,
+                timestamp
+            ]
+        );
+        
+        console.log("✅ Match saved to SQLite database!");
+
+    } catch (error) {
+        console.error("❌ Failed to save match:", error);
+    }
+
     // Stop the loop
     this.stop(); 
   }

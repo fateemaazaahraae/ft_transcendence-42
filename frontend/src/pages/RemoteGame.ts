@@ -1,4 +1,3 @@
-// frontend/src/pages/RemoteGame.ts
 import { getGameSocket } from "../utils/gameSocket.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";

@@ -1,6 +1,7 @@
 const fastify = require('fastify')({ logger: true });
 const { Server } = require('socket.io');
 const GameRoom = require('./GameRoom'); // I will do it later just to have an idea
+const { getDb } = require('./db');
 
 const waitingQueue = []; // array to store my players until I have a size of 2
 
@@ -8,6 +9,26 @@ fastify.get('/test', async (request, reply) => {
   return { message: 'Game service is working!' };
 });
 
+fastify.get('/matches/user/:userId', async (request, reply) => {
+    const userId = request.params.userId;
+    
+    try {
+        const db = await getDb();
+        
+        // SQL: "Find all games where I was Player 1 OR Player 2"
+        const matches = await db.all(
+            `SELECT * FROM matches 
+             WHERE player1Id = ? OR player2Id = ? 
+             ORDER BY timestamp DESC`, // Newest games first
+            [userId, userId]
+        );
+
+        return matches;
+    } catch (err) {
+        console.error(err);
+        return reply.code(500).send({ error: 'Database error' });
+    }
+});
 const getUserIdFromToken = (token) => {
   try {
     // JWT structure is: header.payload.signature
