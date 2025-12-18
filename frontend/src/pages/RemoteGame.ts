@@ -209,13 +209,14 @@ export function RemoteGameEventListener() {
             winnerOverlay.innerHTML = `
               <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
                 <h3 class="text-3xl font-glitch text-secondary mb-3">🏆 YOU WON! 🏆</h3>
-                <h1 class="text-green" mb-4> WINNER </h1>
-                <div class="flex flex-col justify-center items-center mb-8">
+                <h2 class="text-green" mb-5> Your Opponent Left The Game </h2>
+                <div class="flex flex-col justify-center items-center mt-8">
                   <img src="/public/purple-girl.svg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
                     <div class="flex flex-row items-center">
                       <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4"> salma </h1>
                     </div>
                 </div>
+                <h1 class="text-green"> WINNER </h1>
                 <div class="space-y-4 mt-10">
                   <button id="quit" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
                     <i class="fa-solid fa-sign-out mr-2"></i>
@@ -301,6 +302,7 @@ export function RemoteGameEventListener() {
   //     navigate("/home");
   // });
 
+
   const handleKey = (e: KeyboardEvent, isPressed: boolean) => {
       if (e.key === "ArrowUp" || e.key === "w") {
           socket.emit('input_update', { input: 'UP', isPressed });
@@ -312,6 +314,13 @@ export function RemoteGameEventListener() {
 
   window.addEventListener('keydown', (e) => handleKey(e, true));
   window.addEventListener('keyup', (e) => handleKey(e, false));
+  function leaveGame() {
+    console.log("someone left!!");
+    socket.emit('leave_game');
+  }
+
+  window.addEventListener('popstate', leaveGame);
+  window.addEventListener('beforeunload', leaveGame);
 
   
   document.getElementById("leave-btn")?.addEventListener("click", () => {

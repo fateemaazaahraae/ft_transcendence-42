@@ -67,6 +67,11 @@ class GameRoom {
         }
       });
 
+      socket.on('leave_game', () => {
+        console.log(`🚪 Player ${socket.data.userId} left the game`);
+        this.handlePlayerDisconnect(socket);
+      });
+
       socket.on('disconnect', () => {
           console.log(`❌ Player ${socket.data.userId} disconnected during match!`);
           

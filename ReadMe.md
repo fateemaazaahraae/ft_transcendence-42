@@ -488,4 +488,9 @@ So in summary we press a key the frontend detect that and send it to the server(
 * Handle collision
 
 I am thinking next maybe I should apply the ccd alg like I did in local game
+Ok so after making the logic (when ball hit a paddle bounce if paddle hit wall change score if someone wins...)
+
+### Now It's time to create a database 🫤
+
+
 
