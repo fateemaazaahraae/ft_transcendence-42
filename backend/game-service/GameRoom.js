@@ -32,7 +32,32 @@ class GameRoom {
     
     this._setupListeners(this.player1);
     this._setupListeners(this.player2);
+    this.isGameOver = false;
     }
+
+    handlePlayerDisconnect(disconnectedSocket) {
+      if (this.isGameOver) return;
+
+      this.isGameOver = true;
+
+      let winnerSocket = null;
+
+      if (disconnectedSocket.id === this.player1.id) {
+        winnerSocket = this.player2;
+      } else if (disconnectedSocket.id === this.player2.id) {
+        winnerSocket = this.player1;
+      }
+
+      if (winnerSocket && winnerSocket.connected) {
+        this.io.to(winnerSocket.id).emit('game_over', {
+          winner: winnerSocket.data.userId,
+          reason: 'opponent_disconnected',
+          score: this.gameState.score
+        });
+      }
+
+  this.stop();
+}
 
     _setupListeners(socket) {
       socket.on('input_update', (data) => {
@@ -40,6 +65,12 @@ class GameRoom {
           if (data.input === 'UP') this.input[socket.id].up = data.isPressed;
           if (data.input === 'DOWN') this.input[socket.id].down = data.isPressed;
         }
+      });
+
+      socket.on('disconnect', () => {
+          console.log(`❌ Player ${socket.data.userId} disconnected during match!`);
+          
+          this.handlePlayerDisconnect(socket);
       });
     }
 
@@ -61,6 +92,7 @@ class GameRoom {
     const CANVAS_HEIGHT = 580;
     const CANVAS_WIDTH = 1344;
     const BALL_SIZE = 10; // radius
+    const WIN_SCORE = 3;
     this.gameState.ball.x += this.gameState.ball.dx;
     this.gameState.ball.y += this.gameState.ball.dy;
 
@@ -100,8 +132,8 @@ class GameRoom {
     // }
     if (
       this.gameState.ball.dx < 0 && // Only check if moving left
-      this.gameState.ball.x - BALL_SIZE <= 18 && // Ball hit the paddle's right edge
-      this.gameState.ball.x + BALL_SIZE >= 10 && // Ball isn't behind the paddle
+      this.gameState.ball.x - BALL_SIZE <= PADDLE_WIDTH + 8 && // Ball hit the paddle's right edge
+      this.gameState.ball.x + BALL_SIZE >= PADDLE_WIDTH && // Ball isn't behind the paddle
       this.gameState.ball.y >= this.gameState.paddle1.y &&
       this.gameState.ball.y <= this.gameState.paddle1.y + PADDLE_HEIGHT
     ) {
@@ -113,8 +145,8 @@ class GameRoom {
 
     if (
       this.gameState.ball.dx > 0 && // Only check if moving right
-      this.gameState.ball.x + BALL_SIZE >= CANVAS_WIDTH - 18 && // Ball hit the paddle's left edge
-      this.gameState.ball.x - BALL_SIZE <= CANVAS_WIDTH - 10 && // Ball isn't behind
+      this.gameState.ball.x + BALL_SIZE >= CANVAS_WIDTH - PADDLE_WIDTH - 8 && // Ball hit the paddle's left edge
+      this.gameState.ball.x - BALL_SIZE <= CANVAS_WIDTH - PADDLE_WIDTH && // Ball isn't behind
       this.gameState.ball.y >= this.gameState.paddle2.y &&
       this.gameState.ball.y <= this.gameState.paddle2.y + PADDLE_HEIGHT
     ) {
@@ -123,17 +155,38 @@ class GameRoom {
       this.gameState.ball.dy *= 0.9;
     }
 
+
+    if (this.gameState.score.p1 >= WIN_SCORE) {
+        this.endGame(this.player1.data.userId); // Player 1 Wins
+    } 
+    else if (this.gameState.score.p2 >= WIN_SCORE) {
+        this.endGame(this.player2.data.userId); // Player 2 Wins
+    }
+
+
     if (this.gameState.ball.x < 0) {
       this.gameState.score.p2 += 1;
       this.resetBall(false);
     }
-
     // Ball went off the Right side (Player 1 scores)
     else if (this.gameState.ball.x > CANVAS_WIDTH) {
       this.gameState.score.p1 += 1;
       this.resetBall(true);
     }
     
+  }
+
+  endGame(winnerId) {
+    console.log(`🏆 Game Over! Winner: ${winnerId}`);
+    
+    // Tell everyone who won
+    this.io.to(this.roomId).emit('game_over', { 
+      winner: winnerId,
+      score: this.gameState.score 
+    });
+    
+    // Stop the loop
+    this.stop(); 
   }
   
   resetBall (moveTo = null) {

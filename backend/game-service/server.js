@@ -8,6 +8,22 @@ fastify.get('/test', async (request, reply) => {
   return { message: 'Game service is working!' };
 });
 
+const getUserIdFromToken = (token) => {
+  try {
+    // JWT structure is: header.payload.signature
+    // We want the payload (the 2nd part)
+    const payloadBase64 = token.split('.')[1];
+    // Decode Base64 to String
+    const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
+    // Parse JSON
+    const decoded = JSON.parse(decodedJson);
+    return decoded.id; // Return the UUID
+  } catch (error) {
+    console.error("Failed to decode token:", error.message);
+    return null;
+  }
+};
+
 const start = async () => {
   try {
     await fastify.listen({ port: 3003, host: '0.0.0.0' });
@@ -25,7 +41,18 @@ const start = async () => {
         return;
       }
 
-      socket.data.userId = token.slice(40, 50) + '...'; // slice my token to make printing it easy
+      const userId = getUserIdFromToken(token);
+      
+      // socket.data.userId = token.slice(40, 50) + '...'; // slice my token to make printing it easy
+      // const usser = token.slice(0, 50) + '...'; // slice my token to make printing it easy
+      if (!userId) {
+         console.log('❌ Connection rejected: Invalid Token format.');
+         socket.disconnect();
+         return;
+      }
+
+      // 3. Store the clean UUID
+      socket.data.userId = userId;
       console.log(`User connected! Socket ID: ${socket.id} | User ID: ${socket.data.userId}`);
 
       socket.on('join_queue', () => {

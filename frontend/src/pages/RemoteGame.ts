@@ -16,7 +16,7 @@ export default function RemoteGame() {
       }, 
       player2: {
         avatar: "/public/purple-girl.svg", // normally here should go the opponent profile pic
-        name: "Player 2",
+        name: "salma",
         score: 0, 
       },
     }],
@@ -66,8 +66,16 @@ export default function RemoteGame() {
               <i class="fa-solid fa-sign-out mr-2"></i>
               Yes
             </button>
-          </div>
         </div>
+      </div>
+    <!-- PAUSE OVERLAY (Hidden by default) -->
+      <div id="game-over-modal" class="hidden absolute inset-0 bg-black/80 flex-col justify-center items-center z-50">
+        <h1 id="game-result-title" class="text-6xl font-glitch mb-4">GAME OVER</h1>
+        <p id="final-score" class="text-2xl mb-8 font-mono">5 - 3</p>
+        <button id="go-home-btn" class="px-8 py-3 bg-[#35C6DD] text-black font-bold rounded hover:bg-white transition">
+          Back to Home
+        </button>
+      </div>
       </div>
     </div>
     `;
@@ -80,7 +88,7 @@ export function RemoteGameEventListener() {
   
   let player1Score = 0;
   let player2Score = 0;
-  const WINNING_SCORE = 2;
+  const WINNING_SCORE = 3;
 
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
@@ -92,6 +100,11 @@ export function RemoteGameEventListener() {
   // const cancelbtn = document.getElementById('cancel-btn') as HTMLButtonElement;
   const player1ScoreDisplay = document.getElementById('player1-score-display') as HTMLSpanElement;
   const player2ScoreDisplay = document.getElementById('player2-score-display') as HTMLSpanElement;
+  // const scoreP1 = document.getElementById("score-p1");
+  // const scoreP2 = document.getElementById("score-p2");
+  const modal = document.getElementById("game-over-modal");
+  const resultTitle = document.getElementById("game-result-title");
+  const finalScoreText = document.getElementById("final-score");
 
   function updateScoreDisplay() {
     if (player1ScoreDisplay) player1ScoreDisplay.textContent = player1Score.toString();
@@ -120,68 +133,173 @@ export function RemoteGameEventListener() {
     ctx.fillRect(canvas.width - 18, gameState.paddle2.y, 10, 115);
 
 
-      function displayWinner() {
-      const winner = player1Score >= WINNING_SCORE ? "salma" : "salma2";
-      // const winnerAvatar = player1Score >= WINNING_SCORE ? ${game.match[0].player1.avatar} : ${game.match[0].player2.avatar};
-      const winnerOverlay = document.createElement('div');
-      winnerOverlay.id = 'winner-overlay';
-      winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
-      winnerOverlay.innerHTML = `
-        <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
-          <h2 class="text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 We Have A Winner! 🏆</h2>
-          <div class="flex justify-center items-center gap-8 mb-8">
-            <img src="/public/purple-girl.svg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
-              <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[3%] lg:ml-[10%] ">
-                <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${winner} </h1>
-              </div>
-          </div>
-          <div class="space-y-4 mt-10">
-            <button id="quit" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
-              <i class="fa-solid fa-sign-out mr-2"></i>
-              Exit
-            </button>
-          </div>
+    function displayWinner() {
+    // const myId = localStorage.getItem("userId");
+    // const isWinner = data.winner === myId;
+    const winner = player1Score >= WINNING_SCORE ? "salma" : "salma2";
+    // const winnerAvatar = player1Score >= WINNING_SCORE ? ${game.match[0].player1.avatar} : ${game.match[0].player2.avatar};
+    const winnerOverlay = document.createElement('div');
+    winnerOverlay.id = 'winner-overlay';
+    winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
+    winnerOverlay.innerHTML = `
+      <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
+        <h2 class="text-3xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 YOU WON! 🏆</h2>
+        <div class="flex justify-center items-center mb-8">
+          <img src="/public/purple-girl.svg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+            <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[3%] lg:ml-[10%] ">
+              <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4"> ${winner} </h1>
+            </div>
         </div>
-      `;
-      
-      document.querySelector('.relative')?.appendChild(winnerOverlay);
+        <div class="space-y-4 mt-10">
+          <button id="quit" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
+            <i class="fa-solid fa-sign-out mr-2"></i>
+            Exit
+          </button>
+        </div>
+      </div>
+    `;
+    
+        document.querySelector('.relative')?.appendChild(winnerOverlay);
 
-        const ExitBtn = document.getElementById('quit');
+          const ExitBtn = document.getElementById('quit');
 
-        
-        if (ExitBtn) {
-          ExitBtn.addEventListener('click', () => {
-            navigate('/home');
-          });
-        }
-  }
-
+          
+          if (ExitBtn) {
+            ExitBtn.addEventListener('click', () => {
+              navigate('/home');
+            });
+          }
+    }
 
     if (gameState.score.p1 > player1Score) {
       player1Score++;
       updateScoreDisplay();
       if (player1Score >= WINNING_SCORE) {
-        displayWinner();
+        // displayWinner();
       }
     }
     if (gameState.score.p2 > player2Score) {
       player2Score++;
       updateScoreDisplay();
       if (player2Score >= WINNING_SCORE) {
-        displayWinner();
+        // displayWinner();
       }
     }
-    if (gameState.score.p1 >= WINNING_SCORE || gameState.score.p2 >= WINNING_SCORE) {
-        displayWinner();
-    }
+    // if (gameState.score.p1 >= WINNING_SCORE || gameState.score.p2 >= WINNING_SCORE) {
+    //     displayWinner();
+    // }
     // ctx.fillRect(10, gameState.paddle1.y, 10, 100); // Left Paddle
     // ctx.fillRect(canvas.width - 20, gameState.paddle2.y, 10, 100); // Right Paddle
   });
 
-  socket.on("game_over", () => {  
-      alert("Game Over!");
-      navigate("/home");
+  socket.on("game_over", (data) => {
+      // Get my User ID from token (simple decode or stored value)
+      // Since we just need to compare strings, we can check equality
+      // NOTE: Ensure your backend sends the UserID exactly as you store it.
+      const myId = localStorage.getItem("userId"); // Ensure you stored this in Step 0
+      console.log('we have a winnnner!!!');
+      console.log(myId);
+      console.log(data.winner);
+      const isWinner = data.winner === myId;
+
+      if (data.reason === 'opponent_disconnected') {
+        const winnerOverlay = document.createElement('div');
+            winnerOverlay.id = 'winner-overlay';
+            winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
+            winnerOverlay.innerHTML = `
+              <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
+                <h3 class="text-3xl font-glitch text-secondary mb-3">🏆 YOU WON! 🏆</h3>
+                <h1 class="text-green" mb-4> WINNER </h1>
+                <div class="flex flex-col justify-center items-center mb-8">
+                  <img src="/public/purple-girl.svg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+                    <div class="flex flex-row items-center">
+                      <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4"> salma </h1>
+                    </div>
+                </div>
+                <div class="space-y-4 mt-10">
+                  <button id="quit" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
+                    <i class="fa-solid fa-sign-out mr-2"></i>
+                    Exit
+                  </button>
+                </div>
+              </div>
+            `;
+    
+            document.querySelector('.relative')?.appendChild(winnerOverlay);
+            document.getElementById("quit")?.addEventListener("click", () => {
+              navigate("/home");
+            });
+      }
+      else if (modal && resultTitle && finalScoreText) {
+          // modal.classList.remove("hidden");
+          // modal.classList.add("flex"); // Show modal
+
+          if (isWinner) {
+            const winnerOverlay = document.createElement('div');
+            winnerOverlay.id = 'winner-overlay';
+            winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
+            winnerOverlay.innerHTML = `
+              <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
+                <h3 class="text-3xl font-glitch text-secondary mb-3">🏆 YOU WON! 🏆</h3>
+                <h1 class="text-green" mb-4> WINNER </h1>
+                <div class="flex flex-col justify-center items-center mb-8">
+                  <img src="/public/purple-girl.svg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+                    <div class="flex flex-row items-center">
+                      <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4"> salma </h1>
+                    </div>
+                </div>
+                <div class="space-y-4 mt-10">
+                  <button id="quit" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
+                    <i class="fa-solid fa-sign-out mr-2"></i>
+                    Exit
+                  </button>
+                </div>
+              </div>
+            `;
+    
+            document.querySelector('.relative')?.appendChild(winnerOverlay);
+            document.getElementById("quit")?.addEventListener("click", () => {
+              navigate("/home");
+            });
+          } else {
+              const winnerOverlay = document.createElement('div');
+              winnerOverlay.id = 'winner-overlay';
+              winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
+              winnerOverlay.innerHTML = `
+                <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
+                  <h3 class="text-3xl font-glitch text-primary mb-3">💀 YOU LOST! 💀</h3>
+                  <h1 class="text-green" mb-4> WINNER </h1>
+                  <div class="flex flex-col justify-center items-center mb-8">
+                    <img src="/public/purple-girl.svg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+                      <div class="flex flex-row items-center">
+                        <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4"> salma </h1>
+                      </div>
+                  </div>
+                  <div class="space-y-4 mt-10">
+                    <button id="quit" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
+                      <i class="fa-solid fa-sign-out mr-2"></i>
+                      Exit
+                    </button>
+                  </div>
+                </div>
+              `;
+              
+              document.querySelector('.relative')?.appendChild(winnerOverlay);
+              document.getElementById("quit")?.addEventListener("click", () => {
+                navigate("/home");
+              });
+            }
+            finalScoreText.innerText = `${data.score.p1} - ${data.score.p2}`;
+        }
+      
+      // Clean up socket listener so we don't duplicate logic
+      // socket.off("game_update"); // Optional cleanup
   });
+
+  // socket.on("game_over", () => {  
+  //     alert("Game Over!");
+  //     navigate("/home");
+  // });
 
   const handleKey = (e: KeyboardEvent, isPressed: boolean) => {
       if (e.key === "ArrowUp" || e.key === "w") {
