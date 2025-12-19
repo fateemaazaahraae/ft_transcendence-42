@@ -182,9 +182,18 @@ export function ChatEventListener() {
             localStorage.removeItem('activeContactAvatar');
             localStorage.removeItem('activeContactStatus');
             
-            contactsSide?.classList.remove("hidden");
-            chat?.classList.remove("hidden");
-            chat?.classList.add("flex");
+            const isMobile = window.innerWidth < 768;
+            // on mobile: show contacts, hide chat
+            if (isMobile) {
+                contactsSide?.classList.remove("hidden");
+                chat?.classList.add("hidden");
+                chat?.classList.remove("flex");
+            } else {
+                // Desktop: show both
+                contactsSide?.classList.remove("hidden");
+                chat?.classList.remove("hidden");
+                chat?.classList.add("flex");
+            }
         });
     }
 

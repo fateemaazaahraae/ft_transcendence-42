@@ -25,7 +25,8 @@ const renderContactItem = (u: any, lastMsg = 'Search result') => {
             </div>
             <div>
                 <p class="font-medium text-sm text-secondary">${u.username}</p>
-                <p class="text-xs text-gray-200">${lastMsg}</p>
+                <p class="text-xs text-gray-200 truncate max-w-[200px]">
+                ${lastMsg}</p>
             </div>
         </div>
     `;

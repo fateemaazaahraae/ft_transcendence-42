@@ -7,7 +7,7 @@ export const sendMessageHandler = async (request, reply) => {
     const { convo, msg } = history.sendMessage(senderId, receiverId, content);
     return reply.code(201).send({ conversation: convo, message: msg });
   } catch (err) {
-    if (err.code === "BLOCKED") return reply.code(403).send({ error: "you are blocked by recipient" });
+    if (err.code === "BLOCKED") return reply.code(403).send({ error: "you are blocked by this user" });
     console.error(err);
     return reply.code(500).send({ error: "internal" });
   }

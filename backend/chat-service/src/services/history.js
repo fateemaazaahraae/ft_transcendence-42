@@ -4,7 +4,7 @@ import Blocked from "../models/blocked.js";
 
 export default {
   sendMessage: (from, to, content) => {
-    // vérifie si destinataire a bloqué l'expéditeur
+    // checki if blocked
     if (Blocked.isBlocked(to, from)) {
       const err = new Error("blocked");
       err.code = "BLOCKED";

@@ -91,12 +91,42 @@ export function renderSingleMessage(message:{
 {
     const messageDiv = document.createElement("div");
     messageDiv.className = `flex ${isSender ? 'justify-end' : 'justify-start'} mb-2`;
-    messageDiv.innerHTML = `
-        <div class="${isSender ? 'bg-primary' : 'bg-primary/20 text-white'} max-w-[70%] px-4 py-2 rounded-lg px-4 py-2 max-w-xs">
-        <p class="text-sm break-words">${message.content || ""}</p>
-        <p class="text-xs opacity-70 mt-1">${new Date((message as any).created_at ? ((message as any).created_at as number) * 1000 : Date.now()).toLocaleTimeString()}</p>
-    </div>
-  `;
+
+    const timeStr = new Date((message as any).created_at ? ((message as any).created_at as number) * 1000 : Date.now()).toLocaleTimeString();
+
+        if (isSender) {
+        messageDiv.innerHTML = `
+            <div class="flex flex-col items-end mb-4 w-full">
+                <div class="flex items-end gap-2">
+                    <div class="bg-primary/65 text-sm p-3 rounded-3xl  max-w-[250px] break-words text-white">
+                    ${message.content || ""}
+                    </div>
+                    <img src="../../public/green-girl.svg" class="w-10 h-10 object-cover border border-primary rounded-full flex-shrink-0">
+                </div>
+                <p class="text-[10px] opacity-70 mt-1 mr-12">${timeStr}</p>
+            </div>
+        `;
+    } else {
+        messageDiv.innerHTML = `
+            <div class="flex flex-col items-start mb-4 w-full">
+                <div class="flex items-end gap-2">
+                    <img src="../../public/green-girl.svg" class="w-10 h-10 object-cover border border-primary rounded-full flex-shrink-0">
+                    <div class="bg-primary/20 text-white text-sm p-3 rounded-3xl  max-w-[250px] break-words">
+                    ${message.content || ""}
+                    </div>
+                </div>
+                <p class="text-[10px] opacity-70 mt-1 ml-12">${timeStr}</p>
+            </div>
+        `;
+    }
+            
     messagesPanel.appendChild(messageDiv);
     messagesPanel.scrollTop = messagesPanel.scrollHeight;
-              }
+}
+   
+// <div class="${isSender ? 'bg-primary' : 'bg-primary/20 text-white'} max-w-[70%] px-4 py-2 rounded-3xl px-4 py-2 max-w-xs">
+// <p class="text-sm break-words">${message.content || ""}</p>
+// </div>
+// <div class="ml-2 flex flex-col items-center">
+// <p class="text-xs opacity-70 mt-1">${new Date((message as any).created_at ? ((message as any).created_at as number) * 1000 : Date.now()).toLocaleTimeString()}</p>
+// </div>
