@@ -191,13 +191,10 @@ class GameRoom {
     });
     
     try {
-        const db = await getDb(); // Get the connection
-        const matchId = this.roomId; // We can use the room ID as the match ID
+        const db = await getDb();
+        const matchId = this.roomId;
         const timestamp = Date.now();
 
-        // SQL Injection Safe Query (?)
-        // We use '?' as placeholders, and pass the values in an array.
-        // This is safer and cleaner than string concatenation.
         await db.run(
             `INSERT INTO matches (id, player1Id, player2Id, score1, score2, winnerId, timestamp)
              VALUES (?, ?, ?, ?, ?, ?, ?)`,

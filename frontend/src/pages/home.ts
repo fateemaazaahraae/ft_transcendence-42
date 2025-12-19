@@ -144,11 +144,13 @@ export function HomeEventListener() {
             
             socket.on("connect", () => {
                 console.log("✅ Connected via Manager! ID:", socket.id);
+                navigate("/RemotegameStyle");
                 socket.emit('join_queue');
             });
 
             socket.on("match_found", (data) => {
                 console.log("🎉 MATCH FOUND! Navigating to game...");
+                localStorage.setItem("currentMatch", JSON.stringify(data));
                 navigate("/remote-game"); 
             });
 

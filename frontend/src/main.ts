@@ -3,6 +3,7 @@ import Landing, { LandingEventListener } from "./pages/landing";
 import Home, { HomeEventListener } from "./pages/home";
 import GameStyle, { GameStyleEventListener } from "./pages/gameStyle.ts";
 import LocalGameStyle, { LocalGameStyleEventListener } from "./pages/LocalgameStyle.ts";
+import RemoteGameStyle, { RemoteGameStyleEventListener } from "./pages/RemotegameStyle.ts";
 import Game from "./pages/game.ts";
 import LocalGame, { LocalGameEventListener } from "./pages/Localgame.ts";
 import AiGame, { AiGameEventListener } from "./pages/Aigame.ts";
@@ -32,6 +33,7 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/home": {render: Home, setUp: HomeEventListener},
     "/gameStyle": {render: GameStyle, setUp: GameStyleEventListener},
     "/LocalgameStyle": {render: LocalGameStyle, setUp: LocalGameStyleEventListener},
+    "/RemotegameStyle": {render: RemoteGameStyle, setUp: RemoteGameStyleEventListener},
     "/game": {render: Game},
     "/Localgame": {render: LocalGame, setUp: LocalGameEventListener},
     "/Aigame": {render: AiGame, setUp: AiGameEventListener},

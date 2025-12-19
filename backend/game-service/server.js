@@ -15,11 +15,10 @@ fastify.get('/matches/user/:userId', async (request, reply) => {
     try {
         const db = await getDb();
         
-        // SQL: "Find all games where I was Player 1 OR Player 2"
         const matches = await db.all(
             `SELECT * FROM matches 
              WHERE player1Id = ? OR player2Id = ? 
-             ORDER BY timestamp DESC`, // Newest games first
+             ORDER BY timestamp DESC`,
             [userId, userId]
         );
 
@@ -29,6 +28,24 @@ fastify.get('/matches/user/:userId', async (request, reply) => {
         return reply.code(500).send({ error: 'Database error' });
     }
 });
+
+const getUserDataFromToken = (token) => {
+  try {
+    const payloadBase64 = token.split('.')[1];
+    const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
+    const decoded = JSON.parse(decodedJson);
+    
+    return {
+        id: decoded.id,
+        name: decoded.userName,       // Make sure these match your JWT fields
+        avatar: decoded.profileImage || "/public/default-avatar.svg" // Fallback
+    };
+  } catch (error) {
+    console.error("Failed to decode token:", error.message);
+    return null;
+  }
+};
+
 const getUserIdFromToken = (token) => {
   try {
     // JWT structure is: header.payload.signature
@@ -38,7 +55,7 @@ const getUserIdFromToken = (token) => {
     const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
     // Parse JSON
     const decoded = JSON.parse(decodedJson);
-    return decoded.id; // Return the UUID
+    return decoded.id;
   } catch (error) {
     console.error("Failed to decode token:", error.message);
     return null;
@@ -71,10 +88,22 @@ const start = async () => {
          socket.disconnect();
          return;
       }
+      const userData = getUserDataFromToken(token);
+      
+      if (!userData) {
+         socket.disconnect();
+         return;
+      }
+
+      // 2. Store it
+      socket.data.user = userData; 
+      socket.data.userId = userData.id; // Keep this for backward compatibility
+
+      console.log(`🔌 User ${userData.name} connected!`);
 
       // 3. Store the clean UUID
-      socket.data.userId = userId;
-      console.log(`User connected! Socket ID: ${socket.id} | User ID: ${socket.data.userId}`);
+      // socket.data.userId = userId;
+      // console.log(`User connected! Socket ID: ${socket.id} | User ID: ${socket.data.userId}`);
 
       socket.on('join_queue', () => {
         if (waitingQueue.find(s => s.id === socket.id)) { // if the tocken already in my array return 
@@ -85,21 +114,26 @@ const start = async () => {
         console.log(`${socket.data.userId} joined the queue. queue size===:${waitingQueue.length}===`);
 
         if (waitingQueue.length >= 2) {
-          const player1 = waitingQueue.shift();
-          const player2 = waitingQueue.shift();
+            const player1 = waitingQueue.shift();
+            const player2 = waitingQueue.shift();
 
-          const matchId = `match_${Date.now()}`;
-          console.log(`Match found! ${player1.data.userId} vs ${player2.data.userId}`);
+            const matchId = `match_${Date.now()}`; 
 
-          // this is what is make screen switch to Game Screen yaaaay
-          player1.emit('match_found', { matchId: matchId, opponentId: player2.data.userId });
-          player2.emit('match_found', { matchId: matchId, opponentId: player1.data.userId });
+            // Prepare the Match Data
+            const matchInfo = {
+                matchId: matchId,
+                player1: player1.data.user, // Contains {id, name, avatar}
+                player2: player2.data.user
+            };
 
-          // GAME IS ONNN //the para. we're sedingAre: io the room the game if I send something using io I send to every player in the same match
-                          //                           matchId (Unique identifier for this game) 
-                          //                           and for player1&&player2 they are sockets for user1 and user2 that has the data with which I can send things
-          const game = new GameRoom(io, matchId, player1, player2); // we're calling the constructor for the GameRomm class
-          game.start(); // calling GameRoom::start() ft
+            console.log(`🚀 Match: ${matchInfo.player1.name} vs ${matchInfo.player2.name}`);
+
+            // Notify players with FULL info
+            player1.emit('match_found', matchInfo);
+            player2.emit('match_found', matchInfo);
+
+            const game = new GameRoom(io, matchId, player1, player2);
+            game.start();
         }
         else {// case mazal mawslna l joj dial players
           socket.emit('waiting_for_match', { message: `Waiting for opponent... Current queue: ${waitingQueue.length}` });

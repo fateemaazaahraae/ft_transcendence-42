@@ -490,6 +490,9 @@ So in summary we press a key the frontend detect that and send it to the server(
 I am thinking next maybe I should apply the ccd alg like I did in local game
 Ok so after making the logic (when ball hit a paddle bounce if paddle hit wall change score if someone wins...)
 
+### I made the winning system
+it appears when there is a win, or someone left, or click the back/leave button
+
 ### Now It's time to create a database 🫤
 
 
