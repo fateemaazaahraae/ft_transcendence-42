@@ -7,7 +7,7 @@ export async function searchRoute(fastify) {
 
     const db = await openDb();
     const users = await db.all(
-      `SELECT id, userName, profileImage
+      `SELECT id, userName, profileImage, firstName, lastName
        FROM users
        WHERE userName LIKE ? AND id != ?
        ORDER BY userName

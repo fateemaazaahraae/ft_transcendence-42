@@ -1,4 +1,14 @@
 import { showAlert } from "../utils/alert";
+import { viewFriendProfile } from "./viewFriendProfile";
+
+
+export type User = {
+    id: string,
+    userName: string,
+    firstName: string,
+    lastName: string,
+    profileImage: string
+}
 
 export async function searchBar() {
     const search = document.querySelector(".search-input");
@@ -24,18 +34,24 @@ export async function searchBar() {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            type User = {
-                id: string,
-                userName: string
-            }
             const users: User[] = await res.json();
             if (users.length === 0) return ;
             results.classList.remove("hidden")
             users.forEach((user) => {
                 const item = document.createElement("div");
-                item.textContent = user.userName;
-                item.className = "px-3 py-2 text-sm text-white hover:bg-primary/20 cursor-pointer";
+                const img = document.createElement("img");
+                const content = document.createElement("div");
+                content.textContent = user.userName;
+                content.className = "font-roboto px-3 py-2 text-sm text-white cursor-pointer";
+                img.setAttribute("src", user.profileImage)
+                img.className = "w-[35px] h-[35px] object-cover rounded-full border border-primary/50 ml-4";
+                item.className = "flex items-center h-[40px] hover:bg-primary/20"
+                item.appendChild(img)
+                item.appendChild(content)
                 results.appendChild(item)
+                item.addEventListener("click", () => {
+                    viewFriendProfile(user)
+                })
             });
         }
         catch(err) {
