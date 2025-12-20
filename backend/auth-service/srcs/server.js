@@ -13,6 +13,7 @@ import avatarRoutes from "./routes/avatar.js";
 import { authenticate } from "./plugins/auth.js";
 import userRoutes from "./routes/settingsRequests.js";
 import fastifyMultipart from "@fastify/multipart";
+import { searchRoute } from "./routes/searchBar.js";
 
 
 const fastify = Fastify({ logger: true });
@@ -27,7 +28,7 @@ fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET });
 await fastify.register(fastifyMultipart, {
     attachFieldsToBody: false,
     limits: {
-        fileSize: 10 * 1024 * 1024, // 10MB
+        fileSize: 10 * 1024 * 1024,
     },
 });
 
@@ -42,6 +43,7 @@ twoFactorRoutes(fastify)
 forgetPasswordRoute(fastify);
 resetPasswordRoutes(fastify);
 userRoutes(fastify);
+searchRoute(fastify);
 // Start server
 const start = async () => {
   try {

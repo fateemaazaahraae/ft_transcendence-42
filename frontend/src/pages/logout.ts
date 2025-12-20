@@ -34,6 +34,7 @@ export function initLogout(){
     localStorage.removeItem("token");
     localStorage.removeItem("lang");
     localStorage.clear();
+    // setLang(lang);
     navigate("/");
   });
 }

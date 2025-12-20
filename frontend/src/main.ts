@@ -24,6 +24,7 @@ import { initLogout } from "./pages/logout.ts";
 import Chat, {ChatEventListener } from "./pages/Chat.ts";
 import { showAlert } from "./utils/alert.ts";
 import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
+import { searchBar } from "./pages/searchBar.ts";
 // import { viewFriend } from "./pages/viewFriend.ts";
 
 const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<void> }> = {
@@ -58,20 +59,18 @@ async function render(path: string) {
 
     requestAnimationFrame(() => window.scrollTo(0, 0));
     sideBarListeners();
-
     // run setup if exists
-    if (page.setUp) await page.setUp();
-
+    if (page.setUp)
+        await page.setUp();
     const lang = await getSavedLang();
     // const lang = localStorage.getItem(:);
     translatePage(lang);
-
     const currentLangBtn = document.getElementById("currentLang");
     if (currentLangBtn)
         currentLangBtn.innerHTML = `<i class="fa-solid fa-chevron-down text-xs"></i> ${lang.toUpperCase()}`;
-
     renderNotifications(notifications);
     initLogout();
+    searchBar();
 }
 
 

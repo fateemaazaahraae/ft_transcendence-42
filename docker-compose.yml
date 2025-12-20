@@ -12,9 +12,10 @@ services:
     depends_on:
       - auth-service
       - profile-service
+      - relationship-service
     networks:
       - ft_transcendence
-    expose:
+    ports:
       - "5173:5173"
   
   auth-service:
@@ -25,7 +26,7 @@ services:
     image: auth-service
     container_name: auth-service
     env_file:
-      - ./backend/auth-service/.env
+      - ./backend/.env
     volumes:
       - ./backend/auth-service:/app
       - /app/node_modules
@@ -58,12 +59,29 @@ services:
     image: profile-service
     container_name: profile-service
     env_file:
-      - ./backend/profile-service/.env
+      - ./backend/.env
     volumes:
       - ./backend/profile-service:/app
       - /app/node_modules
     ports:
       - "3001:3001"
+    networks:
+      - ft_transcendence
+  
+  relationship-service:
+    platform: linux/amd64
+    build:
+      context: ./backend/relationship-service
+      dockerfile: Dockerfile
+    image: relationship-service
+    container_name: relationship-service
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/relationship-service:/app
+      - /app/node_modules
+    ports:
+      - "3002:3002"
     networks:
       - ft_transcendence
 
@@ -79,6 +97,7 @@ services:
       - frontend
       - auth-service
       - profile-service
+      - relationship-service
       # - chat-service
     volumes:
       - uploads:/app/uploads
