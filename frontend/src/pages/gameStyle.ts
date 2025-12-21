@@ -33,8 +33,8 @@ export default function GameStyle() {
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass text-primary absolute top-1/2 -translate-y-1/2 left-3"></i>
-        <input type="text" placeholder="Search for friends.." class="search-input font-roboto px-10 py-2 rounded-full text-[12px] focus:outline-none bg-black border-[1px] border-primary/50">
-        <div class="search-results absolute top-full left-0 w-full bg-black border border-primary/50 rounded-xl mt-1 hidden"></div>
+        <input type="text" placeholder="Search for friends.." class="search-input font-roboto px-10 py-2 rounded-full text-[12px] focus:outline-none bg-black border-[2px] border-primary/70">
+        <div class="search-results absolute top-full left-0 w-full h-auto backdrop-blur-md mt-1 hidden"></div>
       </div>
       <div class="arrow relative group">
         <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">

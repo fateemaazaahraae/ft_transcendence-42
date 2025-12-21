@@ -45,13 +45,13 @@ export async function searchBar() {
                 content.className = "font-roboto px-3 py-2 text-sm text-white cursor-pointer";
                 img.setAttribute("src", user.profileImage)
                 img.className = "w-[35px] h-[35px] object-cover rounded-full border border-primary/50 ml-4";
-                item.className = "flex items-center h-[40px] hover:bg-primary/20"
+                item.className = "flex items-center h-[40px] hover:bg-primary/20 mb-2 rounded-xl"
                 item.appendChild(img)
                 item.appendChild(content)
                 results.appendChild(item)
-                item.addEventListener("click", () => {
-                    viewFriendProfile(user)
-                })
+                // item.addEventListener("click", () => {
+                //     viewFriendProfile(user)
+                // })
             });
         }
         catch(err) {

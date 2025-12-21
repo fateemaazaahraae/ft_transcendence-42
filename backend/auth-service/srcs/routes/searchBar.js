@@ -11,7 +11,7 @@ export async function searchRoute(fastify) {
        FROM users
        WHERE userName LIKE ? AND id != ?
        ORDER BY userName
-       LIMIT 4`,
+       LIMIT 3`,
       [`${search}%`, req.user.id]
     );
 
