@@ -349,9 +349,9 @@ export function AiGameEventListener() {
         // move paddles
         if (keys['w'] && paddleLeftY > 0) paddleLeftY = Math.max(0, paddleLeftY - PaddleSpeed * dt); // kandrbo PaddleSpeed li hia 400 f dt bach twli mn second l pixel
         if (keys['s'] && paddleLeftY + paddleHeight < height) paddleLeftY = Math.min(height - paddleHeight, paddleLeftY + PaddleSpeed * dt);
+        if (keys['arrowup'] && paddleLeftY > 0) paddleLeftY = Math.max(0, paddleLeftY - PaddleSpeed * dt);
+        if (keys['arrowdown'] && paddleLeftY + paddleHeight < height) paddleLeftY = Math.min(height - paddleHeight, paddleLeftY + PaddleSpeed * dt);
         paddleRightY = Math.max(0, Math.min(height - paddleHeight, paddleRightY));
-        // if (keys['arrowup'] && paddleRightY > 0) paddleRightY = Math.max(0, paddleRightY - PaddleSpeed * dt);
-        // if (keys['arrowdown'] && paddleRightY + paddleHeight < height) paddleRightY = Math.min(height - paddleHeight, paddleRightY + PaddleSpeed * dt);
 
         updateAI(dt);
 
