@@ -85,7 +85,6 @@ function sideBarListeners() {
 }
 
 export async function navigate(path: string) {
-    console.log("rah 3eyto liya");
     window.history.pushState({}, "", path);
     await render(path);
 }

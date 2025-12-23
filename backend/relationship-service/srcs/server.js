@@ -1,9 +1,16 @@
 import "./config/env.js"
 import Fastify from "fastify"
+import fastifyCors from "@fastify/cors";
 import { authPlugin } from "./plugins/auth.js";
 import { relationRoutes } from "./routes/relation.js";
 
 const fastify = Fastify({ logger: true });
+await fastify.register(fastifyCors, {
+  origin: '*',
+  credentials: true,
+  methods: ['GET','PUT','POST','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+});
 
 await fastify.register(authPlugin);
 // const db = await openDb();

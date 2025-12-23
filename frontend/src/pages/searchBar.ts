@@ -49,9 +49,9 @@ export async function searchBar() {
                 item.appendChild(img)
                 item.appendChild(content)
                 results.appendChild(item)
-                // item.addEventListener("click", () => {
-                //     viewFriendProfile(user)
-                // })
+                item.addEventListener("click", () => {
+                    viewFriendProfile(user)
+                })
             });
         }
         catch(err) {

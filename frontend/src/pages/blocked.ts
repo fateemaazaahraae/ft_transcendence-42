@@ -1,20 +1,51 @@
 import { getSavedLang } from "../i18n/index.ts";
 import { navigate } from "../main.ts";
+import { showAlert } from "../utils/alert.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 
-let blockedList = [
-  {name: "smith", img: "/blue-boy.svg"},
-  {name: "noah", img: "/white-boy.svg"},
-  {name: "salaoui", img: "/purple-girl.svg"},
-  {name: "oliver", img: "/white-boy2.svg"},
-  {name: "fateemaazaahrae", img: "/green-girl.svg"},
-  {name: "knacer", img: "/dark-girl.svg"},
-];
+interface Blocked {
+  blocked_user_id: string;
+  userName: string;
+  profileImage: string;
+}
+
+async function fetchMoreInfo(data: Blocked[]): Promise<Blocked[]> {
+  return Promise.all(
+    data.map(async (blocked) => {
+      const res = await fetch(`http://localhost:3000/users/${blocked.blocked_user_id}`);
+      if (!res.ok) return blocked;
+
+      const user = await res.json();
+      return {
+        ...blocked,
+        userName: user.userName,
+        profileImage: user.profileImage
+      };
+    })
+  );
+}
+
+async function fetchBlocked(): Promise<Blocked[]> {
+  const token = localStorage.getItem("token");
+  if (!token) return [];
+  const res = await fetch(`http://localhost:3002/blocked`, {
+    headers: { Authorization: `Bearer ${token}`},
+  })
+  const data: Blocked[] = await res.json();
+  return await fetchMoreInfo(data);
+}
 
 export default async function Blocked() {
   if (!requiredAuth())
     return "";
   const currentLang = (await getSavedLang()).toUpperCase();
+  const blocked: Blocked[] = await fetchBlocked();
+  const emptyBlockedHTML = `
+    <div class="w-full flex flex-col items-center justify-center py-20 text-primary/80">
+      <i class="fa-solid fa-ban text-6xl mb-6"></i>
+      <h2 class="text-2xl font-bold">No Blocked users yet</h2>
+    </div>
+  `
   return `
   <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
 
@@ -41,7 +72,7 @@ export default async function Blocked() {
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass text-primary absolute top-1/2 -translate-y-1/2 left-3"></i>
         <input type="text" placeholder="Search for friends.." class="search-input font-roboto px-10 py-2 rounded-full text-[12px] focus:outline-none bg-black border-[2px] border-primary/70">
-        <div class="search-results absolute top-full left-0 w-full h-auto backdrop-blur-md mt-1 hidden"></div>
+        <div class="search-results absolute top-full left-0 w-full h-auto backdrop-blur-md mt-1 hidden z-[9000] rounded-xl"></div>
       </div>
       <div class="arrow relative group">
         <button id="currentLang" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
@@ -64,14 +95,16 @@ export default async function Blocked() {
 
     <div class="max-w-[1000px] mx-auto px-4 md:px-8 md:pb-20 pb-20">
       <div class="grid grid-cols-1 gap-8 md:gap-6 md:overflow-y-auto md:flex md:py-8 md:overflow-x-auto md:scrollbar-thin md:scrollbar-thumb-primary/60 md:scrollbar-track-transparent">
-        ${blockedList
-          .map(
+        ${blocked.length === 0
+          ? emptyBlockedHTML
+          : blocked
+            .map(
             (blocked) => `
           <div class="flex-none w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative snap-center">
-            <img src="${blocked.img}" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]" />
-            <div class="font-roboto font-bold truncate w-[180px] text-center">${blocked.name}</div>
+            <img src="${blocked.profileImage}" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]" />
+            <div class="font-roboto font-bold truncate w-[180px] text-center">${blocked.userName}</div>
             <div class="flex flex-row items-center gap-6 mb-6">
-              <button data-i18n="unblock" class="unblock-btn w-[100px] md:w-[110px] h-[35px] bg-primary/50 rounded-2xl font-roboto font-bold text-[14px] md:text-[15px] hover:bg-greenAdd transition-all duration-400 ease-in-out" data-name="${blocked.name}"></button>
+              <button data-i18n="unblock" class="unblock-btn w-[100px] md:w-[110px] h-[35px] bg-primary/50 rounded-2xl font-roboto font-bold text-[14px] md:text-[15px] hover:bg-greenAdd transition-all duration-400 ease-in-out" data-id="${blocked.blocked_user_id}"></button>
             </div>
           </div>`
           )
@@ -97,9 +130,23 @@ export function BlockedEventListener() {
 
   const unblockFriends = document.querySelectorAll(".unblock-btn");
   unblockFriends.forEach((button) => {
-    button.addEventListener("click", () => {
-      const name = button.getAttribute("data-name");
-      blockedList = blockedList.filter((block) => block.name !== name);
+    button.addEventListener("click", async() => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const blockedId = button.getAttribute("data-id");
+      const res = await fetch(`http://localhost:3002/unblock`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ blockedId })
+      });
+      if (!res.ok) {
+        showAlert("Something bad happened when unblocking user")
+        return;
+      }
+      showAlert("User Unblocked successfully", "success");
       navigate("/blocked");
     })
   })

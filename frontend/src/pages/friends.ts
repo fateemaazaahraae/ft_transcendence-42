@@ -1,20 +1,57 @@
 import { getSavedLang } from "../i18n/index.ts";
 import { navigate } from "../main.ts";
+import { showAlert } from "../utils/alert.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
+import Invitations, { Invitaions } from "./invitaions.ts";
+interface Friend {
+  friend_id: string;
+  userName: string;
+  profileImage: string;
+}
 
-let friendsList = [
-  { name: "smith", color: "bg-greenAdd", img: "/blue-boy.svg" },
-  { name: "noah", color: "bg-redRemove", img: "/white-boy.svg" },
-  { name: "salaoui", color: "bg-greenAdd", img: "/purple-girl.svg" },
-  { name: "oliver", color: "bg-redRemove", img: "/white-boy2.svg" },
-  { name: "fateemaazaahrae", color: "bg-greenAdd", img: "/green-girl.svg" },
-  { name: "knacer", color: "bg-greenAdd", img: "/dark-girl.svg" },
-];
+async function fetchMoreInfo(data: Friend[]): Promise<Friend[]> {
+  return Promise.all(
+    data.map(async (friend) => {
+      const res = await fetch(`http://localhost:3000/users/${friend.friend_id}`);
+      if (!res.ok) return friend;
+
+      const user = await res.json();
+      return {
+        ...friend,
+        userName: user.userName,
+        profileImage: user.profileImage
+      };
+    })
+  );
+}
+
+async function fetchFriends(): Promise<Friend[]> {
+  const token = localStorage.getItem("token");
+  if (!token) return [];
+  const res = await fetch(`http://localhost:3002/friends`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok)
+    return []
+  const data: Friend[] = await res.json()
+  return await fetchMoreInfo(data)
+}
 
 export default async function Friends() {
   if (!requiredAuth())
     return "";
   const currentLang = (await getSavedLang()).toUpperCase();
+  const friends: Friend[] = await fetchFriends();
+  const emptyFriendsHTML = `
+    <div class="w-full flex flex-col items-center justify-center py-20 text-primary/80">
+      <i class="fa-solid fa-user-group text-6xl mb-6"></i>
+      <h2 class="text-2xl font-bold mb-2">No friends yet</h2>
+      <p class="text-sm">
+        Start adding friends to see them here
+      </p>
+    </div>
+  `;
+
   return `
   <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
 
@@ -41,7 +78,7 @@ export default async function Friends() {
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass text-primary absolute top-1/2 -translate-y-1/2 left-3"></i>
         <input type="text" placeholder="Search for friends.." class="search-input font-roboto px-10 py-2 rounded-full text-[12px] focus:outline-none bg-black border-[2px] border-primary/70">
-        <div class="search-results absolute top-full left-0 w-full h-auto backdrop-blur-md mt-1 hidden"></div>
+        <div class="search-results absolute top-full left-0 w-full h-auto backdrop-blur-md mt-1 hidden z-[9000] rounded-xl"></div>
       </div>
       <div class="arrow relative group">
         <button id="currentLang" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
@@ -64,20 +101,29 @@ export default async function Friends() {
     <div class="max-w-[1000px] mx-auto px-4 md:px-8 pb-20">
       <div class="grid grid-cols-1 gap-8 md:gap-6 overflow-y-auto md:flex md:py-8 md:overflow-x-auto md:scrollbar-thin md:scrollbar-thumb-primary/60 md:scrollbar-track-transparent">
 
-        ${friendsList
-          .map(
-            (friend) => `
-          <div class="flex-none w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative snap-center">
-            <div class="absolute top-[15px] left-[15px] w-[10px] h-[10px] ${friend.color} rounded-full"></div>
-            <img src="${friend.img}" alt="friend-avatar" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]" />
-            <div class="font-roboto font-bold truncate w-[180px] text-center">${friend.name}</div>
-            <div class="flex flex-row items-center gap-6 mb-6">
-              <i class="fa-solid fa-comment text-[30px] md:text-[35px] text-primary/50 hover:text-primary transition-all duration-400 ease-in-out"></i>
-              <button data-i18n="remove" class="remove-btn w-[100px] md:w-[110px] h-[35px] bg-primary/50 rounded-2xl font-roboto font-bold text-[14px] md:text-[15px] hover:bg-redRemove transition-all duration-400 ease-in-out" data-name="${friend.name}"></button>
-            </div>
-          </div>`
-          )
-          .join("")}
+        ${
+          friends.length === 0
+            ? emptyFriendsHTML
+            : friends
+                .map(
+                  (friend: Friend) => `
+                  <div class="flex-none w-[220px] h-[300px] bg-primary/40 rounded-3xl flex flex-col items-center justify-between relative snap-center">
+                    <img src="${friend.profileImage}" class="w-[130px] h-[130px] rounded-full border border-primary/50 object-cover mt-[40px]" />
+                    <div class="font-roboto font-bold truncate w-[180px] text-center">
+                      ${friend.userName}
+                    </div>
+                    <div class="flex gap-6 mb-6">
+                      <i class="fa-solid fa-comment text-[30px] text-primary/50 hover:text-primary"></i>
+                      <button data-i18n="remove"
+                        class="remove-btn w-[100px] h-[35px] bg-primary/50 rounded-2xl font-bold hover:bg-redRemove" data-id="${friend.friend_id}">
+                      </button>
+                    </div>
+                  </div>
+                `
+                )
+                .join("")
+        }
+
       </div>
     </div>
   </div>
@@ -100,10 +146,19 @@ export function FriendsEventListener() {
 
   const removeFriends = document.querySelectorAll(".remove-btn");
   removeFriends.forEach((button) => {
-    button.addEventListener("click", () => {
-      console.log("Remove Friend Clicked");
-      const name = button.getAttribute("data-name");
-      friendsList = friendsList.filter((friend) => friend.name !== name);
+    button.addEventListener("click", async() => {
+      const token = localStorage.getItem("token")
+      if (!token) return;
+      const friend_id = button.getAttribute("data-id");
+      const res = await fetch(`http://localhost:3002/friends/remove`, {
+        method: "POST",
+        headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        body: JSON.stringify({ friend_id })
+      });
+      showAlert("Friend removed successfully", "success")
       navigate("/friends");
     });
   });
