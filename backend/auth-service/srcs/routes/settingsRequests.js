@@ -17,7 +17,7 @@ export default function userRoutes(fastify) {
             [id]
         );
         if (!user)
-            return rep.status(404).send({ message: "User not found" });
+            return rep.status(404).send({ code: "USER_NOT_FOUND" });
         return user;
     });
 
@@ -28,12 +28,12 @@ export default function userRoutes(fastify) {
         const db = await openDb();
         const exists = await db.get("SELECT id FROM users WHERE id = ?", [id]);
         if (!exists)
-            return rep.status(404).send({ message: "User not found" });
+            return rep.status(404).send({ code: "USER_NOT_FOUND" });
         await db.run(
             `UPDATE users SET firstName = ?, lastName = ?, userName = ?, email = ? WHERE id = ?`,
             [firstName, lastName, userName, email, id]
         );
-        return { message: "User updated successfully" };
+        return rep.send({ code: "PROFILE_UPDATED_SUCCESS" });
     })
 
     // ---- UPDATE PASSWORD ----
@@ -44,16 +44,16 @@ export default function userRoutes(fastify) {
         const db = await openDb();
         const exists = await db.get("SELECT id, passwordHash FROM users WHERE id = ?", [id]);
         if (!exists)
-            return rep.status(404).send({ message: "User not found" });
+            return rep.status(404).send({ code: "USER_NOT_FOUND" });
         const isValid = await bcrypt.compare(currentPassword, exists.passwordHash);
         if (!isValid)
-            return rep.status(401).send({ message: "Password Incorrect" });
+            return rep.status(401).send({ code: "PASSWORD_INCORRECT" });
         const newPass = await bcrypt.hash(newPassword, 10);
         await db.run(
             `UPDATE users SET passwordHash = ? WHERE id = ?`,
             [newPass, id]
         );
-        return { message: "Password updated successfully" };
+        return { code: "PASSWORD_UPDATED" };
     });
 
     // ---- UPDATE THE 2FA
@@ -62,14 +62,14 @@ export default function userRoutes(fastify) {
         const db = await openDb();
         const exists = await db.get("SELECT id FROM users WHERE id = ?", [id]);
         if (!exists)
-            return rep.status(404).send({ message: "User not found" });
+            return rep.status(404).send({ code: "USER_NOT_FOUND" });
         const old2FA = await db.get("SELECT isTwoFactorEnabled FROM users WHERE id = ?", [id])
         const new2FA = !old2FA.isTwoFactorEnabled;
         await db.run(
             `UPDATE users SET isTwoFactorEnabled = ? WHERE id = ?`,
             [new2FA, id]
         )
-        return { message: "2FA updated", enabled: new2FA }
+        return rep.send({ code: "TWOFA_UPDATED", enabled: new2FA });
     });
 
     // ---- CHANGE PROFILE IMAGE (avatar) ----
@@ -77,10 +77,10 @@ export default function userRoutes(fastify) {
         const { id } = req.params;
         const { profileImage } = req.body;
         if (!profileImage)
-            return rep.status(400).send({ error: "Profile image is required" });
+            return rep.status(400).send({ code: "PROFILE_REQUIRED" });
         await updateAvatar(id, profileImage);
         return rep.status(200).send({
-            message: "Profile image saved successfully",
+            code: "AVATAR_UPDATED_SUCCESS",
             profileImage: profileImage
         });
     });
@@ -90,7 +90,7 @@ export default function userRoutes(fastify) {
         try {
             const file = await req.file();
             if (!file)
-                return rep.status(400).send({ error: "No file uploaded" });
+                return rep.status(400).send({ code: "PROFILE_REQUIRED" });
             const db = await openDb();
             const fileName = Date.now() + "-" + file.filename;
             const fullPath = "./uploads/" + fileName;
@@ -108,5 +108,33 @@ export default function userRoutes(fastify) {
             console.error(err);
             return rep.status(500).send({ error: "Upload failed", details: err.message });
         }
+    });
+
+    // ---- GET LANGUAGE ----
+    fastify.get("/users/:id/language", async (req, rep) => {
+        const { id } = req.params;
+        const db = await openDb();
+        const user = await db.get("SELECT language FROM users WHERE id = ?",
+            [id]
+        );
+        if (!user)
+            return rep.status(404).send({ code: "USER_NOT_FOUND" });
+        return {
+            id,
+            lang: user.language
+        };
+    });
+
+    // ---- UPDATE LANGUAGE ----
+    fastify.put("/users/:id/language", async (req, rep) => {
+        const { id } = req.params;
+        const { lang } = req.body;
+        const db = await openDb();
+        await db.run(
+            "UPDATE users SET language = ? WHERE id = ?",
+            [lang, id]
+        );
+        console.log("\n\n\n" + lang + "\n\n\n")
+        return rep.status(200).send({ code: "LANG_UPDATED", lang });
     });
 }

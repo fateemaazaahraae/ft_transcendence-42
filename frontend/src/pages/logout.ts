@@ -1,4 +1,6 @@
+import { getSavedLang, setLang } from "../i18n/index.ts";
 import { navigate } from "../main.ts";
+import { showAlert } from "../utils/alert.ts";
 export function initLogout(){
     const logoutIcon = document.getElementById("logout-icon");
     const logout = document.getElementById("logout");
@@ -25,11 +27,12 @@ export function initLogout(){
 
   cancel.addEventListener("click", hideModal);
   overlay.addEventListener("click", hideModal);
-  confirm?.addEventListener("click", () => {
+  confirm?.addEventListener("click", async () => {
     hideModal();
 
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
+    localStorage.removeItem("lang");
     localStorage.clear();
     navigate("/");
   });

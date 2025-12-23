@@ -85,92 +85,7 @@ export default function Register() {
 `;
 }
 
-// export function RegisterEventListener() {
-//   const login = document.getElementById("login-link");
-//   login?.addEventListener("click", (e) => {
-//     e.preventDefault(); 
-//     navigate("/login");
-//   });
-//   const form = document.getElementById("registerForm") as HTMLFormElement | null;
-//   if (!form) {
-//     console.error("Register form not found in the DOM");
-//     return;
-//   }
-// form.addEventListener("submit", async (e) => {
-//   e.preventDefault();
-//   const firstName = (document.getElementById("firstName") as HTMLInputElement).value;
-//   const lastName = (document.getElementById("lastName") as HTMLInputElement).value;
-//   const userName = (document.getElementById("userName") as HTMLInputElement).value;
-//   const email = (document.getElementById("email") as HTMLInputElement).value;
-//   const password = (document.getElementById("password") as HTMLInputElement).value;
-//   const confirmPassword = (document.getElementById("confirmPassword") as HTMLInputElement).value;
-  
-//   let isValid = true;
 
-//   (document.getElementById("fnameErr") as HTMLInputElement).textContent = "";
-//   (document.getElementById("lnameErr") as HTMLInputElement).textContent = "";
-//   (document.getElementById("unameErr") as HTMLInputElement).textContent = "";
-//   (document.getElementById("emailErr") as HTMLInputElement).textContent = "";
-//   (document.getElementById("passwordErr") as HTMLInputElement).textContent = "";
-
-//   const nameRegx = /^[a-zA-Z]{3-30}$/;
-//   if (!nameRegx.test(firstName))
-//   {
-//     (document.getElementById("fnameErr") as HTMLInputElement).textContent = "First Name must be 3-30 letters.";
-//     isValid = false;
-//   }
-//   if (!nameRegx.test(lastName))
-//   {
-//     (document.getElementById("lnameErr") as HTMLInputElement).textContent = "Last Name must be 3-30 letters.";
-//     isValid = false;
-//   }
-//   const userRegx = /^[a-zA-Z0-9_]{3-15}$/;
-//   if (!userRegx.test(userName))
-//   {
-//     (document.getElementById("unameErr") as HTMLInputElement).textContent = "User Name must be 3-15 characters (letters, numbers, underscores).";
-//     isValid = false;
-//   }
-//   const emailRegex = /^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})$/;
-//   if (!emailRegex.test(email))
-//   {
-//     (document.getElementById("emailErr") as HTMLInputElement).textContent = "Invalid email address.";
-//     isValid = false;
-//   }
-//   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-//   if (!passwordRegex.test(password))
-//   {
-//     (document.getElementById("passwordErr") as HTMLInputElement).textContent = "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.";
-//     isValid = false;
-//   }
-
-
-//   try {
-//     const res = await fetch("http://localhost:3000/register", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({ firstName, lastName, userName, email, password, confirmPassword }),
-//     });
-//     const data = await res.json();
-
-//     if (!res.ok) {
-//       showAlert(data.error || "Registration failed");
-//       return;
-//     }
-
-//     // ✅ Store JWT immediately
-//     localStorage.setItem("token", data.token);
-//     localStorage.setItem("userId", data.user.id);
-//     if(isValid)
-//     {
-//       showAlert("Registration successful", "success");
-//       navigate("/ChoseAvatar");
-//     }
-//   } catch (err) {
-//     console.error(err);
-//     showAlert("Network error. Please try again.");
-//   }
-// });
-// }
 export function RegisterEventListener() {
   const login = document.getElementById("login-link");
   login?.addEventListener("click", (e) => {
@@ -188,7 +103,7 @@ export function RegisterEventListener() {
   const nameRegex = /^[a-zA-Z]{3,30}$/;
   const userRegex = /^[a-zA-Z0-9_]{3,15}$/;
   const emailRegex = /^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})$/;
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_])[A-Za-z\d@$!%*#?&_]{8,}$/;
 
   /*HELPERS*/
   function setError(id: string, message: string) {
@@ -293,18 +208,18 @@ export function RegisterEventListener() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.error || "Registration failed");
+        showAlert(data.error || "Registration failed");
         return;
       }
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data.user.id);
 
-      alert("Registration successful");
+      showAlert("Registration successful", "success");
       navigate("/ChoseAvatar");
     } catch (err) {
       console.error(err);
-      alert("Network error. Please try again.");
+      showAlert("Network error. Please try again.");
     }
   });
 }

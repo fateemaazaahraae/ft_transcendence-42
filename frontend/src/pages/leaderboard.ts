@@ -1,6 +1,7 @@
+import { getSavedLang } from "../i18n";
 import { requiredAuth } from "../utils/authGuard";
 
-export default function Leaderboard() {
+export default async function Leaderboard() {
   if (!requiredAuth())
     return "";
   const topThree = [
@@ -8,6 +9,8 @@ export default function Leaderboard() {
     { rank: "2", name: "Kayla", img: "/pink-girl.svg", score: "6.258" },
     { rank: "3", name: "John", img: "/white-boy.svg", score: "6.158" }
   ];
+
+  const currentLang = (await getSavedLang()).toUpperCase();
   return `
   <div class="min-h-screen text-white font-roboto px-6 md:px-20 py-10 relative pb-[90px] overflow-y-auto">
 
@@ -32,16 +35,16 @@ export default function Leaderboard() {
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
+        <button id="currentLang" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
+          ${currentLang}
         </button>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
       <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
-    <h1 id="leader" class="text-4xl md:text-5xl font-glitch text-center mt-20 mb-14" >LEADERBOARD</h1>
+    <h1 id="leader" data-i18n="leaderboard" class="text-4xl md:text-5xl font-glitch text-center mt-20 mb-14" ></h1>
 
     <div class="flex flex-col items-center justify-center relative">
 

@@ -58,7 +58,7 @@ export default function LocalGameStyle() {
             <button id=play class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
         </div>
         <div class="flex flex-col gap-2 md:gap-3 lg:gap-6 xl:gap-3 items-center w-[350px] h-[300px] md:w-[450px] md:h-[310px] lg:w-[500px] lg:h-[400px] xl:w-[600px] xl:h-[430px] bg-primary/60 rounded-3xl ">
-            <h1 class="mt-[5%] font-glitch text-center text-2xl md:text-3xl lg:text-4xl"> One-on-One</h1>
+            <h1 class="mt-[5%] font-glitch text-center text-2xl md:text-3xl lg:text-4xl"> One-on-Ai</h1>
             <div class="flex justify-center gap-3">
                 <i class="object-cover fa-solid fa-circle-user text-[100px] md:text-[100px] lg:text-[120px] xl:text-[150px] mt-[25%] text-primary/90"></i>
                 <img src="/public/vs.svg" class="w-[90px] md:w-[100px] lg:w-[120px]" />

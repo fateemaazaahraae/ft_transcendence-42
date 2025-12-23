@@ -62,7 +62,14 @@ async function render(path: string) {
     // run setup if exists
     if (page.setUp) await page.setUp();
 
-    translatePage(getSavedLang());
+    const lang = await getSavedLang();
+    // const lang = localStorage.getItem(:);
+    translatePage(lang);
+
+    const currentLangBtn = document.getElementById("currentLang");
+    if (currentLangBtn)
+        currentLangBtn.innerHTML = `<i class="fa-solid fa-chevron-down text-xs"></i> ${lang.toUpperCase()}`;
+
     renderNotifications(notifications);
     initLogout();
 }
@@ -89,10 +96,11 @@ window.addEventListener("popstate", async() => {
 })
 
 window.addEventListener("DOMContentLoaded", async() => {
+    const lang = await getSavedLang();
+    translatePage(lang);
     await render(window.location.pathname);
     notificationBarListeners();
     LanguagesMenuEventListener();
-    translatePage(getSavedLang());
     // viewFriend();
 });
 
