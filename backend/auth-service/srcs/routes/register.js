@@ -12,6 +12,8 @@ export function registerRoutes(fastify) {
       const confirmPassword = body.confirmPassword || "";
       if (!firstName || !lastName || !userName || !email || !password || !confirmPassword)
         return reply.code(400).send({error: "All fields are required"});
+      if(firstName.length < 3 || lastName.length < 3 || userName.length < 3)
+        return reply.code(400).send({error: "Please enter at least 3 characters"});
       const userNameExists = await findUserByUserName(userName);
       if(userNameExists)
         return reply.code(409).send({error: "UserName already taken"});
