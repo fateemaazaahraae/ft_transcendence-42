@@ -15,22 +15,35 @@ import {
 import { renderSingleMessage } from "./chatHelpers.ts";
 
 export function ChatEventListener() {
-    const API_BASE_URL: string = 'http://localhost:4000/api';
-    const WS_URL: string = 'ws://localhost:8443/ws';
-    const CURRENT_USER_ID: number = 1;
+    const ORIGIN = window.location.origin; 
+    const API_BASE_URL: string = `${ORIGIN}/api`;
+    const WS_URL: string = `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/ws`;
+    const CURRENT_USER_ID: string | number | null = (() => {
+        const token = localStorage.getItem('token');
+        if (!token) return null;
+        const parts = token.split('.');
+        if (parts.length < 2) return null;
+        try {
+            const payload = JSON.parse(atob(parts[1]));
+            return payload.id || null;
+        } catch {
+            return null;
+        }
+    })();
 
-    let ACTIVE_CHAT_CONTACT_ID: number | null = null;
+    let ACTIVE_CHAT_CONTACT_ID: string | number | null = null;
     let CURRENT_USER_AVATAR: string = '../../public/green-girl.svg';
 
     //connect to socket.io
-    initializeSocket(CURRENT_USER_ID, 'http://localhost:4000');
+    if (CURRENT_USER_ID == null) {
+        console.warn('No user id found in token; chat not initialized');
+        return;
+    }
+
+    initializeSocket(CURRENT_USER_ID, ORIGIN);
 
     // restore active chat 
-    const savedContactId = localStorage.getItem('activeContactId');
-    const savedContactUsername = localStorage.getItem('activeContactUsername');
-    const savedContactAvatar = localStorage.getItem('activeContactAvatar');
-    const savedContactStatus = localStorage.getItem('activeContactStatus');
-    
+
 
     // DOM 
     const menuToggle = document.getElementById("menuToggle");
@@ -106,7 +119,7 @@ export function ChatEventListener() {
     });
 
    
-    const handleContactSelect = (contactId: number, username: string, avatar: string, status: string) => {
+    const handleContactSelect = (contactId: string | number, username: string, avatar: string, status: string) => {
         ACTIVE_CHAT_CONTACT_ID = contactId;
         setChatUIState(true);
 
@@ -153,7 +166,7 @@ export function ChatEventListener() {
             const userId1 = String(CURRENT_USER_ID);
             const userId2 = String(contactId);
             
-            //fetch from api
+            //fetch 
             fetch(`${API_BASE_URL}/chats/history/${userId1}/${userId2}`)
                 .then(response => response.json())
                 .then(data => {
@@ -161,8 +174,9 @@ export function ChatEventListener() {
                     console.log("fetched messages:", messages);
                     
                     messages.forEach((msg: any) => {
+                        const friendAvatar= avatar;
                         const isSender = String(msg.sender_id) === String(userId1);
-                        renderSingleMessage(msg, isSender, messagePanel);
+                        renderSingleMessage(msg, isSender, messagePanel,CURRENT_USER_AVATAR,friendAvatar);
                     });
                 })
                 .catch(error => {
@@ -247,23 +261,25 @@ export function ChatEventListener() {
 
    
     if (contactsListDiv) {
+     if (contactsListDiv) {
+         console.log('[chat-event] Initial load: Fetching contacts for user', CURRENT_USER_ID);
         fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
+             console.log('[chat-event] Contacts loaded callback');
             attachContactClickListeners(contactsListDiv, handleContactSelect);
-            
-            // 
-            //restore active chat if exists
-            if (savedContactId && savedContactUsername) {
-                                
-                const contactId = parseInt(savedContactId);
-                handleContactSelect(
-                    contactId, 
-                    savedContactUsername, 
-                    savedContactAvatar || '../../public/default.svg', 
-                    savedContactStatus || 'offline'
-                );
-            }
+            // intentionally not auto-selecting a contact; user picks one
         });
+     } else {
+         console.error('[chat-event] CRITICAL: Cannot fetch contacts - contactsListDiv is null');
     }
+       console.log('[chat-event] Initial load: Fetching contacts for user', CURRENT_USER_ID);
+       fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
+           console.log('[chat-event] Contacts loaded callback');
+           attachContactClickListeners(contactsListDiv, handleContactSelect);
+           // intentionally not auto-selecting a contact; user picks one
+       });
+   } else {
+       console.error('[chat-event] CRITICAL: Cannot fetch contacts - contactsListDiv is null');
+   }
 
 
 
@@ -289,7 +305,8 @@ export function ChatEventListener() {
             // render sent message 
             if(res?.status === "ok" && res?.message && messagesPanel) {
                 console.log("rendering sent message:", res.message);
-                renderSingleMessage(res.message, true, messagesPanel);
+                const friendAvatar = localStorage.getItem('activeContactAvatar') || '../../public/default.svg';
+                renderSingleMessage(res.message, true, messagesPanel, CURRENT_USER_AVATAR, friendAvatar);
             }
         });
         
@@ -308,7 +325,8 @@ export function ChatEventListener() {
             String(msg.receiver_id) === String(ACTIVE_CHAT_CONTACT_ID);
 
         if (isForActiveChat && messagesPanel) {
-            renderSingleMessage(msg, String(msg.sender_id) === String(CURRENT_USER_ID), messagesPanel);
+             const friendAvatar = localStorage.getItem('activeContactAvatar') || '../../public/default.svg';
+            renderSingleMessage(msg, String(msg.sender_id) === String(CURRENT_USER_ID), messagesPanel, CURRENT_USER_AVATAR, friendAvatar);
         }
     });
 

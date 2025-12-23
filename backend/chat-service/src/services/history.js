@@ -3,9 +3,10 @@ import Messages from "../models/messages.js";
 import Blocked from "../models/blocked.js";
 
 export default {
-  sendMessage: (from, to, content) => {
-    // checki if blocked
-    if (Blocked.isBlocked(to, from)) {
+  sendMessage: async (from, to, content, authHeader = '') => {
+    // check if blocked (relationship service call is async)
+    const blocked = await Blocked.isBlocked(authHeader, to, from);
+    if (blocked) {
       const err = new Error("blocked");
       err.code = "BLOCKED";
       throw err;
@@ -19,8 +20,8 @@ export default {
     return { convo, msg };
   },
 
-  getHistory: (userA, userB, limit = 200) => {
-    const convo = Conversation.findOrCreate(userA, userB); // findOrCreate garantit an id
+  getHistory: async (userA, userB, limit = 200) => {
+    const convo = Conversation.findOrCreate(userA, userB); // findOrCreate ensures an id
     const messages = Messages.getConversationMessages(convo.id, limit);
     return { convo, messages };
   }

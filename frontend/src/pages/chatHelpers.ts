@@ -1,5 +1,5 @@
 
-export function updateContactStatusUI(userId: number, status: string): void {
+export function updateContactStatusUI(userId: string | number, status: string): void {
     const statusElement = document.getElementById(`status-${userId}`);
     if (statusElement) {
         statusElement.className = `absolute bottom-0 right-0 w-3 h-3 rounded-full ${
@@ -24,17 +24,17 @@ export function updateChatHeader(
 
 export function attachContactClickListeners(
     contactsListDiv: HTMLElement,
-    onContactSelect: (contactId: number, username: string, avatar: string, status: string) => void
+    onContactSelect: (contactId: string | number, username: string, avatar: string, status: string) => void
 ): void {
     document.querySelectorAll(".contact-item").forEach((item: Element) => {
         item.addEventListener("click", () => {
             const htmlItem = item as HTMLElement;
-            const contactId: number = parseInt(htmlItem.getAttribute('data-contact-id') || '0');
+            const contactId: string | number = htmlItem.getAttribute('data-contact-id') || '';
             const username: string = htmlItem.getAttribute('data-contact-username') || '';
             const avatar: string = htmlItem.getAttribute('data-contact-avatar') || '';
             const status: string = htmlItem.getAttribute('data-contact-status') || '';
 
-            if (contactId) {
+            if (contactId !== '' && contactId !== null) {
                 onContactSelect(contactId, username, avatar, status);
             }
         });
@@ -86,7 +86,9 @@ export function setupWindowResize(onResize: () => void): void {
 export function renderSingleMessage(message:{ 
   content:string;  sender_id :number;receiver_id:number;createdAt:number},
   isSender:boolean,
-  messagesPanel:HTMLElement
+  messagesPanel:HTMLElement,
+    currentUserAvatar:string,
+    friendAvatar:string
 ):void
 {
     const messageDiv = document.createElement("div");
@@ -101,16 +103,18 @@ export function renderSingleMessage(message:{
                     <div class="bg-primary/65 text-sm p-3 rounded-3xl  max-w-[250px] break-words text-white">
                     ${message.content || ""}
                     </div>
-                    <img src="../../public/green-girl.svg" class="w-10 h-10 object-cover border border-primary rounded-full flex-shrink-0">
+                    <span class="text-[9px] tracking-wide text-white/50 mt-0.5 mr-12">
+                    ${timeStr}
+                    </span>
+                    <img src="${currentUserAvatar}" class="w-10 h-10 object-cover border border-primary rounded-full flex-shrink-0">
                 </div>
-                <p class="text-[10px] opacity-70 mt-1 mr-12">${timeStr}</p>
-            </div>
+        </div>
         `;
     } else {
         messageDiv.innerHTML = `
             <div class="flex flex-col items-start mb-4 w-full">
                 <div class="flex items-end gap-2">
-                    <img src="../../public/green-girl.svg" class="w-10 h-10 object-cover border border-primary rounded-full flex-shrink-0">
+                    <img src="${friendAvatar}" class="w-10 h-10 object-cover border border-primary rounded-full flex-shrink-0">
                     <div class="bg-primary/20 text-white text-sm p-3 rounded-3xl  max-w-[250px] break-words">
                     ${message.content || ""}
                     </div>

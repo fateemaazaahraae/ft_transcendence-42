@@ -1,12 +1,14 @@
 import { Server } from "socket.io";
 import history from "../services/history.js";
+import Conversation from '../models/conversation.js';
+import Messages from '../models/messages.js';
 
-export let io = null;
+export let socket = null;
 
 export const initSocket = (server) => {
-  io = new Server(server, { cors: { origin: "*" }, transports: ["websocket", "polling"] });
+  socket = new Server(server, { cors: { origin: "*" }, transports: ["websocket", "polling"] });
 
-  io.on("connection", (socket) => {
+  socket.on("connection", (socket) => {
     console.log("socket connected:", socket.id);
     
     socket.on("join", (userId) => {
@@ -15,11 +17,13 @@ export const initSocket = (server) => {
       console.log(`socket ${socket.id} joined room ${userId}`);
     });
 
-    socket.on("send_message", (payload, ack) => {
-      try {
-        const { from, to, content } = payload;
-        const { convo, msg } = history.sendMessage(from, to, content);
-        io.to(to).emit("new_message", { conversation: convo, message: msg });
+    socket.on("send_message", async (payload, ack) => {
+  try {
+    const { from, to, content } = payload;
+    // const convo = Conversation.findOrCreate(from, to);
+    // const msg = Messages.create(convo.id, from, content);
+    const { convo, msg } = await history.sendMessage(from, to, content, null);
+    socket.to(to).emit("new_message", { conversation: convo, message: msg });
         if (ack) ack({ status: "ok", message: msg });
       } catch (err) {
         if (err.code === "BLOCKED") {
@@ -34,5 +38,5 @@ export const initSocket = (server) => {
     socket.on("disconnect", () => console.log("socket disconnected"));
   });
 
-  return io;
+  return socket;
 };

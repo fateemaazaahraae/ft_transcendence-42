@@ -89,3 +89,52 @@ export function unblockUser(blockerId:number,blockedId:number)
         console.error("Error blocking user failed:",error);
     });
 }
+
+// const REL_SERVICE_URL = process.env.REL_SERVICE_URL || 'http://relationship-service:3002';
+
+// async function handleJson(response) {
+//   const text = await response.text();
+//   let payload = {};
+//   try {
+//     payload = text ? JSON.parse(text) : {};
+//   } catch {
+//     payload = { raw: text };
+//   }
+//   if (!response.ok) {
+//     const err = new Error(payload?.error || response.statusText || `HTTP ${response.status}`);
+//     err.status = response.status;
+//     err.payload = payload;
+//     throw err;
+//   }
+//   return payload;
+// }
+
+// export async function block(authHeader, blockerId, blockedId) {
+//   const response = await fetch(`${REL_SERVICE_URL}/block`, {
+//     method: 'POST',
+//     headers: { Authorization: authHeader, 'Content-Type': 'application/json' },
+//     body: JSON.stringify({ blockedId })
+//   });
+//   return handleJson(response);
+// }
+
+// export async function unblock(authHeader, blockerId, blockedId) {
+//   const response = await fetch(`${REL_SERVICE_URL}/unblock`, {
+//     method: 'POST',
+//     headers: { Authorization: authHeader, 'Content-Type': 'application/json' },
+//     body: JSON.stringify({ blockedId })
+//   });
+//   return handleJson(response);
+// }
+
+// export async function isBlocked(authHeader, blockerId, blockedId) {
+//   try {
+//     const response = await fetch(`${REL_SERVICE_URL}/is-blocked/${blockerId}/${blockedId}`, {
+//       headers: { Authorization: authHeader }
+//     });
+//     const data = await response.json();
+//     return data.isBlocked || false;
+//   } catch {
+//     return false;
+//   }
+// }

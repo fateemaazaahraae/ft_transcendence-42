@@ -2,9 +2,9 @@
 import { io, Socket } from "socket.io-client";
 
 export let socket: Socket | null = null;
-let currentUserId: number | null = null;
+let currentUserId: string | number | null = null;
 
-export function initializeSocket(userId: number, serverUrl: string) {
+export function initializeSocket(userId: string | number, serverUrl: string) {
     currentUserId = userId;
 
     // clean previous socket before reconnecting
@@ -38,7 +38,7 @@ export function initializeSocket(userId: number, serverUrl: string) {
     });
 }
 
-export function sendMessage(receiverId: number, message: string, ack?: (res: any) => void) {
+export function sendMessage(receiverId: string | number, message: string, ack?: (res: any) => void) {
     if (!socket || socket.disconnected) {
         console.warn("cannot send: socket not connected");
         return;

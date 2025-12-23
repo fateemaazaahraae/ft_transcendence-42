@@ -4,7 +4,7 @@ export const sendMessageHandler = async (request, reply) => {
   try {
     const { senderId, receiverId, content } = request.body;
     if (!senderId || !receiverId || !content) return reply.code(400).send({ error: "missing fields" });
-    const { convo, msg } = history.sendMessage(senderId, receiverId, content);
+    const { convo, msg } = await history.sendMessage(senderId, receiverId, content);
     return reply.code(201).send({ conversation: convo, message: msg });
   } catch (err) {
     if (err.code === "BLOCKED") return reply.code(403).send({ error: "you are blocked by this user" });
