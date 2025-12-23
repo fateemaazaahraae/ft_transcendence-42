@@ -24,10 +24,8 @@ async function getDb() {
             timestamp INTEGER NOT NULL
         )
     `);
-
-    console.log("✅ Database connected and tables ready.");
+        // db created.
     dbInstance = db;
     return db;
 }
-
-module.exports = { getDb };
+module.exports = {getDb};

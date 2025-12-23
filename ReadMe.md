@@ -495,5 +495,45 @@ it appears when there is a win, or someone left, or click the back/leave button
 
 ### Now It's time to create a database 🫤
 
+## Ok first:
+#### The function to call db is: "async function getDb()"
+* In this database function we are opening the database if it's not already open
+* Create tables if needed
+* Returning the database connection 
+
+and I will call it **whenever I need the database.** as I did in the server.js file when I needed it in: **fastify.get**
+
+#### Next thing we have: "filename: './game_data.sqlite',"
+* this will open the file if it exist if not it will create it.
+
+
+**driver: sqlite3.Database**
+* this will Load it into memory so Node.js can use it
+
+#### someone may say what "module.exports = { getDb };" Do? (no worries I said that first)
+* so simply that line in the bottom of our db.js file is what allow and give the possibility to other files to do **const { getDb } = require('./db');** like we did in server.js 😉 to use db
+
+
+### Note: 👉 At this is the moment Our database file is created.
+
+## Now what's next:
+### Let's see how we used this db in our files when we needed it: (ex. server.js)
+
+* first we called db by this line *const { getDb } = require('./db')*
+* And as we see inthe file we have: 
+```c
+const matches = await db.all(
+    `SELECT * FROM matches 
+     WHERE player1Id = ? OR player2Id = ? 
+     ORDER BY timestamp DESC`,
+    [userId, userId]
+);
+```
+and this mean “Give me all rows from matches
+where the user played as player1 OR player2
+sorted from newest to oldest.”
+* and ? are just  placeholders to prevent SQL injection. (learn more about sql injection as I can't explain it here)
+* 
+
 
 

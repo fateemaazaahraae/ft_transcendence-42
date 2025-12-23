@@ -95,7 +95,7 @@ const start = async () => {
          return;
       }
 
-      // 2. Store it
+
       socket.data.user = userData; 
       socket.data.userId = userData.id; // Keep this for backward compatibility
 
