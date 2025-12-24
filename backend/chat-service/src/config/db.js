@@ -6,8 +6,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 
-const dbasePath = process.env.DATABASE_PATH || path.join(process.cwd(),"src","data","chat.db");
-const dir =path.dirname(dbasePath);
+// Prefer an explicitly mounted DB at project root (docker-compose mounts ./backend/chat-service/chat.sqlite -> /app/chat.sqlite)
+const dockerDbPath = path.join(process.cwd(), "chat.sqlite");
+const defaultLocalDb = path.join(process.cwd(), "src", "data", "chat.db");
+const dbasePath = process.env.DATABASE_PATH || (fs.existsSync(dockerDbPath) ? dockerDbPath : defaultLocalDb);
+const dir = path.dirname(dbasePath);
 if(!fs.existsSync(dir)) 
     {
         fs.mkdirSync(dir,{recursive: true});
@@ -18,6 +21,7 @@ const db = new Database(dbasePath);
 
 
 //init tables
+console.log('Using database file:', dbasePath);
 console.log('📋 Creating tables...');
 try {
     db.exec(`

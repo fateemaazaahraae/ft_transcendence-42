@@ -13,27 +13,23 @@ await app.register(fastifyJwt, { secret: process.env.JWT_SECRET || "supersecret"
 
 try {
   await app.register(router, { prefix: "/api" });
-  console.log("Router registered successfully");
-  try {
-    console.log("Fastify routes:\n" + app.printRoutes());
-  } catch (e) {
-    console.error("Failed to print routes:", e);
-  }
+  console.log("router registered successfully");
+  
 } catch (err) {
-  console.error("Failed to register router:", err);
+  console.error("failed to register router:", err);
 }
 
-app.get("/", (request, reply) => ({ status: "Chat service running" }));
+app.get("/", (request, reply) => ({ status: "chat service running" }));
 
 const start = async () => {
   try {
     await app.listen({ port: PORT, host: "0.0.0.0" });
-    console.log(`Chat service listening on port ${PORT}`);
+    console.log(`chat service listening on port ${PORT}`);
     try {
       initSocket(app.server);
-      console.log("Socket.io initialized");
+      console.log("socket.io initialized");
     } catch (e) {
-      console.error("Failed to initialize socket.io", e);
+      console.error("failed to initialize socket.io", e);
     }
   } catch (err) {
     app.log.error(err);
