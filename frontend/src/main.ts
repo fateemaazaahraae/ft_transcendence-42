@@ -26,6 +26,7 @@ import Chat, {ChatEventListener } from "./pages/Chat.ts";
 import { showAlert } from "./utils/alert.ts";
 import RemoteGame, { RemoteGameEventListener } from "./pages/RemoteGame.ts";////
 import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
+import { searchBar } from "./pages/searchBar.ts";
 // import { viewFriend } from "./pages/viewFriend.ts";
 
 const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<void> }> = {
@@ -62,20 +63,18 @@ async function render(path: string) {
 
     requestAnimationFrame(() => window.scrollTo(0, 0));
     sideBarListeners();
-
     // run setup if exists
-    if (page.setUp) await page.setUp();
-
+    if (page.setUp)
+        await page.setUp();
     const lang = await getSavedLang();
     // const lang = localStorage.getItem(:);
     translatePage(lang);
-
     const currentLangBtn = document.getElementById("currentLang");
     if (currentLangBtn)
         currentLangBtn.innerHTML = `<i class="fa-solid fa-chevron-down text-xs"></i> ${lang.toUpperCase()}`;
-
     renderNotifications(notifications);
     initLogout();
+    searchBar();
 }
 
 
@@ -90,7 +89,6 @@ function sideBarListeners() {
 }
 
 export async function navigate(path: string) {
-    console.log("rah 3eyto liya");
     window.history.pushState({}, "", path);
     await render(path);
 }
