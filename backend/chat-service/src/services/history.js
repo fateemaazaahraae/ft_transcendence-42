@@ -6,8 +6,8 @@ const REL_SERVICE_URL = process.env.REL_SERVICE_URL || 'http://relationship-serv
 
 export default {
   sendMessage: async (from, to, content, authHeader = '') => {
-
-    const blocked = await Blocked.isBlocked(authHeader, to, from);
+    // check if recipient has blocked the sender
+    const blocked = await Blocked.isBlocked(authHeader, Number(to), Number(from));
     if (blocked) {
       const err = new Error("blocked");
       err.code = "BLOCKED";

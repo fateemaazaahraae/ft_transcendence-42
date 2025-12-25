@@ -5,34 +5,30 @@ import router from "./routes/router-simple.js";
 import { initSocket } from "./controllers/wsManager.js";
 import db from "./config/db.js";
 
-const app = Fastify({ logger: true });
+const fastify = Fastify({ logger: true });
 const PORT = process.env.PORT || 4000;
 
-await app.register(fastifyCors, { origin: "*" });
-await app.register(fastifyJwt, { secret: process.env.JWT_SECRET || "supersecret" });
+await fastify.register(fastifyCors, { origin: "*" });
+await fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET || "supersecret" });
 
 try {
-  await app.register(router, { prefix: "/api" });
-  console.log("router registered successfully");
-  
+  await fastify.register(router, { prefix: "/api" });
 } catch (err) {
   console.error("failed to register router:", err);
 }
 
-app.get("/", (request, reply) => ({ status: "chat service running" }));
+fastify.get("/", (request, reply) => ({ status: "chat service running" }));
 
 const start = async () => {
   try {
-    await app.listen({ port: PORT, host: "0.0.0.0" });
-    console.log(`chat service listening on port ${PORT}`);
+    await fastify.listen({ port: PORT, host: "0.0.0.0" });
     try {
-      initSocket(app.server);
-      console.log("socket.io initialized");
+      initSocket(fastify.server);
     } catch (e) {
       console.error("failed to initialize socket.io", e);
     }
   } catch (err) {
-    app.log.error(err);
+    fastify.log.error(err);
     process.exit(1);
   }
 };

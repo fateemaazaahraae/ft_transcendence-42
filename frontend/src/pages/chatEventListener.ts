@@ -1,7 +1,7 @@
 
 import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../utils/searchHandler.ts";
 import { blockUser, unblockUser, checkIfBlocked, showMessageInput, showBlockedMessage } from "../utils/blockHandler.ts";
-import { initializeSocket, sendMessage, listenForMessagesReceived, subscribeConnection } from "../utils/sockeService.ts";
+import { socket, initializeSocket, sendMessage, listenForMessagesReceived, subscribeConnection } from "../utils/sockeService.ts";
 import {
     updateContactStatusUI,
     updateChatHeader,
@@ -54,6 +54,20 @@ export function ChatEventListener() {
         console.log('socket connection state changed:', isConnected);
     });
 
+    // listen for server notification that *this* user was blocked by someone
+    if (socket) {
+        socket.off('you_were_blocked');
+        socket.on('you_were_blocked', (data: any) => {
+            const by = String(data?.by || '');
+            // if the blocked user is currently viewing the blocker, hide input
+            if (String(ACTIVE_CHAT_CONTACT_ID) === by) {
+                showBlockedMessage();
+            } else {
+                // optionally update contacts list UI: mark as blocked/disable input when they open chat
+            }
+        });
+    }
+
     // restore active chat 
 
 
@@ -79,21 +93,39 @@ export function ChatEventListener() {
         }
     };
 
-    // block button listener
+    // block button and modal handlers
     const blockBtn = document.getElementById("blockUserBtn");
+    const blockConfirmationDiv = document.getElementById("blockConfirmation");
+    const confirmBlockBtn = document.getElementById("confirmBlockBtn");
+    const cancelBlockBtn = document.getElementById("cancelBlockBtn");
+
+    // show modal when user clicks the block menu item
     if (blockBtn) {
         blockBtn.addEventListener("click", (): void => {
-            const contactUsername = document.getElementById('chatContactUsername')?.textContent || '';
-            if (ACTIVE_CHAT_CONTACT_ID) {
-                blockUser(Number(CURRENT_USER_ID), Number(ACTIVE_CHAT_CONTACT_ID));
-            }
+            if (blockConfirmationDiv) blockConfirmationDiv.classList.remove("hidden");
         });
     }
+
+    // confirm block: call API and hide modal
+    confirmBlockBtn?.addEventListener("click", () => {
+        if (ACTIVE_CHAT_CONTACT_ID) {
+            blockUser(Number(CURRENT_USER_ID), Number(ACTIVE_CHAT_CONTACT_ID));
+            if (blockConfirmationDiv) blockConfirmationDiv.classList.add("hidden");
+            // update menu text to reflect new state (preserve icon)
+            if (blockBtn) blockBtn.innerHTML = '<i class="fa fa-ban"></i> Unblock User';
+        }
+    });
+
+    // cancel: just hide modal
+    cancelBlockBtn?.addEventListener("click", () => {
+        if (blockConfirmationDiv) blockConfirmationDiv.classList.add("hidden");
+    });
 
    
     const unblockBtn = document.getElementById("unblockUserBtn");
     if (unblockBtn) {
         unblockBtn.addEventListener('click', () => {
+
             if (ACTIVE_CHAT_CONTACT_ID) {
                 unblockUser(Number(CURRENT_USER_ID), Number(ACTIVE_CHAT_CONTACT_ID));
             }
@@ -296,6 +328,10 @@ export function ChatEventListener() {
             console.log("save ack:", res);
             if(res?.status === "error") {
                 console.warn("send failed ", res?.reason || "unknown");
+                // if recipient has blocked the sender, hide the input area
+                if (res?.reason === 'blocked') {
+                    showBlockedMessage();
+                }
                 return;
             }
             

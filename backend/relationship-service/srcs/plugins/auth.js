@@ -4,8 +4,6 @@ import fp from "fastify-plugin";
 async function authPluginInner(fastify, opts) {
     fastify.decorate("authenticate", async function (request, reply) {
         const authHeader = request.headers.authorization;
-        // TEMP DEBUG: log incoming Authorization header for troubleshooting
-        try { console.log('[auth] incoming Authorization header:', authHeader); } catch (e) {}
         
         if (!authHeader)
             return reply.code(401).send({ error: "Unauthorized: Missing header" });

@@ -10,12 +10,12 @@ export const initSocket = (server) => {
  
 
   socket.on("connection", (socket) => {
-    console.log("socket connected:", socket.id);
+    
     
     socket.on("join", (userId) => {
       socket.join(userId);
       socket.data.userId = userId;
-      console.log(`socket ${socket.id} joined room ${userId}`);
+      
     });
 
     socket.on("send_message", async (payload, ack) => {
@@ -44,7 +44,24 @@ export const initSocket = (server) => {
       }
     });
 
-    socket.on("disconnect", () => console.log("socket disconnected"));
+    // forward block notifications to the blocked user
+    socket.on('user_blocked', (payload) => {
+      try {
+        const { blockedId, blockerId } = payload || {};
+        if (!blockedId) return;
+        // validate emitter is the claimed blocker
+        if (String(socket.data.userId) !== String(blockerId)) {
+          console.warn('user_blocked: emitter userId mismatch', socket.data.userId, blockerId);
+          return;
+        }
+        socket.to(String(blockedId)).emit('you_were_blocked', { by: blockerId });
+      } catch (e) {
+        console.warn('user_blocked handler error', e);
+      }
+    });
+
+
+    socket.on("disconnect", () => {});
   });
 
   return socket;

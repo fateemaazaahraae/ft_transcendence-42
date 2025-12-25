@@ -100,7 +100,7 @@ export function renderSingleMessage(message:{
         messageDiv.innerHTML = `
             <div class="flex flex-col items-end mb-4 w-full">
                 <div class="flex items-end gap-2">
-                    <div class="bg-primary/65 text-sm p-3 rounded-xl rounded-tr-none max-w-[250px] break-words text-white">
+                    <div class="bg-primary/65 text-sm p-3 rounded-xl rounded-br-none max-w-[250px] break-words text-white">
                     ${message.content || ""}
                     </div>
                     <img src="${currentUserAvatar}" class="w-12 h-12 object-cover border border-primary rounded-full flex-shrink-0">
@@ -113,7 +113,7 @@ export function renderSingleMessage(message:{
             <div class="flex flex-col items-start mb-4 w-full">
                 <div class="flex items-end gap-2">
                     <img src="${friendAvatar}" class="w-12 h-12 object-cover border border-primary rounded-full flex-shrink-0">
-                    <div class="bg-primary/20 text-white text-sm p-3 rounded-xl rounded-tl-none  max-w-[250px] break-words">
+                    <div class="bg-primary/20 text-white text-sm p-3 rounded-xl rounded-bl-none  max-w-[250px] break-words">
                     ${message.content || ""}
                     </div>
                 </div>

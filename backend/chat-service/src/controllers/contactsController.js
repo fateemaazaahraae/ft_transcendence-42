@@ -1,6 +1,4 @@
-import '../config/db.js';
-import '../services/history.js';
-
+import db from '../config/db.js';
 
 const API_URL = process.env.API_URL || 'http://auth-service:3000';
 const REL_SERVICE_URL = process.env.REL_SERVICE_URL || 'http://relationship-service:3002';
@@ -39,7 +37,8 @@ export async function getContacts(request, reply) {
         username = u?.userName || u?.username || '';
         avatar = u?.profileImage || u?.avatar || '';
       } else {
-        console.log(' user profile fetch failed for', f.friend_id, 'status:', res.status);
+        // profile fetch failed
+        console.warn(' user profile fetch failed ');
       }
     } catch (e) {
       console.error(' profile fetch error for', f.friend_id, ':', e.message);

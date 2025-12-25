@@ -5,7 +5,7 @@ export default function Chat() {
     setTimeout(() => {
         ChatEventListener();
     }, 0);
-
+    const contactUsername = document.getElementById('chatContactUsername')?.textContent || '';
     return `
     <div class="class="h-screen overflow-hidden flex items-center justify-center text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
         <aside class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
@@ -113,6 +113,17 @@ export default function Chat() {
                    <h1 class="text-center text-primary/65  font-bold text-4xl ">Ping Pong<br>Chat</h1>
               </div>
 
+            </div>
+
+            <div id="blockConfirmation" class="hidden absolute inset-0 flex items-center justify-center z-50">
+                <div class="confirm bg-primary/65 p-6 rounded-xl shadow-md text-center max-w-xs w-full mx-2 min-h-[160px] flex flex-col justify-between">
+                  <p class="mb-2 text-white text-lg">Block <strong>${contactUsername}</strong>?</p>
+                  <div class="flex items-center justify-center gap-3 mt-4">
+                    <button id="confirmBlockBtn" class="bg-red-500 hover:bg-red-700 text-white rounded-2xl font-bold py-2 px-4 rounded">Block</button>
+                    <button id="cancelBlockBtn" class="bg-green-400 hover:bg-green-700 text-white rounded-2xl font-bold py-2 px-4 rounded">Cancel</button>
+                 </div>
+                
+              </div>
             </div>
 
             <div class="relative">

@@ -90,6 +90,7 @@ export function sendMessage(receiverId: string | number, message: string, ack?: 
         return;
     }
 
+    
     // if socket connected, emit immediately
     if (socket && connected && !socket.disconnected) {
         const payload = { from: String(currentUserId), to: String(receiverId), content: message };
@@ -115,6 +116,7 @@ export function subscribeConnection(cb: (isConnected: boolean) => void) {
         const idx = connectionSubscribers.indexOf(cb);
         if (idx !== -1) connectionSubscribers.splice(idx, 1);
     };
+    
 }
 
 export function listenForMessagesReceived(callback: (data: any) => void) {

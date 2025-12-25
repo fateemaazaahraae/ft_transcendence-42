@@ -1,3 +1,4 @@
+import { socket } from "./sockeService.ts";
 const API_BASE = window.location.origin.replace(/\/$/, "");
 
 export function checkIfBlocked(blockerId: number, blockedId: number, callback: (isBlocked: boolean) => void) {
@@ -16,7 +17,7 @@ export function showBlockedMessage(){
     //hide message input area 
     const messageInputDiv = document.getElementById('messageInputContainer') as HTMLElement;
    if(messageInputDiv){
-        messageInputDiv.style.display ='none'
+        messageInputDiv.classList.add('hidden');
     }
     const blockedDiv=document.getElementById('blockeddiv');
     if(blockedDiv)
@@ -37,6 +38,7 @@ export function blockUser(blockerId:number,blockedId:number){
         method:'POST',
         headers:{
             'Content-Type':'application/json',
+            'Authorization': localStorage.getItem('token') || ''
         },
         body:JSON.stringify({
             blockedId:blockedId,
@@ -48,6 +50,13 @@ export function blockUser(blockerId:number,blockedId:number){
     .then(data => {
         console.log('User blocked succesfuly:',data);
         showBlockedMessage();
+        try {
+        if (socket && socket.connected) {
+            socket.emit('user_blocked', { blockedId, blockerId });
+        }
+    } catch (e) {
+        console.warn('failed to emit user_blocked', e);
+    }
     })
     .catch(error =>{
         console.error("Error blocking user failed:",error);
@@ -58,7 +67,7 @@ export function showMessageInput()
 {
     const messageInputDiv = document.getElementById('messageInputContainer') as HTMLElement;
     if (messageInputDiv) {
-        messageInputDiv.style.display = 'block';
+        messageInputDiv.classList.remove('hidden');
     }
 
     //hide blocked message
@@ -73,6 +82,7 @@ export function unblockUser(blockerId:number,blockedId:number)
         method:'POST',
         headers:{
             'Content-Type':'application/json',
+            'Authorization': localStorage.getItem('token') || ''
         },
         body:JSON.stringify({
             blockedId:blockedId,

@@ -6,7 +6,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 
-// Prefer an explicitly mounted DB at project root (docker-compose mounts ./backend/chat-service/chat.sqlite -> /app/chat.sqlite)
 const dockerDbPath = path.join(process.cwd(), "chat.sqlite");
 const defaultLocalDb = path.join(process.cwd(), "src", "data", "chat.db");
 const dbasePath = process.env.DATABASE_PATH || (fs.existsSync(dockerDbPath) ? dockerDbPath : defaultLocalDb);
@@ -20,9 +19,7 @@ if(!fs.existsSync(dir))
 const db = new Database(dbasePath);
 
 
-//init tables
-console.log('Using database file:', dbasePath);
-console.log('📋 Creating tables...');
+// init tables
 try {
     db.exec(`
     CREATE TABLE IF NOT EXISTS conversations(
