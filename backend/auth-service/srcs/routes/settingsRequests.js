@@ -2,8 +2,7 @@ import bcrypt from "bcryptjs"
 import { openDb } from "../models/db.js";
 import { updateAvatar } from "../models/user.js";
 import fs from "fs";
-import { pipeline } from "stream/promises"; // pump alternative
-
+import { pipeline } from "stream/promises";
 
 // FOR PROFILE SERVICE REQUESTS
 export default function userRoutes(fastify) {

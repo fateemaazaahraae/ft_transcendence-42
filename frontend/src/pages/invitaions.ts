@@ -1,21 +1,55 @@
 import { getSavedLang } from "../i18n/index.ts";
 import { navigate } from "../main.ts";
+import { showAlert } from "../utils/alert.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
+import { formatDate } from "../utils/date.ts";
 
-let invitationsList = [
-  {name:"John", img:"/blue-boy.svg", date:"2025-19-09"},
-  {name:"piiw", img:"/red-boy.svg", date:"2025-19-09"},
-  {name:"one", img:"/white-boy2.svg", date:"2025-19-09"},
-  {name:"two", img:"/white-boy.svg", date:"2025-19-09"},
-  {name:"three", img:"/green-girl.svg", date:"2025-19-09"},
-  {name:"four", img:"/purple-girl.svg", date:"2025-19-09"},
-  {name:"five", img:"/dark-girl.svg", date:"2025-19-09"},
-];
+export interface Invitaions {
+  sender_id: string;
+  userName: string;
+  profileImage: string;
+  created_at: string;
+}
+
+export async function fetchMoreInfo(data: Invitaions[]): Promise<Invitaions[]> {
+  return Promise.all(
+    data.map(async (friend) => {
+      const res = await fetch(`http://localhost:3000/users/${friend.sender_id}`);
+      if (!res.ok) return friend;
+      console.log("---- " + friend.created_at.toString());
+      const user = await res.json();
+      return {
+        ...friend,
+        userName: user.userName,
+        profileImage: user.profileImage,
+        created_at: formatDate(friend.created_at)
+      };
+    })
+  );
+}
+
+async function fetchInvitations(): Promise<Invitaions[]> {
+  const token = localStorage.getItem("token");
+  if (!token) return [];
+  const res = await fetch(`http://localhost:3002/invitations`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) return []
+  const data = await res.json();
+  return await fetchMoreInfo(data)
+}
 
 export default async function Invitations() {
   if (!requiredAuth())
     return "";
   const currentLang = (await getSavedLang()).toUpperCase();
+  const invitations = await fetchInvitations();
+  const emptyInvitationHTML = `
+    <div class="w-full flex flex-col items-center justify-center py-20 text-primary/80">
+      <i class="fa-solid fa-inbox text-6xl mb-6"></i>
+      <h2 class="text-2xl font-bold mb-2">No Invitaions yet</h2>
+    </div>
+  `
   return `
   <div class="h-screen text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
 
@@ -39,6 +73,11 @@ export default async function Invitations() {
 
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass text-primary absolute top-1/2 -translate-y-1/2 left-3"></i>
+        <input type="text" placeholder="Search for friends.." class="search-input font-roboto px-10 py-2 rounded-full text-[12px] focus:outline-none bg-black border-[2px] border-primary/70">
+        <div class="search-results absolute top-full left-0 w-full h-auto backdrop-blur-md mt-1 hidden z-[9000] rounded-xl"></div>
+      </div>
       <div class="arrow relative group">
         <button id="currentLang" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
@@ -59,20 +98,23 @@ export default async function Invitations() {
     <!-- Invitations list -->
     <div class="fixed left-1/2 -translate-x-1/2 top-[300px] md:top-[350px] h-[400px] w-[90%] md:w-[800px] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4 pb-12">
       <div class="flex flex-col gap-4">
-        ${invitationsList
+        ${
+          invitations.length === 0
+          ? emptyInvitationHTML
+          : invitations
           .map(
-            (invitaions) => `
+            (invitaion) => `
           <div class="flex flex-row items-center bg-primary/40 rounded-[20px] px-4 py-2 w-full md:w-[700px] mx-auto text-center">
             <div class="flex items-center gap-3 w-1/3 min-w-[130px] h-[30px]">
-              <img src="${invitaions.img}" class="w-[35px] h-[35px] md:w-[45px] md:h-[45px] rounded-full border border-primary/50 object-cover">
-              <div class="font-roboto font-bold text-[15px] md:text-[20px] truncate">${invitaions.name}</div>
+              <img src="${invitaion.profileImage}" class="w-[35px] h-[35px] md:w-[45px] md:h-[45px] rounded-full border border-primary/50 object-cover">
+              <div class="font-roboto font-bold text-[15px] md:text-[20px] truncate">${invitaion.userName}</div>
             </div>
             <div class="font-roboto font-normal text-[12px] md:text-[15px] text-center w-1/3">
-              ${invitaions.date}
+              ${invitaion.created_at}
             </div>
             <div class="flex gap-2 md:gap-3 justify-end w-1/3">
-              <i class="accept-btn fa-solid fa-circle-check text-[25px] md:text-[35px] text-primary/40 hover:text-greenAdd transition duration-400 ease-in-out"></i>
-              <i class="reject-btn fa-solid fa-circle-xmark text-[25px] md:text-[35px] text-secondary hover:text-redRemove transition duration-400 ease-in-out" data-name="${invitaions.name}"></i>
+              <i class="accept-btn fa-solid fa-circle-check text-[25px] md:text-[35px] text-primary/40 hover:text-greenAdd transition duration-400 ease-in-out" data-id="${invitaion.sender_id}"></i>
+              <i class="reject-btn fa-solid fa-circle-xmark text-[25px] md:text-[35px] text-secondary hover:text-redRemove transition duration-400 ease-in-out" data-id="${invitaion.sender_id}"></i>
             </div>
           </div>
         `
@@ -101,11 +143,37 @@ export function InvitationsEventListener() {
 
   const acceptButtons = document.querySelectorAll(".accept-btn");
   const rejectButtons = document.querySelectorAll(".reject-btn");
+  acceptButtons.forEach((button) => {
+    button.addEventListener("click", async() => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const from = button.getAttribute("data-id");
+      const res = await fetch(`http://localhost:3002/friends/accept`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ from })
+      });
+      showAlert("Invitation accepted successfully", "success");
+      navigate("/invitations");
+    })
+  })
   rejectButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      console.log("Reject Invitation Clicked");
-      const name = button.getAttribute("data-name");
-      invitationsList = invitationsList.filter((invitation) => invitation.name !== name);
+    button.addEventListener("click", async() => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const request_id = button.getAttribute("data-id");
+      const res = await fetch(`http://localhost:3002/friends/cancel`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ request_id })
+      });
+      showAlert("Invitation canceled successfully", "success");
       navigate("/invitations");
     });
   });
