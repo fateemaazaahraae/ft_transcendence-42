@@ -8,7 +8,12 @@ const waitingQueue = []; // array to store my players until I have a size of 2
 fastify.get('/test', async (request, reply) => {
   return { message: 'Game service is working!' };
 });
-
+await fastify.register(fastifyCors, {
+  origin: '*',
+  credentials: true,
+  methods: ['GET','PUT','POST','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+});
 fastify.get('/matches/user/:userId', async (request, reply) => {
     const userId = request.params.userId;
     

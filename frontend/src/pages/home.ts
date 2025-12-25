@@ -9,7 +9,9 @@ import { getGameSocket } from "../utils/gameSocket.ts";
 
 export default async function Home() {
   let user:any;
+  let game:any;
   try{
+    //Auth data
     const params = new URLSearchParams(window.location.search);
     let token = params.get("token");
     if (token)
@@ -27,10 +29,20 @@ export default async function Home() {
     const data = await res.json();
     user = data.user;
     localStorage.setItem("userId", data.user.id);
+    //Game data
+    const userId = data.user.id;
+    alert("the error is here");
+    const resGame = await fetch(`http://localhost:3003/matches/user/${userId}`,{
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    const dataGame = await resGame.json();
+    game = dataGame;
   }
   catch
   {
-    console.log("fetch user/me error");
+    console.log("login first");
     navigate("/login");
   }
 
@@ -110,14 +122,113 @@ export default async function Home() {
             <span class="text-secondary ml-2">700</span>
             </p>
           </div>
-        <button id="play-btn" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out pt-[300px]">
+        <!-- <button id="play-btn" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out pt-[300px]">
           PlayNow localy
         </button>
         <button id="remote-btn" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out pt-[100px]">
           PlayNow Remotely
-        </button>
+        </button> -->
       </div>
     </div>
+     <!-- Vertical Bar -->
+    <div class="w-[70%] h-[2px] md:w-[60%] lg:w-[1px] lg:h-[180px] xl:w-[3px] xl:h-[250px] rounded-full bg-[#35C6DD] mt-[15%] lg:mt-0 lg:ml-[40px] lg:mr-[30px] xl:ml-[80px] xl:mr-[40px] shadow-[0_0_20px_#35C6DD]"></div>
+    <div class="flex relative gap-[10%] md:gap-[15%] lg:gap-0">
+    <div class="flex flex-col ml-[18%] md:ml-[10%] lg:ml-0 lg:gap-4 justify-center items-center">
+      <h1 class=" text-white  lg:mb-0 font-glitch md:text-2xl xl:text-4xl whitespace-nowrap"> Wining rate </h1>
+      <div class="relative w-[110px] h-[110px] mt-[15%] mb-[35%] lg:mt-0 lg:mb-0 xl:w-[150px] xl:h-[150px] rounded-full flex items-center justify-center">
+        <div 
+            class="absolute inset-0 rounded-full"
+            style="background: conic-gradient(#35C6DD 10%, #F40CA4 0);">
+        </div>
+        <div class="absolute inset-[8px] bg-black rounded-full flex items-center justify-center">
+          <span class="text-white font-roboto lg:text-[16px] xl:text-xl">10%</span>
+        </div>
+      </div>
+      <div class="relative flex flex-row bottom-[10%] md:bottom-[15%] lg:bottom-0 items-center gap-2">
+        <!-- Wins -->
+        <div class="relative group">
+          <p class="text-primary font-roboto text-[14px] md:text-[17px] xl:text-xl cursor-pointer group-hover:blur-[3px]">Wins</p>
+          <span class="absolute font-roboto left-1/2 -translate-x-1/2
+                  text-primary text-sm px-3 py-1 rounded-md 
+                  opacity-0 group-hover:opacity-100 transition-opacity duration-300">4</span>
+        </div>
+
+        <p class="text-white text-xl">/</p>
+
+        <!-- Losses -->
+        <div class="relative group">
+          <p class="text-secondary font-roboto text-[14px] md:text-[17px] xl:text-xl cursor-pointer group-hover:blur-[3px]">Losses</p>
+          <span class="absolute font-roboto left-1/2 -translate-x-1/2 
+                  text-secondary text-sm px-3 py-1 rounded-md 
+                  opacity-0 group-hover:opacity-100 transition-opacity duration-300">6</span>
+        </div>
+      </div>
+    </div>
+    <div class="h-[30%] w-[10px] lg:w-[1px] xl:w-[3px] xl:h-[250px] lg:h-[180px] rounded-full bg-[#35C6DD] mt-[2%] lg:mt-[14%] xl:mt-[1%] lg:mr-[20px] lg:ml-[40px] xl:ml-[80px] xl:mr-[40px] shadow-[0_0_20px_#35C6DD]"></div>
+    <div class="flex flex-col justify-center items-center gap-2">
+      <h1 class="text-white font-glitch md:text-2xl xl:text-4xl mt-[10%] md:mt-[5%] lg:mt-[20%] mr-[80%] lg:mr-[40%] xl:mr-0 xl:mt-0">Achievements</h1>
+
+      <div class="relative group w-[340px] h-[220px] ">
+        <!-- Main trophy -->
+        <div  class="flex items-center justify-center absolute mt-[20%] md:mt-[23%] lg:mt-[20%] xl:mt-0 xl:top-1/2 left-[10%] lg:left-[30%] xl:left-1/2 w-[120px] h-[120px] md:w-[130px] md:h-[130px] xl:w-[190px] xl:h-[190px] rounded-full border-[3px] border-[#35C6DD] drop-shadow-cyan cursor-pointer 
+                -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500 group-hover:opacity-0" > 
+          <img src="/public/golden_trophy.svg" class=" w-[80px] md:w-[90px] xl:w-[120px]" />
+        </div>
+        <!-- Hidden trophies in 2x3 grid -->
+        <div class="absolute top-[30%] lg:top-[30%] xl:top-[50%] left-[10%] lg:left-[30%] xl:left-[37%] flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-700 -translate-x-1/2 -translate-y-1/2">
+          <div class="flex gap-2 mb-1">
+            <img src="/public/trophy1.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="/public/trophy6.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="/public/trophy3.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+          </div>
+          <div class="flex gap-2 mt-1">
+            <img src="/public/trophy4.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="/public/trophy5.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="/public/trophy2.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <!-- Match history -->
+    <div class="w-[70%] md:w-[60%] h-[2px] lg:w-0 lg:h-0 rounded-full bg-[#35C6DD] mt-[30%] md:mt-[18%] lg:mt-0 ml-[15%] md:ml-[20%] lg:ml-0  shadow-[0_0_20px_#35C6DD]"></div>
+  <div class = "flex flex-col lg:flex-row lg:gap-[5%] mt-[8%] md:mt-[3%] lg:mt-[15%] xl:mt-[12%] justify-center items-center">
+    <div class="flex flex-col lg:ml-[20%]">
+      <h1 class=" text-center font-glitch md:text-2xl xl:text-4xl lg:mb-1 xl:mb-6">Match history</h1>
+  
+      <!-- Scrollable container -->
+        <div class="flex flex-col gap-4 w-[400px] h-[200px] md:w-[600px] xl:w-[750px] max-h-[250px] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4">
+            
+            <div class="flex justify-between items-center h-[40px] lg:h-[50px] w-full xl:h-[60px] rounded-2xl bg-primary/60 px-4 shadow-lg">
+              ${game.map(match => `
+              <!-- Player 1 -->
+              <div class="flex items-center gap-3">
+                <img src="${user.profileImage}" class="object-cover w-[40px] h-[40px] xl:w-[45px] xl:h-[45px] rounded-full border-2 border-[#35C6DD]" />
+                <p class="text-white font-roboto font-medium text-[12px] md:text-[14px] lg:text-[16px] xl:text-lg truncate w-[50px] lg:w-[80px]">${match.player1.name}</p>
+              </div>
+    
+              <!-- Score -->
+              <p class="flex items-center justify-center text-white font-roboto font-bold lg:text-[17px] xl:text-xl lg:gap-4 xl:gap-6">
+                <span>${game.score1}</span>
+                <span>-</span>
+                <span>${game.score2}</span>
+              </p>
+              <!-- Player 2 -->
+              <div class="flex items-center gap-3">
+                <p class="text-white font-roboto font-medium text-[12px] md:text-[14px] lg:text-[16px] xl:text-lg truncate w-[50px] lg:w-[80px]">${match.player2.name}</p>
+                <img src="${match.player2.avatar}" class="object-cover w-[40px] h-[40px] xl:w-[45px] xl:h-[45px] rounded-full border-2 border-secondary" />
+              </div>
+    
+            </div>
+            `).join("")}
+        </div>
+    </div>  
+    <div class="flex flex-col mt-[10%] md:mt-[5%] mb-[15%] md:mb-[5%] lg:md-0 lg:mt-[5%] lg:mr-[10%] items-center gap-5 group">
+      <img src="/public/match.svg" class="md:w-[350px] lg:w-[250px]"/>
+      <button id="play-btn2" class="w-[100px] xl:w-[130px] h-[30px] rounded-3xl bg-primary/60 text-white font-glitch hover:bg-secondary">play</button>
+    </div>
+  </div>
     </div>
    `;
 }
