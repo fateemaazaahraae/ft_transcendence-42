@@ -2,7 +2,10 @@ import { socket } from "./sockeService.ts";
 const API_BASE = window.location.origin.replace(/\/$/, "");
 
 export function checkIfBlocked(blockerId: number, blockedId: number, callback: (isBlocked: boolean) => void) {
-    fetch(`${API_BASE}/api/is-blocked/${blockerId}/${blockedId}`)
+    const token = localStorage.getItem('token') || '';
+    fetch(`${API_BASE}/api/is-blocked/${blockerId}/${blockedId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    })
         .then(response => response.json())
         .then(data => {
             callback(data.isBlocked);
@@ -38,7 +41,7 @@ export function blockUser(blockerId:number,blockedId:number){
         method:'POST',
         headers:{
             'Content-Type':'application/json',
-            'Authorization': localStorage.getItem('token') || ''
+            'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
         },
         body:JSON.stringify({
             blockedId:blockedId,
@@ -82,7 +85,7 @@ export function unblockUser(blockerId:number,blockedId:number)
         method:'POST',
         headers:{
             'Content-Type':'application/json',
-            'Authorization': localStorage.getItem('token') || ''
+            'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
         },
         body:JSON.stringify({
             blockedId:blockedId,

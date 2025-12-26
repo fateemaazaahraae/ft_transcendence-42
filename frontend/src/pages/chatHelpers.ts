@@ -1,4 +1,3 @@
-
 export function updateContactStatusUI(userId: string | number, status: string): void {
     const statusElement = document.getElementById(`status-${userId}`);
     if (statusElement) {
@@ -16,6 +15,7 @@ export function updateChatHeader(
     status: string,
     avatar: string
 ): void {
+    
     if (chatUsername) chatUsername.textContent = username;
     if (chatStatus) chatStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1);
     if (chatAvatar) chatAvatar.src = avatar;
@@ -83,6 +83,8 @@ export function setupWindowResize(onResize: () => void): void {
 
 // }
 
+
+
 export function renderSingleMessage(message:{ 
   content:string;  sender_id :number;receiver_id:number;createdAt:number},
   isSender:boolean,
@@ -91,10 +93,16 @@ export function renderSingleMessage(message:{
     friendAvatar:string
 ):void
 {
+
+
+    
     const messageDiv = document.createElement("div");
     messageDiv.className = `flex ${isSender ? 'justify-end' : 'justify-start'} mb-2`;
 
     const timeStr = new Date((message as any).created_at ? ((message as any).created_at as number) * 1000 : Date.now()).toLocaleTimeString();
+
+        // minimize avatar
+        const myAvatar = (currentUserAvatar && String(currentUserAvatar).trim() !== '') ? currentUserAvatar : '../../public/green-girl.svg';
 
         if (isSender) {
         messageDiv.innerHTML = `
@@ -103,7 +111,7 @@ export function renderSingleMessage(message:{
                     <div class="bg-primary/65 text-sm p-3 rounded-xl rounded-br-none max-w-[250px] break-words text-white">
                     ${message.content || ""}
                     </div>
-                    <img src="${currentUserAvatar}" class="w-12 h-12 object-cover border border-primary rounded-full flex-shrink-0">
+                        <img src="${myAvatar}" class="w-12 h-12 object-cover border border-primary rounded-full flex-shrink-0">
                 </div>
                 <p class="text-[10px] opacity-70 mt-1 mr-12">${timeStr}</p>
             </div>

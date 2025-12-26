@@ -1,4 +1,5 @@
 import db from '../config/db.js';
+// history service not used directly here; keep DB import
 
 const API_URL = process.env.API_URL || 'http://auth-service:3000';
 const REL_SERVICE_URL = process.env.REL_SERVICE_URL || 'http://relationship-service:3002';

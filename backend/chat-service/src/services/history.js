@@ -13,28 +13,19 @@ export default {
       err.code = "BLOCKED";
       throw err;
     }
-
-    // check friendship status via relationship service
+   
+    // check friendship status via relationship service (minimal check)
     try {
       const res = await fetch(`${REL_SERVICE_URL}/friends/status/${to}`, {
         headers: { Authorization: authHeader }
       });
-      if (!res.ok) {
-        let body = '(no body)';
-        try { body = await res.text(); } catch (e) { body = `(failed to read body: ${e.message})`; }
-        const err = new Error("not_friend");
-        err.code = "NOT_FRIEND";
-        throw err;
-      }
-      const data = await res.json();
-      if (data.status !== 'friend') {
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.status !== 'friend') {
         const err = new Error("not_friend");
         err.code = "NOT_FRIEND";
         throw err;
       }
     } catch (e) {
-      if (e.code === 'NOT_FRIEND') throw e;
-      console.warn(' relationship service error', e.message || e);
       const err = new Error("not_friend");
       err.code = "NOT_FRIEND";
       throw err;
@@ -45,7 +36,12 @@ export default {
 
     // create message
     const msg = Messages.create(convo.id, from, content);
-    return { convo, msg };
+
+     //profile image
+    const uRes = await fetch(`${AUTH_URL}/users/${from}`, { headers: { Authorization: authHeader }});
+    const u = uRes.ok ? await uRes.json() : {};
+    msg.avatar = normalize(u.profileImage);
+    return { convo, msg }; // ack includes avatar
   },
 
   getHistory: async (userA, userB, limit = 200) => {

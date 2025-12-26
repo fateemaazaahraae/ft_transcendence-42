@@ -1,5 +1,6 @@
 
 import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../utils/searchHandler.ts";
+import { loadUser } from "../utils/loadUser.ts";
 import { blockUser, unblockUser, checkIfBlocked, showMessageInput, showBlockedMessage } from "../utils/blockHandler.ts";
 import { socket, initializeSocket, sendMessage, listenForMessagesReceived, subscribeConnection } from "../utils/sockeService.ts";
 import {
@@ -34,6 +35,26 @@ export function ChatEventListener() {
     let ACTIVE_CHAT_CONTACT_ID: string | number | null = null;
     let CURRENT_USER_AVATAR: string = '../../public/green-girl.svg';
 
+        // load user profile from  loadUser
+        loadUser().then(() => {
+            try {
+                const stored = localStorage.getItem('user');
+                if (!stored) return;
+                const user = JSON.parse(stored);
+                const img = user?.profileImage || user?.profile_image;
+                if (!img) return;
+                if (/^https?:\/\//.test(img)) {
+                    CURRENT_USER_AVATAR = img;
+                } else if (img.startsWith('/')) {
+                    CURRENT_USER_AVATAR = `${window.location.origin}${img}`;
+                } else {
+                    CURRENT_USER_AVATAR = `${API_BASE_URL}/${img}`;
+                }
+            } catch (e) {
+                console.warn('failed to read stored user', e);
+            }
+        }).catch(() => {});
+
     //connect to socket.io
     if (CURRENT_USER_ID == null) {
         console.warn('No user id found in token; chat not initialized');
@@ -45,7 +66,7 @@ export function ChatEventListener() {
     console.log('initializing socket with origin', ORIGIN, 'wsUrl', WS_URL);
     initializeSocket(CURRENT_USER_ID, WS_URL, TOKEN);
 
-    // UI: disable send button until socket connected
+    //disable send button until socket connected
     const sendButtonEl = document.getElementById("sendMessageBtn") as HTMLButtonElement | null;
     if (sendButtonEl) sendButtonEl.disabled = true;
     // subscribe to connection changes to enable/disable the send button
@@ -63,7 +84,6 @@ export function ChatEventListener() {
             if (String(ACTIVE_CHAT_CONTACT_ID) === by) {
                 showBlockedMessage();
             } else {
-                // optionally update contacts list UI: mark as blocked/disable input when they open chat
             }
         });
     }
@@ -201,6 +221,8 @@ export function ChatEventListener() {
             chat?.classList.add("flex");
         }
 
+
+        //fetch user profileimage
 
         //FETCH MESSAGES AND RENDER THEM 
         const messagePanel = document.getElementById("messagesPanel") as HTMLElement | null;

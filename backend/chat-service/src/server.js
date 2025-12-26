@@ -11,21 +11,19 @@ const PORT = process.env.PORT || 4000;
 await fastify.register(fastifyCors, { origin: "*" });
 await fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET || "supersecret" });
 
-try {
-  await fastify.register(router, { prefix: "/api" });
-} catch (err) {
-  console.error("failed to register router:", err);
-}
+await fastify.register(router, { prefix: "/api" });
 
-fastify.get("/", (request, reply) => ({ status: "chat service running" }));
+fastify.get("/", async () => ({ status: "chat service running" }));
 
 const start = async () => {
   try {
     await fastify.listen({ port: PORT, host: "0.0.0.0" });
+    fastify.log.info(`chat-service listening on port ${PORT}`);
     try {
       initSocket(fastify.server);
+      fastify.log.info('socket.io initialized');
     } catch (e) {
-      console.error("failed to initialize socket.io", e);
+      fastify.log.error({ err: e }, 'failed to initialize socket.io');
     }
   } catch (err) {
     fastify.log.error(err);
