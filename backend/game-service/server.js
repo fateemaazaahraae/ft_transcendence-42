@@ -1,22 +1,21 @@
-const fastify = require('fastify')({ logger: true });
+const Fastify = require ("fastify");
+const fastifyCors = require ('@fastify/cors');
 const { Server } = require('socket.io');
 const GameRoom = require('./GameRoom'); // I will do it later just to have an idea
 const { getDb } = require('./db');
+
+const fastify = Fastify({ logger: true });
 
 const waitingQueue = []; // array to store my players until I have a size of 2
 
 fastify.get('/test', async (request, reply) => {
   return { message: 'Game service is working!' };
 });
-await fastify.register(fastifyCors, {
-  origin: '*',
-  credentials: true,
-  methods: ['GET','PUT','POST','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-});
+
+
 fastify.get('/matches/user/:userId', async (request, reply) => {
     const userId = request.params.userId;
-    
+    console.log("waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa----------->", userId);
     try {
         const db = await getDb();
         
@@ -69,6 +68,11 @@ const getUserIdFromToken = (token) => {
 
 const start = async () => {
   try {
+    await fastify.register(fastifyCors, {
+      origin: "*",
+      methods: ["GET", "POST", "OPTIONS"],
+      allowedHeaders: ["Authorization", "Content-Type"],
+    });
     await fastify.listen({ port: 3003, host: '0.0.0.0' });
     console.log('✅ HTTP Server running at http://localhost:3003');
 

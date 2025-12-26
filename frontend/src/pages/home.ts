@@ -5,45 +5,55 @@ import { requiredAuth } from "../utils/authGuard.ts";
 import { loadUser } from "../utils/loadUser.ts";
 import { io } from "socket.io-client";
 import { getGameSocket } from "../utils/gameSocket.ts";
+import { formatDate } from "../utils/date.ts";
 
 
 export default async function Home() {
   let user:any;
-  let game:any;
+  let matches:any;
   try{
     //Auth data
     const params = new URLSearchParams(window.location.search);
     let token = params.get("token");
     if (token)
-    {
-      localStorage.setItem("token", token);
-      window.history.replaceState({}, document.title, "/home");
+      {
+        localStorage.setItem("token", token);
+        window.history.replaceState({}, document.title, "/home");
+      }
+      if (!token)
+        token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:3000/user/me", {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      const data = await res.json();
+      user = data.user;
+      localStorage.setItem("userId", data.user.id);
+      //Game data
+      
+      
+      
     }
-    if (!token)
-      token = localStorage.getItem("token");
-   const res = await fetch("http://localhost:3000/user/me", {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
-    const data = await res.json();
-    user = data.user;
-    localStorage.setItem("userId", data.user.id);
-    //Game data
-    const userId = data.user.id;
-    alert("the error is here");
-    const resGame = await fetch(`http://localhost:3003/matches/user/${userId}`,{
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
-    const dataGame = await resGame.json();
-    game = dataGame;
-  }
-  catch
-  {
-    console.log("login first");
-    navigate("/login");
+    catch
+    {
+      console.log("login first");
+      navigate("/login");
+    }
+    try {
+        const userId = localStorage.getItem("userId");
+        const resGame = await fetch(`game/matches/user/${userId}`);
+        const dataGame = await resGame.json();
+        if(!resGame.ok)
+          alert("can't fetch data");
+        matches = dataGame;
+  } catch (err) {
+    if (err instanceof Error) {
+      console.error("Fetch failed:", err.message);
+      alert("Fetch error: " + err.message);
+    } else {
+      alert("Fetch failed with unknown error" + err);
+    }
   }
 
   const currentLang = (await getSavedLang()).toUpperCase();
@@ -194,32 +204,39 @@ export default async function Home() {
   <!-- Match history -->
     <div class="w-[70%] md:w-[60%] h-[2px] lg:w-0 lg:h-0 rounded-full bg-[#35C6DD] mt-[30%] md:mt-[18%] lg:mt-0 ml-[15%] md:ml-[20%] lg:ml-0  shadow-[0_0_20px_#35C6DD]"></div>
   <div class = "flex flex-col lg:flex-row lg:gap-[5%] mt-[8%] md:mt-[3%] lg:mt-[15%] xl:mt-[12%] justify-center items-center">
-    <div class="flex flex-col lg:ml-[20%]">
+    <div class="flex flex-col lg:ml-[20%] xl:ml-[10%]">
       <h1 class=" text-center font-glitch md:text-2xl xl:text-4xl lg:mb-1 xl:mb-6">Match history</h1>
   
       <!-- Scrollable container -->
-        <div class="flex flex-col gap-4 w-[400px] h-[200px] md:w-[600px] xl:w-[750px] max-h-[250px] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4">
-            
+        <div class="flex flex-col items-center gap-4 w-[400px] h-[200px] md:w-[600px] xl:w-[750px] max-h-[250px] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4">
+          ${matches.length === 0 ? 
+          `<div class = "flex flex-col  items-center justify-center gap-5 border-2 border-primary/80 drop-shadow-cyan w-[400px] h-full rounded-[30px]">
+            <i class="fa-duotone fa-solid fa-table-tennis-paddle-ball text-secondary text-[50px]"></i>
+            <p class="font-regular font-roboto text-primary text-center text-xl"> No matches played yet </p> 
+           </div>`
+          : matches.map(match => `
             <div class="flex justify-between items-center h-[40px] lg:h-[50px] w-full xl:h-[60px] rounded-2xl bg-primary/60 px-4 shadow-lg">
-              ${game.map(match => `
+              
               <!-- Player 1 -->
               <div class="flex items-center gap-3">
                 <img src="${user.profileImage}" class="object-cover w-[40px] h-[40px] xl:w-[45px] xl:h-[45px] rounded-full border-2 border-[#35C6DD]" />
-                <p class="text-white font-roboto font-medium text-[12px] md:text-[14px] lg:text-[16px] xl:text-lg truncate w-[50px] lg:w-[80px]">${match.player1.name}</p>
+                <p class="text-white font-roboto font-medium text-[12px] md:text-[14px] lg:text-[16px] xl:text-lg truncate w-[50px] lg:w-[80px]">${user.userName}</p>
               </div>
     
               <!-- Score -->
+              <div class= "flex flex-col items-center font-normal gap-[4px] text-[12px] text-white/60">
               <p class="flex items-center justify-center text-white font-roboto font-bold lg:text-[17px] xl:text-xl lg:gap-4 xl:gap-6">
-                <span>${game.score1}</span>
-                <span>-</span>
-                <span>${game.score2}</span>
+              <span>${match.score1}</span>
+              <span>-</span>
+              <span>${match.score2}</span>
               </p>
+              <span>${formatDate(match.timestamp)}</span> 
+              </div>
               <!-- Player 2 -->
               <div class="flex items-center gap-3">
-                <p class="text-white font-roboto font-medium text-[12px] md:text-[14px] lg:text-[16px] xl:text-lg truncate w-[50px] lg:w-[80px]">${match.player2.name}</p>
-                <img src="${match.player2.avatar}" class="object-cover w-[40px] h-[40px] xl:w-[45px] xl:h-[45px] rounded-full border-2 border-secondary" />
+                <p class="text-white font-roboto font-medium text-[12px] md:text-[14px] lg:text-[16px] xl:text-lg truncate w-[50px] lg:w-[80px]">fakhita</p>
+                <img src="/green-girl.svg" class="object-cover w-[40px] h-[40px] xl:w-[45px] xl:h-[45px] rounded-full border-2 border-secondary" />
               </div>
-    
             </div>
             `).join("")}
         </div>
