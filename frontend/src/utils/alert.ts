@@ -11,8 +11,8 @@ export function showAlert(message: string, type: "error" | "success" = "error") 
     <div class="fixed inset-0 flex items-start justify-end mt-10 mr-10 z-[100]">
         <div class="animate-fade-in-down bg ${
             type === "error" ? "bg-redRemove/50" : "bg-greenAdd/50"
-        } text-white rounded-xl px-12 py-4 text-center shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-            <p class="font-normal text-[17px] font-roboto"><span class="font-roboto font-bold text-[20px] mb-2 ">${type === "error" ? "Error" : "Success"}: </span>
+        } text-white rounded-xl px-8 py-2 md:px-12 md:py-4 text-center shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+            <p class="font-normal text-[12px] md:text-[17px] font-roboto"><span class="font-roboto font-bold text-[17px] md:text-[20px] mb-2 ">${type === "error" ? "Error" : "Success"}: </span>
                 ${message}
             </p>
         </div>

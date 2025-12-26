@@ -27,12 +27,12 @@ export async function viewFriendProfile(user: User) {
         card.id = "friend-card";
         card.className = "fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9000]";
         card.innerHTML = `
-            <div class="flex flex-col items-center justify-center w-[600px] bg-primary/50 rounded-2xl p-6 relative animate-[fadeIn_0.25s_ease-out] scale-95">
+            <div class="flex flex-col items-center justify-center w-[400px] md:w-[600px] bg-primary/50 rounded-2xl p-6 relative animate-[fadeIn_0.25s_ease-out] scale-95">
                 <i id="close-friend-card" class="fa-solid fa-xmark absolute top-3 right-4 text-black cursor-pointer text-[16px]"></i>
-                <img id="profile-img" class="w-[300px] h-[300px] rounded-full border-2 border-primary mx-auto object-cover" />
-                <h2 id="profile-username" class="font-roboto text-center text-white font-bold text-3xl mt-5"></h2>
-                <p id="profile-fullname" class="font-roboto text-center text-white/80 text-2xl mt-3"></p>
-                <button id="button" class="text-center text-white font-roboto font-bold text-md bg-secondary rounded-full w-36 h-10 mt-5"></button>
+                <img id="profile-img" class="w-[200px] md:w-[300px] h-[200px] md:h-[300px] rounded-full border-2 border-primary mx-auto object-cover" />
+                <h2 id="profile-username" class="font-roboto text-center text-white font-bold text-2xl md:text-3xl mt-5"></h2>
+                <p id="profile-fullname" class="font-roboto text-center text-white/80 text-xl md:text-2xl mt-3"></p>
+                <button id="button" class="text-center text-white font-roboto font-bold text-md bg-secondary rounded-full w-40 h-10 mt-5"></button>
             </div>
         `;
         // showAlert(card)
