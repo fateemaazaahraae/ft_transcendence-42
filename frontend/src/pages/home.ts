@@ -3,6 +3,9 @@ import { getSavedLang } from "../i18n/index.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 import { loadUser } from "../utils/loadUser.ts";
+import { io } from "socket.io-client";
+import { getGameSocket } from "../utils/gameSocket.ts";
+
 
 export default async function Home() {
   let user:any;
@@ -108,7 +111,10 @@ export default async function Home() {
             </p>
           </div>
         <button id="play-btn" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out pt-[300px]">
-          PlayNow
+          PlayNow localy
+        </button>
+        <button id="remote-btn" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out pt-[100px]">
+          PlayNow Remotely
         </button>
       </div>
     </div>
@@ -125,6 +131,43 @@ export function HomeEventListener() {
         navigate("/LocalgameStyle");
       });
     }
+
+    const btnRemote = document.getElementById("remote-btn");
+    if (btnRemote) {
+      btnRemote.addEventListener("click", () => {
+        console.log("Remote Play Clicked - Attempting Connection...");
+
+        const token = localStorage.getItem("token"); // this will get JWT prolly
+        if (!token) {
+          navigate("/login"); 
+          return;
+        }
+
+        const socket = getGameSocket(token); /// here is the key to send request to our game server
+
+        if (!socket.hasListeners("match_found")) {
+            
+            socket.on("connect", () => {
+                console.log("✅ Connected via Manager! ID:", socket.id);
+                navigate("/RemotegameStyle");
+                socket.emit('join_queue');
+            });
+
+            socket.on("match_found", (data) => {
+                console.log("🎉 MATCH FOUND! Navigating to game...");
+                localStorage.setItem("currentMatch", JSON.stringify(data));
+                navigate("/remote-game"); 
+            });
+
+            socket.on("waiting_for_match", (data) => {
+                console.log(`Status: ${data.message}`);
+            });
+        }
+
+        if (socket.connected) {
+             socket.emit('join_queue');
+        }
+      });
+    }
   }, 100);
 }
-

@@ -13,6 +13,7 @@ services:
       - auth-service
       - profile-service
       - relationship-service
+      - game-service
     networks:
       - ft_transcendence
     ports:
@@ -67,7 +68,23 @@ services:
       - "3001:3001"
     networks:
       - ft_transcendence
-  
+
+  game-service:
+    platform: linux/amd64
+    build:
+      context: ./backend/game-service
+      dockerfile: Dockerfile
+    image: game-service
+    container_name: game-service
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/game-service:/app
+      - /app/node_modules
+    ports:
+      - "3003:3003"
+    networks:
+      - ft_transcendence
   relationship-service:
     platform: linux/amd64
     build:
@@ -98,7 +115,7 @@ services:
       - auth-service
       - profile-service
       - relationship-service
-      # - chat-service
+      - game-service
     volumes:
       - uploads:/app/uploads
       # - profile-service

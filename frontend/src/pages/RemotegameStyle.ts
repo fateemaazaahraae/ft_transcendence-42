@@ -1,4 +1,5 @@
 import { navigate } from "../main.ts";
+import { showAlert } from "../utils/alert";
 import { requiredAuth } from "../utils/authGuard.ts";
 
 export default function LocalGameStyle() {
@@ -41,39 +42,95 @@ export default function LocalGameStyle() {
       <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
-    <!-- chose your mode -->
 
-    <div class="absolute top-[70%]  md:top-1/2 pb-[15%] md:pb-0 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-      <h1 class="font-glitch text-3xl md:text-4xl xl:text-6xl lg:text-5xl text-black leading-[1.9]"
-       style="-webkit-text-stroke: 2px rgba(53,198,221,0.6);">Ready to play?</h1>
-      <h1 class="font-glitch text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-primary/60 text-shadow-cyan">Pick your mode</h1>
-      <div class="flex flex-col md:flex-col lg:flex-row xl:flex gap-10 lg:gap-5 xl:gap-20 mt-[20%] md:mt-[12%]">
-        <div class="flex flex-col gap-2 md:gap-3 lg:gap-6 xl:gap-3 items-center w-[350px] h-[300px] md:w-[450px] md:h-[310px] lg:w-[500px] lg:h-[400px] xl:w-[600px] xl:h-[430px] bg-primary/60 rounded-3xl ">
-            <h1 class="mt-[5%] font-glitch text-center text-2xl md:text-3xl lg:text-4xl"> One-on-One</h1>
-            <div class="flex justify-center gap-3">
-                <i class="object-cover fa-solid fa-circle-user text-[100px] md:text-[100px] lg:text-[120px] xl:text-[150px] mt-[25%] text-primary/90"></i>
-                <img src="/public/vs.svg" class="w-[90px] md:w-[100px] lg:w-[120px]" />
-                <i class="object-cover fa-solid fa-circle-user text-[100px] md:text-[100px] lg:text-[120px] xl:text-[150px] mt-[25%] text-primary/90"></i> 
-            </div>
-            <button id=play class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
-        </div>
-        <div class="flex flex-col gap-2 md:gap-3 lg:gap-6 xl:gap-3 items-center w-[350px] h-[300px] md:w-[450px] md:h-[310px] lg:w-[500px] lg:h-[400px] xl:w-[600px] xl:h-[430px] bg-primary/60 rounded-3xl ">
-            <h1 class="mt-[5%] font-glitch text-center text-2xl md:text-3xl lg:text-4xl"> One-on-Ai</h1>
-            <div class="flex justify-center gap-3">
-                <i class="object-cover fa-solid fa-circle-user text-[100px] md:text-[100px] lg:text-[120px] xl:text-[150px] mt-[25%] text-primary/90"></i>
-                <img src="/public/vs.svg" class="w-[90px] md:w-[100px] lg:w-[120px]" />
-                <i class="object-cover fa-solid fa-circle-user text-[100px] md:text-[100px] lg:text-[120px] xl:text-[150px] mt-[25%] text-primary/90"></i> 
-            </div>
-            <button id=playai class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
-        </div>
-      </div>
+    <!-- Wait opponent -->
+
+    <h1 id="waitingText"
+        class="text-4xl md:text-5xl font-glitch text-center mt-[14%]">
+      Waiting For Opponent<span id="dots">...</span>
+    </h1>
+    <div class="flex justify-center items-center mt-[5%] gap-10">
+        <img src="" id="myImg" class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[250px] lg:h-[250px] rounded-full border-2 border-primary/40 object-cover">
+        <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[170px]" />
+        <img
+          id="opponentImg"
+          src="/public/opponent1.png"
+          class="w-[100px] h-[100px] md:w-[200px] md:h-[200px]
+                lg:w-[250px] lg:h-[250px]
+                rounded-full border-2 border-primary/40 object-cover
+                opacity-80 transition-opacity duration-300"
+        />
     </div>
-
   </div>
   `;
 }
 
-export function LocalGameStyleEventListener() {
+function startWaitingDots() {
+  const dots = document.getElementById("dots");
+  if (!dots) return;
+
+  let count = 0;
+  return setInterval(() => {
+    count = (count + 1) % 4;
+    dots.textContent = ".".repeat(count);
+  }, 500);
+}
+
+function startOpponentImageRotation() {
+  const opponentImg = document.getElementById("opponentImg") as HTMLImageElement;
+  if (!opponentImg) return;
+
+  const images = [
+    "/public/dark-girl.svg",
+    "/public/white-boy2.svg",
+    "/public/pink-girl.svg",
+    "/public/purple-girl.svg",
+    "/public/red-boy.svg",
+    "/public/white-boy.svg",
+    "/public/green-girl.svg",
+    "/public/blue-boy.svg",
+  ];
+
+  let index = 0;
+
+  return setInterval(() => {
+    opponentImg.classList.add("opacity-0");
+
+    setTimeout(() => {
+      index = (index + 1) % images.length;
+      opponentImg.src = images[index];
+      opponentImg.classList.remove("opacity-0");
+    }, 300);
+  }, 400);
+}
+
+async function fillSettingsPage()
+{
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    showAlert("Login first");
+    navigate("/login");
+  }
+  try
+  {
+    const res = await fetch(`http://localhost:3001/settings/${userId}`);
+    const data = await res.json();
+    
+    // fill page
+    (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
+    // (document.getElementById("userName") as HTMLInputElement).value = data.userName || "";
+  }
+  catch (err)
+  {
+    console.log(err);
+    showAlert("Error while fetching data: " + err);
+  }
+}
+
+export function RemoteGameStyleEventListener() {
+  fillSettingsPage();
+  startWaitingDots();
+  startOpponentImageRotation();
   setTimeout(() => {
       const match=document.getElementById("play");
       match?.addEventListener("click", () =>{
