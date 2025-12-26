@@ -60,8 +60,8 @@ export async function tournamentChoices() {
             </div>
 
             <!-- Content Wrapper-->
-            <div class="grid grid-cols-1 md:grid-cols-[1fr_1fr] max-w-[1400px] max-h-[70px]  justify-center ml-[13%] mt-36">
-                <div class="flex gap-32">
+            <div class="grid grid-cols-1 gap-20 lg:grid-cols-[1fr_1fr] max-w-[1400px] max-h-[70px]  justify-center md:ml-[13%] mt-36">
+                <div class="md:flex md:gap-32">
                 <div class="flex flex-col justify-center">
                     <h1 class="font-glitch text-center text-3xl mb-8">Available tournaments</h1>
                     <div class="flex">
@@ -77,7 +77,7 @@ export async function tournamentChoices() {
                                                     <p class="font-bold">${tour.name}</p>
                                                     <p class="text-white/70 ">${tour.numOfPlayers} Players</p>
                                                 </div>
-                                                <i class="fa-solid fa-right-to-bracket text-secondary text-3xl absolute right-6"></i>
+                                                <i class="fa-solid fa-right-to-bracket text-secondary text-3xl absolute right-6 cursor-pointer"></i>
                                             </div>
                                         `
                                     )
@@ -85,7 +85,7 @@ export async function tournamentChoices() {
                         </div>
                     </div>
                 </div>
-                <div class="bg-primary/50 h-[700px] w-[3px] rounded-full"></div>
+                <div class="bg-primary/50 h-[700px] w-[3px] rounded-full hidden lg:flex"></div>
                 </div>
                 <div>
                     <h1 class="font-glitch text-center text-3xl pt-4">Create yours</h1>
@@ -102,7 +102,7 @@ export async function tournamentChoices() {
                                 <i class="fa-solid fa-plus absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer text-secondary"></i>
                             </div>
                         </div>
-                        <button class="bg-primary/60 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary">Create</button>
+                        <button class="bg-primary/60 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary mb-16">Create</button>
                     </div>
                 </div>
             </div>
