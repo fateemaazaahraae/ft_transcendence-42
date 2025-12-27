@@ -60,7 +60,7 @@ export async function tournamentChoices() {
             </div>
 
             <!-- Content Wrapper-->
-            <div class="grid grid-cols-1 gap-20 lg:grid-cols-[1fr_1fr] max-w-[1400px] max-h-[70px]  justify-center md:ml-[13%] mt-36">
+            <div class="grid grid-cols-1 gap-20 lg:grid-cols-[1fr_1fr] max-w-[1400px] max-h-[70px] justify-center md:ml-[10%] mt-36">
                 <div class="md:flex md:gap-32">
                 <div class="flex flex-col justify-center">
                     <h1 class="font-glitch text-center text-3xl mb-8">Available tournaments</h1>

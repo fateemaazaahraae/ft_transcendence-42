@@ -2,7 +2,7 @@ import { navigate } from "../main.ts";
 
 export default function Landing() {
   return `
-    <div class="w-full h-full flex flex-col items-center pt-40 overflow-x-hidden overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4">
+    <div class="w-full h-full flex flex-col items-center pt-40 p-4">
     <div class="relative text-center">
       <h1 class="text-black text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-glitch text-center text-shadow-cyan leading-[1.1]"
       style="-webkit-text-stroke: 5px rgba(53,198,221,0.6);">
