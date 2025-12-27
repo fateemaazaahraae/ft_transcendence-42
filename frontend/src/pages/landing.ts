@@ -2,7 +2,7 @@ import { navigate } from "../main.ts";
 
 export default function Landing() {
   return `
-    <div class="w-full h-full flex flex-col items-center pt-40 p-4">
+    <div class="w-full flex flex-col items-center pt-40 p-4">
     <div class="relative text-center">
       <h1 class="text-black text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-glitch text-center text-shadow-cyan leading-[1.1]"
       style="-webkit-text-stroke: 5px rgba(53,198,221,0.6);">
@@ -28,7 +28,7 @@ export default function Landing() {
                 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100 pointer-events-none" 
         />
       </div>
-      <h1 class=" mt-[25%] lg:mt-[180px] xl:mt-[200px] text-white font-glitch text-[18px] md:text-xl lg:text-3xl xl:text-4xl">Think you've got the reflexes to keep up? </h1>
+      <h1 class="mt-24 md:mt-32 xl:mt-40 lg:mt-[180px] text-white font-glitch text-[18px] md:text-xl lg:text-3xl xl:text-4xl">Think you've got the reflexes to keep up? </h1>
       <p class="text-white font-roboto text-[14px] md:text-[15px] lg:text-xl text-center pl-[5%] pr-[5%] mt-7 lg:mt-10">
       Step into the thrilling world of ping pong where speed meets strategy.<br/>
       From first-timers to seasoned pros, everyone can dive in and enjoy nonstop<br/>
