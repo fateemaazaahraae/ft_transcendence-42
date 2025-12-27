@@ -223,7 +223,7 @@ export function LocalGameEventListener() {
       }
       if (quitBtn) {
         quitBtn.addEventListener('click', () => {
-          navigate('/LocalgameStyle');
+          navigate('/localMode');
           // console.log('Quit lacal game style');
         });
       }
@@ -408,7 +408,7 @@ export function LocalGameEventListener() {
               
               if (mainMenuBtn) {
                 mainMenuBtn.addEventListener('click', () => {
-                  navigate('/LocalgameStyle');
+                  navigate('/localMode');
                 });
               }
         }

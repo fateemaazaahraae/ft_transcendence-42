@@ -226,7 +226,7 @@ export function AiGameEventListener() {
       }
       if (quitBtn) {
         quitBtn.addEventListener('click', () => {
-          navigate('/LocalgameStyle');
+          navigate('/localMode');
           // console.log('Quit lacal game style');
         });
       }
@@ -454,7 +454,7 @@ export function AiGameEventListener() {
               
               if (mainMenuBtn) {
                 mainMenuBtn.addEventListener('click', () => {
-                  navigate('/LocalgameStyle');
+                  navigate('/localMode');
                 });
               }
         }

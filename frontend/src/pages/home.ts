@@ -9,10 +9,9 @@ import { formatDate } from "../utils/date.ts";
 
 
 export default async function Home() {
+  //Auth data
   let user:any;
-  let matches:any;
   try{
-    //Auth data
     const params = new URLSearchParams(window.location.search);
     let token = params.get("token");
     if (token)
@@ -29,17 +28,15 @@ export default async function Home() {
       });
       const data = await res.json();
       user = data.user;
-      localStorage.setItem("userId", data.user.id);
-      //Game data
-      
-      
-      
+      localStorage.setItem("userId", data.user.id); 
     }
     catch
     {
       console.log("login first");
       navigate("/login");
     }
+    //Game data
+    let matches:any;
     try {
         const userId = localStorage.getItem("userId");
         const resGame = await fetch(`game/matches/user/${userId}`);
@@ -203,19 +200,19 @@ export default async function Home() {
   </div>
   <!-- Match history -->
     <div class="w-[70%] md:w-[60%] h-[2px] lg:w-0 lg:h-0 rounded-full bg-[#35C6DD] mt-[30%] md:mt-[18%] lg:mt-0 ml-[15%] md:ml-[20%] lg:ml-0  shadow-[0_0_20px_#35C6DD]"></div>
-  <div class = "flex flex-col lg:flex-row lg:gap-[5%] mt-[8%] md:mt-[3%] lg:mt-[15%] xl:mt-[12%] justify-center items-center">
+  <div class = "flex flex-col lg:flex-row lg:gap-[5%] xl:gap-[8%] mt-[8%] md:mt-[3%] lg:mt-[15%] xl:mt-[10%] justify-center items-center">
     <div class="flex flex-col lg:ml-[20%] xl:ml-[10%]">
       <h1 class=" text-center font-glitch md:text-2xl xl:text-4xl lg:mb-1 xl:mb-6">Match history</h1>
   
       <!-- Scrollable container -->
-        <div class="flex flex-col items-center gap-4 w-[400px] h-[200px] md:w-[600px] xl:w-[750px] max-h-[250px] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4">
+        <div class="flex flex-col items-center gap-4  w-[400px] h-[200px] xl:h-[250px] md:w-[600px] xl:w-[750px] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4">
           ${matches.length === 0 ? 
           `<div class = "flex flex-col  items-center justify-center gap-5 border-2 border-primary/80 drop-shadow-cyan w-[400px] h-full rounded-[30px]">
             <i class="fa-duotone fa-solid fa-table-tennis-paddle-ball text-secondary text-[50px]"></i>
             <p class="font-regular font-roboto text-primary text-center text-xl"> No matches played yet </p> 
            </div>`
           : matches.map(match => `
-            <div class="flex justify-between items-center h-[40px] lg:h-[50px] w-full xl:h-[60px] rounded-2xl bg-primary/60 px-4 shadow-lg">
+            <div class="flex justify-between items-center py-[5px] h-[40px] lg:h-[50px] w-full xl:h-[60px] rounded-2xl bg-primary/60 px-4 shadow-lg">
               
               <!-- Player 1 -->
               <div class="flex items-center gap-3">
@@ -224,7 +221,7 @@ export default async function Home() {
               </div>
     
               <!-- Score -->
-              <div class= "flex flex-col items-center font-normal gap-[4px] text-[12px] text-white/60">
+              <div class= "flex flex-col items-center font-normal text-[12px] text-white/60">
               <p class="flex items-center justify-center text-white font-roboto font-bold lg:text-[17px] xl:text-xl lg:gap-4 xl:gap-6">
               <span>${match.score1}</span>
               <span>-</span>
@@ -242,63 +239,69 @@ export default async function Home() {
         </div>
     </div>  
     <div class="flex flex-col mt-[10%] md:mt-[5%] mb-[15%] md:mb-[5%] lg:md-0 lg:mt-[5%] lg:mr-[10%] items-center gap-5 group">
-      <img src="/public/match.svg" class="md:w-[350px] lg:w-[250px]"/>
-      <button id="play-btn2" class="w-[100px] xl:w-[130px] h-[30px] rounded-3xl bg-primary/60 text-white font-glitch hover:bg-secondary">play</button>
+      <img src="/public/match.svg" class="md:w-[350px] lg:w-[250px] xl:w-[350px]"/>
+      <button id="play-btn2" class="w-[100px] xl:w-[160px] h-[30px] xl:h-[40px] rounded-3xl bg-primary/60 text-center text-white font-glitch hover:bg-secondary xl:text-2xl">play</button>
     </div>
   </div>
     </div>
    `;
 }
-
-export function HomeEventListener() {
-  setTimeout(() => {
-    const btnPlay = document.getElementById("play-btn");
-    if (btnPlay) {
-      btnPlay.addEventListener("click", () => {
-        console.log("play Button clicked");
-        navigate("/LocalgameStyle");
-      });
-    }
-
-    const btnRemote = document.getElementById("remote-btn");
-    if (btnRemote) {
-      btnRemote.addEventListener("click", () => {
-        console.log("Remote Play Clicked - Attempting Connection...");
-
-        const token = localStorage.getItem("token"); // this will get JWT prolly
-        if (!token) {
-          navigate("/login"); 
-          return;
-        }
-
-        const socket = getGameSocket(token); /// here is the key to send request to our game server
-
-        if (!socket.hasListeners("match_found")) {
-            
-            socket.on("connect", () => {
-                console.log("✅ Connected via Manager! ID:", socket.id);
-                navigate("/RemotegameStyle");
-                socket.emit('join_queue');
-            });
-
-            socket.on("match_found", (data) => {
-                console.log("🎉 MATCH FOUND! Navigating to game...");
-                localStorage.setItem("currentMatch", JSON.stringify(data));
-                navigate("/remote-game"); 
-            });
-
-            socket.on("waiting_for_match", (data) => {
-                console.log(`Status: ${data.message}`);
-            });
-        }
-
-        if (socket.connected) {
-             socket.emit('join_queue');
-        }
-      });
-    }
-  }, 100);
+export function HomeEventListener()
+{
+  const btnPlay = document.getElementById("play-btn2");
+  btnPlay?.addEventListener("click", () => {navigate("/gameStyle");
+});
 }
+
+// export function HomeEventListener() {
+//   setTimeout(() => {
+//     const btnPlay = document.getElementById("play-btn");
+//     if (btnPlay) {
+//       btnPlay.addEventListener("click", () => {
+//         console.log("play Button clicked");
+//         navigate("/LocalgameStyle");
+//       });
+//     }
+
+//     const btnRemote = document.getElementById("remote-btn");
+//     if (btnRemote) {
+//       btnRemote.addEventListener("click", () => {
+//         console.log("Remote Play Clicked - Attempting Connection...");
+
+//         const token = localStorage.getItem("token"); // this will get JWT prolly
+//         if (!token) {
+//           navigate("/login"); 
+//           return;
+//         }
+
+//         const socket = getGameSocket(token); /// here is the key to send request to our game server
+
+//         if (!socket.hasListeners("match_found")) {
+            
+//             socket.on("connect", () => {
+//                 console.log("✅ Connected via Manager! ID:", socket.id);
+//                 navigate("/RemotegameStyle");
+//                 socket.emit('join_queue');
+//             });
+
+//             socket.on("match_found", (data) => {
+//                 console.log("🎉 MATCH FOUND! Navigating to game...");
+//                 localStorage.setItem("currentMatch", JSON.stringify(data));
+//                 navigate("/remote-game"); 
+//             });
+
+//             socket.on("waiting_for_match", (data) => {
+//                 console.log(`Status: ${data.message}`);
+//             });
+//         }
+
+//         if (socket.connected) {
+//              socket.emit('join_queue');
+//         }
+//       });
+//     }
+//   }, 100);
+// }
 /*import { navigate } from "../main.ts";
 export default function Home() {
   const user = {

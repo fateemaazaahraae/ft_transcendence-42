@@ -1,6 +1,8 @@
 import "./../styles/index.css";
 import Landing, { LandingEventListener } from "./pages/landing";
 import Home, { HomeEventListener } from "./pages/home";
+import RemoteVsLocal, {RemoteVsLocalEventListener} from "./pages/remoteVSlocal.ts";
+import LocalMode, { LocalModeEventListener } from "./pages/localMode.ts";
 import GameStyle, { GameStyleEventListener } from "./pages/gameStyle.ts";
 import LocalGameStyle, { LocalGameStyleEventListener } from "./pages/LocalgameStyle.ts";
 import RemoteGameStyle, { RemoteGameStyleEventListener } from "./pages/RemotegameStyle.ts";
@@ -32,6 +34,8 @@ import { searchBar } from "./pages/searchBar.ts";
 const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<void> }> = {
     "/": {render: Landing, setUp: LandingEventListener},
     "/home": {render: Home, setUp: HomeEventListener},
+    "/remoteVSlocal": {render: RemoteVsLocal, setUp: RemoteVsLocalEventListener},
+    "/localMode" :{ render: LocalMode, setUp: LocalModeEventListener},
     "/gameStyle": {render: GameStyle, setUp: GameStyleEventListener},
     "/LocalgameStyle": {render: LocalGameStyle, setUp: LocalGameStyleEventListener},
     "/RemotegameStyle": {render: RemoteGameStyle, setUp: RemoteGameStyleEventListener},
