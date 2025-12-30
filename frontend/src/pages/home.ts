@@ -56,7 +56,7 @@ export default async function Home() {
   const currentLang = (await getSavedLang()).toUpperCase();
 
   return `
-<div class="relative w-full h-screen overflow-x-hidden px-6">
+<div class="relative w-full overflow-x-hidden px-6">
 
     <!-- Sidebar -->
     <aside
@@ -79,7 +79,7 @@ export default async function Home() {
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass text-primary absolute top-1/2 -translate-y-1/2 left-3"></i>
-        <input type="text" placeholder="Search for friends.." class="search-input font-roboto px-10 py-2 rounded-full text-[12px] focus:outline-none bg-black border-[2px] border-primary/70">
+        <input type="text" placeholder="Search" class="search-input w-[180px] md:w-[280px] font-roboto px-10 py-2 rounded-full text-[12px] focus:outline-none bg-black border-[2px] border-primary/70">
         <div class="search-results absolute top-full left-0 w-full h-auto backdrop-blur-md mt-1 hidden z-[9000] rounded-xl"></div>
       </div>
       <div class="arrow relative group">
@@ -93,7 +93,7 @@ export default async function Home() {
     </div>
 
        <!-- HOME -->
-  <div class ="relative flex lg:flex-row flex-col justify-center items-center lg:left-[7%] xl:left-0 top-[20%]">
+  <div class ="relative flex lg:flex-row flex-col justify-center items-center lg:left-[7%] xl:left-0 mt-[30%] lg:mt-[20%] xl:mt-[10%]">
    <div class="flex justify center items-center">
       <!-- Avatar -->
       <img 
@@ -129,16 +129,10 @@ export default async function Home() {
             <span class="text-secondary ml-2">700</span>
             </p>
           </div>
-        <!-- <button id="play-btn" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out pt-[300px]">
-          PlayNow localy
-        </button>
-        <button id="remote-btn" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out pt-[100px]">
-          PlayNow Remotely
-        </button> -->
       </div>
     </div>
      <!-- Vertical Bar -->
-    <div class="w-[70%] h-[2px] md:w-[60%] lg:w-[1px] lg:h-[180px] xl:w-[3px] xl:h-[250px] rounded-full bg-[#35C6DD] mt-[15%] lg:mt-0 lg:ml-[40px] lg:mr-[30px] xl:ml-[80px] xl:mr-[40px] shadow-[0_0_20px_#35C6DD]"></div>
+    <div class="w-[70%] h-[2px] md:w-[60%] lg:w-[1px] lg:h-[180px] xl:w-[3px] xl:h-[250px] rounded-full bg-[#35C6DD]  mt-[10%] md:mt-[8%] lg:mt-0 lg:ml-[40px] lg:mr-[30px] xl:ml-[80px] xl:mr-[40px] shadow-[0_0_20px_#35C6DD]"></div>
     <div class="flex relative gap-[10%] md:gap-[15%] lg:gap-0">
     <div class="flex flex-col ml-[18%] md:ml-[10%] lg:ml-0 lg:gap-4 justify-center items-center">
       <h1 class=" text-white  lg:mb-0 font-glitch md:text-2xl xl:text-4xl whitespace-nowrap"> Wining rate </h1>
@@ -199,17 +193,17 @@ export default async function Home() {
     </div>
   </div>
   <!-- Match history -->
-    <div class="w-[70%] md:w-[60%] h-[2px] lg:w-0 lg:h-0 rounded-full bg-[#35C6DD] mt-[30%] md:mt-[18%] lg:mt-0 ml-[15%] md:ml-[20%] lg:ml-0  shadow-[0_0_20px_#35C6DD]"></div>
-  <div class = "flex flex-col lg:flex-row lg:gap-[5%] xl:gap-[8%] mt-[8%] md:mt-[3%] lg:mt-[15%] xl:mt-[10%] justify-center items-center">
-    <div class="flex flex-col lg:ml-[20%] xl:ml-[10%]">
+    <div class="w-[70%] md:w-[60%] h-[2px] lg:w-0 lg:h-0 rounded-full bg-[#35C6DD]  lg:mt-0 ml-[15%] md:ml-[20%] lg:ml-0  shadow-[0_0_20px_#35C6DD]"></div>
+  <div class = "flex flex-col lg:flex-row lg:gap-[8%] xl:gap-[8%] mt-[8%] md:mt-[3%] lg:mt-0 xl:mt-[2%] justify-center items-center">
+    <div class="flex flex-col lg:ml-[10%] xl:ml-[10%]">
       <h1 class=" text-center font-glitch md:text-2xl xl:text-4xl lg:mb-1 xl:mb-6">Match history</h1>
   
       <!-- Scrollable container -->
         <div class="flex flex-col items-center gap-4  w-[400px] h-[200px] xl:h-[250px] md:w-[600px] xl:w-[750px] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4">
           ${matches.length === 0 ? 
-          `<div class = "flex flex-col  items-center justify-center gap-5 border-2 border-primary/80 drop-shadow-cyan w-[400px] h-full rounded-[30px]">
-            <i class="fa-duotone fa-solid fa-table-tennis-paddle-ball text-secondary text-[50px]"></i>
-            <p class="font-regular font-roboto text-primary text-center text-xl"> No matches played yet </p> 
+          `<div class = "flex flex-col  items-center justify-center gap-5 border-2 border-primary/80 drop-shadow-cyan w-[300px] md:w-[400px]  h-full rounded-[30px]">
+            <i class="fa-duotone fa-solid fa-table-tennis-paddle-ball text-secondary text-[40px] md:text-[50px]"></i>
+            <p class="font-regular font-roboto text-primary text-center text-[18px] md:text-xl"> No matches played yet </p> 
            </div>`
           : matches.map(match => `
             <div class="flex justify-between items-center py-[5px] h-[40px] lg:h-[50px] w-full xl:h-[60px] rounded-2xl bg-primary/60 px-4 shadow-lg">
@@ -238,8 +232,8 @@ export default async function Home() {
             `).join("")}
         </div>
     </div>  
-    <div class="flex flex-col mt-[10%] md:mt-[5%] mb-[15%] md:mb-[5%] lg:md-0 lg:mt-[5%] lg:mr-[10%] items-center gap-5 group">
-      <img src="/public/match.svg" class="md:w-[350px] lg:w-[250px] xl:w-[350px]"/>
+    <div class="flex flex-col mt-[10%] md:mt-[5%]  lg:mt-[5%] lg:mr-[5%] xl:mr-[8%] mb-[20%] md:mb-[5%] lg:mb-0 xl:mt-[2%] items-center gap-5  ">
+      <img src="/public/match.svg" class="md:w-[350px] lg:w-[260px] xl:w-[350px]"/>
       <button id="play-btn2" class="w-[100px] xl:w-[160px] h-[30px] xl:h-[40px] rounded-3xl bg-primary/60 text-center text-white font-glitch hover:bg-secondary xl:text-2xl">play</button>
     </div>
   </div>

@@ -29,7 +29,7 @@ import { showAlert } from "./utils/alert.ts";
 import RemoteGame, { RemoteGameEventListener } from "./pages/RemoteGame.ts";////
 import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
 import { searchBar } from "./pages/searchBar.ts";
-// import { viewFriend } from "./pages/viewFriend.ts";
+import { tournamentChoices } from "./pages/tournamentChoices.ts";
 
 const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<void> }> = {
     "/": {render: Landing, setUp: LandingEventListener},
@@ -55,6 +55,7 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
     "/chat": {render: Chat, setUp: ChatEventListener},
     "/remote-game": { render: RemoteGame, setUp: RemoteGameEventListener },///
+    "/tournamentChoices": { render: tournamentChoices},
     404: {render: PageNotFound},
 };
 
@@ -112,9 +113,3 @@ window.addEventListener("DOMContentLoaded", async() => {
 
 const urlParams = new URLSearchParams(window.location.search);
 const token = urlParams.get("token");
-// if (token) {
-//   localStorage.setItem("jwt", token);
-
-//   window.history.replaceState({}, document.title, "/home");
-//   window.location.href = "/home";
-// }

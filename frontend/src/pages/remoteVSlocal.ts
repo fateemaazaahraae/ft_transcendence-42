@@ -21,8 +21,13 @@ export default function RemoteVsLocal(){
             </aside>
 
 
-            <!-- Controls Icons -->
+             <!-- Controls Icons -->
             <div class="absolute top-10 right-[5%] flex items-center gap-4">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass text-primary absolute top-1/2 -translate-y-1/2 left-3"></i>
+                <input type="text" placeholder="Search" class="search-input w-[180px] md:w-[280px] font-roboto px-10 py-2 rounded-full text-[12px] focus:outline-none bg-black border-[2px] border-primary/70">
+                <div class="search-results absolute top-full left-0 w-full h-auto backdrop-blur-md mt-1 hidden z-[9000] rounded-xl"></div>
+            </div>
             <div class="arrow relative group">
                 <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
                 <i class="fa-solid fa-chevron-down text-xs"></i>
@@ -34,10 +39,10 @@ export default function RemoteVsLocal(){
             </div>
 
             <!-- Remote OR Local -->
-                <div class= "flex flex-col items-center mt-[13%]">
+                <div class= "flex flex-col items-center mt-[60%] md:mt-[35%] lg:mt-[30%] xl:mt-[13%]">
                     <h1
                     class="relative font-glitch uppercase
-                            text-[60px] sm:text-[80px] md:text-6xl
+                             xl:text-6xl lg:text-5xl md:text-3xl text-[18px]
                             tracking-[5px] leading-none
                             text-secondary
 
@@ -56,10 +61,10 @@ export default function RemoteVsLocal(){
                     How do you prefer to play?
                     </h1>
 
-                    <div class =" flex gap-[5%] mt-[5%] w-full items-center justify-center">
-                        <button id="remote" class="w-[200px] h-[80px] bg-black rounded-[20px] font-roboto font-bold text-2xl drop-shadow-cyan hover:bg-primary"> Remote </button>
-                        <span class=" font-roboto text-xl"> OR </span>
-                        <button id="local" class="w-[200px] h-[80px] bg-black rounded-[20px] font-roboto font-bold text-2xl drop-shadow-pink hover:bg-secondary"> Local </button>
+                    <div class =" flex gap-[5%] mt-[7%] md:mt-[5%] w-full items-center justify-center">
+                        <button id="remote" class="w-[100px] h-[50px] text-[15px] md:w-[150px] md:h-[60px] md:text-xl lg:w-[200px] lg:h-[80px] bg-black rounded-[20px] font-roboto font-bold lg:text-2xl drop-shadow-cyan hover:bg-primary"> Remote </button>
+                        <span class=" font-roboto text-[17px] md:text-xl"> OR </span>
+                        <button id="local" class="w-[100px] h-[50px] text-[15px] md:w-[150px] md:h-[60px] md:text-xl lg:w-[200px] lg:h-[80px] bg-black rounded-[20px] font-roboto font-bold lg:text-2xl drop-shadow-pink hover:bg-secondary"> Local </button>
                     </div>
                 </div>
         </div> 

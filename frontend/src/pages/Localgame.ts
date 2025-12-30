@@ -21,7 +21,7 @@ export default function LocalGame() {
   }; 
   
   return `
-  <div class="relative w-full h-screen">
+  <div id="container" class="relative w-full h-screen">
 
     <!-- Top icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
@@ -58,7 +58,7 @@ export default function LocalGame() {
     </div>
 
     <!-- PAUSE OVERLAY (Hidden by default) -->
-    <div id="pause-overlay" class="absolute inset-0 bg-black/80 z-20 hidden flex-col items-center justify-center">
+    <div id="pause-overlay" class="absolute inset-0 bg-black/50 z-[100] hidden flex-col items-center justify-center">
       <div class="bg-black p-8 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
         <h2 class="text-3xl font-glitch text-primary mb-2">Game Paused</h2>
         <p class="font-roboto text-gray-300 mb-10">Take a break, adjust settings, or resume</p>
@@ -365,7 +365,7 @@ export function LocalGameEventListener() {
           const winner = player1Score >= WINNING_SCORE ? "player1" : "player2";
             const winnerOverlay = document.createElement('div');
             winnerOverlay.id = 'winner-overlay';
-            winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
+            winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
             winnerOverlay.innerHTML = `
               <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
                 <h2 class="text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
@@ -394,7 +394,7 @@ export function LocalGameEventListener() {
               </div>
             `;
             
-            document.querySelector('.relative')?.appendChild(winnerOverlay);
+            document.querySelector('#container')?.appendChild(winnerOverlay);
 
               const playAgainBtn = document.getElementById('play-again-btn');
               const mainMenuBtn = document.getElementById('main-menu-btn');

@@ -38,8 +38,13 @@ export default async function LocalMode() {
     </aside>
 
 
-    <!-- Controls Icons -->
+     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass text-primary absolute top-1/2 -translate-y-1/2 left-3"></i>
+        <input type="text" placeholder="Search" class="search-input w-[180px] md:w-[280px] font-roboto px-10 py-2 rounded-full text-[12px] focus:outline-none bg-black border-[2px] border-primary/70">
+        <div class="search-results absolute top-full left-0 w-full h-auto backdrop-blur-md mt-1 hidden z-[9000] rounded-xl"></div>
+      </div>
       <div class="arrow relative group">
         <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
@@ -52,7 +57,7 @@ export default async function LocalMode() {
 
     <!-- chose your mode -->
 
-    <div class="absolute top-[70%]  md:top-1/2 pb-[15%] md:pb-0 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+    <div class="absolute top-[70%]  lg:top-1/2 pb-[15%] md:pb-0 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
       <h1 class="font-glitch text-3xl md:text-4xl xl:text-6xl lg:text-5xl text-black leading-[1.9]"
        style="-webkit-text-stroke: 2px rgba(53,198,221,0.6);">Ready to play?</h1>
       <h1 class="font-glitch text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-primary/60 text-shadow-cyan">Pick your mode</h1>
@@ -72,7 +77,7 @@ export default async function LocalMode() {
                 <img src="${user.profileImage}" 
                 class=" object-cover w-[100px] h-[100px] md:w-[100px] md:h-[100px] lg:w-[120px] lg:h-[120px] xl:w-[150px] xl:h-[150px] rounded-full border-[3px] border-[#35C6DD]/90"/>
                 <img src="/public/vs.svg" class="w-[90px] md:w-[100px] lg:w-[120px]" />
-                <img src="/public/robot.svg" class="o w-[100px] md:w-[100px] lg:w-[120px] xl:w-[130px] mt-[25%]"/> 
+                <img src="/public/robot.svg" class=" w-[85px] lg:w-[103px] xl:w-[130px] mt-[25%]"/> 
             </div>
             <button id="playAi" class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
         </div>
