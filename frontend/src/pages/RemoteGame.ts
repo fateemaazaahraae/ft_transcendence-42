@@ -1,37 +1,31 @@
 import { getGameSocket } from "../utils/gameSocket.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
+import { showAlert } from "../utils/alert.ts";
+import { match } from "node:assert";
 
 export default function RemoteGame() {
   if (!requiredAuth()) return "";
-  
-  // 1. Get the data we saved in Home.ts
-  const matchDataString = localStorage.getItem("currentMatch");
-  
-  // Default fallback (in case of refresh or error)
-  let p1 = { name: "Player 1", avatar: "/public/dark-girl.svg", score: 0 };
-  let p2 = { name: "Player 2", avatar: "/public/purple-girl.svg", score: 0 };
+  let p1 = { score: 0 };// Adding score
+  let p2 = { score: 0 };
 
-  if (matchDataString) {
-      const matchData = JSON.parse(matchDataString);
-      p1 = { ...p1, ...matchData.player1 }; // Merge defaults with real data
-      p2 = { ...p2, ...matchData.player2 };
-  } 
-  
   return `
-  <div id="container" class="relative w-full h-screen">
-    <!-- Player Info & Score -->
+  <div class="relative w-full h-screen">
     <div class="absolute flex top-[15%] md:top-[20%] lg:top-[23%] xl:top-[18%] left-[6%] md:left-[2%] lg:left-[11%] xl:left-[22%] md:translate-x-1/2">
-        <img src="${p1.avatar}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+        
+        <img src="" id="myImg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+        
         <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[3%] lg:ml-[10%] ">
-          <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${p1.name} </h1>
+          <h1 id="userName" class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> </h1>
           <span id="player1-score-display" class="w-[40px] h-[30px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-primary text-xl bg-black drop-shadow-cyann">${p1.score}</span>
         </div>
+
         <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[20%] lg:ml-[35%]">
-          <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${p2.name} </h1>
+          <h1 id="userName2" class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> </h1>
           <span id="player2-score-display" class="w-[40px] h-[30px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-secondary text-xl bg-black drop-shadow-pink">${p2.score}</span>
         </div>
-        <img src="${p2.avatar}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+
+        <img src="" id="myImg2" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
     </div>
     <!-- GAME CANVAS AREA -->
     <div class="absolute top-[26%] lg:top-[37%] xl:top-[32%] md:top-[32%] left-[15%] w-[70%] h-[65%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
@@ -48,7 +42,7 @@ export default function RemoteGame() {
         </button>
       </div>
     <!-- PAUSE OVERLAY (Hidden by default) -->
-      <div id="leave-overlay" class="absolute inset-0 bg-black/50 z-[100] hidden flex-col items-center justify-center">
+      <div id="leave-overlay" class="absolute inset-0 bg-black/80 z-20 hidden flex-col items-center justify-center">
         <div class="bg-black p-8 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
           <h2 class="text-3xl font-glitch tracking-[1px] leading-[5px] text-primary mb-5">Leave Match ?</h2>
           <p class="font-roboto text-gray-300 mb-10">Your progress for this match will be lost.</p>
@@ -77,7 +71,43 @@ export default function RemoteGame() {
     `;
   }
 
+export async function fillSettingsPage()
+{
+  const cachedData = localStorage.getItem("currentMatch");
+  if (cachedData) {
+    const match = JSON.parse(cachedData);
+    const userId = match.player1.id;
+    const userId2 = match.player2.id;
+    if (!userId || !userId2) {
+      showAlert("Login first");
+      navigate("/login");
+    }
+    try
+    {
+      const res = await fetch(`http://localhost:3001/settings/${userId}`);
+      const data = await res.json();
+      // fill page
+      (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
+      (document.getElementById("userName") as HTMLElement).textContent = data.userName || "";
+      
+
+      const res2 = await fetch(`http://localhost:3001/settings/${userId2}`);
+      const data2 = await res2.json();
+      // fill page
+      (document.getElementById("myImg2") as HTMLImageElement).src = data2.profileImage || "";
+      (document.getElementById("userName2") as HTMLElement).textContent = data2.userName || "";
+    }
+    catch (err)
+    {
+      console.log(err);
+      showAlert("Error while fetching data: " + err);
+    }
+  }
+}
+
+
 export function RemoteGameEventListener() {
+  fillSettingsPage();
   const socket = getGameSocket(localStorage.getItem("token"));
   const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
   const ctx = canvas?.getContext("2d");
@@ -93,11 +123,8 @@ export function RemoteGameEventListener() {
 
   const LeaveOverlay = document.getElementById('leave-overlay') as HTMLDivElement;
   const quitBtn = document.getElementById('quit-btn') as HTMLButtonElement;
-  // const cancelbtn = document.getElementById('cancel-btn') as HTMLButtonElement;
   const player1ScoreDisplay = document.getElementById('player1-score-display') as HTMLSpanElement;
   const player2ScoreDisplay = document.getElementById('player2-score-display') as HTMLSpanElement;
-  // const scoreP1 = document.getElementById("score-p1");
-  // const scoreP2 = document.getElementById("score-p2");
   const modal = document.getElementById("game-over-modal");
   const resultTitle = document.getElementById("game-result-title");
   const finalScoreText = document.getElementById("final-score");
@@ -136,7 +163,7 @@ export function RemoteGameEventListener() {
     // const winnerAvatar = player1Score >= WINNING_SCORE ? ${game.match[0].player1.avatar} : ${game.match[0].player2.avatar};
     const winnerOverlay = document.createElement('div');
     winnerOverlay.id = 'winner-overlay';
-    winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
+    winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
     winnerOverlay.innerHTML = `
       <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
         <h2 class="text-3xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 YOU WON! 🏆</h2>
@@ -155,7 +182,7 @@ export function RemoteGameEventListener() {
       </div>
     `;
     
-        document.querySelector('#container')?.appendChild(winnerOverlay);
+        document.querySelector('.relative')?.appendChild(winnerOverlay);
 
           const ExitBtn = document.getElementById('quit');
 
@@ -198,7 +225,7 @@ export function RemoteGameEventListener() {
       if (data.reason === 'opponent_disconnected') {
         const winnerOverlay = document.createElement('div');
             winnerOverlay.id = 'winner-overlay';
-            winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
+            winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
             winnerOverlay.innerHTML = `
               <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
                 <h3 class="text-3xl font-glitch text-secondary mb-3">🏆 YOU WON! 🏆</h3>
@@ -219,7 +246,7 @@ export function RemoteGameEventListener() {
               </div>
             `;
     
-            document.querySelector('#container')?.appendChild(winnerOverlay);
+            document.querySelector('.relative')?.appendChild(winnerOverlay);
             document.getElementById("quit")?.addEventListener("click", () => {
               navigate("/home");
             });
@@ -231,7 +258,7 @@ export function RemoteGameEventListener() {
           if (isWinner) {
             const winnerOverlay = document.createElement('div');
             winnerOverlay.id = 'winner-overlay';
-            winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
+            winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
             winnerOverlay.innerHTML = `
               <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
                 <h3 class="text-3xl font-glitch text-secondary mb-3">🏆 YOU WON! 🏆</h3>
@@ -251,14 +278,14 @@ export function RemoteGameEventListener() {
               </div>
             `;
     
-            document.querySelector('#container')?.appendChild(winnerOverlay);
+            document.querySelector('.relative')?.appendChild(winnerOverlay);
             document.getElementById("quit")?.addEventListener("click", () => {
               navigate("/home");
             });
           } else {
               const winnerOverlay = document.createElement('div');
               winnerOverlay.id = 'winner-overlay';
-              winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
+              winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
               winnerOverlay.innerHTML = `
                 <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
                   <h3 class="text-3xl font-glitch text-primary mb-3">💀 YOU LOST! 💀</h3>
@@ -278,7 +305,7 @@ export function RemoteGameEventListener() {
                 </div>
               `;
               
-              document.querySelector('#container')?.appendChild(winnerOverlay);
+              document.querySelector('.relative')?.appendChild(winnerOverlay);
               document.getElementById("quit")?.addEventListener("click", () => {
                 navigate("/home");
               });
@@ -342,7 +369,7 @@ export function RemoteGameEventListener() {
   setTimeout(() => {
       if (!hasReceivedGameData) {
           console.log("⚠️ No active game found (likely refreshed). Redirecting...");
-          alert("Game session lost or finished.");
+          showAlert("Game session lost or finished.");
           navigate("/home");
       }
   }, 1500);

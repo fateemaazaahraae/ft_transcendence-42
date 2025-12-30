@@ -1,10 +1,7 @@
-const Fastify = require ("fastify");
-const fastifyCors = require ('@fastify/cors');
+const fastify = require('fastify')({ logger: true });
 const { Server } = require('socket.io');
 const GameRoom = require('./GameRoom'); // I will do it later just to have an idea
 const { getDb } = require('./db');
-
-const fastify = Fastify({ logger: true });
 
 const waitingQueue = []; // array to store my players until I have a size of 2
 
@@ -12,10 +9,9 @@ fastify.get('/test', async (request, reply) => {
   return { message: 'Game service is working!' };
 });
 
-
 fastify.get('/matches/user/:userId', async (request, reply) => {
     const userId = request.params.userId;
-    console.log("waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa----------->", userId);
+    
     try {
         const db = await getDb();
         
@@ -42,7 +38,7 @@ const getUserDataFromToken = (token) => {
     return {
         id: decoded.id,
         name: decoded.userName,       // Make sure these match your JWT fields
-        avatar: decoded.profileImage || "/public/default-avatar.svg" // Fallback
+        avatar: decoded.profileImage || "/public/default.png" // Fallback
     };
   } catch (error) {
     console.error("Failed to decode token:", error.message);
@@ -68,11 +64,6 @@ const getUserIdFromToken = (token) => {
 
 const start = async () => {
   try {
-    await fastify.register(fastifyCors, {
-      origin: "*",
-      methods: ["GET", "POST", "OPTIONS"],
-      allowedHeaders: ["Authorization", "Content-Type"],
-    });
     await fastify.listen({ port: 3003, host: '0.0.0.0' });
     console.log('✅ HTTP Server running at http://localhost:3003');
 
@@ -110,7 +101,6 @@ const start = async () => {
 
       console.log(`🔌 User ${userData.name} connected!`);
 
-      // 3. Store the clean UUID
       // socket.data.userId = userId;
       // console.log(`User connected! Socket ID: ${socket.id} | User ID: ${socket.data.userId}`);
 
@@ -135,7 +125,7 @@ const start = async () => {
                 player2: player2.data.user
             };
 
-            console.log(`🚀 Match: ${matchInfo.player1.name} vs ${matchInfo.player2.name}`);
+            console.log(`🚀 Match: ${matchInfo.player1.avatar} vs ${matchInfo.player2.avatar}`);
 
             // Notify players with FULL info
             player1.emit('match_found', matchInfo);
@@ -157,7 +147,7 @@ const start = async () => {
         const index = waitingQueue.findIndex(s => s.id === socket.id);
         if (index !== -1) {
           waitingQueue.splice(index, 1);// splice (index) from where start removing and (1) how many to remove
-          console.log(`${socket.data.userId} removed from queue.bslama`);
+          console.log(`${socket.data.userId} removed from queue bslama`);
         }
       });
     });
