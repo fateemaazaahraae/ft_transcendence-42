@@ -60,6 +60,21 @@ export const initSocket = (server) => {
       }
     });
 
+    
+        socket.on('user_unblocked', (payload) => {
+      try {
+        const { unblockedId, unblockedBy } = payload || {};
+        if (!unblockedId) return;
+        if (String(socket.data.userId) !== String(unblockedBy)) {
+          console.warn('user_unblocked: emitter mismatch', socket.data.userId, unblockedBy);
+          return;
+        }
+        socket.to(String(unblockedId)).emit('you_were_unblocked', { by: unblockedBy });
+      } catch (e) {
+        console.warn('user_unblocked handler error', e);
+      }
+    });
+
 
     socket.on("disconnect", () => {});
   });

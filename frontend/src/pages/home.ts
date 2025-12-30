@@ -3,6 +3,9 @@ import { getSavedLang } from "../i18n/index.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 import { loadUser } from "../utils/loadUser.ts";
+import { io } from "socket.io-client";
+import { getGameSocket } from "../utils/gameSocket.ts";
+
 
 export default async function Home() {
   let user:any;
@@ -57,7 +60,7 @@ export default async function Home() {
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass text-primary absolute top-1/2 -translate-y-1/2 left-3"></i>
-        <input type="text" placeholder="Search for friends.." class="search-input font-roboto px-10 py-2 rounded-full text-[12px] focus:outline-none bg-black border-[2px] border-primary/70">
+        <input type="text" placeholder="Search" class="search-input w-[180px] md:w-[280px] font-roboto px-10 py-2 rounded-full text-[12px] focus:outline-none bg-black border-[2px] border-primary/70">
         <div class="search-results absolute top-full left-0 w-full h-auto backdrop-blur-md mt-1 hidden z-[9000] rounded-xl"></div>
       </div>
       <div class="arrow relative group">
@@ -108,7 +111,10 @@ export default async function Home() {
             </p>
           </div>
         <button id="play-btn" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out pt-[300px]">
-          PlayNow
+          PlayNow localy
+        </button>
+        <button id="remote-btn" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out pt-[100px]">
+          PlayNow Remotely
         </button>
       </div>
     </div>
@@ -125,6 +131,43 @@ export function HomeEventListener() {
         navigate("/LocalgameStyle");
       });
     }
+
+    const btnRemote = document.getElementById("remote-btn");
+    if (btnRemote) {
+      btnRemote.addEventListener("click", () => {
+        console.log("Remote Play Clicked - Attempting Connection...");
+
+        const token = localStorage.getItem("token"); // this will get JWT prolly
+        if (!token) {
+          navigate("/login"); 
+          return;
+        }
+
+        const socket = getGameSocket(token); /// here is the key to send request to our game server
+
+        if (!socket.hasListeners("match_found")) {
+            
+            socket.on("connect", () => {
+                console.log("✅ Connected via Manager! ID:", socket.id);
+                navigate("/RemotegameStyle");
+                socket.emit('join_queue');
+            });
+
+            socket.on("match_found", (data) => {
+                console.log("🎉 MATCH FOUND! Navigating to game...");
+                localStorage.setItem("currentMatch", JSON.stringify(data));
+                navigate("/remote-game"); 
+            });
+
+            socket.on("waiting_for_match", (data) => {
+                console.log(`Status: ${data.message}`);
+            });
+        }
+
+        if (socket.connected) {
+             socket.emit('join_queue');
+        }
+      });
+    }
   }, 100);
 }
-

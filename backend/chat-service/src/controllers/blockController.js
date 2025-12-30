@@ -4,6 +4,9 @@ export const blockUser = async (request, reply) => {
   try {
     const { blockedId } = request.body || {};
     const authHeader = request.headers.authorization || '';
+    // debug: presence of auth header and blockedId
+    request.log.info({ hasAuth: !!authHeader, blockedId }, '[chat] POST /api/block received');
+
     if (!blockedId) return reply.code(400).send({ error: 'missing blockedId' });
     const result = await blockedModel.block(authHeader, null, blockedId);
     return reply.code(201).send(result);

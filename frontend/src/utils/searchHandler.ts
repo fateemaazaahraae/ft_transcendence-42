@@ -42,14 +42,18 @@ const renderContactItem = (u: any, lastMsg = 'Search result') => {
 
 // render users to contact list
 const renderToList = (users: any[], div: HTMLElement, getLastMsg = (u: any) => 'Search result') => {
+    if (!Array.isArray(users)) {
+        console.error('renderToList: expected users array but got:', users);
+        return;
+    }
     console.log('renderToList: rendering', users.length, 'users');
     if (users.length > 0) {
-        console.log('First user sample:', JSON.stringify(users[0]).substring(0, 150));
+        try { console.log('First user sample:', JSON.stringify(users[0]).substring(0, 150)); } catch (e) {}
     }
     const html = users.map(u => renderContactItem(u, getLastMsg(u))).join('');
     console.log('generated HTML length:', html.length);
     div.innerHTML = html;
-    console.log('Div innerHTML set, now contains:', div.children.length, 'contact-item elements');
+    console.log('Div innerHTML set, now contains:', div.querySelectorAll('.contact-item').length, 'contact-item elements');
 };
 
 export const searchUsers = (q: string, API_BASE_URL: string, CURRENT_USER_ID: string | number, onResults: (users: any[]) => void) => {
@@ -83,14 +87,26 @@ export const fetchContacts = (API_BASE_URL: string, CURRENT_USER_ID: string | nu
     fetch(url, {
          headers: { 'Authorization': `Bearer ${token}` }
         })
-        .then(res => {
-            console.log('response status:', res.status);
-            return res.json();
-        })
-        .then(contacts => {
-            console.log('received', contacts.length, 'contacts');
+        .then(async (res) => {
+            console.log('fetchContacts response status:', res.status, 'url:', url);
+            const text = await res.text().catch(() => null);
+            console.log('fetchContacts raw body:', text);
+            let contacts: any = null;
+            try {
+                contacts = text ? JSON.parse(text) : null;
+            } catch (e) {
+                console.error('fetchContacts JSON parse error', e);
+                contacts = null;
+            }
+            if (!contacts) {
+                console.warn('fetchContacts: received no contacts, returning empty list');
+                renderToList([], div, c => c.last_message || 'No messages yet.');
+                onComplete?.();
+                return;
+            }
+            console.log('received', Array.isArray(contacts) ? contacts.length : typeof contacts, 'contacts');
             renderToList(contacts, div, c => c.last_message || 'No messages yet.');
             onComplete?.();
         })
-        .catch(err => console.error(' Error fetching contacts:', err));
+        .catch(err => console.error('Error fetching contacts:', err));
 };

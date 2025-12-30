@@ -1,13 +1,13 @@
 import { ChatEventListener } from "./chatEventListener.ts";
+import { getSavedLang } from "../i18n/index.ts";
 
-export default function Chat() {
-    // initialize event listeners 
-    setTimeout(() => {
-        ChatEventListener();
-    }, 0);
-    const contactUsername = document.getElementById('chatContactUsername')?.textContent || '';
+export default async function Chat() {
+  // ChatEventListener is invoked by the router `setUp` after the page is rendered.
+    const contactUsername = '';
+    const currentLang = (await getSavedLang()).toUpperCase();
+    
     return `
-    <div class="class="h-screen overflow-hidden flex items-center justify-center text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
+    <div class="h-screen overflow-hidden flex items-center justify-center text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
         <aside class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
            bottom-0 left-0 w-full bg-black/40 backdrop-blur-md md:w-auto
            flex justify-around md:justify-normal items-center py-3 md:py-0
@@ -20,21 +20,24 @@ export default function Chat() {
           </div>
           <i data-path="/settings" class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
         </aside>
-      
+  
+      <!-- Controls Icons -->
+    <div class="absolute top-10 right-[5%] flex items-center gap-4">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass text-primary absolute top-1/2 -translate-y-1/2 left-3"></i>
+        <input type="text" placeholder="Search" class="search-input w-[180px] md:w-[280px] font-roboto px-10 py-2 rounded-full text-[12px] focus:outline-none bg-black border-[2px] border-primary/70">
+        <div class="search-results absolute top-full left-0 w-full h-auto backdrop-blur-md mt-1 hidden z-[9000] rounded-xl"></div>
+      </div>
+      <div class="arrow relative group">
+        <button id="currentLang" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
+          <i class="fa-solid fa-chevron-down text-xs"></i>
+          ${currentLang}
+        </button>
+      </div>
+      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+      <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+    </div>
 
-
-          <div class="absolute top-10 right-[5%] flex items-center gap-4">
-          <div class="arrow relative group">
-            <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
-              <i class="fa-solid fa-chevron-down text-xs"></i>
-              En
-            </button>
-
-
-          </div>
-          <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-          <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-        </div>
 
       <div class="h-full w-screen md:ml-[100px] flex items-center justify-center pt-24 pb-6 md:pt-28 md:px-0">  
       <div id="chat_panels_wrapper" 
@@ -142,10 +145,7 @@ export default function Chat() {
                   </div>
                 </div>
 
-                <div id="blockeddiv" class="hidden ">
-                <button id="unblockUserBtn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-b-xl">
-                    Unblock User
-                </button>
+               
             </div>
             </div>
             </div>

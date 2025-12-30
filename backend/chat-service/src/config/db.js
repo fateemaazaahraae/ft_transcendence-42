@@ -3,7 +3,11 @@ import Database from 'better-sqlite3';
 import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
-dotenv.config();
+import { fileURLToPath } from 'url';
+// Load shared backend .env (two levels up from src) so chat-service uses the same secrets
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 
 const dockerDbPath = path.join(process.cwd(), "chat.sqlite");

@@ -1,15 +1,17 @@
 import { socket } from "./sockeService.ts";
 const API_BASE = window.location.origin.replace(/\/$/, "");
 
-export function checkIfBlocked(blockerId: number, blockedId: number, callback: (isBlocked: boolean) => void) {
+export function checkIfBlocked(blockerId: number | string, blockedId: number | string, callback: (isBlocked: boolean) => void) {
+    // validate ids
+    if (blockerId == null || blockedId == null) return callback(false);
+    const b1 = String(blockerId);
+    const b2 = String(blockedId);
     const token = localStorage.getItem('token') || '';
-    fetch(`${API_BASE}/api/is-blocked/${blockerId}/${blockedId}`, {
+    fetch(`${API_BASE}/api/is-blocked/${encodeURIComponent(b1)}/${encodeURIComponent(b2)}`, {
         headers: { 'Authorization': `Bearer ${token}` }
     })
         .then(response => response.json())
-        .then(data => {
-            callback(data.isBlocked);
-        })
+        .then(data => callback(Boolean(data.isBlocked)))
         .catch(error => {
             console.error("Error check if blocked:", error);
             callback(false);
@@ -35,35 +37,41 @@ export function showBlockedMessage(){
     }
 }
 
-export function blockUser(blockerId:number,blockedId:number){
-    //send request to backend
-    fetch(`${API_BASE}/api/block`,{
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+export async function blockUser(blockerId: number | string, blockedId: number | string) {
+    if (blockedId == null) {
+        console.error('blockUser: missing blockedId');
+        return;
+    }
+    const token = localStorage.getItem('token') || '';
+    try {
+        console.log('[frontend] blockUser payload:', { blockedId }, 'tokenPresent:', !!token);
+
+        // then the existing fetch...
+        const res = await fetch(`${API_BASE}/api/block`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
-        body:JSON.stringify({
-            blockedId:blockedId,
-            blockerId:blockerId
-        })
-        
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('User blocked succesfuly:',data);
+        body: JSON.stringify({ blockedId })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+            console.error('blockUser failed', res.status, data);
+            return;
+        }
+        console.log('User blocked successfully:', data);
         showBlockedMessage();
         try {
-        if (socket && socket.connected) {
-            socket.emit('user_blocked', { blockedId, blockerId });
+            if (socket && socket.connected) {
+                socket.emit('user_blocked', { blockedId, blockerId });
+            }
+        } catch (e) {
+            console.warn('failed to emit user_blocked', e);
         }
-    } catch (e) {
-        console.warn('failed to emit user_blocked', e);
+    } catch (error) {
+        console.error('Error blocking user failed:', error);
     }
-    })
-    .catch(error =>{
-        console.error("Error blocking user failed:",error);
-    });
 }
 
 export function showMessageInput()
@@ -79,28 +87,34 @@ export function showMessageInput()
         blockedDiv.classList.add('hidden');
     }
 }
-export function unblockUser(blockerId:number,blockedId:number)
-{
-    fetch(`${API_BASE}/api/unblock`,{
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
-        },
-        body:JSON.stringify({
-            blockedId:blockedId,
-            blockerId:blockerId
-        })
-        
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('User blocked succesfuly:',data);
+export async function unblockUser(blockerId: number | string, blockedId: number | string) {
+    if (blockedId == null) {
+        console.error('unblockUser: missing blockedId');
+        return;
+    }
+    const token = localStorage.getItem('token') || '';
+    try {
+        const res = await fetch(`${API_BASE}/api/unblock`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ blockedId })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+            console.error('unblockUser failed', res.status, data);
+            return;
+        }
+        console.log('User unblocked successfully:', data);
         showMessageInput();
-    })
-    .catch(error =>{
-        console.error("Error blocking user failed:",error);
-    });
+        if (socket && socket.connected) {
+        socket.emit('user_unblocked', { unblockedId: blockedId, unblockedBy: blockerId });
+        }
+    } catch (error) {
+        console.error('Error unblocking user failed:', error);
+    }
 }
 
 // const REL_SERVICE_URL = process.env.REL_SERVICE_URL || 'http://relationship-service:3002';

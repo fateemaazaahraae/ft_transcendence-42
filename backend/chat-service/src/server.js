@@ -9,7 +9,7 @@ const fastify = Fastify({ logger: true });
 const PORT = process.env.PORT || 4000;
 
 await fastify.register(fastifyCors, { origin: "*" });
-await fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET || "supersecret" });
+await fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET});
 
 await fastify.register(router, { prefix: "/api" });
 

@@ -42,7 +42,8 @@ export function attachContactClickListeners(
 }
 
 export function setupMenuToggle(menuToggle: HTMLElement, dropdownMenu: HTMLElement): void {
-    menuToggle.addEventListener("click", (): void => {
+    menuToggle.addEventListener("click", (e: MouseEvent): void => {
+        try { e.stopPropagation(); } catch (err) {}
         dropdownMenu.classList.toggle("hidden");
     });
 }

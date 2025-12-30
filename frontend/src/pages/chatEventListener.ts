@@ -16,10 +16,19 @@ import {
 import { renderSingleMessage } from "./chatHelpers.ts";
 
 export function ChatEventListener() {
-    const ORIGIN = window.location.origin; 
-    const API_BASE_URL: string = `${ORIGIN}/api`;
-    const WS_URL: string = `${window.location.protocol}//${window.location.host}`;
-    const CURRENT_USER_ID: string | number | null = (() => {
+    const HOST = window.location.hostname;
+    const PROTO = window.location.protocol;
+    
+    let API_BASE_URL: string;
+    let WS_URL: string;
+    if (PROTO === 'https:') {
+        API_BASE_URL = `${window.location.origin}/api`;
+        WS_URL = window.location.origin; 
+    } else {
+        API_BASE_URL = `${PROTO}//${HOST}:4000/api`;
+        WS_URL = `${PROTO}//${HOST}:4000`;
+    }
+    let CURRENT_USER_ID: string | number | null = (() => {
         const token = localStorage.getItem('token');
         if (!token) return null;
         const parts = token.split('.');
@@ -27,10 +36,20 @@ export function ChatEventListener() {
         try {
             const payload = JSON.parse(atob(parts[1]));
             return payload.id || null;
-        } catch {
+        } catch (e) {
+            console.warn('JWT parse error', e);
             return null;
         }
     })();
+
+    
+    if (!CURRENT_USER_ID) {
+        const storedId = localStorage.getItem('userId');
+        if (storedId) {
+            CURRENT_USER_ID = storedId;
+            console.log('[chat] using fallback userId from localStorage', storedId);
+        }
+    }
 
     let ACTIVE_CHAT_CONTACT_ID: string | number | null = null;
     let CURRENT_USER_AVATAR: string = '../../public/green-girl.svg';
@@ -62,8 +81,7 @@ export function ChatEventListener() {
     }
 
     const TOKEN = localStorage.getItem('token') || '';
-    // connect socket to chat service via proxied WS path
-    console.log('initializing socket with origin', ORIGIN, 'wsUrl', WS_URL);
+    console.log('initializing socket with wsUrl', WS_URL);
     initializeSocket(CURRENT_USER_ID, WS_URL, TOKEN);
 
     //disable send button until socket connected
@@ -128,12 +146,32 @@ export function ChatEventListener() {
 
     // confirm block: call API and hide modal
     confirmBlockBtn?.addEventListener("click", () => {
-        if (ACTIVE_CHAT_CONTACT_ID) {
-            blockUser(Number(CURRENT_USER_ID), Number(ACTIVE_CHAT_CONTACT_ID));
+        const targetId = String(ACTIVE_CHAT_CONTACT_ID || '').trim();
+        const meId = String(CURRENT_USER_ID || '').trim();
+        if (!targetId || !meId) {
+            console.error('confirmBlock: invalid IDs', { ACTIVE_CHAT_CONTACT_ID, CURRENT_USER_ID });
+            //  to avoid repeated clicks
             if (blockConfirmationDiv) blockConfirmationDiv.classList.add("hidden");
-            // update menu text to reflect new state (preserve icon)
-            if (blockBtn) blockBtn.innerHTML = '<i class="fa fa-ban"></i> Unblock User';
+            return;
         }
+        // call block API with string ids (supports UUIDs)
+        checkIfBlocked(meId, targetId, (isBlocked) => {
+            if(isBlocked) {
+                
+                if (blockBtn) {
+                    blockBtn.innerHTML = '<i class="fa fa-ban"></i> Unblock User';
+                    blockBtn.setAttribute('data-blocked', 'true');
+                }
+            }else {
+                blockUser(meId, targetId);
+                if (blockBtn) {
+                    blockBtn.innerHTML = '<i class="fa fa-ban"></i> Block User';
+                    blockBtn.setAttribute('data-blocked', 'false');
+                }
+            }
+        });
+        if (blockConfirmationDiv) blockConfirmationDiv.classList.add("hidden");
+        
     });
 
     // cancel: just hide modal
@@ -141,16 +179,12 @@ export function ChatEventListener() {
         if (blockConfirmationDiv) blockConfirmationDiv.classList.add("hidden");
     });
 
-   
-    const unblockBtn = document.getElementById("unblockUserBtn");
-    if (unblockBtn) {
-        unblockBtn.addEventListener('click', () => {
+            // if (ACTIVE_CHAT_CONTACT_ID) {
+            //     unblockUser(Number(CURRENT_USER_ID), Number(ACTIVE_CHAT_CONTACT_ID));
+            // } 
+    
+    // search input handler
 
-            if (ACTIVE_CHAT_CONTACT_ID) {
-                unblockUser(Number(CURRENT_USER_ID), Number(ACTIVE_CHAT_CONTACT_ID));
-            }
-        });
-    }
 
   
     const contactsListDiv = document.querySelector('#contacts_side .space-y-4') as HTMLElement | null;
@@ -204,7 +238,7 @@ export function ChatEventListener() {
         updateChatHeader(chatUsername, chatStatus, chatAvatar, username, status, avatar);
 
         // check if contact is blocked
-        checkIfBlocked(Number(CURRENT_USER_ID), Number(contactId), (isBlocked) => {
+        checkIfBlocked(String(CURRENT_USER_ID), String(contactId), (isBlocked) => {
             console.log(`Is contact (ID: ${contactId}) blocked?`, isBlocked);
             if (isBlocked) {
                 showBlockedMessage();
@@ -319,6 +353,7 @@ export function ChatEventListener() {
             contactsSide?.classList.remove("hidden");
             chat?.classList.remove("hidden");
             chat?.classList.add("flex");
+            document.getElementById("messageInputContainer")?.classList.add("hidden");
             document.getElementById("dropdownMenu")?.classList.add("hidden");
         });
     }
@@ -345,23 +380,27 @@ export function ChatEventListener() {
         if(!content || !ACTIVE_CHAT_CONTACT_ID) return;
         
         console.log("sending message to", ACTIVE_CHAT_CONTACT_ID, "content:", content);
-        
-        sendMessage(ACTIVE_CHAT_CONTACT_ID, content,(res) => {
+        // optimistic render: show message immediately in UI
+        try {
+            const friendAvatar = localStorage.getItem('activeContactAvatar') || '../../public/default.svg';
+            const optimisticMsg: any = {
+                content,
+                sender_id: String(CURRENT_USER_ID),
+                created_at: Math.floor(Date.now() / 1000)
+            };
+            if (messagesPanel) {
+                renderSingleMessage(optimisticMsg, true, messagesPanel, CURRENT_USER_AVATAR, friendAvatar);
+            }
+        } catch (e) { console.warn('optimistic render failed', e); }
+
+        // send to server (ack used only for error handling, do not re-render on ack)
+        sendMessage(ACTIVE_CHAT_CONTACT_ID, content, (res) => {
             console.log("save ack:", res);
             if(res?.status === "error") {
                 console.warn("send failed ", res?.reason || "unknown");
-                // if recipient has blocked the sender, hide the input area
                 if (res?.reason === 'blocked') {
                     showBlockedMessage();
                 }
-                return;
-            }
-            
-            // render sent message 
-            if(res?.status === "ok" && res?.message && messagesPanel) {
-                console.log("rendering sent message:", res.message);
-                const friendAvatar = localStorage.getItem('activeContactAvatar') || '../../public/default.svg';
-                renderSingleMessage(res.message, true, messagesPanel, CURRENT_USER_AVATAR, friendAvatar);
             }
         });
         

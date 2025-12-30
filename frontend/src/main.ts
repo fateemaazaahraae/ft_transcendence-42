@@ -3,6 +3,7 @@ import Landing, { LandingEventListener } from "./pages/landing";
 import Home, { HomeEventListener } from "./pages/home";
 import GameStyle, { GameStyleEventListener } from "./pages/gameStyle.ts";
 import LocalGameStyle, { LocalGameStyleEventListener } from "./pages/LocalgameStyle.ts";
+import RemoteGameStyle, { RemoteGameStyleEventListener } from "./pages/RemotegameStyle.ts";
 import Game from "./pages/game.ts";
 import LocalGame, { LocalGameEventListener } from "./pages/Localgame.ts";
 import AiGame, { AiGameEventListener } from "./pages/Aigame.ts";
@@ -22,16 +23,19 @@ import { notifications, notificationBarListeners, renderNotifications } from "./
 import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
 import Chat from "./pages/Chat.ts";
+import { ChatEventListener } from "./pages/chatEventListener.ts";
 import { showAlert } from "./utils/alert.ts";
+import RemoteGame, { RemoteGameEventListener } from "./pages/RemoteGame.ts";////
 import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
 import { searchBar } from "./pages/searchBar.ts";
-// import { viewFriend } from "./pages/viewFriend.ts";
+import { tournamentChoices } from "./pages/tournamentChoices.ts";
 
 const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<void> }> = {
     "/": {render: Landing, setUp: LandingEventListener},
     "/home": {render: Home, setUp: HomeEventListener},
     "/gameStyle": {render: GameStyle, setUp: GameStyleEventListener},
     "/LocalgameStyle": {render: LocalGameStyle, setUp: LocalGameStyleEventListener},
+    "/RemotegameStyle": {render: RemoteGameStyle, setUp: RemoteGameStyleEventListener},
     "/game": {render: Game},
     "/Localgame": {render: LocalGame, setUp: LocalGameEventListener},
     "/Aigame": {render: AiGame, setUp: AiGameEventListener},
@@ -46,7 +50,9 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/friends": {render: Friends, setUp: FriendsEventListener},
     "/invitations": {render: Invitations, setUp: InvitationsEventListener},
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
-    "/chat": {render: Chat},
+    "/chat": {render: Chat, setUp: ChatEventListener},
+    "/remote-game": { render: RemoteGame, setUp: RemoteGameEventListener },
+    "/tournamentChoices": { render: tournamentChoices},
     404: {render: PageNotFound},
 };
 
