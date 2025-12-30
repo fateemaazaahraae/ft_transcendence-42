@@ -186,7 +186,7 @@ export function GameStyleEventListener(){
   // match?.addEventListener("click", () =>{navigate("/RemotegameStyle");
   // });
   const tournament=document.getElementById("start");
-  tournament?.addEventListener("click", () =>{navigate("/game");
+  tournament?.addEventListener("click", () =>{navigate("/tournamentChoices");
   });
 
   const btnRemote = document.getElementById("play");
