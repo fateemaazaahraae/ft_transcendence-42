@@ -1,6 +1,8 @@
 import "./../styles/index.css";
 import Landing, { LandingEventListener } from "./pages/landing";
 import Home, { HomeEventListener } from "./pages/home";
+import RemoteVsLocal, {RemoteVsLocalEventListener} from "./pages/remoteVSlocal.ts";
+import LocalMode, { LocalModeEventListener } from "./pages/localMode.ts";
 import GameStyle, { GameStyleEventListener } from "./pages/gameStyle.ts";
 import LocalGameStyle, { LocalGameStyleEventListener } from "./pages/LocalgameStyle.ts";
 import RemoteGameStyle, { RemoteGameStyleEventListener } from "./pages/RemotegameStyle.ts";
@@ -33,6 +35,8 @@ import { tournamentChoices } from "./pages/tournamentChoices.ts";
 const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<void> }> = {
     "/": {render: Landing, setUp: LandingEventListener},
     "/home": {render: Home, setUp: HomeEventListener},
+    "/remoteVSlocal": {render: RemoteVsLocal, setUp: RemoteVsLocalEventListener},
+    "/localMode" :{ render: LocalMode, setUp: LocalModeEventListener},
     "/gameStyle": {render: GameStyle, setUp: GameStyleEventListener},
     "/LocalgameStyle": {render: LocalGameStyle, setUp: LocalGameStyleEventListener},
     "/RemotegameStyle": {render: RemoteGameStyle, setUp: RemoteGameStyleEventListener},
@@ -51,7 +55,7 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/invitations": {render: Invitations, setUp: InvitationsEventListener},
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
     "/chat": {render: Chat, setUp: ChatEventListener},
-    "/remote-game": { render: RemoteGame, setUp: RemoteGameEventListener },
+    // "/remote-game": { render: RemoteGame, setUp: RemoteGameEventListener },
     "/tournamentChoices": { render: tournamentChoices},
     404: {render: PageNotFound},
 };
@@ -110,9 +114,3 @@ window.addEventListener("DOMContentLoaded", async() => {
 
 const urlParams = new URLSearchParams(window.location.search);
 const token = urlParams.get("token");
-// if (token) {
-//   localStorage.setItem("jwt", token);
-
-//   window.history.replaceState({}, document.title, "/home");
-//   window.location.href = "/home";
-// }

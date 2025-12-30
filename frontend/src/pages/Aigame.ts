@@ -21,7 +21,7 @@ export default function AiGame() {
   }; 
   
   return `
-  <div class="relative w-full h-screen">
+  <div id="container" class="relative w-full h-screen">
 
     <!-- Top icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
@@ -36,7 +36,7 @@ export default function AiGame() {
     </div>
 
     <!-- Player Info & Score -->
-    <div class="absolute flex top-[15%] md:top-[20%] lg:top-[23%] xl:top-[18%] left-[6%] md:left-[2%] lg:left-[11%] xl:left-[22%] md:translate-x-1/2">
+    <div class="absolute flex top-[25%] lg:top-[23%] xl:top-[18%] left-[12%] md:left-[2%] lg:left-[11%] xl:left-[22%] md:translate-x-1/2">
         <img src="${game.match[0].player1.avatar}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
         <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[3%] lg:ml-[10%] ">
           <h1 class="font-glitch text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${game.match[0].player1.name} </h1>
@@ -51,7 +51,7 @@ export default function AiGame() {
 
 
     <!-- PAUSE BUTTON -->
-    <div class="absolute top-[10%] left-1/2 transform -translate-x-1/2 z-10">
+    <div class="absolute top-[15%] lg:top-[10%] left-1/2 transform -translate-x-1/2 z-10">
       <button id="pause-btn" class="px-6 py-3 bg-black text-white border-secondary/40 overflow-hidden drop-shadow-pink rounded-lg font-roboto transition-all duration-300 flex items-center gap-2">
         <i class="fa-solid fa-pause"></i>
         Pause
@@ -59,7 +59,7 @@ export default function AiGame() {
     </div>
 
     <!-- PAUSE OVERLAY (Hidden by default) -->
-    <div id="pause-overlay" class="absolute inset-0 bg-black/80 z-20 hidden flex-col items-center justify-center">
+    <div id="pause-overlay" class="absolute inset-0 bg-black/50 z-[100] hidden flex-col items-center justify-center">
       <div class="bg-black p-8 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
         <h2 class="text-3xl font-glitch text-primary mb-2">Game Paused</h2>
         <p class="font-roboto text-gray-300 mb-10">Take a break, adjust settings, or resume</p>
@@ -84,7 +84,7 @@ export default function AiGame() {
     </div>
 
     <!-- GAME CANVAS AREA -->
-    <div class="absolute top-[26%] lg:top-[37%] xl:top-[32%] md:top-[32%] left-[15%] w-[70%] h-[65%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
+    <div class="absolute rotate-90 lg:rotate-0 top-[43%] lg:top-[37%] xl:top-[32%] md:top-[38%]  md:left-[10%] h-[38%] md:h-[55%] w-[100%] md:w-[80%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
       <!-- This is where the game will be drawn -->
       <canvas 
         id="pongCanvas"
@@ -226,7 +226,7 @@ export function AiGameEventListener() {
       }
       if (quitBtn) {
         quitBtn.addEventListener('click', () => {
-          navigate('/LocalgameStyle');
+          navigate('/localMode');
           // console.log('Quit lacal game style');
         });
       }
@@ -411,7 +411,7 @@ export function AiGameEventListener() {
           const winner = player1Score >= WINNING_SCORE ? "Salma" : "héhé Ai";
             const winnerOverlay = document.createElement('div');
             winnerOverlay.id = 'winner-overlay';
-            winnerOverlay.className = 'absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center';
+            winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[1000] flex flex-col items-center justify-center';
             winnerOverlay.innerHTML = `
               <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
                 <h2 class="text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
@@ -440,7 +440,7 @@ export function AiGameEventListener() {
               </div>
             `;
             
-            document.querySelector('.relative')?.appendChild(winnerOverlay);
+            document.querySelector('#container')?.appendChild(winnerOverlay);
 
               const playAgainBtn = document.getElementById('play-again-btn');
               const mainMenuBtn = document.getElementById('main-menu-btn');
@@ -454,7 +454,7 @@ export function AiGameEventListener() {
               
               if (mainMenuBtn) {
                 mainMenuBtn.addEventListener('click', () => {
-                  navigate('/LocalgameStyle');
+                  navigate('/localMode');
                 });
               }
         }
