@@ -107,7 +107,7 @@ export function renderSingleMessage(message:{
 
         if (isSender) {
         messageDiv.innerHTML = `
-            <div class="flex flex-col items-end mb-4 w-full">
+            <div class="flex flex-col items-end mb-4 w-full pr-4">
                 <div class="flex items-end gap-2">
                     <div class="bg-primary/65 text-sm p-3 rounded-xl rounded-br-none max-w-[250px] break-words text-white">
                     ${message.content || ""}
@@ -119,7 +119,7 @@ export function renderSingleMessage(message:{
         `;
     } else {
         messageDiv.innerHTML = `
-            <div class="flex flex-col items-start mb-4 w-full">
+            <div class="flex flex-col items-start mb-4 w-full pl-4">
                 <div class="flex items-end gap-2">
                     <img src="${friendAvatar}" class="w-12 h-12 object-cover border border-primary rounded-full flex-shrink-0">
                     <div class="bg-primary/20 text-white text-sm p-3 rounded-xl rounded-bl-none  max-w-[250px] break-words">
