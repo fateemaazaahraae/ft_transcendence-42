@@ -81,6 +81,10 @@ async function render(path: string) {
     renderNotifications(notifications);
     initLogout();
     searchBar();
+    const logo = document.getElementById("logo");
+    logo?.addEventListener("click", () => {
+        navigate("/");
+    })
 }
 
 
