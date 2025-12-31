@@ -1,14 +1,34 @@
-import blocked from "../models/blocked";
+import blockedModel from "../models/blocked.js";
 
-export const blockHandler = async (request, reply) => {
-  const { blockerId, blockedId } = request.body;
-  if (!blockerId || !blockedId) return reply.code(400).send({ error: "missing" });
-  const entry = Blocked.block(blockerId, blockedId);
-  return reply.code(201).send(entry);
+export const blockUser = async (request, reply) => {
+  try {
+    const { blockedId } = request.body || {};
+    const authHeader = request.headers.authorization || '';
+    // debug: presence of auth header and blockedId
+    request.log.info({ hasAuth: !!authHeader, blockedId }, '[chat] POST /api/block received');
+
+    if (!blockedId) return reply.code(400).send({ error: 'missing blockedId' });
+    const result = await blockedModel.block(authHeader, null, blockedId);
+    return reply.code(201).send(result);
+  } catch (e) {
+    return reply.code(e.status || 500).send({ error: 'block failed', details: e.message, payload: e.payload });
+  }
+};
+export const isBlocked = async (request, reply) => {
+  const { blockerId, blockedId } = request.params;
+  const authHeader = request.headers.authorization || '';
+  const isBlocked = await blockedModel.isBlocked(authHeader, blockerId, blockedId);
+  return reply.send({ isBlocked });
 };
 
-export const unblockHandler = async (request, reply) => {
-  const { blockerId, blockedId } = request.body;
-  Blocked.unblock(blockerId, blockedId);
-  return reply.code(200).send({ ok: true });
+export const unblock= async (request, reply) => {
+  try {
+    const { blockedId } = request.body || {};
+    const authHeader = request.headers.authorization || '';
+    if (!blockedId) return reply.code(400).send({ error: 'missing blockedId' });
+    const res = await blockedModel.unblock(authHeader, null, blockedId);
+    return reply.send(res?.success ? res : { ok: true });
+  } catch (e) {
+    return reply.code(e.status || 500).send({ error: 'unblock failed', details: e.message, payload: e.payload });
+  }
 };

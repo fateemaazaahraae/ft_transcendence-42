@@ -1,0 +1,26 @@
+BOB = 
+"firstName":"Bob",
+    "lastName":"Smith",
+    "userName":"bob",
+    "email":"bob@example.com",
+    "password":"pass1234"
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM3YzhjZTdmLWE1OTctNGMzMy1hMDJlLWQ0NjRhMWEzOThhOSIsImVtYWlsIjoiYm9iQGV4YW1wbGUuY29tIiwidXNlck5hbWUiOiJib2IiLCJpYXQiOjE3NjYzOTYwNTd9.QxMpKsgleWxg1GAJqWaNlKpV_TBqjxg9rmCby3Sng0g
+
+BOB ID = 7c8ce7f-a597-4c33-a02e-d464a1a398a9
+
+
+BOUCHRA
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFiYTU1ZmY0LTA3ZmEtNDJhMC1hYTYyLWIxZTRiOTY2ZWQ3NSIsImVtYWlsIjoiYWhtZWRAZ21haWwuY29tIiwidXNlck5hbWUiOiJhaG1lZCIsImlhdCI6MTc2NjM4OTIxM30.68A55wu1DdUnYouDujRWRErmGMpR7_1kUi85m5a1HuE
+
+ID = aba55ff4-07fa-42a0-aa62-b1e4b966ed75
+
+
+
+#0 to host localhost left intact
+{"count":7,"users":[{"id":"2106c498-9b0a-4d77-a739-2723a0a44a69","userName":"knacer"},
+{"id":"3bdb1ada-9eb5-4cd3-8761-26890e1876a1","userName":"xa"},
+{"id":"d4eee526-7c50-4490-98ef-ad5c39c19f6f","userName":"bbenjrai"},
+{"id":"8c5b5f70-eee0-4103-b121-461c1bf8add4","userName":"hmad"},
+{"id":"dad7d891-a4ba-479c-adc6-8bba7feece95","userName":"bouchra"},
+{"id":"3953e1e9-8168-4926-aef8-519ed43aeb63","userName":"new"},
+{"id":"a212287b-87ae-4b89-898c-e6ffe9bca215","userName":"jack"}]}% 

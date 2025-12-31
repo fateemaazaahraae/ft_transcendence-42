@@ -12,6 +12,7 @@ export default defineConfig({
     ],
     host: true, // already listens on all interfaces
     port: 5173,
+    
     fs: {
       strict: false,
     },

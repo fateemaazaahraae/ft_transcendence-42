@@ -1,43 +1,32 @@
 import Fastify from "fastify";
 import fastifyJwt from "@fastify/jwt";
-import cors from "cors";
-
-import router from "./routes/router.js";
+import fastifyCors from "@fastify/cors";
+import router from "./routes/router-simple.js";
 import { initSocket } from "./controllers/wsManager.js";
-import db from "./config/db.js"
+import db from "./config/db.js";
 
-const app =Fastify({
-    logger: true
-});
+const fastify = Fastify({ logger: true });
 const PORT = process.env.PORT || 4000;
 
-// CORS
-await app.register(fastifyCors, {
-  origin: "*"
-});
+await fastify.register(fastifyCors, { origin: "*" });
+await fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET});
 
-// JWT (si tu en as besoin)
-await app.register(fastifyJwt, {
-  secret: process.env.JWT_SECRET || "supersecret"
-});
+await fastify.register(router, { prefix: "/api" });
 
-// Routes
-app.register(router,{prefix: "/api"});
+fastify.get("/", async () => ({ status: "chat service running" }));
 
-app.get('/', async (request, reply) => {
-  return { status: 'Chat service running' };
-});
-
-// IMPORTANT: Listen on 0.0.0.0, not localhost
 const start = async () => {
   try {
-    await app.listen({ 
-      port: PORT, 
-      host: '0.0.0.0'  // This is crucial for Docker!!!!
-    });
-    console.log(`Chat service listening on port ${PORT}`);
+    await fastify.listen({ port: PORT, host: "0.0.0.0" });
+    fastify.log.info(`chat-service listening on port ${PORT}`);
+    try {
+      initSocket(fastify.server);
+      fastify.log.info('socket.io initialized');
+    } catch (e) {
+      fastify.log.error({ err: e }, 'failed to initialize socket.io');
+    }
   } catch (err) {
-    app.log.error(err);
+    fastify.log.error(err);
     process.exit(1);
   }
 };

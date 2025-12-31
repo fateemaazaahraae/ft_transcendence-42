@@ -1,29 +1,25 @@
+import { ChatEventListener } from "./chatEventListener.ts";
 import { getSavedLang } from "../i18n/index.ts";
-import { navigate } from "../main.ts";
 
 export default async function Chat() {
-  const currentLang = (await getSavedLang()).toUpperCase();
-  return `
-  <div class="class="h-screen overflow-hidden flex items-center justify-center text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
-
-    <!-- Sidebar -->
-    <aside
-      class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
-       bottom-0 left-0 w-full bg-black/40 backdrop-blur-md md:w-auto
-       flex justify-around md:justify-normal items-center py-3 md:py-0
-       md:bg-transparent md:backdrop-blur-0 z-50">
-
-      <i data-path="/home" class="fa-solid fa-house text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out  "></i>
-      <i data-path="/leaderboard" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-
-      <i data-path="/friends" class="fa-solid fa-user-group  text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      
-      <div data-path="/chat" class="md:w-[40px] md:h-[40px] w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center mt-2 md:mt-2">
-        <i id="comments" class="fa-solid fa-comments text-black text-[18px]"></i>
-      </div>
-
-      <i data-path="/settings" class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-    </aside>
+  // ChatEventListener is invoked by the router `setUp` after the page is rendered.
+    const contactUsername = '';
+    const currentLang = (await getSavedLang()).toUpperCase();
+    
+    return `
+    <div class="h-screen overflow-hidden flex items-center justify-center text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
+        <aside class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
+           bottom-0 left-0 w-full bg-black/40 backdrop-blur-md md:w-auto
+           flex justify-around md:justify-normal items-center py-3 md:py-0
+           md:bg-transparent md:backdrop-blur-0 z-50">
+          <i data-path="/home" class="fa-solid fa-house text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out  "></i>
+          <i data-path="/leaderboard" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+          <i data-path="/friends" class="fa-solid fa-user-group  text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+          <div data-path="/chat" class="md:w-[40px] md:h-[40px] w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center mt-2 md:mt-2">
+            <i id="comments" class="fa-solid fa-comments text-black text-[18px]"></i>
+          </div>
+          <i data-path="/settings" class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+        </aside>
   
       <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
@@ -42,362 +38,122 @@ export default async function Chat() {
       <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
-  <!-- chat side 
-  -->
-<div class="h-full w-screen md:ml-[100px] flex items-center justify-center pt-24 pb-6 md:pt-28 md:px-0">  
-  <div id="chat_panels_wrapper" 
-         class="m-5 mb-4 w-full md:w-[90%] md:mx-auto h-[calc(100vh-12rem)] md:h-[700px] 
-            shadow-lg flex md:flex-row relative overflow-hidden text-white gap-x-4">
-    <div id="contacts_side" class="w-full h-full md:w-1/3 flex-shrink-0 "> 
-   
-    
-    <!-- Sidebar: Chat Profiles -->
-     <div class="w-full bg-primary/60 rounded-xl border-blue p-4 flex flex-col h-full">
-       <div class="relative ">
-        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-secondary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-            </svg>
-        </div>
-   
-          <input
-            type="search"
-            id="default-search"
-            class="block bg-primary/80 w-full h-[35px] px-4 ps-9 text-sm text-white rounded-2xl border-none focus:outline-none placeholder-white"
-            placeholder="Search ..." 
-            required
-          />
 
-        </div>
-       
-    
-    <div class="space-y-4 mt-3 mb-3 pb-8 h-full overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent">
-                      <div class="  scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
-                                  <div class="relative w-12 h-12 flex-shrink-0">
-                                  <img src="/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                                  <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
-                                  </div>
-                                  <div>
-                                    <p class="font-medium text-sm text-secondary ">Bouchra</p>
-                                    <p class="text-xs text-gray-200">Hey, how are you?</p>
-                                  </div>
-                      </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
-                                <div class="relative w-12 h-12 flex-shrink-0">
-                                  <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
-                                  <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
-                                </div>
-                                <div>
-                                  <p class="font-medium text-sm text-secondary">Boy</p>
-                                  <p class="text-xs text-gray-200">Let's meet tomorrow</p>
-                                </div>
-                      </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
-                                <div class="relative w-12 h-12 flex-shrink-0">
-                                <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                                <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
-                                </div>                
-                        
-                              <div>
-                                <p class="font-medium text-sm text-secondary ">Boy</p>
-                                <p class="text-xs text-gray-200">Let's meet tomorrow</p>
-                              </div>
-                      </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
-                                <div class="relative w-12 h-12 flex-shrink-0">
-                                <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                                <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
-                                </div> 
-                          
-                                <div>
-                                  <p class="font-medium text-sm text-secondary ">Boy</p>
-                                  <p class="text-xs text-gray-200">Let's meet tomorrow</p>
-                                </div>
-                      </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
-                              <div class="relative w-12 h-12 flex-shrink-0">
-                              <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                              <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
-                              </div> 
-                          
-                              <div>
-                                <p class="font-medium text-sm text-secondary ">Boy</p>
-                                <p class="text-xs text-gray-200">Let's meet tomorrow</p>
-                              </div>
-                      </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
-                              <div class="relative w-12 h-12 flex-shrink-0">
-                              <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                              <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
-                              </div> 
-                          
-                              <div>
-                                <p class="font-medium text-sm text-secondary ">Boy</p>
-                                <p class="text-xs text-gray-200">Let's meet tomorrow</p>
-                              </div>
-                      </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
-                              <div class="relative w-12 h-12 flex-shrink-0">
-                              <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                              <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full"></div>
-                              </div> 
-                          
-                              <div>
-                                <p class="font-medium text-sm text-secondary ">Boy</p>
-                                <p class="text-xs text-gray-200">Let's meet tomorrow</p>
-                              </div>
-                      </div>
-                      <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
-                            <div class="relative w-12 h-12 flex-shrink-0">
-                            <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-redRemove rounded-full"></div>
-                            </div> 
-                          
-                          <div>
-                            <p class="font-medium text-sm text-secondary ">Boy</p>
-                            <p class="text-xs text-gray-200">Let's meet tomorrow</p>
-                          </div>
-                      </div>
-                        <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
-                            <div class="relative w-12 h-12 flex-shrink-0">
-                            <img src="/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full">
-                            </div>
-                            </div> 
-                            <div>
-                              <p class="font-medium text-sm text-secondary ">Boy</p>
-                              <p class="text-xs text-gray-200">Let's meet tomorrow</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item">
-                            <div class="relative w-12 h-12 flex-shrink-0">
-                            <img src="../../public/white-boy.svg" class="w-12 h-12 object-cover border border-primary rounded-full right-">
-                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-greenAdd rounded-full">
-                            </div>
-                            </div> 
-                            <div>
-                              <p class="font-medium text-sm text-secondary ">Boy</p>
-                              <p class="text-xs text-gray-200">Let's meet tomorrow</p>
-                            </div>
-                        </div>
-                        
-    </div>
-    </div>
-      </div>
-
-      <!-- Main Chat Window -->
- <div class="h-full w-full md:w-[80%] "> 
-    
-   <div id="main_chat" 
-     class="w-full h-full 
-            absolute top-0 left-0  
-            shadow-lg overflow-hidden text-white 
-            hidden 
-            md:relative md:flex lg:w-[90%] md:w-[90%] md:h-[700px]">
-        
-        <div id="chatContainer" class="w-full h-full flex flex-col">
-            <div class="relative flex items-center justify-between p-3 rounded-t-xl bg-primary/80"> <div class="flex items-center gap-3">
-            <i id="backToContacts"
-      class="fa-solid fa-arrow-left bg-primary cursor-pointer p-3 rounded-full text-white md:hidden"></i>
-<img src="../../public/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
-          <div>
-            <p class=" text-secondary font-bold text-sm">Bouchra</p>
-            <p class="text-xs text-gray-200">Online</p>
-          </div>
-        </div>
-        
-        <!-- Right Side: Ellipsis Icon -->
-        <button id="menuToggle" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/20 transition-all">
-        <i class="fa-solid fa-ellipsis-vertical text-secondary"></i>
-        </button>
-
-      <div id="dropdownMenu" class="hidden absolute right-3 top-12 bg-#35C6DD backdrop-blur-md rounded-lg shadow-lg py-2 w-40 z-50">
-        <button class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
-          <i class="fas fa-circle-info"></i>
-          Contact Info
-        </button>
-        
-        <button id="closeChat" class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
-          <i class="fa-regular fa-times-circle"></i>
-          Close Chat
-        </button>
-        <button class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
-          <i class="fa fa-ban"></i>
-          Block User
-        </button>
-    </div>
-</div>
-
-
-        <!-- Messages -->
-        <div class="flex-1 p-4 space-y-4 overflow-y-auto bg-primary/60 min-h-0">
-          
-          <!-- Message from other user (left side - receiver) -->
-          <div class="flex items-start">
-            <img src="/green-girl.svg" class="w-[50px] h-[50px] object-cover mr-3 border border-primary rounded-full flex-shrink-0">
-            <div class="bg-primary/65 text-sm text-white p-3 rounded-3xl max-w-[60%]">
-              Hi Salma, how are you?
+      <div class="h-full w-screen md:ml-[200px] flex items-center justify-center pt-24 pb-6 md:pt-40 md:px-0">  
+      <div id="chat_panels_wrapper" 
+             class="m-5 mb-4 w-full md:w-[90%] md:mx-auto h-[calc(100vh-12rem)] md:h-[700px] 
+                shadow-lg flex md:flex-row relative overflow-hidden text-white gap-x-2">
+        <div id="contacts_side" class="w-full h-full md:w-1/4 flex-shrink-0 overflow-hidden"> 
+           
+            
+        <div class="w-full bg-primary/60 rounded-xl border-blue p-4 flex flex-col h-full overflow-hidden">
+           <div class="relative ">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-secondary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
             </div>
-          </div>
-          
-          <!-- Message from current user (right side - sender) -->
-          <div class="flex items-start justify-end">
-            <div class="bg-primary/65 text-sm text-white p-3 rounded-3xl max-w-[60%]">
-              Hey Bouchra! I'm doing great, thanks!
-            </div>
-            <img src="/green-girl.svg" class="w-[50px] h-[50px] object-cover ml-3 border border-primary rounded-full flex-shrink-0">
-          </div>
-          
-          <!-- Message from other user (left side - receiver) -->
-          <div class="flex items-start">
-            <img src="/green-girl.svg" class="w-[50px] h-[50px] object-cover mr-3 border border-primary rounded-full flex-shrink-0">
-            <div class="bg-primary/65 text-sm text-white p-3 rounded-3xl max-w-[60%]">
-              Want to catch up later?
-            </div>
-          </div>
-          
-        </div>
+               
+              <input
+                type="search"
+                id="default-search"
+                class="block bg-primary/80 w-full h-[35px] px-4 ps-9 text-sm text-white rounded-2xl border-none focus:outline-none placeholder-white"
+                placeholder="Search ..." 
+                required
+              />
 
-        <!-- Message Input -->
-          <div class="relative">
-            <div class="p-4 bg-primary/60 rounded-b-xl">
-              <div class="relative">
-                
-                <i class="fa-regular fa-paper-plane text-secondary absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"></i>
-                <i class="fa-solid fa-plus text-secondary absolute left-3 top-1/2 -translate-y-1/2 cursor-pointer"></i>
-                <i class="fa-solid fa-table-tennis-paddle-ball text-secondary absolute left-9 top-1/2 -translate-y-1/2 cursor-pointer"></i>
-                
-                <!-- Input with padding for icons -->
-                <input 
-                  type="text" 
-                  placeholder="Type a message..." 
-                  class="w-full pl-16 pr-10 py-2 rounded-full bg-primary/65 text-white placeholder-white focus:outline-none">
+            </div>
+               
+            
+        <div class="space-y-4 mt-3 pb-8 h-full overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-secondary scrollbar-track-primary/20">
+            </div>
+
+        </div>
+          </div>
+
+          <div class="h-full w-full md:w-[80%] "> 
+            
+        <div id="main_chat" 
+         class="w-full h-full 
+                hidden md:block
+                absolute top-0 left-0  
+                shadow-lg overflow-hidden text-white rounded-xl
+                md:relative md:flex lg:w-[90%] md:w-[90%] md:h-[700px]">        <div id="chatContainer" class="w-full h-full flex flex-col">
+                <div id="chatHeader" class="hidden relative md:h-16 flex items-center justify-between pl-6 p-3 rounded-t-xl bg-primary/80"> <div class="flex items-center gap-3">
+                <i id="backToContacts"
+          class="fa-solid fa-arrow-left bg-primary cursor-pointer p-3 rounded-full text-white md:hidden"></i>
+    <img id="chatContactAvatar" src="../../public/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
+              <div>
+                <p id="chatContactUsername" class=" text-secondary font-bold text-sm">Select a Contact</p>
+                <p id="chatContactStatus" class="text-xs text-gray-200">Offline</p>
               </div>
             </div>
-          </div>
-          </div>
-          </div>
-        
-   </div>
-    </div>
-  </div>
-  </div>
-  `;
-}
-
-export function ChatEventListener()
-{
-const menuToggle=document.getElementById("menuToggle");
-const dropdownMenu=document.getElementById("dropdownMenu");
-
-menuToggle?.addEventListener("click",()=>
-{
-  dropdownMenu?.classList.toggle("hidden");
-});
-
-document.addEventListener("click",(e)=>{
-  const target = e.target as Node;
-  if(!menuToggle?.contains(target) && !dropdownMenu?.contains(target))
-  {
-    dropdownMenu?.classList.add("hidden");
-  }
-});
-
-const closebutton=document.getElementById("closeChat");
-  const chatDiv = document.getElementById("chatContainer");
-  closebutton?.addEventListener("click",()=>
-  {
-   if(chatDiv)
-    {
-      chatDiv.innerHTML=`
-        
-         <div class="flex-1 flex items-center justify-center p-4 rounded-2xl overflow-y-auto bg-primary/60">
-
-          <h1 class="text-center text-primary/65  font-bold text-4xl ">Ping Pong<br>Chat</h1>
-        </div>
-        
-      `;
-    } 
-    const dropdown = document.getElementById("dropdownMenu");
-    dropdown?.classList.add("hidden");
-  });
-
- const contacts = document.getElementById("contacts_side");
-const chat = document.getElementById("main_chat");
-const contactItems = document.querySelectorAll(".contact-item");
-const backToContactsBtn = document.getElementById('backToContacts'); 
-
-    const isMobile = () => window.innerWidth < 768;
-
-    // --- Mode Mobile: masque contacts, montre chat) ---
-    contactItems.forEach(item => {
-        item.addEventListener("click", () => {
-            if (isMobile()) {
-                contacts?.classList.add("hidden"); 
-                chat?.classList.remove("hidden");
-                chat?.classList.add("flex"); 
-            }
-        });
-    });
-
-    // --- clic sur le bouton retour (Mode Mobile: masque chat, montre contacts) ---
-    backToContactsBtn?.addEventListener("click", () => {
-        if (isMobile()) {
-            chat?.classList.add("hidden");
-            chat?.classList.remove("flex"); 
-            contacts?.classList.remove("hidden");
-        }
-    });
-
-    // --- gestion de l'événement de redimensionnement ---
-    window.addEventListener("resize", () => {
-        if (window.innerWidth >= 768) {
-            chat?.classList.remove("hidden"); 
-            chat?.classList.add("flex"); 
-            contacts?.classList.remove("hidden");
-        } else {
-            contacts?.classList.remove("hidden"); 
             
-            //  masque le chat pour revenir à l'état initial mobile.
-            chat?.classList.add("hidden"); 
-            chat?.classList.remove("flex");
-        }
-    });
+            <button id="menuToggle" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/20 transition-all">
+            <i class="fa-solid fa-ellipsis-vertical text-secondary"></i>
+            </button>
 
-// Ouvrir chat sur mobile
-// contactItems.forEach(item => {
-//   item.addEventListener("click", () => {
-//     if (window.innerWidth < 768) {
-//       console.log("clicked mobile 1");
-//       console.log("Classes du chat:", chat?.className);
-//       contacts?.classList.add("hidden");
-//       chat?.classList.remove("hidden");
-//       chat?.classList.add("flex","flex-col");  // ✅ IMPORTANT: ajouter flex
-//     }
-//   });
-// });
+          <div id="dropdownMenu" class="hidden absolute right-3 top-12 bg-#35C6DD backdrop-blur-md rounded-lg shadow-lg py-2 w-40 z-50">
+            <button class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
+              <i class="fas fa-circle-info"></i>
+              Contact Info
+            </button>
+            
+            <button id="closeChat" class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
+              <i class="fa-regular fa-times-circle"></i>
+              Close Chat
+            </button>
+            <button id="blockUserBtn"  class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
+              <i class="fa fa-ban"></i>
+              Block User
+            </button>
+        </div>
+    </div>
 
-// // Revenir aux contacts sur mobile
-// backBtn?.addEventListener("click", () => {
-//   if (window.innerWidth < 768) {
-//     console.log("clicked mobile");
-//     chat?.classList.add("hidden");
-//     chat?.classList.remove("flex");  // ✅ IMPORTANT: enlever flex
-//     contacts?.classList.remove("hidden");
-//   }
-// });
 
-// // Resize event pour réafficher chat en desktop
-// window.addEventListener("resize", () => {
-//   if (window.innerWidth >= 768) {
-//     chat?.classList.remove("hidden");
-//     chat?.classList.add("flex");  // ✅ Ajouter flex
-//     contacts?.classList.remove("hidden");
-//   }
-// });
+            <div id="messagesPanel" class="flex-1 p-4 space-y-4 overflow-y-auto bg-primary/60 min-h-0">
+              <div class="flex-1 flex items-center justify-center h-full">
+                   <h1 class="text-center text-primary/65  font-bold text-4xl ">Ping Pong<br>Chat</h1>
+              </div>
 
-  //
+            </div>
 
+            <div id="blockConfirmation" class="hidden absolute inset-0 flex items-center justify-center z-50">
+                <div class="confirm bg-primary/65 p-6 rounded-xl shadow-md text-center max-w-xs w-full mx-2 min-h-[160px] flex flex-col justify-between">
+                  <p class="mb-2 text-white text-lg">Block <strong>${contactUsername}</strong>?</p>
+                  <div class="flex items-center justify-center gap-3 mt-4">
+                    <button id="confirmBlockBtn" class="bg-red-500 hover:bg-red-700 text-white rounded-2xl font-bold py-2 px-4 rounded">Block</button>
+                    <button id="cancelBlockBtn" class="bg-green-400 hover:bg-green-700 text-white rounded-2xl font-bold py-2 px-4 rounded">Cancel</button>
+                 </div>
+                
+              </div>
+            </div>
+
+            <div class="relative">
+                <div id="messageInputContainer" class="hidden p-4 bg-primary/60 rounded-b-xl">
+                  <div class="relative">
+                    
+                    <i id="sendMessageBtn" class="fa-regular fa-paper-plane text-secondary absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"></i>
+                    <i class="fa-solid fa-plus text-secondary absolute left-3 top-1/2 -translate-y-1/2 cursor-pointer"></i>
+                    <i class="fa-solid fa-table-tennis-paddle-ball text-secondary absolute left-9 top-1/2 -translate-y-1/2 cursor-pointer"></i>
+                    
+                    <input 
+                      type="text" 
+                      id="messageInput"
+                      placeholder="Type a message..." 
+                      class="w-full pl-16 pr-10 py-2 rounded-full bg-primary/65 text-white placeholder-white focus:outline-none">
+                  </div>
+                </div>
+
+               
+            </div>
+            </div>
+            </div>
+            
+       </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    `;
 }
-
-

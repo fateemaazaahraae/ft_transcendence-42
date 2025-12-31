@@ -1,9 +1,21 @@
 import { getSavedLang } from "../i18n";
 import { navigate } from "../main";
 
+interface AvTournaments {
+    img: string;
+    name: string;
+    numOfPlayers: number;
+}
+
 export async function tournamentChoices() {
-    const emptyAvTournaments = "";
-    const avTournaments = [
+    const emptyAvTournaments = /* html */
+    `
+    <div class="w-full flex flex-col items-center justify-center py-20 text-primary/80 rounded-2xl bg-black drop-shadow-cyan">
+        <i class="fa-solid fa-table-tennis-paddle-ball text-7xl mb-12"></i>
+        <h2 class="text-2xl font-bold mb-2">No tournament available</h2>
+    </div>
+    `;
+    const avTournaments: AvTournaments[] = [
         {img: "/dark-girl.svg", name: "Pong legends", numOfPlayers: 3},
         {img: "/dark-girl.svg", name: "tournowa d ramadan", numOfPlayers: 3},
         {img: "/dark-girl.svg", name: "tajamo3 l a7rar", numOfPlayers: 3},
