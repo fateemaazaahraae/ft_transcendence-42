@@ -15,7 +15,6 @@ fastify.get('/test', async (request, reply) => {
 
 fastify.get('/matches/user/:userId', async (request, reply) => {
     const userId = request.params.userId;
-    console.log("waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa----------->", userId);
     try {
         const db = await getDb();
         
