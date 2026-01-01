@@ -49,7 +49,7 @@ export default async function Home() {
         matches = dataGame;
         opponent = await Promise.all(
           matches.map(async (match:any)=>{
-            (userId == match.player1Id)?
+            (userId === match.player1Id)?
              res = await(fetch(`http://localhost:3000/users/${match.player2Id}`))
             : res = await(fetch(`http://localhost:3000/users/${match.player1Id}`))
             return await res.json();
@@ -146,7 +146,7 @@ export default async function Home() {
      <!-- Vertical Bar -->
     <div class="w-[70%] h-[2px] md:w-[60%] lg:w-[1px] lg:h-[180px] xl:w-[3px] xl:h-[250px] rounded-full bg-[#35C6DD]  mt-[10%] md:mt-[8%] lg:mt-0 lg:ml-[40px] lg:mr-[30px] xl:ml-[80px] xl:mr-[40px] shadow-[0_0_20px_#35C6DD]"></div>
     <div class="flex relative gap-[10%] md:gap-[15%] lg:gap-0">
-    <div class="flex flex-col ml-[18%] md:ml-[10%] lg:ml-0 lg:gap-4 justify-center items-center">
+    <div class="flex flex-col mt-[4%] lg:mt-0 ml-[18%] md:ml-[10%] lg:ml-0 lg:gap-4 justify-center items-center">
       <h1 data-i18n="winRate" class=" text-white  lg:mb-0 font-glitch md:text-2xl xl:text-4xl whitespace-nowrap"> Wining rate </h1>
       <div class="relative w-[110px] h-[110px] mt-[15%] mb-[35%] lg:mt-0 lg:mb-0 xl:w-[150px] xl:h-[150px] rounded-full flex items-center justify-center">
         <div 

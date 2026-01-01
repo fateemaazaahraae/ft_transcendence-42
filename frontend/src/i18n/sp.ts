@@ -28,7 +28,7 @@ const sp: translateDict = {
     changeAvt: "Cambia tu avatar",
     level: "Nivel",
     rank: "Rango",
-    winRate: "Porcentaje de victorias",
+    winRate: "Ratio",
     wins: "Victorias",
     losses: "Derrotas",
     achievements: "Logros",
@@ -43,7 +43,7 @@ const sp: translateDict = {
     ready: "¿Listo para jugar?",
     pick: "Elige tu modo",
     one: "Uno-contra-Uno",
-    ai: "Uno-contra-Ia",
+    ai: "Uno-contra-IA",
 }
 
 export default sp;

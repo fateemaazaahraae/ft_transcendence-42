@@ -43,7 +43,7 @@ const fr: translateDict = {
     ready: "Prêt à jouer?",
     pick: "Choisissez votre mode",
     one: "Un-contre-Un",
-    ai: "Un-contre-Ia"
+    ai: "Un-contre-IA"
 }
 
 export default fr;
