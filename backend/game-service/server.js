@@ -29,7 +29,7 @@ fastify.get('/matches/user/:userId', async (request, reply) => {
     }
 });
 
-const getUserDataFromToken = (token) => {
+const getUserDataFromToken = (token) => { // had lfunction kayreturni id&name&img of user from the token
   try {
     const payloadBase64 = token.split('.')[1];
     const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
@@ -40,22 +40,6 @@ const getUserDataFromToken = (token) => {
         name: decoded.userName,       // Make sure these match your JWT fields
         avatar: decoded.profileImage || "/public/default.png" // Fallback
     };
-  } catch (error) {
-    console.error("Failed to decode token:", error.message);
-    return null;
-  }
-};
-
-const getUserIdFromToken = (token) => {
-  try {
-    // JWT structure is: header.payload.signature
-    // We want the payload (the 2nd part)
-    const payloadBase64 = token.split('.')[1];
-    // Decode Base64 to String
-    const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
-    // Parse JSON
-    const decoded = JSON.parse(decodedJson);
-    return decoded.id;
   } catch (error) {
     console.error("Failed to decode token:", error.message);
     return null;
@@ -79,15 +63,6 @@ const start = async () => {
         return;
       }
 
-      const userId = getUserIdFromToken(token);
-      
-      // socket.data.userId = token.slice(40, 50) + '...'; // slice my token to make printing it easy
-      // const usser = token.slice(0, 50) + '...'; // slice my token to make printing it easy
-      if (!userId) {
-         console.log('❌ Connection rejected: Invalid Token format.');
-         socket.disconnect();
-         return;
-      }
       const userData = getUserDataFromToken(token);
       
       if (!userData) {

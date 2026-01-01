@@ -10,13 +10,6 @@ class GameRoom {
     // my canvas size, 1344x580//(x, y)
     this.gameState = {// contain the new positions for ball and paddles
       ball: { x: 672, y: 290, dx: 5, dy: 5 },
-      // ball: {
-      // x: width / 2,
-      // y: height / 2,
-      // r: 10,
-      // vx: (Math.random() < 0.5 ? 1 : -1) * 300,
-      // vy: (Math.random() < 0.5 ? 1 : -1) * 200,
-      // },
       paddle1: { y: 250 },
       paddle2: { y: 250 },
       score: { p1: 0, p2: 0 }
@@ -36,7 +29,11 @@ class GameRoom {
     }
 
     async handlePlayerDisconnect(disconnectedSocket) {
-      if (this.isGameOver) return;
+      if (this.isGameOver || this.player1.id === this.player2.id) 
+      {
+        console.log("saaaame player in both");
+        return;
+      }
 
       this.isGameOver = true;
 

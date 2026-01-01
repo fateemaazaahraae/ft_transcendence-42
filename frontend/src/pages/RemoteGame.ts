@@ -142,8 +142,8 @@ export function RemoteGameEventListener() {
 
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
-  console.log(canvas.height);
-  console.log(canvas.width);
+  // console.log(canvas.height);
+  // console.log(canvas.width);
 
   const LeaveOverlay = document.getElementById('leave-overlay') as HTMLDivElement;
   const quitBtn = document.getElementById('quit-btn') as HTMLButtonElement;
@@ -193,9 +193,9 @@ export function RemoteGameEventListener() {
     }
   });
   function cleanupGame() {
-    console.log("🧹 Cleaning game");
+    console.log("Cleaning game");
 
-    socket.off();        // remove all listeners
+    socket.off();
     socket.disconnect();
 
     document.getElementById("winner-overlay")?.remove();
@@ -330,7 +330,6 @@ export function RemoteGameEventListener() {
     window.removeEventListener('popstate', leaveGame);
     window.removeEventListener('beforeunload', leaveGame);
     
-    // Disconnect socket if still connected
     if (socket.connected) {
       socket.disconnect();
     }
