@@ -91,13 +91,13 @@ const start = async () => {
       socket.on("leave_queue", () => {
         // waitingQueue = waitingQueue.filter(p => p.userId !== socket.userId);
         const index = waitingQueue.findIndex(
-        s => s.data.userId === socket.data.userId
+          s => s.data.userId === socket.data.userId
         );
 
-      if (index !== -1) {
-        waitingQueue.splice(index, 1);
-        console.log(`${socket.data.userId} removed from queue (leave_queue)`);
-      }
+        if (index !== -1) {
+          waitingQueue.splice(index, 1);
+          console.log(`${socket.data.userId} removed from queue (leave_queue)`);
+        }
       });
 
 
@@ -105,13 +105,12 @@ const start = async () => {
       socket.on("join_queue", () => {
         const userId = socket.data.userId;
 
-        // 🚫 Prevent duplicate users
         const alreadyQueued = waitingQueue.some(
           s => s.data.userId === userId
         );
 
         if (alreadyQueued) {
-          console.log(`⚠️ ${userId} already in queue, ignoring`);
+          console.log(`${userId} already in queue, successfuly ignored`);
           return;
         }
 
@@ -122,9 +121,7 @@ const start = async () => {
           const player1 = waitingQueue.shift();
           const player2 = waitingQueue.shift();
 
-          // 🛑 Absolute safety
           if (player1.data.userId === player2.data.userId) {
-            console.log("❌ Prevented self-match");
             return;
           }
 

@@ -314,7 +314,7 @@ export function RemoteGameEventListener() {
 
   setTimeout(() => {
       if (!hasReceivedGameData) {
-          console.log("⚠️ No active game found (likely refreshed). Redirecting...");
+          console.log("No active game found (likely refreshed). Redirecting...");
           showAlert("Game session lost or finished.");
           navigate("/home");
       }

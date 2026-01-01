@@ -135,12 +135,6 @@ export function GameStyleEventListener(){
               localStorage.setItem("currentMatch", JSON.stringify(data));
               navigate("/remote-game"); 
           });
-
-          socket.on("waiting_for_match", (data: any) => {
-              console.log(`Status: ${data.message}`);
-              navigate("/RemotegameStyle");
-              // socket.emit('join_queue');
-          });
       }
 
       if (socket.connected) {

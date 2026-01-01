@@ -37,36 +37,34 @@ export default async function Home() {
       navigate("/login");
     }
     //Game data
-    let matches:any;
-    let opponent:any;
-    let res:any;
-    try {
-        const userId = localStorage.getItem("userId");
-        const resGame = await fetch(`game/matches/user/${userId}`);
-        const dataGame = await resGame.json();
-        console.error("----------------------1111111");
-        if(!resGame.ok)
-          return[];
-        matches = dataGame;
-        if (matches.length === 0)
-          return[];
-        opponent = await Promise.all(
-          matches.map(async (match:any)=>{
-            (userId === match.player1Id)?
-             res = await(fetch(`http://localhost:3000/users/${match.player2Id}`))
-            : res = await(fetch(`http://localhost:3000/users/${match.player1Id}`))
-            return await res.json();
+   let matches: any[] = [];
+let opponent: any[] = [];
 
-          })
-        )
-  } catch (err) {
-      if (err instanceof Error) {
-        console.error("Fetch failed:", err.message);
-        alert("Fetch error: " + err.message);
-      } else {
-        alert("Fetch failed with unknown error" + err);
-      }
+try {
+  const userId = localStorage.getItem("userId");
+
+  const resGame = await fetch(`game/matches/user/${userId}`);
+  if (!resGame.ok) throw new Error("Can't fetch matches");
+
+  matches = await resGame.json();
+
+  if (matches.length > 0) {
+    opponent = await Promise.all(
+      matches.map(async (match: any) => {
+        const otherId =
+          userId === match.player1Id
+            ? match.player2Id
+            : match.player1Id;
+
+        const res = await fetch(`http://localhost:3000/users/${otherId}`);
+        return await res.json();
+      })
+    );
   }
+} catch (err) {
+  console.error(err);
+}
+
 
   const currentLang = (await getSavedLang()).toUpperCase();
 
