@@ -1,6 +1,14 @@
 import { navigate } from "../main.ts";
+import { requiredAuth } from "../utils/authGuard";
+import { showAlert } from "../utils/alert";
+import { getSavedLang } from "../i18n";
+import { translateMsg } from "../i18n/translateBack";
 
 export default async function LocalMode() {
+    if (!requiredAuth())
+    return "";
+    
+    const currentLang = (await getSavedLang()).toUpperCase();
     let user:any;
     try{
       const token = localStorage.getItem("token");
@@ -14,7 +22,7 @@ export default async function LocalMode() {
     }
     catch
     {
-      alert("login first");
+      showAlert("login first");
     }
 
   return `
@@ -38,7 +46,7 @@ export default async function LocalMode() {
     </aside>
 
 
-     <!-- Controls Icons -->
+    <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass text-primary absolute top-1/2 -translate-y-1/2 left-3"></i>
@@ -46,40 +54,40 @@ export default async function LocalMode() {
         <div class="search-results absolute top-full left-0 w-full h-auto backdrop-blur-md mt-1 hidden z-[9000] rounded-xl"></div>
       </div>
       <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
+        <button id="currentLang" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
+          ${currentLang}
         </button>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-      <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+      <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
     <!-- chose your mode -->
 
     <div class="absolute top-[70%]  lg:top-1/2 pb-[15%] md:pb-0 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-      <h1 class="font-glitch text-3xl md:text-4xl xl:text-6xl lg:text-5xl text-black leading-[1.9]"
+      <h1 data-i18n="ready" class="font-glitch text-3xl md:text-4xl xl:text-6xl lg:text-5xl text-black leading-[1.9]"
        style="-webkit-text-stroke: 2px rgba(53,198,221,0.6);">Ready to play?</h1>
-      <h1 class="font-glitch text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-primary/60 text-shadow-cyan">Pick your mode</h1>
+      <h1 data-i18n="pick" class="font-glitch text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-primary/60 text-shadow-cyan">Pick your mode</h1>
       <div class="flex flex-col md:flex-col lg:flex-row xl:flex gap-10 lg:gap-5 xl:gap-20 mt-[20%] md:mt-[12%]">
         <div class="flex flex-col gap-2 md:gap-3 lg:gap-6 xl:gap-3 items-center w-[350px] h-[300px] md:w-[450px] md:h-[310px] lg:w-[500px] lg:h-[400px] xl:w-[600px] xl:h-[430px] bg-primary/60 rounded-3xl ">
-            <h1 class="mt-[5%] font-glitch text-center text-2xl md:text-3xl lg:text-4xl"> One-vs-One</h1>
+            <h1 data-i18n="one" class="mt-[5%] font-glitch text-center text-2xl md:text-3xl lg:text-4xl"> One-vs-One</h1>
             <div class="flex justify-center gap-3">
                 <i class="object-cover fa-solid fa-circle-user text-[100px] md:text-[100px] lg:text-[120px] xl:text-[150px]  text-primary/90"></i> 
                 <img src="/public/vs.svg" class="w-[90px] md:w-[100px] lg:w-[120px]" />
                 <i class="object-cover fa-solid fa-circle-user text-[100px] md:text-[100px] lg:text-[120px] xl:text-[150px] mt-[25%] text-secondary/90"></i> 
             </div>
-            <button id="local" class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
+            <button data-i18n="play" id="local" class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
         </div>
        <div class="flex flex-col gap-2 md:gap-3 lg:gap-6 xl:gap-3 items-center w-[350px] h-[300px] md:w-[450px] md:h-[310px] lg:w-[500px] lg:h-[400px] xl:w-[600px] xl:h-[430px] bg-primary/60 rounded-3xl ">
-            <h1 class="mt-[5%] font-glitch text-center text-2xl md:text-3xl lg:text-4xl"> One-vs-Ai</h1>
+            <h1 data-i18n="ai" class="mt-[5%] font-glitch text-center text-2xl md:text-3xl lg:text-4xl"> One-vs-Ai</h1>
             <div class="flex justify-center gap-3">
                 <img src="${user.profileImage}" 
                 class=" object-cover w-[100px] h-[100px] md:w-[100px] md:h-[100px] lg:w-[120px] lg:h-[120px] xl:w-[150px] xl:h-[150px] rounded-full border-[3px] border-[#35C6DD]/90"/>
                 <img src="/public/vs.svg" class="w-[90px] md:w-[100px] lg:w-[120px]" />
                 <img src="/public/robot.svg" class=" w-[85px] lg:w-[103px] xl:w-[130px] mt-[25%]"/> 
             </div>
-            <button id="playAi" class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
+            <button data-i18n="play" id="playAi" class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
         </div>
       </div>
     </div>

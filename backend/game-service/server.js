@@ -11,17 +11,16 @@ fastify.get('/test', async (request, reply) => {
 
 fastify.get('/matches/user/:userId', async (request, reply) => {
     const userId = request.params.userId;
-    
     try {
         const db = await getDb();
         
         const matches = await db.all(
-            `SELECT * FROM matches 
-             WHERE player1Id = ? OR player2Id = ? 
-             ORDER BY timestamp DESC`,
-            [userId, userId]
+          `SELECT * FROM matches 
+          WHERE player1Id = ? OR player2Id = ? 
+          ORDER BY timestamp DESC`,
+          [userId, userId]
         );
-
+        
         return matches;
     } catch (err) {
         console.error(err);

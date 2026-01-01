@@ -26,4 +26,22 @@ export interface translateDict {
     FAdesc: string;
     save: string;
     changeAvt: string;
+    level: string;
+    rank: string;
+    winRate: string;
+    wins: string;
+    losses: string;
+    achievements: string;
+    matchHist: string;
+    play: string;
+    noMatches: string;
+    score: string;
+    modePlay: string;
+    remote: string;
+    local: string;
+    or: string;
+    ready: string;
+    pick: string;
+    one: string;
+    ai:string;
 }

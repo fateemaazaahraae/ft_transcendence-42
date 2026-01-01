@@ -14,7 +14,13 @@ export function translatePage(lang: Lang) {
         if (!key) return;
         const translation = dict[key as keyof translateDict];
         if (translation)
+        {
             el.textContent = translation;
+            if (el.hasAttribute("data-glitch-text")){
+                const attr = el.getAttribute("data-glitch-text");
+                el.setAttribute("data-glitch-text", translation);
+            }
+        }
     });
 }
 
