@@ -23,34 +23,26 @@ export default function LocalGame() {
   return `
   <div id="container" class="relative w-full h-screen">
 
-    <!-- Top icons -->
-    <div class="absolute top-10 right-[5%] flex items-center gap-4">
-      <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
-          <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
-        </button>
-      </div>
-      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-      <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-    </div>
-
     <!-- Player Info & Score -->
-    <div class="absolute flex top-[20%] md:top-[23%] lg:top-[23%] xl:top-[18%] left-[14%] md:left-[5%] lg:left-[2%] xl:left-[25%] md:translate-x-1/2">
-        <i class="object-cover fa-solid fa-circle-user text-[50px] md:text-[50px] lg:text-[120px] xl:text-[95px] text-primary/90"></i>
-        <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[3%] lg:ml-[10%] ">
+    <div class="absolute left-1/2 transform -translate-x-1/2 flex justify-center items-center gap-2 md:gap-4 lg:gap-60 top-[25%] md:top-[23%] xl:top-[18%]">
+      <div class="flex items-center justify-end w-[260px]">
+        <i class="object-cover fa-solid fa-circle-user text-[60px] lg:text-[80px] xl:text-[100px] text-primary/90"></i>
+        <div class="flex flex-col items-center gap-1 md:gap-3">
           <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${game.match[0].player1.name} </h1>
-          <span id="player1-score-display" class="w-[40px] h-[30px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-primary text-xl bg-black drop-shadow-cyann">${game.match[0].player1.score}</span>
+          <span id="player1-score-display" class="w-[40px] h-[30px] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-primary text-xl bg-black drop-shadow-cyann">${game.match[0].player1.score}</span>
         </div>
-        <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[20%] lg:ml-[35%]">
+      </div>
+      <div class="flex items-center justify-start w-[260px]">
+        <div class="flex flex-col items-center gap-1 md:gap-3">
           <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${game.match[0].player2.name} </h1>
-          <span id="player2-score-display" class="w-[40px] h-[30px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-secondary text-xl bg-black drop-shadow-pink">${game.match[0].player2.score}</span>
+          <span id="player2-score-display" class="w-[40px] h-[30px] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-secondary text-xl bg-black drop-shadow-pink">${game.match[0].player2.score}</span>
         </div>
-        <i class="object-cover fa-solid fa-circle-user text-[50px] md:text-[50px] lg:text-[120px]  ml-[1%] md:ml-[3%] lg:ml-[10%] xl:text-[95px] text-secondary/75"></i>
+        <i class="object-cover fa-solid fa-circle-user text-[60px] lg:text-[80px] xl:text-[100px] xl:text-[95px] text-secondary/75"></i>
+      </div>
     </div>
 
     <!-- PAUSE BUTTON -->
-    <div class="absolute top-[14%] lg:top-[10%] left-1/2 transform -translate-x-1/2 z-10">
+    <div class="absolute top-[15%] lg:top-[10%] left-1/2 transform -translate-x-1/2 z-10">
       <button id="pause-btn" class="px-6 py-3 bg-black text-white border-secondary/40 overflow-hidden drop-shadow-pink rounded-lg font-roboto transition-all duration-300 flex items-center gap-2">
         <i class="fa-solid fa-pause"></i>
         Pause
@@ -83,7 +75,7 @@ export default function LocalGame() {
     </div>
 
     <!-- GAME CANVAS AREA -->
-    <div class="absolute rotate-90 lg:rotate-0 top-[26%] lg:top-[40%] xl:top-[32%] md:top-[32%] left-[15%] md:left-[13%] lg:left-[15%] w-[80%] md:w-[75%] h-[40%] md:h-[65%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
+    <div class="absolute left-1/2 transform -translate-x-1/2 rotate-90 lg:rotate-0 top-[43%] lg:top-[37%] xl:top-[32%] md:top-[38%] h-[38%] md:h-[55%] w-full md:w-[80%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
       <!-- This is where the game will be drawn -->
       <canvas 
         id="pongCanvas"

@@ -36,7 +36,7 @@ export async function tournamentChoices() {
     ];
     const currentLang = (await getSavedLang()).toUpperCase();
     return `
-        <div class="min-h-screen text-white font-roboto px-6 md:px-20 py-10 relative overflow-y-auto">
+        <div class="text-white font-roboto px-6 md:px-20 py-10 relative">
             <!-- Sidebar -->
             <aside
                 class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
@@ -72,7 +72,7 @@ export async function tournamentChoices() {
             </div>
 
             <!-- Content Wrapper-->
-            <div class="grid grid-cols-1 gap-20 lg:grid-cols-[1fr_1fr] max-w-[1400px] max-h-[70px] justify-center md:ml-[10%] mt-36">
+            <div class="grid grid-cols-1 gap-20 lg:grid-cols-[1fr_1fr] max-w-[1400px] max-h-[70px] md:ml-[10%] lg:ml-[5%] xl:ml-[14%] mt-36">
                 <div class="md:flex md:gap-32">
                 <div class="flex flex-col justify-center">
                     <h1 class="font-glitch text-center text-3xl mb-8">Available tournaments</h1>

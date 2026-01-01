@@ -23,30 +23,22 @@ export default function AiGame() {
   return `
   <div id="container" class="relative w-full h-screen">
 
-    <!-- Top icons -->
-    <div class="absolute top-10 right-[5%] flex items-center gap-4">
-      <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
-          <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
-        </button>
-      </div>
-      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-      <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-    </div>
-
     <!-- Player Info & Score -->
-    <div class="absolute flex top-[25%] lg:top-[23%] xl:top-[18%] left-[12%] md:left-[2%] lg:left-[11%] xl:left-[22%] md:translate-x-1/2">
+    <div class="absolute left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-4 lg:gap-60 top-[25%] md:top-[23%] xl:top-[18%]">
+      <div class="flex items-center justify-end w-[260px]">
         <img src="${game.match[0].player1.avatar}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
-        <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[3%] lg:ml-[10%] ">
+        <div class="flex flex-col items-center gap-1 md:gap-3">
           <h1 class="font-glitch text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${game.match[0].player1.name} </h1>
-          <span id="player1-score-display" class="w-[40px] h-[30px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-primary text-xl bg-black drop-shadow-cyann">0</span>
+          <span id="player1-score-display" class="w-[40px] h-[30px] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-primary text-xl bg-black drop-shadow-cyann">0</span>
         </div>
-        <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[20%] lg:ml-[35%]">
+      </div>
+      <div class="flex items-center justify-start w-[260px]">
+        <div class="flex flex-col items-center gap-1 md:gap-3">
           <h1 class="font-glitch text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${game.match[0].player2.name} </h1>
-          <span id="player2-score-display" class="w-[40px] h-[30px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-secondary text-xl bg-black drop-shadow-pink">0</span>
+          <span id="player2-score-display" class="w-[40px] h-[30px] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-secondary text-xl bg-black drop-shadow-pink">0</span>
         </div>
-        <img src="${game.match[0].player2.avatar}" class="w-[60px] h-[60px] ml-[1%] md:ml-[3%] lg:ml-[10%] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-secondary object-cover border-[2px]"/>
+        <img src="${game.match[0].player2.avatar}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-secondary object-cover border-[2px]"/>
+      </div>
     </div>
 
 
@@ -84,7 +76,7 @@ export default function AiGame() {
     </div>
 
     <!-- GAME CANVAS AREA -->
-    <div class="absolute rotate-90 lg:rotate-0 top-[43%] lg:top-[37%] xl:top-[32%] md:top-[38%]  md:left-[10%] h-[38%] md:h-[55%] w-[100%] md:w-[80%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
+    <div class="absolute left-1/2 transform -translate-x-1/2 rotate-90 lg:rotate-0 top-[43%] lg:top-[37%] xl:top-[32%] md:top-[38%] h-[38%] md:h-[55%] w-full md:w-[80%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
       <!-- This is where the game will be drawn -->
       <canvas 
         id="pongCanvas"
@@ -411,28 +403,28 @@ export function AiGameEventListener() {
           const winner = player1Score >= WINNING_SCORE ? "Salma" : "héhé Ai";
             const winnerOverlay = document.createElement('div');
             winnerOverlay.id = 'winner-overlay';
-            winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[1000] flex flex-col items-center justify-center';
+            winnerOverlay.className = 'ml-12 md:ml-0 w-[80%] md:w-full absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
             winnerOverlay.innerHTML = `
               <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
-                <h2 class="text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
-                <p class="font-roboto text-2xl text-gray-300 mb-2">Final Score</p>
+                <h2 class="text-2xl md:text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
+                <p class="font-roboto text-xl md:text-2xl text-gray-300 mb-2">Final Score</p>
                 <div class="flex justify-center items-center gap-8 mb-8">
                   <div class="text-center">
-                    <p class="text-primary text-3xl">${player1Score}</p>
+                    <p class="text-primary text-2xl md:text-3xl">${player1Score}</p>
                     <p class="font-roboto text-gray-400">You</p>
                   </div>
                   <span class="text-3xl text-white">-</span>
                   <div class="text-center">
-                    <p class="text-secondary text-3xl">${player2Score}</p>
+                    <p class="text-secondary text-2xl md:text-3xl">${player2Score}</p>
                     <p class="font-roboto text-gray-400">Ai</p>
                   </div>
                 </div>
                 <div class="space-y-4">
-                  <button id="play-again-btn" class="w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
+                  <button id="play-again-btn" class="text-[15px] md:text-xl w-[150px] md:w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
                     <i class="fa-solid fa-rotate-right mr-2"></i>
                     Play Again
                   </button>
-                  <button id="main-menu-btn" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all duration-300">
+                  <button id="main-menu-btn" class="text-[15px] md:text-xl w-[150px] md:w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all duration-300">
                     <i class="fa-solid fa-home mr-2"></i>
                     Main Menu
                   </button>

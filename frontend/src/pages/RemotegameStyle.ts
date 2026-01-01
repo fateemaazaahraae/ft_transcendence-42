@@ -46,10 +46,10 @@ export default function LocalGameStyle() {
     <!-- Wait opponent -->
 
     <h1 id="waitingText"
-        class="text-3xl  md:text-4xl lg:text-5xl font-glitch text-center mt-[40%] md:mt-[20%] lg:mt-[14%]">
+        class="text-3xl md:text-4xl lg:text-5xl font-glitch text-center mt-[40%] md:mt-[20%] lg:mt-[14%]">
       Waiting For Opponent<span id="dots">...</span>
     </h1>
-    <div class="flex justify-center items-center mt-[5%] gap-10">
+    <div class="flex flex-col lg:flex-row justify-center items-center mt-[8%] lg:mt-[5%] gap-6 md:gap-10">
         <img src="" id="myImg" class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[250px] lg:h-[250px] rounded-full border-2 border-primary object-cover">
         <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[170px]" />
         <img
