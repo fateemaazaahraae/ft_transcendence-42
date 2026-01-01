@@ -29,11 +29,8 @@ class GameRoom {
     }
 
     async handlePlayerDisconnect(disconnectedSocket) {
-      if (this.isGameOver || this.player1.id === this.player2.id) 
-      {
-        console.log("saaaame player in both");
-        return;
-      }
+      // console.log(this.player1.id, "<--- id1 id2--->", this.player2.id)
+      if (this.isGameOver) return;
 
       this.isGameOver = true;
 
@@ -72,6 +69,7 @@ class GameRoom {
             ]
         );
         
+      console.log(this.player1.id, "<--- id1 id2--->", this.player2.id);
         console.log("✅ Match saved to SQLite database!");
 
     } catch (error) {

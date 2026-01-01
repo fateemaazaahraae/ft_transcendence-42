@@ -79,41 +79,77 @@ const start = async () => {
       // socket.data.userId = userId;
       // console.log(`User connected! Socket ID: ${socket.id} | User ID: ${socket.data.userId}`);
 
-      socket.on('join_queue', () => {
-        if (waitingQueue.find(s => s.id === socket.id)) { // if the tocken already in my array return 
-          console.log('alreadyyyyy thereee');
-          return;
-        }
-        // if not push it
-        waitingQueue.push(socket);
-        console.log(`${socket.data.userId} joined the queue. queue size===:${waitingQueue.length}===`);
-
-        if (waitingQueue.length >= 2) {
-            const player1 = waitingQueue.shift();
-            const player2 = waitingQueue.shift();
-
-            const matchId = `match_${Date.now()}`; 
-
-            // Prepare the Match Data
-            const matchInfo = {
-                matchId: matchId,
-                player1: player1.data.user, // Contains {id, name, avatar}
-                player2: player2.data.user
-            };
-
-            console.log(`🚀 Match: ${matchInfo.player1.avatar} vs ${matchInfo.player2.avatar}`);
-
-            // Notify players with FULL info
-            player1.emit('match_found', matchInfo);
-            player2.emit('match_found', matchInfo);
-
-            const game = new GameRoom(io, matchId, player1, player2);
-            game.start();
-        }
-        else {// case mazal mawslna l joj dial players
-          socket.emit('waiting_for_match', { message: `Waiting for opponent... Current queue: ${waitingQueue.length}` });
+      socket.on("leave_queue", () => {
+        const index = waitingQueue.findIndex(
+          s => s.data.userId === socket.data.userId
+        );
+        if (index !== -1) {
+          waitingQueue.splice(index, 1);
+          console.log(`${socket.data.userId} removed from queue (leave_queue)`);
         }
       });
+
+      socket.on("leave_queue", () => {
+        // waitingQueue = waitingQueue.filter(p => p.userId !== socket.userId);
+        const index = waitingQueue.findIndex(
+        s => s.data.userId === socket.data.userId
+        );
+
+      if (index !== -1) {
+        waitingQueue.splice(index, 1);
+        console.log(`${socket.data.userId} removed from queue (leave_queue)`);
+      }
+      });
+
+
+
+      socket.on("join_queue", () => {
+        const userId = socket.data.userId;
+
+        // 🚫 Prevent duplicate users
+        const alreadyQueued = waitingQueue.some(
+          s => s.data.userId === userId
+        );
+
+        if (alreadyQueued) {
+          console.log(`⚠️ ${userId} already in queue, ignoring`);
+          return;
+        }
+
+        waitingQueue.push(socket);
+        console.log(`${userId} joined the queue. queue size===:${waitingQueue.length}===`);
+
+        if (waitingQueue.length >= 2) {
+          const player1 = waitingQueue.shift();
+          const player2 = waitingQueue.shift();
+
+          // 🛑 Absolute safety
+          if (player1.data.userId === player2.data.userId) {
+            console.log("❌ Prevented self-match");
+            return;
+          }
+
+          const matchId = `match_${Date.now()}`;
+
+          const matchInfo = {
+            matchId,
+            player1: player1.data.user,
+            player2: player2.data.user
+          };
+
+          console.log(`🚀 Match: ${matchInfo.player1.avatar} vs ${matchInfo.player2.avatar}`);
+
+          player1.emit("match_found", matchInfo);
+          player2.emit("match_found", matchInfo);
+
+          const game = new GameRoom(io, matchId, player1, player2);
+          game.start();
+        } else {
+          socket.emit("waiting_for_match", {
+            message: "Waiting for opponent..."
+          });
+        }
+});
 
       socket.on('disconnect', () => {
         console.log(`user disconnected: ${socket.data.userId}`);

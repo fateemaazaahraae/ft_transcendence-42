@@ -129,7 +129,10 @@ async function fillSettingsPage()
 }
 
 export function RemoteGameStyleEventListener() {
-  window.addEventListener('popstate', leaveGame); // user click back or forward in the browser
+  window.addEventListener('popstate', () => {
+  socket.emit("leave_queue");
+  socket.disconnect();
+  }); // user click back or forward in the browser
   fillSettingsPage();
   startWaitingDots();
   startOpponentImageRotation();
