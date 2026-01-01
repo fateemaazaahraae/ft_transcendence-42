@@ -210,13 +210,13 @@ export function GameStyleEventListener(){
               socket.emit('join_queue');
           });
 
-          socket.on("match_found", (data) => {
+          socket.on("match_found", (data: any) => {
               console.log("🎉 MATCH FOUND! Navigating to game...");
               localStorage.setItem("currentMatch", JSON.stringify(data));
               navigate("/remote-game"); 
           });
 
-          socket.on("waiting_for_match", (data) => {
+          socket.on("waiting_for_match", (data: any) => {
               console.log(`Status: ${data.message}`);
               navigate("/RemotegameStyle");
               // socket.emit('join_queue');

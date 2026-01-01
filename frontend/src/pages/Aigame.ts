@@ -1,5 +1,6 @@
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
+import { showAlert } from "../utils/alert.ts";
 
 export default function AiGame() {
   if (!requiredAuth())
@@ -8,8 +9,8 @@ export default function AiGame() {
   const game = {
     match: [{
       player1: {
-        avatar: "/public/pink-girl.svg",
-        name: "Salma",
+        // avatar: "/public/pink-girl.svg",
+        // name: "Salma",
         score: 0,
       }, 
       player2: {
@@ -26,9 +27,9 @@ export default function AiGame() {
     <!-- Player Info & Score -->
     <div class="absolute left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-4 lg:gap-60 top-[25%] md:top-[23%] xl:top-[18%]">
       <div class="flex items-center justify-end w-[260px]">
-        <img src="${game.match[0].player1.avatar}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+        <img src="" id="myImg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
         <div class="flex flex-col items-center gap-1 md:gap-3">
-          <h1 class="font-glitch text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${game.match[0].player1.name} </h1>
+          <h1 id="userName" class="font-glitch text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"></h1>
           <span id="player1-score-display" class="w-[40px] h-[30px] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-primary text-xl bg-black drop-shadow-cyann">0</span>
         </div>
       </div>
@@ -87,7 +88,31 @@ export default function AiGame() {
   `;
 }
 
+
+async function fillSettingsPage()
+{
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    showAlert("Login first");
+    navigate("/login");
+  }
+  try
+  {
+    const res = await fetch(`http://localhost:3001/settings/${userId}`);
+    const data = await res.json();
+    // fill page
+    (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
+    (document.getElementById("userName") as HTMLElement).textContent = data.userName || "";
+  }
+  catch (err)
+  {
+    console.log(err);
+    showAlert("Error while fetching data: " + err);
+  }
+}
+
 export function AiGameEventListener() {
+  fillSettingsPage();
   setTimeout(() => {
     // Back button
     // const backBtn = document.getElementById('back-btn');
