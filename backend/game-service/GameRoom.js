@@ -35,7 +35,7 @@ class GameRoom {
     this.isGameOver = false;
     }
 
-    handlePlayerDisconnect(disconnectedSocket) {
+    async handlePlayerDisconnect(disconnectedSocket) {
       if (this.isGameOver) return;
 
       this.isGameOver = true;
@@ -55,6 +55,31 @@ class GameRoom {
           score: this.gameState.score
         });
       }
+      try {
+        const db = await getDb();
+        const matchId = this.roomId;
+        const timestamp = Date.now();
+        const winner = winnerSocket.data.userId;
+
+        await db.run(
+            `INSERT INTO matches (id, player1Id, player2Id, score1, score2, winnerId, timestamp)
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [
+                matchId,
+                this.player1.data.userId,
+                this.player2.data.userId,
+                this.gameState.score.p1,
+                this.gameState.score.p2,
+                winner,
+                timestamp
+            ]
+        );
+        
+        console.log("✅ Match saved to SQLite database!");
+
+    } catch (error) {
+        console.error("❌ Failed to save match:", error);
+    }
 
   this.stop();
 }
@@ -230,7 +255,6 @@ class GameRoom {
   broadcast() {
     // Send the entire state to everyone in this specific room // using server instance socket.io and the room id so we know to which room we're talking yah ofc
     this.io.to(this.roomId).emit('game_update', this.gameState);
-    // this.io.to(this.roomId).emit('game_over');
   }
 
   stop() {

@@ -218,6 +218,8 @@ export function GameStyleEventListener(){
 
           socket.on("waiting_for_match", (data) => {
               console.log(`Status: ${data.message}`);
+              navigate("/RemotegameStyle");
+              // socket.emit('join_queue');
           });
       }
 

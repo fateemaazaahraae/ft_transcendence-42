@@ -1,3 +1,4 @@
+import { getGameSocket } from "../utils/gameSocket.ts";
 import { navigate } from "../main.ts";
 import { showAlert } from "../utils/alert";
 import { requiredAuth } from "../utils/authGuard.ts";
@@ -128,19 +129,14 @@ async function fillSettingsPage()
 }
 
 export function RemoteGameStyleEventListener() {
+  window.addEventListener('popstate', leaveGame); // user click back or forward in the browser
   fillSettingsPage();
   startWaitingDots();
   startOpponentImageRotation();
-  setTimeout(() => {
-      const match=document.getElementById("play");
-      match?.addEventListener("click", () =>{
-        console.log("Local multiplayer button clicked!");
-        navigate("/Localgame");
-      });
-      const matchai=document.getElementById("playai");
-      matchai?.addEventListener("click", () =>{
-        console.log("VS AI button clicked!");
-        navigate("/Aigame");
-      });
-  }, 100);
+  const socket = getGameSocket(localStorage.getItem("token"));
+  function leaveGame() {
+    console.log("You left!!");
+    socket.disconnect();
+    navigate("/gameStyle");
+  }
 }

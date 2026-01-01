@@ -106,6 +106,7 @@ const start = async () => {
 
       socket.on('join_queue', () => {
         if (waitingQueue.find(s => s.id === socket.id)) { // if the tocken already in my array return 
+          console.log('alreadyyyyy thereee');
           return;
         }
         // if not push it
@@ -141,8 +142,6 @@ const start = async () => {
 
       socket.on('disconnect', () => {
         console.log(`user disconnected: ${socket.data.userId}`);
-        // socket.emit('game_over');
-
 
         const index = waitingQueue.findIndex(s => s.id === socket.id);
         if (index !== -1) {

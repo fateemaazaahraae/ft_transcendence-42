@@ -168,53 +168,31 @@ export function RemoteGameEventListener() {
       }
     }
   });
-  function cleanupGame() {
-    console.log("🧹 Cleaning game");
 
-    socket.off();        // remove all listeners
-    socket.disconnect();
-
-    document.getElementById("winner-overlay")?.remove();
-    document.getElementById("leave-overlay")?.classList.add("hidden");
-
-    window.removeEventListener("popstate", leaveGame);
-    window.removeEventListener("beforeunload", leaveGame);
-  }
-
-  socket.once("game_over", (data) => {
+  socket.on("game_over", (data) => {
       const myId = localStorage.getItem("userId");
       console.log('we have a winnnner!!!');
       console.log(myId);
       console.log(data.winner);
       const isWinner = data.winner === myId;
-      let h3ColorClass: string;
-      let h3Text: string;
-      if (data.reason === 'opponent_disconnected' ||
-        (isWinner)
-      ) {
-        h3Text = "🏆 YOU WON! 🏆"
-        h3ColorClass = "text-secondary";
-      }
-      else {
-        h3Text = "💀 YOU LOST! 💀"
-        h3ColorClass = "text-primary";
-      }
 
-      const winnerOverlay = document.createElement('div');
+      if (data.reason === 'opponent_disconnected') {
+        const winnerOverlay = document.createElement('div');
             winnerOverlay.id = 'winner-overlay';
             winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
             winnerOverlay.innerHTML = `
               <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
-                <h3 class="text-3xl font-glitch ${h3ColorClass} mb-3">${h3Text}</h3>
-                <h1 class="text-green" mb-4> WINNER </h1>
-                <div class="flex flex-col justify-center items-center mb-8">
+                <h3 class="text-3xl font-glitch text-secondary mb-3">🏆 YOU WON! 🏆</h3>
+                <h2 class="text-green" mb-5> Your Opponent Left The Game </h2>
+                <div class="flex flex-col justify-center items-center mt-8">
                   <img src="/public/purple-girl.svg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
                     <div class="flex flex-row items-center">
                       <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4"> salma </h1>
                     </div>
                 </div>
+                <h1 class="text-green"> WINNER </h1>
                 <div class="space-y-4 mt-10">
-                  <button id="quit-game-btn" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
+                  <button id="quit" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
                     <i class="fa-solid fa-sign-out mr-2"></i>
                     Exit
                   </button>
@@ -223,11 +201,78 @@ export function RemoteGameEventListener() {
             `;
     
             document.querySelector('#container')?.appendChild(winnerOverlay);
-            document.getElementById("quit-game-btn")?.addEventListener("click", () => {
-              cleanupGame();
+            document.getElementById("quit")?.addEventListener("click", () => {
               navigate("/home");
             });
+      }
+      else if (modal && resultTitle && finalScoreText) {
+          if (isWinner) {
+            const winnerOverlay = document.createElement('div');
+            winnerOverlay.id = 'winner-overlay';
+            winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
+            winnerOverlay.innerHTML = `
+              <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
+                <h3 class="text-3xl font-glitch text-secondary mb-3">🏆 YOU WON! 🏆</h3>
+                <h1 class="text-green" mb-4> WINNER </h1>
+                <div class="flex flex-col justify-center items-center mb-8">
+                  <img src="" id="myImg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+                    <div class="flex flex-row items-center">
+                      <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4"> salma </h1>
+                    </div>
+                </div>
+                <div class="space-y-4 mt-10">
+                  <button id="quit" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
+                    <i class="fa-solid fa-sign-out mr-2"></i>
+                    Exit
+                  </button>
+                </div>
+              </div>
+            `;
+    
+            document.querySelector('#container')?.appendChild(winnerOverlay);
+            document.getElementById("quit")?.addEventListener("click", () => {
+              navigate("/home");
+            });
+          } else {
+              const winnerOverlay = document.createElement('div');
+              winnerOverlay.id = 'winner-overlay';
+              winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
+              winnerOverlay.innerHTML = `
+                <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
+                  <h3 class="text-3xl font-glitch text-primary mb-3">💀 YOU LOST! 💀</h3>
+                  <h1 class="text-green" mb-4> WINNER </h1>
+                  <div class="flex flex-col justify-center items-center mb-8">
+                    <img src="/public/purple-girl.svg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+                      <div class="flex flex-row items-center">
+                        <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4"> salma </h1>
+                      </div>
+                  </div>
+                  <div class="space-y-4 mt-10">
+                    <button id="quit" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
+                      <i class="fa-solid fa-sign-out mr-2"></i>
+                      Exit
+                    </button>
+                  </div>
+                </div>
+              `;
+              
+              document.querySelector('#container')?.appendChild(winnerOverlay);
+              document.getElementById("quit")?.addEventListener("click", () => {
+                navigate("/home");
+              });
+            }
+        }
+      
   });
+
+  const handleKey = (e: KeyboardEvent, isPressed: boolean) => {
+      if (e.key === "ArrowUp" || e.key === "w") {
+          socket.emit('input_update', { input: 'UP', isPressed });
+      }
+      if (e.key === "ArrowDown" || e.key === "s") {
+          socket.emit('input_update', { input: 'DOWN', isPressed });
+      }
+  };
 
   window.addEventListener('keydown', (e) => handleKey(e, true));
   window.addEventListener('keyup', (e) => handleKey(e, false));
@@ -247,7 +292,7 @@ export function RemoteGameEventListener() {
 
   if (quitBtn) {
     quitBtn.addEventListener('click', () => {
-      cleanupGame();
+      socket.disconnect();
       navigate("/home");
     });
   }
@@ -272,16 +317,7 @@ export function RemoteGameEventListener() {
   }, 1500);
 
   return () => {
-    socket.off("game_update");
-    socket.off("game_over");
-    window.removeEventListener('keydown', (e) => handleKey(e, true));
-    window.removeEventListener('keyup', (e) => handleKey(e, false));
-    window.removeEventListener('popstate', leaveGame);
-    window.removeEventListener('beforeunload', leaveGame);
-    
-    // Disconnect socket if still connected
-    if (socket.connected) {
-      socket.disconnect();
-    }
+     window.removeEventListener('keydown', (e) => handleKey(e, true));
+     window.removeEventListener('keyup', (e) => handleKey(e, false));
   };
 }
