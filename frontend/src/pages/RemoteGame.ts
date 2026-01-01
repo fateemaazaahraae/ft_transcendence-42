@@ -105,6 +105,30 @@ export async function fillSettingsPage()
   }
 }
 
+export async function winnerdata(winner: any) {
+  try
+    {
+      const res = await fetch(`http://localhost:3001/settings/${winner}`);
+      const data = await res.json();
+      // fill page
+      console.log('winner img', data.profileImage);
+      console.log('winner userName', data.userName);
+
+      const profileImage = data.profileImage || "";
+        const userName = data.userName || "";
+
+      return {profileImage, userName};
+      
+      // (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
+      // (document.getElementById("userName") as HTMLElement).textContent = data.userName || "";
+    }
+    catch (err)
+    {
+      console.log(err);
+      showAlert("Error while fetching data: " + err);
+      return { profileImage: "", userName: "" };
+    }
+}
 
 export function RemoteGameEventListener() {
   fillSettingsPage();
@@ -189,6 +213,9 @@ export function RemoteGameEventListener() {
       const isWinner = data.winner === myId;
       let h3ColorClass: string;
       let h3Text: string;
+      let HeaderMsg: string;
+
+      winnerdata(data.winner).then(Info => {
       if (data.reason === 'opponent_disconnected' ||
         (isWinner)
       ) {
@@ -199,6 +226,13 @@ export function RemoteGameEventListener() {
         h3Text = "💀 YOU LOST! 💀"
         h3ColorClass = "text-primary";
       }
+      if (data.reason === 'opponent_disconnected')
+      {
+        HeaderMsg = "Your Opponent Left The Game";
+      } else {
+        HeaderMsg = ""
+      }
+      console.log(data.winner)
 
       const winnerOverlay = document.createElement('div');
             winnerOverlay.id = 'winner-overlay';
@@ -206,11 +240,12 @@ export function RemoteGameEventListener() {
             winnerOverlay.innerHTML = `
               <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
                 <h3 class="text-3xl font-glitch ${h3ColorClass} mb-3">${h3Text}</h3>
-                <h1 class="text-green" mb-4> WINNER </h1>
-                <div class="flex flex-col justify-center items-center mb-8">
-                  <img src="/public/purple-girl.svg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+                <h2 class="text-green" mb-5>${HeaderMsg}</h2>
+                <h1 class="text-green text-bold" mb-4>WINNER IS</h1>
+                <div class="flex flex-col justify-center items-center mt-[10%]">
+                  <img src="${Info.profileImage}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
                     <div class="flex flex-row items-center">
-                      <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4"> salma </h1>
+                      <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4">${Info.userName}</h1>
                     </div>
                 </div>
                 <div class="space-y-4 mt-10">
@@ -221,12 +256,14 @@ export function RemoteGameEventListener() {
                 </div>
               </div>
             `;
-    
+            
+            
             document.querySelector('#container')?.appendChild(winnerOverlay);
             document.getElementById("quit-game-btn")?.addEventListener("click", () => {
               cleanupGame();
               navigate("/home");
             });
+          });
   });
 
   const handleKey = (e: KeyboardEvent, isPressed: boolean) => {
