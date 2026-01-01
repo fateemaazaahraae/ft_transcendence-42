@@ -87,11 +87,11 @@ export function setupWindowResize(onResize: () => void): void {
 
 
 export function renderSingleMessage(message:{ 
-  content:string;  sender_id :number;receiver_id:number;createdAt:number},
-  isSender:boolean,
-  messagesPanel:HTMLElement,
-    currentUserAvatar:string,
-    friendAvatar:string
+    content:string;  sender_id :number;receiver_id:number;createdAt:number; senderAvatar?: string},
+    isSender:boolean,
+    messagesPanel:HTMLElement,
+        currentUserAvatar:string,
+        friendAvatar:string
 ):void
 {
 
@@ -100,10 +100,12 @@ export function renderSingleMessage(message:{
     const messageDiv = document.createElement("div");
     messageDiv.className = `flex ${isSender ? 'justify-end' : 'justify-start'} mb-2`;
 
-    const timeStr = new Date((message as any).created_at ? ((message as any).created_at as number) * 1000 : Date.now()).toLocaleTimeString();
+    const timeStr = new Date((message as any).created_at ? ((message as any).created_at as number) * 1000 : Date.now()).toLocaleTimeString([], {hour: '2-digit',minute: '2-digit',hour12:false});
 
-        // minimize avatar
-        const myAvatar = (currentUserAvatar && String(currentUserAvatar).trim() !== '') ? currentUserAvatar : '../../public/green-girl.svg';
+    // simple avatar usage: use currentUserAvatar for sender, otherwise prefer message.senderAvatar or passed friendAvatar, then default
+    const myAvatar = (currentUserAvatar && String(currentUserAvatar).trim() !== '') ? currentUserAvatar : '/green-girl.svg';
+    const messageAvatar = (message as any).senderAvatar || '';
+    const friendAvatarUrl = friendAvatar || messageAvatar || '/default.png';
 
         if (isSender) {
         messageDiv.innerHTML = `
@@ -121,7 +123,7 @@ export function renderSingleMessage(message:{
         messageDiv.innerHTML = `
             <div class="flex flex-col items-start mb-4 w-full pl-4">
                 <div class="flex items-end gap-2">
-                    <img src="${friendAvatar}" class="w-12 h-12 object-cover border border-primary rounded-full flex-shrink-0">
+                    <img src="${(message as any).senderAvatar ? messageAvatar : friendAvatarUrl}" class="w-12 h-12 object-cover border border-primary rounded-full flex-shrink-0">
                     <div class="bg-primary/20 text-white text-sm p-3 rounded-xl rounded-bl-none  max-w-[250px] break-words">
                     ${message.content || ""}
                     </div>

@@ -21,7 +21,8 @@ fastify.post('/api/unblock', unblock);
 //fetch history between users 
 fastify.get('/api/chats/history/:userId1/:userId2', async (request, reply) => {
   const { userId1, userId2 } = request.params;
-  const { convo, messages } = await history.getHistory(userId1, userId2, 200);
+  const authHeader = request.headers.authorization || '';
+  const { convo, messages } = await history.getHistory(userId1, userId2, 200, authHeader);
   return reply.send({ convo, messages });
 });
 

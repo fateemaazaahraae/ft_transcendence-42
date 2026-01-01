@@ -10,14 +10,14 @@ export async function getContacts(request, reply) {
   let friendList = [];
   try {
     const res = await fetch(`${REL_SERVICE_URL}/friends`, { headers: { Authorization: authHeader } });
-    console.log('[chat] fetched /friends status:', res.status);
+    console.log(' fetched /friends status:', res.status);
     const bodyText = await res.text().catch(() => null);
-    try { console.log('[chat] /friends raw body:', bodyText && bodyText.substring ? bodyText.substring(0, 500) : bodyText); } catch (e) {}
+    try { console.log(' /friends raw body:', bodyText && bodyText.substring ? bodyText.substring(0, 500) : bodyText); } catch (e) {}
     if (res.ok) {
       try {
         friendList = bodyText ? JSON.parse(bodyText) : [];
       } catch (e) {
-        console.error('[chat] failed to parse /friends JSON', e);
+        console.error(' failed to parse /friends JSON', e);
         friendList = [];
       }
     } else {
@@ -69,7 +69,7 @@ export async function getContacts(request, reply) {
   }));
 
   const filtered = contacts.filter(c => c !== null);
-  try { console.log('[chat] returning contacts count:', filtered.length); } catch (e) {}
+  try { console.log('returning contacts count:', filtered.length); } catch (e) {}
   return reply.send(filtered);
 }
 

@@ -1,6 +1,7 @@
 
 import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../utils/searchHandler.ts";
 import { loadUser } from "../utils/loadUser.ts";
+import { viewFriendProfile } from "./viewFriendProfile.ts";
 import { blockUser, unblockUser, checkIfBlocked, showMessageInput, showBlockedMessage } from "../utils/blockHandler.ts";
 import { socket, initializeSocket, sendMessage, listenForMessagesReceived, subscribeConnection } from "../utils/sockeService.ts";
 import {
@@ -14,6 +15,8 @@ import {
     setupWindowResize
 } from "./chatHelpers.ts";
 import { renderSingleMessage } from "./chatHelpers.ts";
+
+
 
 export function ChatEventListener() {
     const HOST = window.location.hostname;
@@ -54,6 +57,45 @@ export function ChatEventListener() {
     let ACTIVE_CHAT_CONTACT_ID: string | number | null = null;
     let CURRENT_USER_AVATAR: string = '../../public/green-girl.svg';
 
+    function resolveChatAvatar(img?: string | null): string {
+        const origin = window.location.origin;
+
+        if (!img) return `${origin}/default.png`;
+
+        if (/^https?:\/\//.test(img)) {
+            try {
+                const u = new URL(img);
+                if (
+                    u.hostname.includes("auth-service") ||
+                    u.hostname.includes("profile-service") ||
+                    u.hostname.includes("chat-service") ||
+                    u.port === "3000"
+                ) {
+                    return `${origin}${u.pathname}`;
+                }
+
+                if (u.hostname === window.location.hostname) {
+                    return img;
+                }
+
+                return img;
+            } catch {
+                return `${origin}/default.png`;
+            }
+        }
+
+        if (img.startsWith("/")) {
+            return `${origin}${img}`;
+        }
+
+        const cleaned = img
+            .replace(/^(?:\.\.\/|\.\/)+/, "")
+            .replace(/^public\//, "")
+            .replace(/^\/+/, "");
+
+        return `${origin}/${cleaned}`.replace(/([^:]\/)\/+/g, "$1");
+    }
+
         // load user profile from  loadUser
         loadUser().then(() => {
             try {
@@ -62,17 +104,13 @@ export function ChatEventListener() {
                 const user = JSON.parse(stored);
                 const img = user?.profileImage || user?.profile_image;
                 if (!img) return;
-                if (/^https?:\/\//.test(img)) {
-                    CURRENT_USER_AVATAR = img;
-                } else if (img.startsWith('/')) {
-                    CURRENT_USER_AVATAR = `${window.location.origin}${img}`;
-                } else {
-                    CURRENT_USER_AVATAR = `${API_BASE_URL}/${img}`;
-                }
+                CURRENT_USER_AVATAR = resolveChatAvatar(img) || '/default.png';
             } catch (e) {
                 console.warn('failed to read stored user', e);
             }
         }).catch(() => {});
+
+
 
     //connect to socket.io
     if (CURRENT_USER_ID == null) {
@@ -104,6 +142,7 @@ export function ChatEventListener() {
             } else {
             }
         });
+        
     }
 
     // restore active chat 
@@ -117,7 +156,7 @@ export function ChatEventListener() {
     const chat = document.getElementById("main_chat");
     const chatHeader = document.getElementById("chatHeader");
     const backToContactsBtn = document.getElementById('backToContacts');
-
+    const contactinfo=document.getElementById('contactInfo');
     const chatUsername = document.getElementById('chatContactUsername');
     const chatStatus = document.getElementById('chatContactStatus');
     const chatAvatar = document.getElementById('chatContactAvatar') as HTMLImageElement | null;
@@ -159,7 +198,7 @@ export function ChatEventListener() {
             if(isBlocked) {
                 
                 if (blockBtn) {
-                    blockBtn.innerHTML = '<i class="fa fa-ban"></i> Unblock User';
+                    blockBtn.remove();
                     blockBtn.setAttribute('data-blocked', 'true');
                 }
             }else {
@@ -178,15 +217,6 @@ export function ChatEventListener() {
     cancelBlockBtn?.addEventListener("click", () => {
         if (blockConfirmationDiv) blockConfirmationDiv.classList.add("hidden");
     });
-
-            // if (ACTIVE_CHAT_CONTACT_ID) {
-            //     unblockUser(Number(CURRENT_USER_ID), Number(ACTIVE_CHAT_CONTACT_ID));
-            // } 
-    
-    // search input handler
-
-
-  
     const contactsListDiv = document.querySelector('#contacts_side .space-y-4') as HTMLElement | null;
 
     
@@ -223,7 +253,9 @@ export function ChatEventListener() {
         // save in case of refresh
         localStorage.setItem('activeContactId', String(contactId));
         localStorage.setItem('activeContactUsername', username);
-        localStorage.setItem('activeContactAvatar', avatar);
+        // normalize and store the contact avatar
+                const normAvatar = resolveChatAvatar(avatar);
+        localStorage.setItem('activeContactAvatar', normAvatar);
         localStorage.setItem('activeContactStatus', status);
 
         if (window.innerWidth < 768) {
@@ -235,7 +267,7 @@ export function ChatEventListener() {
         chat?.classList.add("flex");
 
        
-        updateChatHeader(chatUsername, chatStatus, chatAvatar, username, status, avatar);
+        updateChatHeader(chatUsername, chatStatus, chatAvatar, username, status, normAvatar);
 
         // check if contact is blocked
         checkIfBlocked(String(CURRENT_USER_ID), String(contactId), (isBlocked) => {
@@ -265,16 +297,39 @@ export function ChatEventListener() {
             const userId1 = String(CURRENT_USER_ID);
             const userId2 = String(contactId);
             
-            //fetch 
-            fetch(`${API_BASE_URL}/chats/history/${userId1}/${userId2}`)
+            //fetch history with Authorization header so server can resolve avatars
+            const tokenForFetch = localStorage.getItem('token') || '';
+            fetch(`${API_BASE_URL}/chats/history/${userId1}/${userId2}`, {
+                headers: {
+                    'Authorization': tokenForFetch
+                }
+            })
                 .then(response => response.json())
-                .then(data => {
+                .then(async data => {
                     const messages = data?.messages || [];
                     
                     messages.forEach((msg: any) => {
-                        const friendAvatar= avatar;
-                        const isSender = String(msg.sender_id) === String(userId1);
-                        renderSingleMessage(msg, isSender, messagePanel,CURRENT_USER_AVATAR,friendAvatar);
+                        // normalize/cache any message-provided avatar
+                        if (msg.senderAvatar) {
+                            try {
+                                const fixedMsgAvatar = resolveChatAvatar(msg.senderAvatar);
+                                msg.senderAvatar = fixedMsgAvatar;
+                                try { sessionStorage.setItem('avatar:' + String(msg.sender_id), fixedMsgAvatar); } catch (e) {}
+                            } catch (e) {}
+                        }
+
+                        const isSenderMe = String(msg.sender_id) === String(userId1);
+
+                        const avatarToUse = isSenderMe
+                            ? CURRENT_USER_AVATAR
+                            : resolveChatAvatar(
+                                localStorage.getItem('activeContactAvatar')
+                                || sessionStorage.getItem('avatar:' + String(msg.sender_id))
+                                || msg.senderAvatar
+                                || '/default.png'
+                            );
+
+                        renderSingleMessage(msg, isSenderMe, messagePanel, CURRENT_USER_AVATAR, avatarToUse);
                     });
                 })
                 .catch(error => {
@@ -333,6 +388,36 @@ export function ChatEventListener() {
     }
 
     
+    if (contactinfo) {
+        contactinfo.addEventListener('click', async () => {
+            const contactId = localStorage.getItem('activeContactId') || String(ACTIVE_CHAT_CONTACT_ID || '');
+            if (!contactId) return;
+
+            const cachedUser: any = {
+                id: contactId,
+                userName: localStorage.getItem('activeContactUsername') || '',
+                profileImage: localStorage.getItem('activeContactAvatar') || '/default.png',
+                firstName: '',
+                lastName: ''
+            };
+            try { await viewFriendProfile(cachedUser); } catch (err) { console.warn('viewFriendProfile (cached) failed', err); }
+
+            const tokenFetch = localStorage.getItem('token') || '';
+            try {
+                const res = await fetch(`${API_BASE_URL}/users/${contactId}`, { headers: { Authorization: tokenFetch } });
+                if (res.ok) {
+                    const fullUser = await res.json();
+                    try { await viewFriendProfile(fullUser); } catch (err) { console.warn('viewFriendProfile (full) failed', err); }
+                }
+            } catch (err) {
+                console.warn('failed fetching full user', err);
+            }
+
+            dropdownMenu?.classList.add('hidden');
+        });
+    }
+
+
     if (closeButton) {
         setupCloseChat(closeButton, () => {
             ACTIVE_CHAT_CONTACT_ID = null;
@@ -375,21 +460,24 @@ export function ChatEventListener() {
     const messagesPanel = document.getElementById("messagesPanel");
     // sendButton?.addEventListener("click", () => {
     //     const message = messageInput?.value.trim();
-    const handleSendMessage = () => {
+    const handleSendMessage = async () => {
         const content = messageInput?.value.trim();
         if(!content || !ACTIVE_CHAT_CONTACT_ID) return;
         
         console.log("sending message to", ACTIVE_CHAT_CONTACT_ID, "content:", content);
         // optimistic render: show message immediately in UI
-        try {
-            const friendAvatar = localStorage.getItem('activeContactAvatar') || '../../public/default.svg';
+            try {
+                let friendAvatar = localStorage.getItem('activeContactAvatar')
+                            || (ACTIVE_CHAT_CONTACT_ID ? sessionStorage.getItem('avatar:' + String(ACTIVE_CHAT_CONTACT_ID)) : null)
+                            || null;
+            friendAvatar = friendAvatar || '/default.png';
             const optimisticMsg: any = {
                 content,
                 sender_id: String(CURRENT_USER_ID),
                 created_at: Math.floor(Date.now() / 1000)
             };
             if (messagesPanel) {
-                renderSingleMessage(optimisticMsg, true, messagesPanel, CURRENT_USER_AVATAR, friendAvatar);
+                renderSingleMessage(optimisticMsg, true, messagesPanel, CURRENT_USER_AVATAR, resolveChatAvatar(friendAvatar) || '/default.png');
             }
         } catch (e) { console.warn('optimistic render failed', e); }
 
@@ -415,17 +503,34 @@ export function ChatEventListener() {
         }
     });
 
-    listenForMessagesReceived((data) => {
+    listenForMessagesReceived(async (data) => {
         const msg = data?.message;
         const convo = data?.conversation;
         if (!msg) return;
+
+        // normalize & cache sender avatar so fresh tabs can use it
+        if (msg.senderAvatar) {
+            try {
+                const fixed = resolveChatAvatar(msg.senderAvatar);
+                msg.senderAvatar = fixed;
+                try { sessionStorage.setItem('avatar:' + String(msg.sender_id), fixed); } catch (e) {}
+            } catch (e) {}
+        }
 
         const otherId = convo ? (String(convo.user_a) === String(CURRENT_USER_ID) ? String(convo.user_b) : String(convo.user_a)) : null;
         const isForActiveChat = (String(msg.sender_id) === String(ACTIVE_CHAT_CONTACT_ID)) || (otherId && String(otherId) === String(ACTIVE_CHAT_CONTACT_ID));
 
         if (isForActiveChat && messagesPanel) {
-            const friendAvatar = localStorage.getItem('activeContactAvatar') || '../../public/default.svg';
-            renderSingleMessage(msg, String(msg.sender_id) === String(CURRENT_USER_ID), messagesPanel, CURRENT_USER_AVATAR, friendAvatar);
+            const isSenderMe = String(msg.sender_id) === String(CURRENT_USER_ID);
+
+            const raw = localStorage.getItem('activeContactAvatar')
+                        || sessionStorage.getItem('avatar:' + String(msg.sender_id))
+                        || msg.senderAvatar
+                        || '/default.png';
+
+            const avatarToUse = isSenderMe ? CURRENT_USER_AVATAR : (resolveChatAvatar(raw) || '/default.png');
+
+            renderSingleMessage(msg, isSenderMe, messagesPanel, CURRENT_USER_AVATAR, avatarToUse);
         }
     });
 

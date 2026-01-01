@@ -18,10 +18,10 @@ const renderContactItem = (u: any, lastMsg = 'Search result') => {
         ? u.username
         : (typeof u?.id === 'string' ? String(u.id).trim().slice(0, 8) : String(u?.id ?? 'Unknown'));
         const timeStr = u?.last_message_time 
-        ? new Date(u.last_message_time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        ? new Date(u.last_message_time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
         : '';
         return `
-        <div class="scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65 p-2 rounded contact-item"
+        <div class="scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65  p-2 rounded-xl contact-item"
              data-contact-id="${u.id}"
              data-contact-username="${displayName}"
              data-contact-avatar="${avatar}"
@@ -30,12 +30,23 @@ const renderContactItem = (u: any, lastMsg = 'Search result') => {
                 <img src="${avatar}" class="w-12 h-12 object-cover border border-primary rounded-full">
                 <div id="status-${u.id}" class="absolute bottom-0 right-0 w-3 h-3 rounded-full ${statusClass}"></div>
             </div>
-            <div>
-                <p class="font-medium text-sm text-secondary">${displayName}</p>
-                <p class="text-xs text-gray-200 truncate max-w-[200px]">
-                ${lastMsg}</p>
-                 <span class="text-xs text-gray-400">${timeStr}</span>
+            <div class="w-full">
+            
+            <div class="flex w-full items-start">
+                <p class="font-medium text-sm text-secondary truncate">
+                    ${displayName}
+                </p>
+                <span class="ml-auto text-[11px] text-gray-400">
+                    ${timeStr}
+                </span>
             </div>
+
+            
+            <p class="text-xs text-gray-200 max-w-[200px] truncate">
+                ${lastMsg}
+            </p>
+        </div>
+
         </div>
     `;
 };
