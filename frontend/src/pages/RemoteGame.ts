@@ -229,8 +229,20 @@ export function RemoteGameEventListener() {
             });
   });
 
-  window.addEventListener('keydown', (e) => handleKey(e, true));
-  window.addEventListener('keyup', (e) => handleKey(e, false));
+  const handleKey = (e: KeyboardEvent, isPressed: boolean) => {
+      if (e.key === "ArrowUp" || e.key === "w") {
+          socket.emit('input_update', { input: 'UP', isPressed });
+      }
+      if (e.key === "ArrowDown" || e.key === "s") {
+          socket.emit('input_update', { input: 'DOWN', isPressed });
+      }
+  };
+
+  const onKeyDown = (e: KeyboardEvent) => handleKey(e, true);
+  const onKeyUp = (e: KeyboardEvent) => handleKey(e, false);
+
+  window.addEventListener('keydown', onKeyDown);
+  window.addEventListener('keyup', onKeyUp);
   function leaveGame() {
     console.log("someone left!!");
     socket.emit('leave_game');
@@ -274,6 +286,8 @@ export function RemoteGameEventListener() {
   return () => {
     socket.off("game_update");
     socket.off("game_over");
+    window.removeEventListener('keydown', onKeyDown);
+    window.removeEventListener('keyup', onKeyUp);
     window.removeEventListener('keydown', (e) => handleKey(e, true));
     window.removeEventListener('keyup', (e) => handleKey(e, false));
     window.removeEventListener('popstate', leaveGame);
