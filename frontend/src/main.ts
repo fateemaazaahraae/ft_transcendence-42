@@ -24,7 +24,8 @@ import PageNotFound from "./pages/pageNotFound.ts"
 import { notifications, notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
 import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
-import Chat, {ChatEventListener } from "./pages/Chat.ts";
+import Chat from "./pages/Chat.ts";
+import { ChatEventListener } from "./pages/chatEventListener.ts";
 import { showAlert } from "./utils/alert.ts";
 import RemoteGame, { RemoteGameEventListener } from "./pages/RemoteGame.ts";////
 import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
@@ -54,7 +55,7 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/invitations": {render: Invitations, setUp: InvitationsEventListener},
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
     "/chat": {render: Chat, setUp: ChatEventListener},
-    "/remote-game": { render: RemoteGame, setUp: RemoteGameEventListener },///
+    "/remote-game": { render: RemoteGame, setUp: RemoteGameEventListener },
     "/tournamentChoices": { render: tournamentChoices},
     404: {render: PageNotFound},
 };
@@ -80,6 +81,10 @@ async function render(path: string) {
     renderNotifications(notifications);
     initLogout();
     searchBar();
+    const logo = document.getElementById("logo");
+    logo?.addEventListener("click", () => {
+        navigate("/");
+    })
 }
 
 

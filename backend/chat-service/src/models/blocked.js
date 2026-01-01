@@ -1,30 +1,54 @@
-import db from "../config/db.js";
-import { nanoid } from "nanoid";
+const REL_SERVICE_URL = process.env.REL_SERVICE_URL || 'http://relationship-service:3002';
 
-const insertBlockedStmt = db.prepare(
-  `INSERT OR IGNORE INTO blocked_users (id, blocker_id, blocked_id, created_at) VALUES (?, ?, ?, strftime('%s','now'))`
-);
+async function handleJson(response) {
+  const text = await response.text();
+  let payload = {};
+  try {
+    payload = text ? JSON.parse(text) : {};
+  } catch {
+    payload = { raw: text };
+  }
+  if (!response.ok) {
+    const err = new Error(payload?.error || response.statusText || `HTTP ${response.status}`);
+    err.status = response.status;
+    err.payload = payload;
+    throw err;
+  }
+  return payload;
+}
 
-const isBlockedStmt = db.prepare(
-  `SELECT 1 FROM blocked_users WHERE blocker_id = ? AND blocked_id = ? LIMIT 1`
-);
+async function block(authHeader, blockerId, blockedId) {
+  const response = await fetch(`${REL_SERVICE_URL}/block`, {
+    method: 'POST',
+    headers: { Authorization: authHeader, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ blockedId })
+  });
+  return handleJson(response);
+}
 
-const deleteBlockedStmt = db.prepare(
-  `DELETE FROM blocked_users WHERE blocker_id = ? AND blocked_id = ?`
-);
+async function unblock(authHeader, blockerId, blockedId) {
+  const response = await fetch(`${REL_SERVICE_URL}/unblock`, {
+    method: 'POST',
+    headers: { Authorization: authHeader, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ blockedId })
+  });
+  return handleJson(response);
+}
+
+async function isBlocked(authHeader, blockerId, blockedId) {
+  try {
+    const response = await fetch(`${REL_SERVICE_URL}/is-blocked/${blockerId}/${blockedId}`, {
+      headers: { Authorization: authHeader }
+    });
+    const data = await response.json();
+    return data.isBlocked || false;
+  } catch {
+    return false;
+  }
+}
 
 export default {
-  block: (blocker, blocked) => {
-    const id = nanoid();
-    insertBlockedStmt.run(id, blocker, blocked);
-    return { id, blocker_id: blocker, blocked_id: blocked };
-  },
-
-  unblock: (blocker, blocked) => {
-    deleteBlockedStmt.run(blocker, blocked);
-  },
-
-  isBlocked: (blocker, blocked) => {
-    return !!isBlockedStmt.get(blocker, blocked);
-  }
+  block,
+  unblock,
+  isBlocked
 };

@@ -23,34 +23,26 @@ export default function LocalGame() {
   return `
   <div id="container" class="relative w-full h-screen">
 
-    <!-- Top icons -->
-    <div class="absolute top-10 right-[5%] flex items-center gap-4">
-      <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
-          <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
-        </button>
-      </div>
-      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-      <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-    </div>
-
     <!-- Player Info & Score -->
-    <div class="absolute flex top-[15%] md:top-[20%] lg:top-[23%] xl:top-[18%] left-[6%] md:left-[2%] lg:left-[11%] xl:left-[22%] md:translate-x-1/2">
-        <i class="object-cover fa-solid fa-circle-user text-[50px] md:text-[50px] lg:text-[120px] xl:text-[95px] text-primary/90"></i>
-        <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[3%] lg:ml-[10%] ">
+    <div class="absolute left-1/2 transform -translate-x-1/2 flex justify-center items-center gap-2 md:gap-4 lg:gap-60 top-[25%] md:top-[23%] xl:top-[18%]">
+      <div class="flex items-center justify-end w-[260px]">
+        <i class="object-cover fa-solid fa-circle-user text-[60px] lg:text-[80px] xl:text-[100px] text-primary/90"></i>
+        <div class="flex flex-col items-center gap-1 md:gap-3">
           <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${game.match[0].player1.name} </h1>
-          <span id="player1-score-display" class="w-[40px] h-[30px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-primary text-xl bg-black drop-shadow-cyann">${game.match[0].player1.score}</span>
+          <span id="player1-score-display" class="w-[40px] h-[30px] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-primary text-xl bg-black drop-shadow-cyann">${game.match[0].player1.score}</span>
         </div>
-        <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[20%] lg:ml-[35%]">
+      </div>
+      <div class="flex items-center justify-start w-[260px]">
+        <div class="flex flex-col items-center gap-1 md:gap-3">
           <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${game.match[0].player2.name} </h1>
-          <span id="player2-score-display" class="w-[40px] h-[30px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-secondary text-xl bg-black drop-shadow-pink">${game.match[0].player2.score}</span>
+          <span id="player2-score-display" class="w-[40px] h-[30px] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-secondary text-xl bg-black drop-shadow-pink">${game.match[0].player2.score}</span>
         </div>
-        <i class="object-cover fa-solid fa-circle-user text-[50px] md:text-[50px] lg:text-[120px]  ml-[1%] md:ml-[3%] lg:ml-[10%] xl:text-[95px] text-secondary/75"></i>
+        <i class="object-cover fa-solid fa-circle-user text-[60px] lg:text-[80px] xl:text-[100px] xl:text-[95px] text-secondary/75"></i>
+      </div>
     </div>
 
     <!-- PAUSE BUTTON -->
-    <div class="absolute top-[10%] left-1/2 transform -translate-x-1/2 z-10">
+    <div class="absolute top-[15%] lg:top-[10%] left-1/2 transform -translate-x-1/2 z-10">
       <button id="pause-btn" class="px-6 py-3 bg-black text-white border-secondary/40 overflow-hidden drop-shadow-pink rounded-lg font-roboto transition-all duration-300 flex items-center gap-2">
         <i class="fa-solid fa-pause"></i>
         Pause
@@ -58,23 +50,23 @@ export default function LocalGame() {
     </div>
 
     <!-- PAUSE OVERLAY (Hidden by default) -->
-    <div id="pause-overlay" class="absolute inset-0 bg-black/50 z-[100] hidden flex-col items-center justify-center">
+    <div id="pause-overlay" class="absolute ml-12 w-[80%] md:w-full inset-0 bg-black/50 z-[100] hidden flex-col items-center justify-center">
       <div class="bg-black p-8 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
-        <h2 class="text-3xl font-glitch text-primary mb-2">Game Paused</h2>
-        <p class="font-roboto text-gray-300 mb-10">Take a break, adjust settings, or resume</p>
+        <h2 class="text-2xl md:text-3xl font-glitch text-primary mb-2">Game Paused</h2>
+        <p class="font-roboto text-gray-300 mb-10 text-md md:text-xl">Take a break, adjust settings, or resume</p>
         
         <div class="space-y-4">
-          <button id="resume-btn" class="w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
+          <button id="resume-btn" class="text-[15px] md:text-lg w-[180px] md:w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
             <i class="fa-solid fa-play mr-2"></i>
             Resume Game
           </button>
           
-          <button id="restart-btn" class="w-[200px] py-3 bg-secondary/80 hover:bg-secondary text-white rounded-lg font-roboto transition-all duration-300">
+          <button id="restart-btn" class="text-[15px] md:text-lg w-[180px] md:w-[200px] py-3 bg-secondary/80 hover:bg-secondary text-white rounded-lg font-roboto transition-all duration-300">
             <i class="fa-solid fa-rotate-right mr-2"></i>
             Restart Game
           </button>
           
-          <button id="quit-btn" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all duration-300">
+          <button id="quit-btn" class="text-[15px] md:text-lg w-[180px] md:w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all duration-300">
             <i class="fa-solid fa-sign-out mr-2"></i>
             Quit to Menu
           </button>
@@ -83,7 +75,7 @@ export default function LocalGame() {
     </div>
 
     <!-- GAME CANVAS AREA -->
-    <div class="absolute top-[26%] lg:top-[37%] xl:top-[32%] md:top-[32%] left-[15%] w-[70%] h-[65%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
+    <div class="absolute left-1/2 transform -translate-x-1/2 rotate-90 lg:rotate-0 top-[43%] lg:top-[37%] xl:top-[32%] md:top-[38%] h-[38%] md:h-[55%] w-full md:w-[80%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
       <!-- This is where the game will be drawn -->
       <canvas 
         id="pongCanvas"
@@ -365,28 +357,28 @@ export function LocalGameEventListener() {
           const winner = player1Score >= WINNING_SCORE ? "player1" : "player2";
             const winnerOverlay = document.createElement('div');
             winnerOverlay.id = 'winner-overlay';
-            winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
+            winnerOverlay.className = 'ml-12 md:ml-0 w-[80%] md:w-full absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
             winnerOverlay.innerHTML = `
               <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
-                <h2 class="text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
-                <p class="font-roboto text-2xl text-gray-300 mb-2">Final Score</p>
+                <h2 class="text-2xl md:text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
+                <p class="font-roboto text-xl md:text-2xl text-gray-300 mb-2">Final Score</p>
                 <div class="flex justify-center items-center gap-8 mb-8">
                   <div class="text-center">
-                    <p class="text-primary text-3xl">${player1Score}</p>
+                    <p class="text-primary text-2xl md:text-3xl">${player1Score}</p>
                     <p class="font-roboto text-gray-400">Player1</p>
                   </div>
                   <span class="text-3xl text-white">-</span>
                   <div class="text-center">
-                    <p class="text-secondary text-3xl">${player2Score}</p>
+                    <p class="text-secondary text-2xl md:text-3xl">${player2Score}</p>
                     <p class="font-roboto text-gray-400">Player2</p>
                   </div>
                 </div>
                 <div class="space-y-4">
-                  <button id="play-again-btn" class="w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
+                  <button id="play-again-btn" class="text-[15px] md:text-xl w-[150px] md:w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
                     <i class="fa-solid fa-rotate-right mr-2"></i>
                     Play Again
                   </button>
-                  <button id="main-menu-btn" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all duration-300">
+                  <button id="main-menu-btn" class="text-[15px] md:text-xl w-[150px] md:w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all duration-300">
                     <i class="fa-solid fa-home mr-2"></i>
                     Main Menu
                   </button>

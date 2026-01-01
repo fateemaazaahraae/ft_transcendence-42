@@ -41,8 +41,8 @@ export default function RemoteVsLocal(){
             <!-- Remote OR Local -->
                 <div class= "flex flex-col items-center mt-[60%] md:mt-[35%] lg:mt-[30%] xl:mt-[13%]">
                     <h1
-                    class="relative font-glitch uppercase
-                             xl:text-6xl lg:text-5xl md:text-3xl text-[18px]
+                    class="relative text-center font-glitch uppercase
+                             xl:text-6xl lg:text-5xl text-3xl
                             tracking-[5px] leading-none
                             text-secondary
 
@@ -61,10 +61,10 @@ export default function RemoteVsLocal(){
                     How do you prefer to play?
                     </h1>
 
-                    <div class =" flex gap-[5%] mt-[7%] md:mt-[5%] w-full items-center justify-center">
-                        <button id="remote" class="w-[100px] h-[50px] text-[15px] md:w-[150px] md:h-[60px] md:text-xl lg:w-[200px] lg:h-[80px] bg-black rounded-[20px] font-roboto font-bold lg:text-2xl drop-shadow-cyan hover:bg-primary"> Remote </button>
+                    <div class ="flex flex-col lg:flex-row gap-8 lg:gap-[5%] mt-[12%] md:mt-[7%] w-full items-center justify-center">
+                        <button id="remote" class="w-[150px] h-[60px] text-xl lg:w-[200px] lg:h-[80px] bg-black rounded-[20px] font-roboto font-bold lg:text-2xl drop-shadow-cyan hover:bg-primary"> Remote </button>
                         <span class=" font-roboto text-[17px] md:text-xl"> OR </span>
-                        <button id="local" class="w-[100px] h-[50px] text-[15px] md:w-[150px] md:h-[60px] md:text-xl lg:w-[200px] lg:h-[80px] bg-black rounded-[20px] font-roboto font-bold lg:text-2xl drop-shadow-pink hover:bg-secondary"> Local </button>
+                        <button id="local" class="w-[150px] h-[60px] text-xl lg:w-[200px] lg:h-[80px] bg-black rounded-[20px] font-roboto font-bold lg:text-2xl drop-shadow-pink hover:bg-secondary"> Local </button>
                     </div>
                 </div>
         </div> 

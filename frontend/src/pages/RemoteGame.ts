@@ -28,7 +28,7 @@ export default function RemoteGame() {
         <img src="" id="myImg2" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
     </div>
     <!-- GAME CANVAS AREA -->
-    <div class="absolute top-[26%] lg:top-[37%] xl:top-[32%] md:top-[32%] left-[15%] w-[70%] h-[65%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
+    <div class="absolute left-1/2 transform -translate-x-1/2 rotate-90 lg:rotate-0 top-[43%] lg:top-[37%] xl:top-[32%] md:top-[38%] h-[38%] md:h-[55%] w-full md:w-[80%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
       <!-- This is where the game will be drawn -->
       <canvas 
         id="gameCanvas"
@@ -36,7 +36,7 @@ export default function RemoteGame() {
       ></canvas>
     </div>
     <!-- LEAVE GAME BUTTON -->
-      <div class="absolute top-[10%] left-1/2 transform -translate-x-1/2 z-10">
+      <div class="absolute top-[15%] lg:top-[10%] left-1/2 transform -translate-x-1/2 z-10">
         <button id="leave-btn" class="px-6 py-3 bg-black hover:bg-secondary text-white border-secondary/40 overflow-hidden drop-shadow-pink rounded-lg font-roboto transition-all duration-300 flex items-center gap-2">
           Leave
         </button>
@@ -158,7 +158,7 @@ export function RemoteGameEventListener() {
     if (player2ScoreDisplay) player2ScoreDisplay.textContent = player2Score.toString();
   }
 
-  socket.on("game_update", (gameState) => {// listen for a socket.emit('game_update') with the new positions
+  socket.on("game_update", (gameState: any) => {// listen for a socket.emit('game_update') with the new positions
     if (!ctx || !canvas) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -205,7 +205,7 @@ export function RemoteGameEventListener() {
     window.removeEventListener("beforeunload", leaveGame);
   }
 
-  socket.once("game_over", (data) => {
+  socket.once("game_over", (data: any) => {
       const myId = localStorage.getItem("userId");
       console.log('we have a winnnner!!!');
       console.log(myId);
