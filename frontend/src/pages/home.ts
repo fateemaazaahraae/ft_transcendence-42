@@ -310,13 +310,6 @@ function updateWinRateDisplay(wins: any, losses: any) {
     if (percentageElement) {
         percentageElement.textContent = `${roundedWinRate}%`;
     }
-    
-    // Optional: Update wins/losses text if you have elements for them
-    const winsElement = document.querySelector('[data-i18n="wins"]');
-    const lossesElement = document.querySelector('[data-i18n="losses"]');
-    
-    if (winsElement) winsElement.textContent = wins;
-    if (lossesElement) lossesElement.textContent = losses;
 }
 
 export async function HomeEventListener()
