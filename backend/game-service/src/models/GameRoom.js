@@ -22,7 +22,7 @@ class GameRoom {
 
     this.player1.join(roomId);
     this.player2.join(roomId);
-    
+
     this._setupListeners(this.player1);
     this._setupListeners(this.player2);
     this.isGameOver = false;

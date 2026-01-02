@@ -39,20 +39,20 @@ services:
     
 
   # chat service
-  chat-service:
-    build: ./backend/chat-service
-    container_name: chat-service
-    env_file:
-      - ./backend/.env
-    environment:
-      - API_URL=http://auth-service:3000
-    volumes:
-      - ./backend/chat-service/chat.sqlite:/app/chat.sqlite
-    ports:
-      - "4000:4000"
-    networks:
-      - ft_transcendence
-    restart: always
+  # chat-service:
+  #   build: ./backend/chat-service
+  #   container_name: chat-service
+  #   env_file:
+  #     - ./backend/.env
+  #   environment:
+  #     - API_URL=http://auth-service:3000
+  #   volumes:
+  #     - ./backend/chat-service/chat.sqlite:/app/chat.sqlite
+  #   ports:
+  #     - "4000:4000"
+  #   networks:
+  #     - ft_transcendence
+  #   restart: always
 
 
   # chat-service:

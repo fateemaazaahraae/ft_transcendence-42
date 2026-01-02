@@ -268,6 +268,7 @@ try {
 async function GetWinsLosses()
 {
   const userId = localStorage.getItem("userId");
+  console.log("WLXP data fetched:", userId);
   if (!userId) {
     showAlert("Login first");
     navigate("/login");

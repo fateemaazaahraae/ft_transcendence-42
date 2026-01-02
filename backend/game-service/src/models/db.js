@@ -1,5 +1,5 @@
-const sqlite3 = require('sqlite3');
-const { open } = require('sqlite');
+import sqlite3 from "sqlite3"
+import { open } from "sqlite"
 
 let dbInstance = null;
 
@@ -37,4 +37,5 @@ async function getDb() {
     dbInstance = db;
     return db;
 }
-module.exports = {getDb};
+
+export { getDb };
