@@ -3,7 +3,7 @@ import { open } from "sqlite"
 
 let dbInstance = null;
 
-async function getDb() {
+export async function getDb() {
     if (dbInstance) {
         return dbInstance;
     }
@@ -37,5 +37,3 @@ async function getDb() {
     dbInstance = db;
     return db;
 }
-
-export { getDb };

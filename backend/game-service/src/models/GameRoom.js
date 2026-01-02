@@ -1,6 +1,6 @@
-const { getDb } = require('./db');
+import { getDb } from "./db.js";
 
-class GameRoom {
+export default class GameRoom {
   constructor(io, roomId, player1Socket, player2Socket) {
     this.io = io;
     this.roomId = roomId;
@@ -325,4 +325,3 @@ class GameRoom {
   }
 }
 
-module.exports = GameRoom;

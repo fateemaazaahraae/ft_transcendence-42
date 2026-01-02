@@ -1,8 +1,8 @@
 // const { Server } = require('socket.io');
 import { Server } from "socket.io";
-const { getDb } = require('./db');
-const GameRoom = require('./GameRoom');
-const Fastify = require('fastify');
+import { getDb } from "./db.js";
+import GameRoom from "./GameRoom.js";
+import Fastify from 'fastify';
 // const fastifyCors = require('@fastify/cors');
 
 
@@ -162,4 +162,4 @@ export const GameLogic = (server) => {
     });
 }
 
-module.exports = { GameLogic };
+// export { GameLogic };
