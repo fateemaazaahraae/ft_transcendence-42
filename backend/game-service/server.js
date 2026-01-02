@@ -146,8 +146,7 @@ const start = async () => {
 
           await db.run(
             `UPDATE wlxp
-            SET Wins = Wins + 1,
-                XPoints = XPoints + 30
+            SET XPoints = XPoints + 30
             WHERE id = ?`,
             [data.userId]
           );
