@@ -1,3 +1,4 @@
+import { getGameSocket } from "../utils/gameSocket.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 import { showAlert } from "../utils/alert.ts";
@@ -113,6 +114,7 @@ async function fillSettingsPage()
 
 export function AiGameEventListener() {
   fillSettingsPage();
+  const socket = getGameSocket(localStorage.getItem("token"));
   setTimeout(() => {
     // Back button
     // const backBtn = document.getElementById('back-btn');
@@ -126,7 +128,7 @@ export function AiGameEventListener() {
     let animationId: number | null = null;
     let player1Score = 0;
     let player2Score = 0;
-    const WINNING_SCORE = 2; // Check which player WINS the match score 5
+    const WINNING_SCORE = 1; // Check which player WINS the match score 5
 
     const pauseBtn = document.getElementById('pause-btn') as HTMLButtonElement;
     const pauseOverlay = document.getElementById('pause-overlay') as HTMLDivElement;
@@ -343,7 +345,7 @@ export function AiGameEventListener() {
           const speedFactor = 0.7; // Ai padding moving speed // or we'll call it later difficulty level
           const move = Math.sign(diff) * PaddleSpeed * speedFactor * dt;
           // if (Math.abs(move) > Math.abs(diff)) paddleRightY = targetCenterY; else  // just to not make a gitch in the paddle's movement
-          paddleRightY += move;
+          paddleRightY += move / 2;
         }
         paddleRightY = Math.max(0, Math.min(height - paddleHeight, paddleRightY));
       }
@@ -424,56 +426,72 @@ export function AiGameEventListener() {
           ball.y = NewY;
         }
 
-        function displayWinner() {
-          const winner = player1Score >= WINNING_SCORE ? "Salma" : "héhé Ai";
-            const winnerOverlay = document.createElement('div');
-            winnerOverlay.id = 'winner-overlay';
-            winnerOverlay.className = 'ml-12 md:ml-0 w-[80%] md:w-full absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
-            winnerOverlay.innerHTML = `
-              <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
-                <h2 class="text-2xl md:text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
-                <p class="font-roboto text-xl md:text-2xl text-gray-300 mb-2">Final Score</p>
-                <div class="flex justify-center items-center gap-8 mb-8">
-                  <div class="text-center">
-                    <p class="text-primary text-2xl md:text-3xl">${player1Score}</p>
-                    <p class="font-roboto text-gray-400">You</p>
+        async function displayWinner() {
+          const userId = localStorage.getItem("userId");
+          if (!userId) {
+            showAlert("Login first");
+            navigate("/login");
+          }
+          try
+          {
+            const res = await fetch(`http://localhost:3001/settings/${userId}`);
+            const data = await res.json();
+            const winner = player1Score >= WINNING_SCORE ? data.userName : "héhé Ai";
+              const winnerOverlay = document.createElement('div');
+              winnerOverlay.id = 'winner-overlay';
+              winnerOverlay.className = 'ml-12 md:ml-0 w-[80%] md:w-full absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
+              winnerOverlay.innerHTML = `
+                <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
+                  <h2 class="text-2xl md:text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
+                  <p class="font-roboto text-xl md:text-2xl text-gray-300 mb-2">Final Score</p>
+                  <div class="flex justify-center items-center gap-8 mb-8">
+                    <div class="text-center">
+                      <p class="text-primary text-2xl md:text-3xl">${player1Score}</p>
+                      <p class="font-roboto text-gray-400">You</p>
+                    </div>
+                    <span class="text-3xl text-white">-</span>
+                    <div class="text-center">
+                      <p class="text-secondary text-2xl md:text-3xl">${player2Score}</p>
+                      <p class="font-roboto text-gray-400">Ai</p>
+                    </div>
                   </div>
-                  <span class="text-3xl text-white">-</span>
-                  <div class="text-center">
-                    <p class="text-secondary text-2xl md:text-3xl">${player2Score}</p>
-                    <p class="font-roboto text-gray-400">Ai</p>
+                  <div class="space-y-4">
+                    <button id="play-again-btn" class="text-[15px] md:text-xl w-[150px] md:w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
+                      <i class="fa-solid fa-rotate-right mr-2"></i>
+                      Play Again
+                    </button>
+                    <button id="main-menu-btn" class="text-[15px] md:text-xl w-[150px] md:w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all duration-300">
+                      <i class="fa-solid fa-home mr-2"></i>
+                      Main Menu
+                    </button>
                   </div>
                 </div>
-                <div class="space-y-4">
-                  <button id="play-again-btn" class="text-[15px] md:text-xl w-[150px] md:w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
-                    <i class="fa-solid fa-rotate-right mr-2"></i>
-                    Play Again
-                  </button>
-                  <button id="main-menu-btn" class="text-[15px] md:text-xl w-[150px] md:w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all duration-300">
-                    <i class="fa-solid fa-home mr-2"></i>
-                    Main Menu
-                  </button>
-                </div>
-              </div>
-            `;
-            
-            document.querySelector('#container')?.appendChild(winnerOverlay);
-
-              const playAgainBtn = document.getElementById('play-again-btn');
-              const mainMenuBtn = document.getElementById('main-menu-btn');
+              `;
               
-              if (playAgainBtn) {
-                playAgainBtn.addEventListener('click', () => {
-                  winnerOverlay.remove();
-                  restartGame();
-                });
-              }
-              
-              if (mainMenuBtn) {
-                mainMenuBtn.addEventListener('click', () => {
-                  navigate('/localMode');
-                });
-              }
+              document.querySelector('#container')?.appendChild(winnerOverlay);
+  
+                const playAgainBtn = document.getElementById('play-again-btn');
+                const mainMenuBtn = document.getElementById('main-menu-btn');
+                
+                if (playAgainBtn) {
+                  playAgainBtn.addEventListener('click', () => {
+                    winnerOverlay.remove();
+                    restartGame();
+                  });
+                }
+                
+                if (mainMenuBtn) {
+                  mainMenuBtn.addEventListener('click', () => {
+                    navigate('/localMode');
+                  });
+                }
+                socket.emit('save-ai-match', { userId });
+          }
+          catch (err)
+          {
+            console.log(err);
+            showAlert("Error while fetching data: " + err);
+          }
         }
 
         if (ball.x - ball.r > width) {

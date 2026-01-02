@@ -134,6 +134,30 @@ const start = async () => {
         }
       });
 
+      socket.on("save-ai-match", async (data) => {
+        console.log(`this player: ${data.userId} wins againset Ai ------------`);
+        try {
+          const db = await getDb();
+
+          await db.run(
+            `INSERT OR IGNORE INTO wlxp (id) VALUES (?)`,
+            [data.userId]
+          );
+
+          await db.run(
+            `UPDATE wlxp
+            SET Wins = Wins + 1,
+                XPoints = XPoints + 30
+            WHERE id = ?`,
+            [data.userId]
+          );
+          
+          console.log("✅ Match vs Ai is saved to SQLite database!");
+        } catch (error) {
+            console.error("❌ Failed to save Ai match:", error);
+        }
+      })
+
       socket.on("leave_queue", () => {
         // waitingQueue = waitingQueue.filter(p => p.userId !== socket.userId);
         const index = waitingQueue.findIndex(

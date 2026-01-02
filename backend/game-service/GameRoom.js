@@ -49,11 +49,41 @@ class GameRoom {
           score: this.gameState.score
         });
       }
+      const winnerId = winnerSocket.data.userId;
+      const loserId =
+      winnerId === this.player1.data.userId
+        ? this.player2.data.userId
+        : this.player1.data.userId;
+
       try {
         const db = await getDb();
         const matchId = this.roomId;
         const timestamp = Date.now();
         const winner = winnerSocket.data.userId;
+
+        await db.run(
+          `INSERT OR IGNORE INTO wlxp (id) VALUES (?)`,
+          [winnerId]
+        );
+        await db.run(
+          `INSERT OR IGNORE INTO wlxp (id) VALUES (?)`,
+          [loserId]
+        );
+
+        await db.run(
+          `UPDATE wlxp
+          SET Wins = Wins + 1,
+              XPoints = XPoints + 50
+          WHERE id = ?`,
+          [winnerId]
+        );
+
+        await db.run(
+          `UPDATE wlxp
+          SET Losses = Losses + 1
+          WHERE id = ?`,
+          [loserId]
+        );
 
         await db.run(
             `INSERT INTO matches (id, player1Id, player2Id, score1, score2, winnerId, timestamp)
