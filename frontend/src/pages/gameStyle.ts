@@ -27,6 +27,7 @@ export default async function GameStyle() {
     catch
     {
       showAlert("login first");
+      navigate("/login");
     }
 
   return `

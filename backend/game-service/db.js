@@ -24,6 +24,15 @@ async function getDb() {
             timestamp INTEGER NOT NULL
         )
     `);
+
+    await db.exec(`
+        CREATE TABLE IF NOT EXISTS wlxp (
+            id TEXT PRIMARY KEY,
+            XPoints INTEGER DEFAULT 0,
+            Wins INTEGER DEFAULT 0,
+            Losses INTEGER DEFAULT 0
+        )
+    `);
         // db created.
     dbInstance = db;
     return db;

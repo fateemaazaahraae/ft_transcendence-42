@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nodemon --watch srcs --exec ts-node server.js"
   },
   "keywords": [],
   "author": "",
@@ -23,8 +22,5 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
-  },
-  "scripts": {
-    "test": "nodemon --watch srcs --exec ts-node server.js"
   }
 }

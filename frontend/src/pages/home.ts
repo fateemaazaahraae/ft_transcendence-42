@@ -7,6 +7,7 @@ import { loadUser } from "../utils/loadUser.ts";
 import { io } from "socket.io-client";
 import { getGameSocket } from "../utils/gameSocket.ts";
 import { formatDate } from "../utils/date.ts";
+import { showAlert } from "../utils/alert";
 
 
 export default async function Home() {
@@ -121,7 +122,7 @@ try {
           <div class="lg:gap-3 xl:gap-6 lg:mt-[5%] xl:mt-[10%]">
             <div class="flex text-white font-roboto justify-between text-[10px] md:text-[13px] w-[210px] md:w-[300px] xl:w-[400px]">
               <p data-i18n="level">Level</p>
-              <p>"7.5%"</p>
+              <p id="level" >"7.5%"</p>
             </div>
 
             <div class="w-[210px] h-[5px] md:w-[300px] md:h-[8px] xl:w-[400px] xl:h-[12px] bg-secondary rounded-full overflow-hidden relative">
@@ -139,7 +140,7 @@ try {
             </p>
             <p class="font-roboto">
             <span data-i18n="score" class="text-white">Score</span>
-            <span class="text-secondary ml-2">700</span>
+            <span id="xpoints" class="text-secondary ml-2">700</span>
             </p>
           </div>
       </div>
@@ -151,20 +152,24 @@ try {
       <h1 data-i18n="winRate" class=" text-white  lg:mb-0 font-glitch md:text-2xl xl:text-4xl whitespace-nowrap"> Wining rate </h1>
       <div class="relative w-[110px] h-[110px] mt-[15%] mb-[35%] lg:mt-0 lg:mb-0 xl:w-[150px] xl:h-[150px] rounded-full flex items-center justify-center">
         <div 
-            class="absolute inset-0 rounded-full"
-            style="background: conic-gradient(#35C6DD 10%, #F40CA4 0);">
+                id="winRateCircle"
+                class="absolute inset-0 rounded-full"
+                style="background: conic-gradient(#35C6DD 0%, #F40CA4 0);">
         </div>
         <div class="absolute inset-[8px] bg-black rounded-full flex items-center justify-center">
-          <span class="text-white font-roboto lg:text-[16px] xl:text-xl">10%</span>
+          <span id="winRatePercentage" class="text-white font-roboto lg:text-[16px] xl:text-xl">--%</span>
         </div>
       </div>
+
+
+
       <div class="relative flex flex-row bottom-[10%] md:bottom-[15%] lg:bottom-0 items-center gap-2">
         <!-- Wins -->
         <div class="relative group">
           <p data-i18n="wins" class="text-primary font-roboto text-[14px] md:text-[17px] xl:text-xl cursor-pointer group-hover:blur-[3px]">Wins</p>
-          <span class="absolute font-roboto left-1/2 -translate-x-1/2
+          <span id="Wins" class="absolute font-roboto left-1/2 -translate-x-1/2
                   text-primary text-sm px-3 py-1 rounded-md 
-                  opacity-0 group-hover:opacity-100 transition-opacity duration-300">4</span>
+                  opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
         </div>
 
         <p class="text-white text-xl">/</p>
@@ -172,11 +177,14 @@ try {
         <!-- Losses -->
         <div class="relative group">
           <p data-i18n="losses" class="text-secondary font-roboto text-[14px] md:text-[17px] xl:text-xl cursor-pointer group-hover:blur-[3px]">Losses</p>
-          <span class="absolute font-roboto left-1/2 -translate-x-1/2 
+          <span id="Losses" class="absolute font-roboto left-1/2 -translate-x-1/2 
                   text-secondary text-sm px-3 py-1 rounded-md 
-                  opacity-0 group-hover:opacity-100 transition-opacity duration-300">6</span>
+                  opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
         </div>
       </div>
+
+
+
     </div>
     <div class="h-[30%] w-[10px] lg:w-[1px] xl:w-[3px] xl:h-[250px] lg:h-[180px] rounded-full bg-[#35C6DD] mt-[2%] lg:mt-[14%] xl:mt-[1%] lg:mr-[20px] lg:ml-[40px] xl:ml-[80px] xl:mr-[40px] shadow-[0_0_20px_#35C6DD]"></div>
     <div class="flex flex-col justify-center items-center gap-2">
@@ -257,9 +265,83 @@ try {
 }
 
 
-export function HomeEventListener()
+async function GetWinsLosses()
+{
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    showAlert("Login first");
+    navigate("/login");
+  }
+    try {
+    const res = await fetch(`http://localhost:3003/wlxp/${userId}`);
+    if (res.status === 404) {
+      return { Wins: 0, Losses: 0, XPoints: 0 };
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    console.log("WLXP data fetched:", data);
+    return data;
+  }
+  catch (err)
+  {
+    console.log(err);
+    showAlert("Error while fetching data: " + err);
+    return null;
+  }
+}
+
+function CalculateWinRate(Wins: any, Losses: any) {
+  const totalMatches = Wins + Losses;
+  if (totalMatches === 0) return 0;
+  const winningRate = (Wins * 100) / totalMatches;
+  return winningRate;
+}
+
+function updateWinRateDisplay(wins: any, losses: any) {
+    const winRate = CalculateWinRate(wins, losses);
+    const roundedWinRate = Math.round(winRate);
+    
+    const circleElement = document.getElementById('winRateCircle');
+    if (circleElement) {
+        circleElement.style.background = `conic-gradient(#35C6DD ${winRate}%, #F40CA4 0)`;
+    }
+    
+    const percentageElement = document.getElementById('winRatePercentage');
+    if (percentageElement) {
+        percentageElement.textContent = `${roundedWinRate}%`;
+    }
+    
+    // Optional: Update wins/losses text if you have elements for them
+    const winsElement = document.querySelector('[data-i18n="wins"]');
+    const lossesElement = document.querySelector('[data-i18n="losses"]');
+    
+    if (winsElement) winsElement.textContent = wins;
+    if (lossesElement) lossesElement.textContent = losses;
+}
+
+export async function HomeEventListener()
 {
   const btnPlay = document.getElementById("play-btn2");
   btnPlay?.addEventListener("click", () => {navigate("/remoteVSlocal");
-});
+  });
+  const Wins = document.getElementById("Wins");
+  const Losses = document.getElementById("Losses");
+  const Level = document.getElementById("level");
+  const Score = document.getElementById("xpoints");
+  if (!Wins || !Losses || !Level || !Score) {
+    console.warn("Wins element not found");
+    return;
+  }
+  const data = await GetWinsLosses();
+  console.log("WLXP data:", data);
+  if (!data) return;
+  Wins.textContent = data.Wins;
+  Losses.textContent = data.Losses;
+  Score.textContent = data.XPoints;
+  const levelRate = data.XPoints / 100;
+  Level.textContent = `"${levelRate}"%`;
+  updateWinRateDisplay(data.Wins, data.Losses);
 }
+
+
+// if (matches.length > 0) {

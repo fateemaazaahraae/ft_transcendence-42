@@ -25,7 +25,7 @@ export default function RemoteGame() {
           <span id="player2-score-display" class="w-[40px] h-[30px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-secondary text-xl bg-black drop-shadow-pink">${p2.score}</span>
         </div>
 
-        <img src="" id="myImg2" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+        <img src="" id="myImg2" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-secondary/80 object-cover border-[2px]"/>
     </div>
     <!-- GAME CANVAS AREA -->
     <div class="absolute left-1/2 transform -translate-x-1/2 rotate-90 lg:rotate-0 top-[43%] lg:top-[37%] xl:top-[32%] md:top-[38%] h-[38%] md:h-[55%] w-full md:w-[80%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
@@ -57,14 +57,6 @@ export default function RemoteGame() {
               Yes
             </button>
         </div>
-      </div>
-    <!-- PAUSE OVERLAY (Hidden by default) -->
-      <div id="game-over-modal" class="hidden absolute inset-0 bg-black/80 flex-col justify-center items-center z-50">
-        <h1 id="game-result-title" class="text-6xl font-glitch mb-4">GAME OVER</h1>
-        <p id="final-score" class="text-2xl mb-8 font-mono">5 - 3</p>
-        <button id="go-home-btn" class="px-8 py-3 bg-[#35C6DD] text-black font-bold rounded hover:bg-white transition">
-          Back to Home
-        </button>
       </div>
       </div>
     </div>
@@ -149,9 +141,9 @@ export function RemoteGameEventListener() {
   const quitBtn = document.getElementById('quit-btn') as HTMLButtonElement;
   const player1ScoreDisplay = document.getElementById('player1-score-display') as HTMLSpanElement;
   const player2ScoreDisplay = document.getElementById('player2-score-display') as HTMLSpanElement;
-  const modal = document.getElementById("game-over-modal");
-  const resultTitle = document.getElementById("game-result-title");
-  const finalScoreText = document.getElementById("final-score");
+  // const modal = document.getElementById("game-over-modal");
+  // const resultTitle = document.getElementById("game-result-title");
+  // const finalScoreText = document.getElementById("final-score");
 
   function updateScoreDisplay() {
     if (player1ScoreDisplay) player1ScoreDisplay.textContent = player1Score.toString();
