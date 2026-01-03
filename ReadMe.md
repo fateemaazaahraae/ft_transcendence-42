@@ -425,7 +425,7 @@ Server matchmaking
         ↓
 match_found
         ↓
-navigate("/remote-game")
+navigate("/remotegame")
 
 (so when ever I type socket.emit('Myevent', ...) I fire an event and when I type socket.on(('Myevent'), () => {}); I handle that event I fired).
 ```

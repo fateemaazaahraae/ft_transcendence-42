@@ -55,7 +55,7 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/invitations": {render: Invitations, setUp: InvitationsEventListener},
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
     "/chat": {render: Chat, setUp: ChatEventListener},
-    "/remote-game": { render: RemoteGame, setUp: RemoteGameEventListener },
+    "/remotegame": { render: RemoteGame, setUp: RemoteGameEventListener },
     "/tournamentChoices": { render: tournamentChoices},
     404: {render: PageNotFound},
 };

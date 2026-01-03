@@ -157,7 +157,7 @@ try {
                 style="background: conic-gradient(#35C6DD 0%, #F40CA4 0);">
         </div>
         <div class="absolute inset-[8px] bg-black rounded-full flex items-center justify-center">
-          <span id="winRatePercentage" class="text-white font-roboto lg:text-[16px] xl:text-xl">--%</span>
+          <span id="winRatePercentage" class="text-white font-roboto lg:text-[16px] xl:text-xl">%</span>
         </div>
       </div>
 
@@ -169,7 +169,7 @@ try {
           <p data-i18n="wins" class="text-primary font-roboto text-[14px] md:text-[17px] xl:text-xl cursor-pointer group-hover:blur-[3px]">Wins</p>
           <span id="Wins" class="absolute font-roboto left-1/2 -translate-x-1/2
                   text-primary text-sm px-3 py-1 rounded-md 
-                  opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                  opacity-0 group-hover:opacity-100 transition-opacity duration-300">0</span>
         </div>
 
         <p class="text-white text-xl">/</p>
@@ -179,7 +179,7 @@ try {
           <p data-i18n="losses" class="text-secondary font-roboto text-[14px] md:text-[17px] xl:text-xl cursor-pointer group-hover:blur-[3px]">Losses</p>
           <span id="Losses" class="absolute font-roboto left-1/2 -translate-x-1/2 
                   text-secondary text-sm px-3 py-1 rounded-md 
-                  opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                  opacity-0 group-hover:opacity-100 transition-opacity duration-300">0</span>
         </div>
       </div>
 
@@ -268,7 +268,6 @@ try {
 async function GetWinsLosses()
 {
   const userId = localStorage.getItem("userId");
-  console.log("WLXP data fetched:", userId);
   if (!userId) {
     showAlert("Login first");
     navigate("/login");
@@ -322,10 +321,7 @@ export async function HomeEventListener()
   const Losses = document.getElementById("Losses");
   const Level = document.getElementById("level");
   const Score = document.getElementById("xpoints");
-  if (!Wins || !Losses || !Level || !Score) {
-    console.warn("Wins element not found");
-    return;
-  }
+  if (!Wins || !Losses || !Level || !Score) return;
   const data = await GetWinsLosses();
   console.log("WLXP data:", data);
   if (!data) return;

@@ -4,10 +4,6 @@ import { requiredAuth } from "../utils/authGuard.ts";
 export default function LocalGameStyle() {
   if (!requiredAuth())
     return "";
-  const match = {
-      user: "/public/pink-girl.svg",
-      player: "/public/purple-girl.svg",
-  };
   return `
   <div class="relative w-full h-screen overflow-x-hidden">
 

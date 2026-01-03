@@ -103,9 +103,6 @@ export default async function GameStyle() {
 
 export function GameStyleEventListener(){
   setTimeout(() => {
-  // const match=document.getElementById("play");
-  // match?.addEventListener("click", () =>{navigate("/RemotegameStyle");
-  // });
   const tournament=document.getElementById("start");
   tournament?.addEventListener("click", () =>{navigate("/tournamentChoices");
   });
@@ -134,7 +131,7 @@ export function GameStyleEventListener(){
           socket.on("match_found", (data: any) => {
               console.log("🎉 MATCH FOUND! Navigating to game...");
               localStorage.setItem("currentMatch", JSON.stringify(data));
-              navigate("/remote-game"); 
+              navigate("/remotegame"); 
           });
       }
 
@@ -179,7 +176,7 @@ export function GameStyleEventListener(){
 //             socket.on("match_found", (data) => {
 //                 console.log("🎉 MATCH FOUND! Navigating to game...");
 //                 localStorage.setItem("currentMatch", JSON.stringify(data));
-//                 navigate("/remote-game"); 
+//                 navigate("/remotegame"); 
 //             });
 
 //             socket.on("waiting_for_match", (data) => {

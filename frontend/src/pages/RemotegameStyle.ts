@@ -3,13 +3,9 @@ import { navigate } from "../main.ts";
 import { showAlert } from "../utils/alert";
 import { requiredAuth } from "../utils/authGuard.ts";
 
-export default function LocalGameStyle() {
+export default function RemoteGameStyle() {
   if (!requiredAuth())
     return "";
-  const match = {
-      user: "/public/pink-girl.svg",
-      player: "/public/purple-girl.svg",
-  };
   return `
   <div class="relative w-full h-screen overflow-x-hidden">
 
@@ -109,8 +105,9 @@ async function fillSettingsPage()
 {
   const userId = localStorage.getItem("userId");
   if (!userId) {
-    showAlert("Login first");
+    // showAlert("Login first");
     navigate("/login");
+    return ;
   }
   try
   {

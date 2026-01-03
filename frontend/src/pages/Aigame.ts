@@ -94,8 +94,9 @@ async function fillSettingsPage()
 {
   const userId = localStorage.getItem("userId");
   if (!userId) {
-    showAlert("Login first");
+    // showAlert("Login first");
     navigate("/login");
+    return ;
   }
   try
   {
@@ -485,7 +486,9 @@ export function AiGameEventListener() {
                     navigate('/localMode');
                   });
                 }
-                socket.emit('save-ai-match', { userId });
+                if (winner === data.userName) {
+                  socket.emit('save-ai-match', { userId });
+                }
           }
           catch (err)
           {
