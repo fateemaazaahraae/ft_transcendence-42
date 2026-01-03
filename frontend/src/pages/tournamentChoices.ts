@@ -1,5 +1,6 @@
 import { getSavedLang } from "../i18n";
-import { navigate } from "../main";
+import { getTrSocket } from "../utils/tournamentSocket.ts";
+import { navigate } from "../main.ts";
 
 interface AvTournaments {
     img: string;
@@ -114,10 +115,50 @@ export async function tournamentChoices() {
                                 <i class="fa-solid fa-plus absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer text-secondary"></i>
                             </div>
                         </div>
-                        <button class="bg-primary/60 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary mb-16">Create</button>
+                        <button id=trcreate class="bg-primary/60 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary mb-16">Create</button>
                     </div>
                 </div>
             </div>
         </div>
     `
 }
+
+
+export function tournamentChoicesEventListener(){
+  setTimeout(() => {
+  const btnTr = document.getElementById("trcreate");
+  if (btnTr) {
+    btnTr.addEventListener("click", () => {
+      console.log("Create tr button is clicked!");
+
+      const token = localStorage.getItem("token"); // this will get JWT prolly
+      if (!token) {
+        navigate("/login"); 
+        return;
+      }
+
+      const socket = getTrSocket(token); /// here is the key to send request to our game server
+
+      if (!socket.hasListeners("match_found")) {
+          
+          socket.on("connect", () => {
+              console.log("✅ Connected via Manager! ID:", socket.id);
+              navigate("/TrWaitingPlayers");
+              socket.emit('join_queue');
+          });
+
+          socket.on("match_found", (data: any) => {
+              console.log("🎉 MATCH FOUND! Navigating to game...");
+              localStorage.setItem("currentMatch", JSON.stringify(data));
+              navigate("/remotegame"); 
+          });
+      }
+
+      if (socket.connected) {
+            socket.emit('join_queue');
+      }
+    });
+  }
+}, 100);
+}
+

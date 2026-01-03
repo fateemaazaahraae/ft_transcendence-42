@@ -102,6 +102,24 @@ services:
       - "3003:3003"
     networks:
       - ft_transcendence
+
+  tournament-service:
+    platform: linux/amd64
+    build:
+      context: ./backend/tournament-service
+      dockerfile: Dockerfile
+    image: tournament-service
+    container_name: tournament-service
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/tournament-service:/app
+      - /app/node_modules
+    ports:
+      - "3004:3004"
+    networks:
+      - ft_transcendence
+
   relationship-service:
     platform: linux/amd64
     build:
@@ -133,6 +151,7 @@ services:
       - profile-service
       - relationship-service
       - game-service
+      - tournament-service
     volumes:
       - uploads:/app/uploads
       # - profile-service

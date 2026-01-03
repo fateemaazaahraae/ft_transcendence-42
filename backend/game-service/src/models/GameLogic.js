@@ -1,4 +1,3 @@
-// const { Server } = require('socket.io');
 import { Server } from "socket.io";
 import { getDb } from "./db.js";
 import GameRoom from "./GameRoom.js";
@@ -27,9 +26,6 @@ const getUserDataFromToken = (token) => { // had lfunction kayreturni id&name&im
   }
 };
 
-// export const GameLogic = (server) => { ... }
-
-
 
 export const GameLogic = (server) => {
 
@@ -38,9 +34,9 @@ export const GameLogic = (server) => {
     io.on('connection', (socket) => {
         const token = socket.handshake.auth.token;
         if (!token) { // check tocken (JWT)
-        console.log('❌ Connection rejected: No token provided.');
-        socket.disconnect();
-        return;
+            console.log('❌ Connection rejected: No token provided.');
+            socket.disconnect();
+            return;
         }
 
         const userData = getUserDataFromToken(token);
@@ -114,7 +110,7 @@ export const GameLogic = (server) => {
         );
 
         if (alreadyQueued) {
-            console.log(`${userId} already in queue, successfuly ignored`);
+            console.log(`${userId} already in queue, successfuly ignored hh`);
             return;
         }
 
@@ -161,5 +157,3 @@ export const GameLogic = (server) => {
         });
     });
 }
-
-// export { GameLogic };
