@@ -157,7 +157,7 @@ try {
                 style="background: conic-gradient(#35C6DD 0%, #F40CA4 0);">
         </div>
         <div class="absolute inset-[8px] bg-black rounded-full flex items-center justify-center">
-          <span id="winRatePercentage" class="text-white font-roboto lg:text-[16px] xl:text-xl">%</span>
+          <span id="winRatePercentage" class="text-white font-roboto lg:text-[16px] xl:text-xl">0%</span>
         </div>
       </div>
 

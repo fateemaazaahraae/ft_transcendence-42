@@ -6,6 +6,7 @@ import LocalMode, { LocalModeEventListener } from "./pages/localMode.ts";
 import GameStyle, { GameStyleEventListener } from "./pages/gameStyle.ts";
 import LocalGameStyle, { LocalGameStyleEventListener } from "./pages/LocalgameStyle.ts";
 import RemoteGameStyle, { RemoteGameStyleEventListener } from "./pages/RemotegameStyle.ts";
+import TrWaitingPlayers, { TrWaitingPlayersEventListener } from "./pages/TrWaitingPlayers.ts";
 import Game from "./pages/game.ts";
 import LocalGame, { LocalGameEventListener } from "./pages/Localgame.ts";
 import AiGame, { AiGameEventListener } from "./pages/Aigame.ts";
@@ -30,7 +31,7 @@ import { showAlert } from "./utils/alert.ts";
 import RemoteGame, { RemoteGameEventListener } from "./pages/RemoteGame.ts";////
 import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
 import { searchBar } from "./pages/searchBar.ts";
-import { tournamentChoices } from "./pages/tournamentChoices.ts";
+import { tournamentChoices, tournamentChoicesEventListener } from "./pages/tournamentChoices.ts";
 
 const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<void> }> = {
     "/": {render: Landing, setUp: LandingEventListener},
@@ -40,6 +41,7 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/gameStyle": {render: GameStyle, setUp: GameStyleEventListener},
     "/LocalgameStyle": {render: LocalGameStyle, setUp: LocalGameStyleEventListener},
     "/RemotegameStyle": {render: RemoteGameStyle, setUp: RemoteGameStyleEventListener},
+    "/TrWaitingPlayers": {render: TrWaitingPlayers, setUp: TrWaitingPlayersEventListener},
     "/game": {render: Game},
     "/Localgame": {render: LocalGame, setUp: LocalGameEventListener},
     "/Aigame": {render: AiGame, setUp: AiGameEventListener},
@@ -56,7 +58,7 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
     "/chat": {render: Chat, setUp: ChatEventListener},
     "/remotegame": { render: RemoteGame, setUp: RemoteGameEventListener },
-    "/tournamentChoices": { render: tournamentChoices},
+    "/tournamentChoices": { render: tournamentChoices, setUp: tournamentChoicesEventListener },
     404: {render: PageNotFound},
 };
 

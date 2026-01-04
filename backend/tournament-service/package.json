@@ -1,0 +1,20 @@
+{
+  "name": "tournament-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node srcs/server.js",
+    "start": "node srcs/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "fastify": "^5.6.2",
+    "socket.io-client": "^4.8.3",
+    "socket.io": "^4.7.1"
+  }
+}
