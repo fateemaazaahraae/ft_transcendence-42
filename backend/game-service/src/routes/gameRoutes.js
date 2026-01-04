@@ -29,7 +29,7 @@ export default async function GameRoutes(fastify, options) {
       try {
           const db = await getDb();
           
-          const wlxp = await db.get(
+          let wlxp = await db.get(
             `SELECT Wins, Losses, XPoints
             FROM wlxp 
             WHERE id = ?`,

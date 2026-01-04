@@ -59,6 +59,7 @@ export default function TrWaitingPlayers() {
                     opacity-80 transition-opacity duration-300"
             />
         </div>
+        <span>}</span>
         <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
             <img src="" id="myImg" class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
             <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
@@ -71,6 +72,7 @@ export default function TrWaitingPlayers() {
                     opacity-80 transition-opacity duration-300"
             />
         </div>
+        <span>{</span>
     </div>
   </div>
   `;
