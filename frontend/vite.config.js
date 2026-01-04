@@ -4,22 +4,28 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: true,
+    port: 5173,
+
     allowedHosts: [
-      "frontend", // <-- add this
+      "frontend",
       "localhost",
-      'carole-condescensive-lillie.ngrok-free.dev',
+      "carole-condescensive-lillie.ngrok-free.dev",
       "0.0.0.0",
     ],
-    host: true, // already listens on all interfaces
-    port: 5173,
-    
+    watch: {
+      usePolling: true,
+      interval: 100,
+    },
+
     fs: {
       strict: false,
     },
   },
+
   build: {
     rollupOptions: {},
   },
-  optimizeDeps: {},
+
   appType: "spa",
 });
