@@ -46,33 +46,48 @@ export default function TrWaitingPlayers() {
         class="text-3xl md:text-4xl lg:text-5xl font-glitch text-center mt-[40%] md:mt-[20%] lg:mt-[4%]">
       Waiting For Players<span id="dots">...</span>
     </h1>
-    <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[2%] gap-2 md:gap-[1000px]">
-        <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
-            <img src="" id="myImg" class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
-            <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
-            <img
-            id="opponentImg"
-            src="/public/opponent1.png"
-            class="w-[100px] h-[100px] md:w-[200px] md:h-[200px]
-                    lg:w-[200px] lg:h-[200px]
-                    rounded-full border-2 border-secondary object-cover
-                    opacity-80 transition-opacity duration-300"
-            />
-        </div>
-        <span>}</span>
-        <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
-            <img src="" id="myImg" class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
-            <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
-            <img
-            id="opponentImg"
-            src="/public/opponent1.png"
-            class="w-[100px] h-[100px] md:w-[200px] md:h-[200px]
-                    lg:w-[200px] lg:h-[200px]
-                    rounded-full border-2 border-secondary object-cover
-                    opacity-80 transition-opacity duration-300"
-            />
-        </div>
-        <span>{</span>
+    <h2 id="waitingText"
+        class="text-3xl md:text-4xl lg:text-4xl font-glitch text-center mt-[40%] md:mt-[20%] lg:mt-[4%]">
+      Tournament name
+    </h2>
+    <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[1%] gap-2 md:gap-[30px]">
+      <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[2%] gap-2 md:gap-[3px]">
+          <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
+              <img src="" id="myImg" class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
+              <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
+              <img
+              src="/public/opponent1.png"
+              class="opponentImg w-[100px] h-[100px] md:w-[200px] md:h-[200px]
+                      lg:w-[200px] lg:h-[200px]
+                      rounded-full border-2 border-primary object-cover
+                      opacity-80 transition-opacity duration-300"
+              />
+          </div>
+          <span class="text-white text-[30rem] font-serif font-light">}</span>
+          <img src="" id="myImg" class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
+      </div>
+      <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[150px]" />
+      <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[2%] gap-2 md:gap-[3px]">
+      <img src="" id="myImg" class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-secondary object-cover">
+          <span class="text-white text-[30rem] font-serif">{</span>
+          <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
+              <img
+              src="/public/opponent1.png"
+              class="opponentImg w-[100px] h-[100px] md:w-[200px] md:h-[200px]
+                      lg:w-[200px] lg:h-[200px]
+                      rounded-full border-2 border-secondary object-cover
+                      opacity-80 transition-opacity duration-300"
+              />
+              <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
+              <img
+              src="/public/opponent1.png"
+              class="opponentImg w-[100px] h-[100px] md:w-[200px] md:h-[200px]
+                      lg:w-[200px] lg:h-[200px]
+                      rounded-full border-2 border-secondary object-cover
+                      opacity-80 transition-opacity duration-300"
+              />
+          </div>
+      </div>
     </div>
   </div>
   `;
@@ -90,8 +105,8 @@ function startWaitingDots() {
 }
 
 function startOpponentImageRotation() {
-  const opponentImg = document.getElementById("opponentImg") as HTMLImageElement;
-  if (!opponentImg) return;
+  const opponentImages = document.querySelectorAll(".opponentImg") as NodeListOf<HTMLImageElement>;
+  if (opponentImages.length === 0) return;
 
   const images = [
     "/public/dark-girl.svg",
@@ -104,17 +119,21 @@ function startOpponentImageRotation() {
     "/public/blue-boy.svg",
   ];
 
-  let index = 0;
+  // let index = 0;
+  const indices = Array.from(opponentImages).map(() => Math.floor(Math.random() * images.length));
+
 
   return setInterval(() => {
-    opponentImg.classList.add("opacity-0");
+    opponentImages.forEach((img, i) => {
+      img.classList.add("opacity-0");
 
-    setTimeout(() => {
-      index = (index + 1) % images.length;
-      opponentImg.src = images[index];
-      opponentImg.classList.remove("opacity-0");
-    }, 300);
-  }, 400);
+      setTimeout(() => {
+        indices[i] = (indices[i] + 1) % images.length;
+        img.src = images[indices[i]];
+        img.classList.remove("opacity-0");
+      }, 300);
+    });
+  }, 450);
 }
 
 async function fillSettingsPage()
@@ -150,6 +169,9 @@ export function TrWaitingPlayersEventListener() {
   startWaitingDots();
   startOpponentImageRotation();
   const socket = getTrSocket(localStorage.getItem("token"));
+  socket.on("player_connected", (data) => {
+    console.log("a player connected with the pic: ", data.pic);
+  });
   function leaveGame() {
     console.log("You left!!");
     socket.disconnect();
