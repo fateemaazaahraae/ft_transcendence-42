@@ -29,7 +29,7 @@ export default async function GameRoutes(fastify, options) {
       try {
           const db = await getDb();
           
-          const wlxp = await db.get(
+          let wlxp = await db.get(
             `SELECT Wins, Losses, XPoints
             FROM wlxp 
             WHERE id = ?`,
@@ -61,6 +61,19 @@ export default async function GameRoutes(fastify, options) {
           console.error(err);
           return reply.code(500).send({ error: 'Database error' });
       }
+  });
+
+  fastify.get("/leaderboard", async() => {
+      const db = await getDb();
+      const users = await db.all(
+        `SELECT id, XPoints
+         FROM wlxp
+         ORDER BY XPoints DESC`
+      );
+      console.log("-----------------------\n")
+      console.log(users)
+      console.log("-----------------------\n")
+      return users;
   });
 }
 
