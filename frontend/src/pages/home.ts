@@ -122,7 +122,7 @@ try {
           <div class="lg:gap-3 xl:gap-6 lg:mt-[5%] xl:mt-[10%]">
             <div class="flex text-white font-roboto justify-between text-[10px] md:text-[13px] w-[210px] md:w-[300px] xl:w-[400px]">
               <p data-i18n="level">Level</p>
-              <p id="level" >"7.5%"</p>
+              <p id="level" >7.5%</p>
             </div>
 
             <div class="w-[210px] h-[5px] md:w-[300px] md:h-[8px] xl:w-[400px] xl:h-[12px] bg-secondary rounded-full overflow-hidden relative">
@@ -329,7 +329,7 @@ export async function HomeEventListener()
   Losses.textContent = data.Losses;
   Score.textContent = data.XPoints;
   const levelRate = data.XPoints / 100;
-  Level.textContent = `"${levelRate}"%`;
+  Level.textContent = `${levelRate}%`;
   updateWinRateDisplay(data.Wins, data.Losses);
 }
 
