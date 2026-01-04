@@ -9,7 +9,9 @@ let connected = false;
 type Queued = { to: string | number; message: string; ack?: (res: any) => void };
 const messageQueue: Queued[] = [];
 const connectionSubscribers: Array<(isConnected: boolean) => void> = [];
-
+const messageListeners: Array<(data: any) => void> = [];
+const blockListeners: Array<(data: any) => void> = [];
+const presenceListeners: Array<(userId: string, status: 'online' | 'offline') => void> = [];
 export function initializeSocket(userId: string | number, serverUrl: string, token?: string) {
     currentUserId = userId;
 
@@ -25,8 +27,7 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
     }
 
     // Connect to chat service
-    console.log('[sockeService] connecting to', serverUrl, 'with token?', !!token);
-    // If serverUrl points to the proxied /ws path, set socket.io path accordingly
+    console.log('connecting to', serverUrl, 'with token?', !!token);
     const opts: any = {
         transports: ["websocket", "polling"],
         withCredentials: false,
@@ -38,6 +39,7 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
 
     socket = io(serverUrl, opts);
 
+    
     socket.on("connect", () => {
         console.log("socket connected", socket?.id, 'userId=', userId);
         connected = true;
@@ -48,9 +50,9 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
 
         try {
             socket?.emit("join", String(userId)); // Convert to string to match backend room format
-            console.log('[sockeService] emitted join', String(userId));
+            console.log('emitted join', String(userId));
         } catch (e) {
-            console.warn('[sockeService] failed to emit join', e);
+            console.warn('failed to emit join', e);
         }
 
         // flush queued messages
@@ -68,6 +70,30 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
                 break;
             }
         }
+    });
+
+    // presence events: forward to registered listeners 
+    socket.off("user_online");
+    socket.off("user_offline");
+    socket.on("user_online", ({ userId }) => {
+        console.log('DBG recv user_online', userId);
+        presenceListeners.forEach(cb => {
+            try { cb(String(userId), 'online'); } catch (e) { console.warn('presence listener error', e); }
+        });
+    });
+    socket.on("user_offline", ({ userId }) => {
+        console.log('DBG recv user_offline', userId);
+        presenceListeners.forEach(cb => {
+            try { cb(String(userId), 'offline'); } catch (e) { console.warn('presence listener error', e); }
+        });
+    });
+
+    socket.on("new_message", (data: any) => {
+    messageListeners.forEach(cb => {
+        try { cb(data); } catch (e) {
+            console.warn("message listener error", e);
+        }
+    });
     });
 
     socket.on("disconnect", (reason) => {
@@ -119,14 +145,52 @@ export function subscribeConnection(cb: (isConnected: boolean) => void) {
     
 }
 
-export function listenForMessagesReceived(callback: (data: any) => void) {
-    if (!socket) {
-        console.warn("socket not initialized");
-        return;
-    }
+export function listenForMessagesReceived(cb: (data: any) => void) {
+    messageListeners.push(cb);
+
+    if (!socket) return;
 
     socket.off("new_message");
-    socket.on("new_message", (data: any) => {
-        callback(data);
+    socket.on("new_message", (data) => {
+        messageListeners.forEach(fn => fn(data));
     });
 }
+
+export function listenForBlockEvents(cb: (data: any) => void) {
+    blockListeners.push(cb);
+
+    if (!socket) return;
+
+    socket.off("user_blocked");
+    socket.on("user_blocked", data => {
+        blockListeners.forEach(fn => fn(data));
+    });
+}
+
+//temporarly
+export function listenForPresenceEvents(
+  onOnline: (userId: string) => void,
+  onOffline: (userId: string) => void
+) {
+    // maintain backward-compatible API using new listenForPresence
+    const handler = (userId: string, status: 'online' | 'offline') => {
+        if (status === 'online') onOnline(String(userId));
+        else onOffline(String(userId));
+    };
+    presenceListeners.push(handler);
+
+    return () => {
+        const idx = presenceListeners.indexOf(handler as any);
+        if (idx !== -1) presenceListeners.splice(idx, 1);
+    };
+}
+
+export function listenForPresence(cb: (userId: string, status: 'online' | 'offline') => void) {
+    presenceListeners.push(cb);
+    return () => {
+        const idx = presenceListeners.indexOf(cb);
+        if (idx !== -1) presenceListeners.splice(idx, 1);
+    };
+}
+
+

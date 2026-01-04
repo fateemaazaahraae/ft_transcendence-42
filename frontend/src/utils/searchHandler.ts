@@ -36,13 +36,20 @@ const renderContactItem = (u: any, lastMsg = 'Search result') => {
                 <p class="font-medium text-sm text-secondary truncate">
                     ${displayName}
                 </p>
-                <span class="ml-auto text-[11px] text-gray-400">
+                 <span
+                class="unread-badge hidden ml-2 bg-red-500 text-white text-[10px]
+                    rounded-full px-2 py-[2px]"
+                data-unread="0"
+            >
+                0
+            </span>
+                <span class="last-message-time ml-auto text-[11px] text-gray-400">
                     ${timeStr}
                 </span>
             </div>
 
             
-            <p class="text-xs text-gray-200 max-w-[200px] truncate">
+            <p class="last-message text-xs text-gray-200 max-w-[200px] truncate">
                 ${lastMsg}
             </p>
         </div>
@@ -92,7 +99,7 @@ export const renderSearchResults = (users: any[], div: HTMLElement) => {
 export const fetchContacts = (API_BASE_URL: string, CURRENT_USER_ID: string | number, div: HTMLElement, onComplete?: () => void) => {
     console.log('fetchContacts: user=', CURRENT_USER_ID, 'div exists=', !!div);
     const token = localStorage.getItem('token');
-    const url = `${API_BASE_URL}/chats/contacts/${CURRENT_USER_ID}`;
+    const url = `${API_BASE_URL}/chats/contacts`;
     console.log('fetching from:', url);
     
     fetch(url, {
@@ -121,3 +128,5 @@ export const fetchContacts = (API_BASE_URL: string, CURRENT_USER_ID: string | nu
         })
         .catch(err => console.error('Error fetching contacts:', err));
 };
+
+

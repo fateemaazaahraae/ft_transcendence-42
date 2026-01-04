@@ -5,10 +5,13 @@ const API_URL = process.env.API_URL || 'http://auth-service:3000';
 const REL_SERVICE_URL = process.env.REL_SERVICE_URL || 'http://relationship-service:3002';
 
 export async function getContacts(request, reply) {
-  const userId = String(request.params.userId);
+  const userId = String(request.user.id);
   const authHeader = request.headers.authorization || '';
   let friendList = [];
   try {
+    if (!authHeader) {
+        return reply.status(401).send([]);
+      }
     const res = await fetch(`${REL_SERVICE_URL}/friends`, { headers: { Authorization: authHeader } });
     console.log(' fetched /friends status:', res.status);
     const bodyText = await res.text().catch(() => null);

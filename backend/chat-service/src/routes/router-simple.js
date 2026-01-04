@@ -7,7 +7,18 @@ import { getContacts, searchContacts } from "../controllers/contactsController.j
 export default fp(async (fastify) => {
 
   //get all contacts with last message
-fastify.get('/api/chats/contacts/:userId', getContacts);
+  // require JWT for chat endpoints and populate request.user
+  const ensureAuth = async (request, reply) => {
+    try {
+      const payload = await request.jwtVerify();
+      request.user = payload;
+    } catch (e) {
+      request.log && request.log.warn && request.log.warn('unauthorized access to chats route');
+      return reply.code(401).send([]);
+    }
+  };
+
+  fastify.get('/api/chats/contacts', { preHandler: ensureAuth }, getContacts);
 
 // search contacts by username
 fastify.get('/api/chats/search/:userId', searchContacts);

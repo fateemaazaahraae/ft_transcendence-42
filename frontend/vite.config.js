@@ -10,12 +10,20 @@ export default defineConfig({
       'carole-condescensive-lillie.ngrok-free.dev',
       "0.0.0.0",
     ],
+  hmr: {
+    protocol: 'ws', 
+    host: 'localhost',
+    port: 5173,
+  },
+
+
     host: true, // already listens on all interfaces
     port: 5173,
-    
+
     fs: {
       strict: false,
     },
+
   },
   build: {
     rollupOptions: {},

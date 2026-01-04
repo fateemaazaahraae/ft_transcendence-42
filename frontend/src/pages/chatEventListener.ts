@@ -2,35 +2,41 @@
 import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../utils/searchHandler.ts";
 import { loadUser } from "../utils/loadUser.ts";
 import { viewFriendProfile } from "./viewFriendProfile.ts";
-import { blockUser, unblockUser, checkIfBlocked, showMessageInput, showBlockedMessage } from "../utils/blockHandler.ts";
-import { socket, initializeSocket, sendMessage, listenForMessagesReceived, subscribeConnection } from "../utils/sockeService.ts";
+import { blockUser, checkIfBlocked, showMessageInput, showBlockedMessage } from "../utils/blockHandler.ts";
+import { socket, initializeSocket, sendMessage, listenForMessagesReceived, subscribeConnection, listenForBlockEvents, listenForPresenceEvents } from "../utils/sockeService.ts";
 import {
-    updateContactStatusUI,
     updateChatHeader,
     attachContactClickListeners,
     setupMenuToggle,
     setupDropdownClose,
     setupCloseChat,
     setupBackToContacts,
-    setupWindowResize
+    setupWindowResize,
+    updateUnreadBadge,
+    renderSingleMessage,
+    updateContactLastMessage,
+    updateContactStatusUI,
+    applyPresenceToRenderedContacts
 } from "./chatHelpers.ts";
-import { renderSingleMessage } from "./chatHelpers.ts";
 
 
 
 export function ChatEventListener() {
     const HOST = window.location.hostname;
     const PROTO = window.location.protocol;
-    
+
     let API_BASE_URL: string;
     let WS_URL: string;
     if (PROTO === 'https:') {
         API_BASE_URL = `${window.location.origin}/api`;
         WS_URL = window.location.origin; 
-    } else {
+    }
+    else {
         API_BASE_URL = `${PROTO}//${HOST}:4000/api`;
         WS_URL = `${PROTO}//${HOST}:4000`;
     }
+
+    
     let CURRENT_USER_ID: string | number | null = (() => {
         const token = localStorage.getItem('token');
         if (!token) return null;
@@ -50,7 +56,6 @@ export function ChatEventListener() {
         const storedId = localStorage.getItem('userId');
         if (storedId) {
             CURRENT_USER_ID = storedId;
-            console.log('[chat] using fallback userId from localStorage', storedId);
         }
     }
 
@@ -114,13 +119,30 @@ export function ChatEventListener() {
 
     //connect to socket.io
     if (CURRENT_USER_ID == null) {
-        console.warn('No user id found in token; chat not initialized');
         return;
     }
 
+    // initialize socket connection
     const TOKEN = localStorage.getItem('token') || '';
-    console.log('initializing socket with wsUrl', WS_URL);
     initializeSocket(CURRENT_USER_ID, WS_URL, TOKEN);
+
+   listenForPresenceEvents(
+  (userId) => {
+    updateContactStatusUI(String(userId), "online");
+  },
+  (userId) => {
+    updateContactStatusUI(String(userId), "offline");
+  }
+);
+
+
+
+    // block / unblock
+        listenForBlockEvents(({ by }) => {
+            if (String(by) === String(ACTIVE_CHAT_CONTACT_ID)) {
+                showBlockedMessage();
+            }
+    });
 
     //disable send button until socket connected
     const sendButtonEl = document.getElementById("sendMessageBtn") as HTMLButtonElement | null;
@@ -128,12 +150,10 @@ export function ChatEventListener() {
     // subscribe to connection changes to enable/disable the send button
     subscribeConnection((isConnected) => {
         if (sendButtonEl) sendButtonEl.disabled = !isConnected;
-        console.log('socket connection state changed:', isConnected);
     });
 
     // listen for server notification that *this* user was blocked by someone
     if (socket) {
-        socket.off('you_were_blocked');
         socket.on('you_were_blocked', (data: any) => {
             const by = String(data?.by || '');
             // if the blocked user is currently viewing the blocker, hide input
@@ -145,7 +165,7 @@ export function ChatEventListener() {
         
     }
 
-    // restore active chat 
+    
 
 
     // DOM 
@@ -221,12 +241,17 @@ export function ChatEventListener() {
 
     
     setChatUIState(false);
+    
 
     const debouncedSearch = debounce((query: string) => {
         if (!query.trim()) {
             if (contactsListDiv) {
                 fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
                     attachContactClickListeners(contactsListDiv, handleContactSelect);
+                    applyPresenceToRenderedContacts();
+
+                    
+                
                 });
             }
             return;
@@ -236,10 +261,16 @@ export function ChatEventListener() {
             if (contactsListDiv) {
                 renderSearchResults(results, contactsListDiv);
                 attachContactClickListeners(contactsListDiv, handleContactSelect);
+                applyPresenceToRenderedContacts();
+
             }
         });
     }, 250);
 
+
+    //
+
+   
     searchInput?.addEventListener('input', (e: Event) => {
         const value = (e.target as HTMLInputElement).value;
         debouncedSearch(value);
@@ -249,6 +280,9 @@ export function ChatEventListener() {
     const handleContactSelect = (contactId: string | number, username: string, avatar: string, status: string) => {
         ACTIVE_CHAT_CONTACT_ID = contactId;
         setChatUIState(true);
+
+        //clear unread
+        updateUnreadBadge(contactId, false);
 
         // save in case of refresh
         localStorage.setItem('activeContactId', String(contactId));
@@ -271,7 +305,6 @@ export function ChatEventListener() {
 
         // check if contact is blocked
         checkIfBlocked(String(CURRENT_USER_ID), String(contactId), (isBlocked) => {
-            console.log(`Is contact (ID: ${contactId}) blocked?`, isBlocked);
             if (isBlocked) {
                 showBlockedMessage();
             } else {
@@ -447,7 +480,12 @@ export function ChatEventListener() {
     if (contactsListDiv) {
         fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
             attachContactClickListeners(contactsListDiv, handleContactSelect);
+            applyPresenceToRenderedContacts();
+            
         });
+
+
+        
     } else {
         console.error('Cannot fetch contacts - contactsListDiv is null');
     }
@@ -458,13 +496,13 @@ export function ChatEventListener() {
     const messageInput =document.getElementById("messageInput") as HTMLInputElement | null;
     const sendButton = document.getElementById("sendMessageBtn");
     const messagesPanel = document.getElementById("messagesPanel");
-    // sendButton?.addEventListener("click", () => {
-    //     const message = messageInput?.value.trim();
+    
+
     const handleSendMessage = async () => {
         const content = messageInput?.value.trim();
         if(!content || !ACTIVE_CHAT_CONTACT_ID) return;
         
-        console.log("sending message to", ACTIVE_CHAT_CONTACT_ID, "content:", content);
+        
         // optimistic render: show message immediately in UI
             try {
                 let friendAvatar = localStorage.getItem('activeContactAvatar')
@@ -476,14 +514,22 @@ export function ChatEventListener() {
                 sender_id: String(CURRENT_USER_ID),
                 created_at: Math.floor(Date.now() / 1000)
             };
-            if (messagesPanel) {
+
+            const isForActiveChat = Boolean(ACTIVE_CHAT_CONTACT_ID);
+
+            if (isForActiveChat && messagesPanel) {
                 renderSingleMessage(optimisticMsg, true, messagesPanel, CURRENT_USER_AVATAR, resolveChatAvatar(friendAvatar) || '/default.png');
             }
+
+            updateContactLastMessage(String(ACTIVE_CHAT_CONTACT_ID),{content,created_at: Math.floor(Date.now() / 1000)});
+            
+
+           
+
         } catch (e) { console.warn('optimistic render failed', e); }
 
         // send to server (ack used only for error handling, do not re-render on ack)
         sendMessage(ACTIVE_CHAT_CONTACT_ID, content, (res) => {
-            console.log("save ack:", res);
             if(res?.status === "error") {
                 console.warn("send failed ", res?.reason || "unknown");
                 if (res?.reason === 'blocked') {
@@ -520,8 +566,14 @@ export function ChatEventListener() {
         const otherId = convo ? (String(convo.user_a) === String(CURRENT_USER_ID) ? String(convo.user_b) : String(convo.user_a)) : null;
         const isForActiveChat = (String(msg.sender_id) === String(ACTIVE_CHAT_CONTACT_ID)) || (otherId && String(otherId) === String(ACTIVE_CHAT_CONTACT_ID));
 
-        if (isForActiveChat && messagesPanel) {
+        if(otherId) {
+            updateContactLastMessage(otherId, msg);
+        }
+        if(!isForActiveChat && otherId)
+            updateUnreadBadge(otherId, true);
+        if ( messagesPanel) {
             const isSenderMe = String(msg.sender_id) === String(CURRENT_USER_ID);
+
 
             const raw = localStorage.getItem('activeContactAvatar')
                         || sessionStorage.getItem('avatar:' + String(msg.sender_id))
