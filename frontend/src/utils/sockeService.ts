@@ -1,5 +1,7 @@
 // import { Socket } from "node:dgram";
 import { io, Socket } from "socket.io-client";
+import { getActiveChatUser } from "../pages/chatHelpers";
+
 
 export let socket: Socket | null = null;
 let currentUserId: string | number | null = null;
@@ -48,13 +50,6 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
             try { cb(true); } catch (e) { console.warn('connection subscriber error', e); }
         });
 
-        try {
-            socket?.emit("join", String(userId)); // Convert to string to match backend room format
-            console.log('emitted join', String(userId));
-        } catch (e) {
-            console.warn('failed to emit join', e);
-        }
-
         // flush queued messages
         while (messageQueue.length > 0 && socket && connected) {
             const q = messageQueue.shift();
@@ -88,7 +83,37 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
         });
     });
 
+
+    // receive initial snapshot of online users
+        socket.on("online_users", (userIds: string[]) => {
+            console.log("DBG recv online_users snapshot", userIds);
+
+            userIds.forEach((id) => {
+                presenceListeners.forEach(cb => {
+                    try {
+                        cb(String(id), "online");
+                    } catch (e) {
+                        console.warn("presence snapshot listener error", e);
+                    }
+                });
+            });
+        });
+
     socket.on("new_message", (data: any) => {
+
+    //     const { message } = data;
+
+    // const otherUserId =
+    //     String(message.from) === String(currentUserId)
+    //         ? String(message.to)
+    //         : String(message.from);
+
+    // const activeChat = getActiveChatUser();
+
+    // if (activeChat && String(activeChat) === String(otherUserId)) {
+    //     messageListeners.forEach(cb => cb(data));
+    //     return;
+    // }
     messageListeners.forEach(cb => {
         try { cb(data); } catch (e) {
             console.warn("message listener error", e);
@@ -178,6 +203,7 @@ export function listenForPresenceEvents(
         else onOffline(String(userId));
     };
     presenceListeners.push(handler);
+    
 
     return () => {
         const idx = presenceListeners.indexOf(handler as any);

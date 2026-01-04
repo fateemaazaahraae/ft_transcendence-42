@@ -43,6 +43,16 @@ export const initSocket = (server) => {
     // join personal room
     socket.join(userId);
 
+
+    // send current online users to the newly connected client
+    try {
+      const onlineNow = Array.from(onlineUsers.keys()).filter(id => id !== userId);
+      socket.emit("online_users", onlineNow);
+      console.log('[presence] sent online_users snapshot to', userId, onlineNow);
+    } catch (e) {
+      console.warn('online_users snapshot error', e);
+    }
+
     // maintain set of socket ids per user to handle multi-tab connections
     const current = onlineUsers.get(userId) || new Set();
     current.add(socket.id);

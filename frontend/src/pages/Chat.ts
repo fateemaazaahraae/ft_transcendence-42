@@ -76,6 +76,7 @@ export default async function Chat() {
         <div id="main_chat" 
          class="w-full h-full 
                 hidden md:block
+                block
                 absolute top-0 left-0  
                 shadow-lg overflow-hidden text-white rounded-xl
                 md:relative md:flex lg:w-[90%] md:w-[90%] md:h-[700px]">        <div id="chatContainer" class="w-full h-full flex flex-col">

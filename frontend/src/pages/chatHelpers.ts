@@ -1,6 +1,16 @@
  
 const pendingPresence = new Map<string, "online" | "offline">();
 
+let activeChatUserId: string | null = null;
+
+export function setActiveChatUser(userId: string | null) {
+    activeChatUserId = userId;
+}
+
+export function getActiveChatUser() {
+    return activeChatUserId;
+}
+
 export function updateChatHeader(
     chatUsername: HTMLElement | null,
     chatStatus: HTMLElement | null,

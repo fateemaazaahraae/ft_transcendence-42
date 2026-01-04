@@ -4,6 +4,7 @@ import { loadUser } from "../utils/loadUser.ts";
 import { viewFriendProfile } from "./viewFriendProfile.ts";
 import { blockUser, checkIfBlocked, showMessageInput, showBlockedMessage } from "../utils/blockHandler.ts";
 import { socket, initializeSocket, sendMessage, listenForMessagesReceived, subscribeConnection, listenForBlockEvents, listenForPresenceEvents } from "../utils/sockeService.ts";
+import { setUserOnline, setUserOffline } from "../utils/presenceStore.ts";
 import {
     updateChatHeader,
     attachContactClickListeners,
@@ -16,7 +17,9 @@ import {
     renderSingleMessage,
     updateContactLastMessage,
     updateContactStatusUI,
-    applyPresenceToRenderedContacts
+    applyPresenceToRenderedContacts,
+    setActiveChatUser,
+    getActiveChatUser
 } from "./chatHelpers.ts";
 
 
@@ -60,6 +63,7 @@ export function ChatEventListener() {
     }
 
     let ACTIVE_CHAT_CONTACT_ID: string | number | null = null;
+    setActiveChatUser(null);
     let CURRENT_USER_AVATAR: string = '../../public/green-girl.svg';
 
     function resolveChatAvatar(img?: string | null): string {
@@ -128,12 +132,16 @@ export function ChatEventListener() {
 
    listenForPresenceEvents(
   (userId) => {
+    setUserOnline(String(userId));
     updateContactStatusUI(String(userId), "online");
   },
   (userId) => {
+    setUserOffline(String(userId));
     updateContactStatusUI(String(userId), "offline");
   }
 );
+
+
 
 
 
@@ -204,7 +212,7 @@ export function ChatEventListener() {
     }
 
     // confirm block: call API and hide modal
-    confirmBlockBtn?.addEventListener("click", () => {
+    confirmBlockBtn?.addEventListener("click", async () => {
         const targetId = String(ACTIVE_CHAT_CONTACT_ID || '').trim();
         const meId = String(CURRENT_USER_ID || '').trim();
         if (!targetId || !meId) {
@@ -215,18 +223,52 @@ export function ChatEventListener() {
         }
         // call block API with string ids (supports UUIDs)
         checkIfBlocked(meId, targetId, (isBlocked) => {
-            if(isBlocked) {
-                
+            if (isBlocked) {
+                // already blocked: show blocked state on the button
                 if (blockBtn) {
-                    blockBtn.remove();
+                    blockBtn.innerHTML = '<i class="fa fa-ban"></i> Blocked';
                     blockBtn.setAttribute('data-blocked', 'true');
+                    blockBtn.setAttribute('aria-pressed', 'true');
+                    try { (blockBtn as HTMLButtonElement).disabled = true; } catch (e) {}
+                    blockBtn.classList.add('opacity-50');
+                    blockBtn.classList.add('pointer-events-none');
                 }
-            }else {
-                blockUser(meId, targetId);
-                if (blockBtn) {
-                    blockBtn.innerHTML = '<i class="fa fa-ban"></i> Block User';
-                    blockBtn.setAttribute('data-blocked', 'false');
-                }
+            } else {
+                // perform block then close chat and show blocked state on the button
+                (async () => {
+                    const res = await blockUser(meId, targetId);
+
+                    if (blockBtn) {
+                        blockBtn.innerHTML = '<i class="fa fa-ban"></i> Blocked';
+                        blockBtn.setAttribute('data-blocked', 'true');
+                        blockBtn.setAttribute('aria-pressed', 'true');
+                        try { (blockBtn as HTMLButtonElement).disabled = true; } catch (e) {}
+                        blockBtn.classList.add('opacity-50');
+                        blockBtn.classList.add('pointer-events-none');
+                    }
+
+                    // close chat UI
+                    ACTIVE_CHAT_CONTACT_ID = null;
+                    setActiveChatUser(null);
+                    setChatUIState(false);
+                    // clear storage
+                    localStorage.removeItem('activeContactId');
+                    localStorage.removeItem('activeContactUsername');
+                    localStorage.removeItem('activeContactAvatar');
+                    localStorage.removeItem('activeContactStatus');
+
+                    // hide message input and reset messages panel
+                    document.getElementById("messageInputContainer")?.classList.add("hidden");
+                    const chatDiv = document.getElementById("messagesPanel");
+                    if (chatDiv) {
+                        chatDiv.innerHTML = `<div class="flex-1 flex items-center justify-center h-full">\n                            <h1 class="text-center text-primary/65 font-bold text-4xl">Ping Pong<br>Chat</h1>\n                        </div>`;
+                    }
+
+                    contactsSide?.classList.remove("hidden");
+                    chat?.classList.remove("hidden");
+                    chat?.classList.add("flex");
+                    document.getElementById("dropdownMenu")?.classList.add("hidden");
+                })();
             }
         });
         if (blockConfirmationDiv) blockConfirmationDiv.classList.add("hidden");
@@ -280,6 +322,7 @@ export function ChatEventListener() {
     const handleContactSelect = (contactId: string | number, username: string, avatar: string, status: string) => {
         ACTIVE_CHAT_CONTACT_ID = contactId;
         setChatUIState(true);
+        setActiveChatUser(String(contactId));
 
         //clear unread
         updateUnreadBadge(contactId, false);
@@ -571,16 +614,18 @@ export function ChatEventListener() {
         }
         if(!isForActiveChat && otherId)
             updateUnreadBadge(otherId, true);
-        if ( messagesPanel) {
+        if (messagesPanel && isForActiveChat && ACTIVE_CHAT_CONTACT_ID) {
             const isSenderMe = String(msg.sender_id) === String(CURRENT_USER_ID);
 
+            const raw =
+                localStorage.getItem('activeContactAvatar')
+                || sessionStorage.getItem('avatar:' + String(msg.sender_id))
+                || msg.senderAvatar
+                || '/default.png';
 
-            const raw = localStorage.getItem('activeContactAvatar')
-                        || sessionStorage.getItem('avatar:' + String(msg.sender_id))
-                        || msg.senderAvatar
-                        || '/default.png';
-
-            const avatarToUse = isSenderMe ? CURRENT_USER_AVATAR : (resolveChatAvatar(raw) || '/default.png');
+            const avatarToUse = isSenderMe
+                ? CURRENT_USER_AVATAR
+                : (resolveChatAvatar(raw) || '/default.png');
 
             renderSingleMessage(msg, isSenderMe, messagesPanel, CURRENT_USER_AVATAR, avatarToUse);
         }
