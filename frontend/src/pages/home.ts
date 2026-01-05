@@ -323,7 +323,6 @@ export async function HomeEventListener()
   const Score = document.getElementById("xpoints");
   if (!Wins || !Losses || !Level || !Score) return;
   const data = await GetWinsLosses();
-  console.log("WLXP data:", data);
   if (!data) return;
   Wins.textContent = data.Wins;
   Losses.textContent = data.Losses;

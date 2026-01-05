@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 // import { getDb } from "./db.js";
 
 const waitingQueue = [];
+const playersPicInfo = [];
 
 const getUserDataFromToken = (token) => { // had lfunction kayreturni id&name&img of user from the token
   try {
@@ -46,6 +47,8 @@ export const StartTournament = (server) => {
         socket.data.userId = userData.id; // Keep this for backward compatibility
 
         console.log(`🔌 User ${userData.name} connected!`);
+        console.log(`----------------- pic is: ${userData.profileImage}`);
+        console.log(`----------------- pic is: ${userData.avatar}`);
         console.log('I think we are connected!!');
 
         socket.on("leave_queue", () => {
@@ -60,6 +63,8 @@ export const StartTournament = (server) => {
 
         socket.on("join_queue", () => {
             const userId = socket.data.userId;
+            const userData = socket.data.user;
+
             const alreadyQueued = waitingQueue.some(
                 s => s.data.userId === userId
             );
@@ -70,9 +75,10 @@ export const StartTournament = (server) => {
             }
     
             waitingQueue.push(socket);
-            console.log(`${userId} joined the queue. queue size===:${waitingQueue.length}===`);
-            console.log(`${userId.avatar} pic of player===:${userId.profileImage}===`);
-            socket.emit("player_connected", {pic: userId.profileImage})
+            // playersInfo.push(userData);
+            console.log(`${userData.profileImage} joined the queue. queue size===:${waitingQueue.length}===`);
+            // console.log(`${userData.avatar} pic of player===:${userData.name}===`);
+            socket.emit("player_connected", {pic: userData.avatar, name: userData.name, number: waitingQueue.length})
 
             if (waitingQueue.length >= 4) {
                 // const player1 = waitingQueue.shift();

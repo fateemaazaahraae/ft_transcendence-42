@@ -9,24 +9,6 @@ export default function RemoteGameStyle() {
   return `
   <div class="relative w-full h-screen overflow-x-hidden">
 
-    <!-- Sidebar -->
-    <aside
-        class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
-         bottom-0 left-0 w-full bg-black/40 backdrop-blur-md md:w-auto
-         flex justify-around md:justify-normal items-center py-3 md:py-0
-         md:bg-transparent md:backdrop-blur-0 z-50">
-
-      <div data-path="/home" class="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center">
-        <i class="fa-solid fa-house text-[18px] text-black"></i>
-      </div>
-      <i data-path="/leaderboard" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i data-path="/friends" class="fa-solid fa-user-group text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i data-path="/chat" class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i data-path="/settings" class="fa-solid fa-gear text-primary hover:text-secondary transition-all duration-400 ease-in-out text-[18px]"></i>
-
-    </aside>
-
-
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
       <div class="arrow relative group">
