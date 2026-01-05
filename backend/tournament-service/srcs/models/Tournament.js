@@ -11,6 +11,8 @@ const getUserDataFromToken = (token) => { // had lfunction kayreturni id&name&im
     const decoded = JSON.parse(decodedJson);
     
     console.log("*  succesfully got the pic", decoded.profileImage, " and data");
+    console.log("JWT payload:", decoded);
+
     return {
         id: decoded.id,
         name: decoded.userName,       // Make sure these match your JWT fields
@@ -30,19 +32,15 @@ export const StartTournament = (server) => {
     io.on('connection', (socket) => {
         const token = socket.handshake.auth.token;
         if (!token) { // check tocken (JWT)
-            console.log('❌ Connection rejected: No token provided.');
+            // console.log('❌ Connection rejected: No token provided.');
             socket.disconnect();
             return;
         }
-
         const userData = getUserDataFromToken(token);
-        
         if (!userData) {
             socket.disconnect();
             return;
         }
-
-
         socket.data.user = userData; 
         socket.data.userId = userData.id; // Keep this for backward compatibility
 
@@ -75,18 +73,23 @@ export const StartTournament = (server) => {
             }
     
             waitingQueue.push(socket);
+            playersPicInfo.push(userData.avatar);
             // playersInfo.push(userData);
-            console.log(`${userData.profileImage} joined the queue. queue size===:${waitingQueue.length}===`);
+            // console.log(`${userData.profileImage} joined the queue. queue size===:${waitingQueue.length}===`);
             // console.log(`${userData.avatar} pic of player===:${userData.name}===`);
-            socket.emit("player_connected", {pic: userData.avatar, name: userData.name, number: waitingQueue.length})
+            socket.emit("player_connected", {pic: userData.avatar, name: userData.name, number: waitingQueue.length, avatars: playersPicInfo})
+            if (waitingQueue.length > 1) {
+                console.log(`hello waitingQueue.lenth is: ${waitingQueue.length}`)
+                io.emit('update_avatars', {number: waitingQueue.length, avatars: playersPicInfo})
+            }
 
             if (waitingQueue.length >= 4) {
-                // const player1 = waitingQueue.shift();
-                // const player2 = waitingQueue.shift();
+                const player1 = waitingQueue.shift();
+                const player2 = waitingQueue.shift();
     
-                // if (player1.data.userId === player2.data.userId) {
-                // return;
-                // }
+                if (player1.data.userId === player2.data.userId) {
+                return;
+                }
     
                 const matchId = `match_${Date.now()}`;
     
@@ -105,7 +108,7 @@ export const StartTournament = (server) => {
                 // game.start();
             } else {
                 socket.emit("waiting_for_match", {
-                message: "Waiting for opponent..."
+                message: "Waiting for players..."
                 });
             }
         });
