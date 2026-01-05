@@ -1,3 +1,5 @@
+import { showAlert } from "../utils/alert";
+
 type Notification = {
     id: string;
     user_id: number;
@@ -21,6 +23,37 @@ export async function fetchNotifications(userId: string) {
     }
 }
 
+async function fetchUnreadNotifications(userId: string): Promise<number> {
+    try {
+        const res = await fetch(`http://localhost:3005/notifications/${userId}/unread-count`);
+        if (!res.ok)
+            throw new Error("Failed to fetch unread count");
+        const data = await res.json()
+        return data.count;
+    }
+    catch(err) {
+        showAlert("Error " + err);
+        console.log(err);
+        return 0
+    }
+}
+
+export async function updateUnreadCount(userId: string) {
+    const notifCount = document.getElementById("notifBadge");
+    if (!notifCount) return;
+    const count = await fetchUnreadNotifications(userId);
+    if (count > 0)
+        notifCount.classList.remove("hidden")
+    else
+        notifCount.classList.add("hidden")
+}
+
+async function markAllNotificationsAsRead(userId: string) {
+    await fetch(`http://localhost:3005/notifications/${userId}/read-all`, {
+        method: "PUT"
+    })
+}
+
 export function notificationBarListeners(userId: string) {
     const bar = document.getElementById("notificationBar");
     const bell = document.querySelector<HTMLElement>(".fa-bell");
@@ -33,6 +66,9 @@ export function notificationBarListeners(userId: string) {
             if (!bar.classList.contains("hidden")) {
                 const notifs = await fetchNotifications(userId);
                 renderNotifications(notifs);
+                await markAllNotificationsAsRead(userId)
+                await updateUnreadCount(userId)
+                console.log("12345 heeeerrrrrreee")
             }
         } 
         else if (!bar.contains(e.target as Node)) {
@@ -40,7 +76,6 @@ export function notificationBarListeners(userId: string) {
         }
     });
 }
-
 
 export function renderNotifications(notifs: Notification[]) {
     const container = document.getElementById('notificationsContainer');

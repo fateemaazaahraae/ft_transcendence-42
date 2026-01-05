@@ -22,7 +22,7 @@ import Friends, {FriendsEventListener} from "./pages/friends.ts";
 import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
 import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
 import PageNotFound from "./pages/pageNotFound.ts"
-import { notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
+import { notificationBarListeners, renderNotifications, updateUnreadCount } from "./pages/notifications.ts";
 import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
 import Chat from "./pages/Chat.ts";
@@ -86,7 +86,7 @@ async function render(path: string) {
     const logo = document.getElementById("logo");
     logo?.addEventListener("click", () => {
         navigate("/");
-    })
+    });
 }
 
 
@@ -114,9 +114,14 @@ window.addEventListener("DOMContentLoaded", async() => {
     translatePage(lang);
     await render(window.location.pathname);
     const userId = localStorage.getItem("userId")
-    notificationBarListeners(userId);
+    if (userId) {
+        notificationBarListeners(userId);
+        updateUnreadCount(userId);
+        setInterval(() => {
+            updateUnreadCount(userId);
+        }, 2000);
+    }
     LanguagesMenuEventListener();
-    // viewFriend();
 });
 
 const urlParams = new URLSearchParams(window.location.search);

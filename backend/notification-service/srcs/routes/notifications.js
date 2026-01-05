@@ -37,14 +37,31 @@ export default function notificationsRoutes(fastify) {
         return { status: "success" };
     });
 
-    // ---- MARK AS READ ----
-    fastify.put("/notifications/:id/read", async (req) => {
-        const { id } = req.params;
+    // MARK ALL AS READ FOR A USER
+    fastify.put("/notifications/:userId/read-all", async (req) => {
+        const { userId } = req.params;
         const db = await openDb();
+
         await db.run(
-            `UPDATE notifications SET is_read = 1 WHERE id = ?`,
-            [id]
+            `UPDATE notifications 
+            SET is_read = 1 
+            WHERE user_id = ? AND is_read = 0`,
+            [userId]
         );
-        return { status: "success" };
+
+        return { success: true };
+    });
+
+    // ---- Count unread notif ----
+    fastify.get("/notifications/:userId/unread-count", async(req) => {
+        const { userId } = req.params;
+        const db = await openDb();
+        const row = await db.get(
+            `SELECT COUNT(*) as count
+            FROM notifications
+            WHERE user_id = ? AND is_read = 0`,
+            [userId]
+        );
+        return { count: row.count };
     });
 }

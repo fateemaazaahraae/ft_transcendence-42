@@ -6,8 +6,10 @@ import notificationsRoutes from "./routes/notifications.js";
 const fastify = Fastify({ logger: true });
 
 await fastify.register(fastifyCors, {
-  origin: "*",
+  origin: '*',
   credentials: true,
+  methods: ['GET','PUT','POST','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 });
 
 fastify.register(notificationsRoutes);
