@@ -22,7 +22,7 @@ import Friends, {FriendsEventListener} from "./pages/friends.ts";
 import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
 import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
 import PageNotFound from "./pages/pageNotFound.ts"
-import { notifications, notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
+import { notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
 import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
 import Chat from "./pages/Chat.ts";
@@ -80,7 +80,7 @@ async function render(path: string) {
     const currentLangBtn = document.getElementById("currentLang");
     if (currentLangBtn)
         currentLangBtn.innerHTML = `<i class="fa-solid fa-chevron-down text-xs"></i> ${lang.toUpperCase()}`;
-    renderNotifications(notifications);
+    // renderNotifications(notifications);
     initLogout();
     searchBar();
     const logo = document.getElementById("logo");
@@ -113,7 +113,8 @@ window.addEventListener("DOMContentLoaded", async() => {
     const lang = await getSavedLang();
     translatePage(lang);
     await render(window.location.pathname);
-    notificationBarListeners();
+    const userId = localStorage.getItem("userId")
+    notificationBarListeners(userId);
     LanguagesMenuEventListener();
     // viewFriend();
 });

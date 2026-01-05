@@ -54,19 +54,23 @@ services:
     restart: always
 
 
-  # chat-service:
-  #   build: ./backend/chat-service
-  #   container_name: chat-service
-  #   env_file:
-  #     - ./backend/chat-service/.env
-  #   environment:
-  #     - JWT_SECRET=${JWT_SECRET}
-  #     - API_URL=http://backend-api:3000
-  #   ports:
-  #     - "4000:4000"
-  #   networks:
-  #     - ft_transcendence
-  #   restart: always
+  notification-service:
+    platform: linux/amd64
+    build: 
+      context: ./backend/notification-service
+      dockerfile: Dockerfile
+    image: notification-service
+    container_name: notification-service
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/notification-service:/app
+      - /app/node_modules
+    ports:
+      - "3005:3005"
+    networks:
+      - ft_transcendence
+    restart: always
 
   profile-service:
     platform: linux/amd64

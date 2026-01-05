@@ -9,7 +9,7 @@ export async function openDb() {
 
     await db.exec(
         `CREATE TABLE IF NOT EXISTS notifications(
-        id TEXT PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         type TEXT NOT NULL,
         payload TEXT,

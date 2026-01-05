@@ -74,7 +74,7 @@ export default async function LocalMode() {
             <h1 data-i18n="one" class="mt-[5%] font-glitch text-center text-2xl md:text-3xl lg:text-4xl"> One-vs-One</h1>
             <div class="flex justify-center gap-3">
                 <i class="object-cover fa-solid fa-circle-user text-[100px] md:text-[100px] lg:text-[120px] xl:text-[150px]  text-primary/90"></i> 
-                <img src="/public/vs.svg" class="w-[90px] md:w-[100px] lg:w-[120px]" />
+                <img src="vs.svg" class="w-[90px] md:w-[100px] lg:w-[120px]" />
                 <i class="object-cover fa-solid fa-circle-user text-[100px] md:text-[100px] lg:text-[120px] xl:text-[150px] mt-[25%] text-secondary/90"></i> 
             </div>
             <button data-i18n="play" id="local" class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
@@ -84,8 +84,8 @@ export default async function LocalMode() {
             <div class="flex justify-center gap-3">
                 <img src="${user.profileImage}" 
                 class=" object-cover w-[100px] h-[100px] md:w-[100px] md:h-[100px] lg:w-[120px] lg:h-[120px] xl:w-[150px] xl:h-[150px] rounded-full border-[3px] border-[#35C6DD]/90"/>
-                <img src="/public/vs.svg" class="w-[90px] md:w-[100px] lg:w-[120px]" />
-                <img src="/public/robot.svg" class=" w-[85px] lg:w-[103px] xl:w-[130px] mt-[25%]"/> 
+                <img src="vs.svg" class="w-[90px] md:w-[100px] lg:w-[120px]" />
+                <img src="robot.svg" class=" w-[85px] lg:w-[103px] xl:w-[130px] mt-[25%]"/> 
             </div>
             <button data-i18n="play" id="playAi" class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
         </div>

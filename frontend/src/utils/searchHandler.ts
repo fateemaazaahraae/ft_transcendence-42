@@ -13,7 +13,7 @@ export const debounce = <T extends (...args: any[]) => void>(fn: T, wait = 250) 
 const renderContactItem = (u: any, lastMsg = 'Search result') => {
     const status = u?.status || 'offline';
     const statusClass = status === 'online' ? 'bg-greenAdd' : 'bg-redRemove';
-    const avatar = u?.avatar || '../../public/default.svg';
+    const avatar = u?.avatar || 'default.svg';
     const displayName = (u?.username && String(u.username).trim())
         ? u.username
         : (typeof u?.id === 'string' ? String(u.id).trim().slice(0, 8) : String(u?.id ?? 'Unknown'));

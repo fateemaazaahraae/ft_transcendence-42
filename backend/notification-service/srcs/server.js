@@ -1,7 +1,7 @@
 import "./config/env.js";
 import Fastify from "fastify";
 import fastifyCors from "@fastify/cors";
-import notificationsRoutes from "./srcs/routes/notifications.js";
+import notificationsRoutes from "./routes/notifications.js";
 
 const fastify = Fastify({ logger: true });
 

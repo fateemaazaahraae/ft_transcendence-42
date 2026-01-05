@@ -49,10 +49,10 @@ export default function TrWaitingPlayers() {
     <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[2%] gap-2 md:gap-[1000px]">
         <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
             <img src="" id="myImg" class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
-            <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
+            <img src="vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
             <img
             id="opponentImg"
-            src="/public/opponent1.png"
+            src="opponent1.png"
             class="w-[100px] h-[100px] md:w-[200px] md:h-[200px]
                     lg:w-[200px] lg:h-[200px]
                     rounded-full border-2 border-secondary object-cover
@@ -62,10 +62,10 @@ export default function TrWaitingPlayers() {
         <span>}</span>
         <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
             <img src="" id="myImg" class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
-            <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
+            <img src="vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
             <img
             id="opponentImg"
-            src="/public/opponent1.png"
+            src="opponent1.png"
             class="w-[100px] h-[100px] md:w-[200px] md:h-[200px]
                     lg:w-[200px] lg:h-[200px]
                     rounded-full border-2 border-secondary object-cover
@@ -94,14 +94,14 @@ function startOpponentImageRotation() {
   if (!opponentImg) return;
 
   const images = [
-    "/public/dark-girl.svg",
-    "/public/white-boy2.svg",
-    "/public/pink-girl.svg",
-    "/public/purple-girl.svg",
-    "/public/red-boy.svg",
-    "/public/white-boy.svg",
-    "/public/green-girl.svg",
-    "/public/blue-boy.svg",
+    "dark-girl.svg",
+    "white-boy2.svg",
+    "pink-girl.svg",
+    "purple-girl.svg",
+    "red-boy.svg",
+    "white-boy.svg",
+    "green-girl.svg",
+    "blue-boy.svg",
   ];
 
   let index = 0;

@@ -82,7 +82,7 @@ export default async function Chat() {
                 <div id="chatHeader" class="hidden relative md:h-16 flex items-center justify-between pl-6 p-3 rounded-t-xl bg-primary/80"> <div class="flex items-center gap-3">
                 <i id="backToContacts"
           class="fa-solid fa-arrow-left bg-primary cursor-pointer p-3 rounded-full text-white md:hidden"></i>
-    <img id="chatContactAvatar" src="../../public/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
+    <img id="chatContactAvatar" src="/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
               <div>
                 <p id="chatContactUsername" class=" text-secondary font-bold text-sm">Select a Contact</p>
                 <p id="chatContactStatus" class="text-xs text-gray-200">Offline</p>
