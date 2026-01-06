@@ -113,9 +113,9 @@ function startOpponentImageRotation() {
         const random = Math.floor(Math.random() * images.length);
         img.src = images[random];
         img.classList.remove("opacity-0");
-      }, 300);
+      }, 550);
     });
-  }, 450);
+  }, 1300);
 }
 
 // async function fillSettingsPage()
