@@ -49,11 +49,11 @@ export default function TrWaitingPlayers() {
               />
           </div>
           <span class="text-white text-[30rem] font-serif font-light">}</span>
-          <img id="opponent5" src="/public/default.png" class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
+          <i class="object-cover fa-solid fa-circle-user text-[100px] md:text-[100px] lg:text-[120px] xl:text-[200px] text-primary/70"></i> 
       </div>
       <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[150px]" />
       <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[2%] gap-2 md:gap-[3px]">
-      <img id="opponent6" src="/public/default.png" class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-secondary object-cover">
+      <i class="object-cover fa-solid fa-circle-user text-[100px] md:text-[100px] lg:text-[120px] xl:text-[200px] text-secondary/70"></i> 
           <span class="text-white text-[30rem] font-serif">{</span>
           <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
               <img id="opponent3"
@@ -89,34 +89,34 @@ function startWaitingDots() {
   }, 500);
 }
 
-function startOpponentImageRotation() {
-  const images = [
-    "/public/dark-girl.svg",
-    "/public/white-boy2.svg",
-    "/public/pink-girl.svg",
-    "/public/purple-girl.svg",
-    "/public/red-boy.svg",
-    "/public/white-boy.svg",
-    "/public/green-girl.svg",
-    "/public/blue-boy.svg",
-  ];
+// function startOpponentImageRotation() {
+//   const images = [
+//     "/public/dark-girl.svg",
+//     "/public/white-boy2.svg",
+//     "/public/pink-girl.svg",
+//     "/public/purple-girl.svg",
+//     "/public/red-boy.svg",
+//     "/public/white-boy.svg",
+//     "/public/green-girl.svg",
+//     "/public/blue-boy.svg",
+//   ];
 
-  return setInterval(() => {
-    const waitingImages = document.querySelectorAll(
-      ".opponentImg.waiting"
-    ) as NodeListOf<HTMLImageElement>;
+//   return setInterval(() => {
+//     const waitingImages = document.querySelectorAll(
+//       ".opponentImg.waiting"
+//     ) as NodeListOf<HTMLImageElement>;
 
-    waitingImages.forEach((img) => {
-      img.classList.add("opacity-0");
+//     waitingImages.forEach((img) => {
+//       img.classList.add("opacity-0");
 
-      setTimeout(() => {
-        const random = Math.floor(Math.random() * images.length);
-        img.src = images[random];
-        img.classList.remove("opacity-0");
-      }, 550);
-    });
-  }, 1300);
-}
+//       setTimeout(() => {
+//         const random = Math.floor(Math.random() * images.length);
+//         img.src = images[random];
+//         img.classList.remove("opacity-0");
+//       }, 550);
+//     });
+//   }, 1300);
+// }
 
 // async function fillSettingsPage()
 // {
@@ -145,12 +145,12 @@ function startOpponentImageRotation() {
 export function TrWaitingPlayersEventListener() {
   const socket = getTrSocket(localStorage.getItem("token"));
   startWaitingDots();
-  const RotatingInterval = startOpponentImageRotation();
+  // const RotatingInterval = startOpponentImageRotation();
   window.addEventListener('popstate', () => {
     socket.emit("leave_queue");
     socket.disconnect();
     console.log("You left!!");
-    window.clearInterval(RotatingInterval);
+    // window.clearInterval(RotatingInterval);
     // leaveGame();
   });
   // fillSettingsPage();
