@@ -1,33 +1,45 @@
 
 import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../utils/searchHandler.ts";
 import { loadUser } from "../utils/loadUser.ts";
-import { blockUser, unblockUser, checkIfBlocked, showMessageInput, showBlockedMessage } from "../utils/blockHandler.ts";
-import { socket, initializeSocket, sendMessage, listenForMessagesReceived, subscribeConnection } from "../utils/sockeService.ts";
+import { viewFriendProfile } from "./viewFriendProfile.ts";
+import { blockUser, checkIfBlocked, showMessageInput, showBlockedMessage } from "../utils/blockHandler.ts";
+import { socket, initializeSocket, sendMessage, listenForMessagesReceived, subscribeConnection, listenForBlockEvents, listenForPresenceEvents } from "../utils/sockeService.ts";
+import { setUserOnline, setUserOffline } from "../utils/presenceStore.ts";
 import {
-    updateContactStatusUI,
     updateChatHeader,
     attachContactClickListeners,
     setupMenuToggle,
     setupDropdownClose,
     setupCloseChat,
     setupBackToContacts,
-    setupWindowResize
+    setupWindowResize,
+    updateUnreadBadge,
+    renderSingleMessage,
+    updateContactLastMessage,
+    updateContactStatusUI,
+    applyPresenceToRenderedContacts,
+    setActiveChatUser,
+    getActiveChatUser
 } from "./chatHelpers.ts";
-import { renderSingleMessage } from "./chatHelpers.ts";
+
+
 
 export function ChatEventListener() {
     const HOST = window.location.hostname;
     const PROTO = window.location.protocol;
-    
+
     let API_BASE_URL: string;
     let WS_URL: string;
     if (PROTO === 'https:') {
         API_BASE_URL = `${window.location.origin}/api`;
         WS_URL = window.location.origin; 
-    } else {
+    }
+    else {
         API_BASE_URL = `${PROTO}//${HOST}:4000/api`;
         WS_URL = `${PROTO}//${HOST}:4000`;
     }
+
+    
     let CURRENT_USER_ID: string | number | null = (() => {
         const token = localStorage.getItem('token');
         if (!token) return null;
@@ -47,12 +59,51 @@ export function ChatEventListener() {
         const storedId = localStorage.getItem('userId');
         if (storedId) {
             CURRENT_USER_ID = storedId;
-            console.log('[chat] using fallback userId from localStorage', storedId);
         }
     }
 
     let ACTIVE_CHAT_CONTACT_ID: string | number | null = null;
+    setActiveChatUser(null);
     let CURRENT_USER_AVATAR: string = '../../public/green-girl.svg';
+
+    function resolveChatAvatar(img?: string | null): string {
+        const origin = window.location.origin;
+
+        if (!img) return `${origin}/default.png`;
+
+        if (/^https?:\/\//.test(img)) {
+            try {
+                const u = new URL(img);
+                if (
+                    u.hostname.includes("auth-service") ||
+                    u.hostname.includes("profile-service") ||
+                    u.hostname.includes("chat-service") ||
+                    u.port === "3000"
+                ) {
+                    return `${origin}${u.pathname}`;
+                }
+
+                if (u.hostname === window.location.hostname) {
+                    return img;
+                }
+
+                return img;
+            } catch {
+                return `${origin}/default.png`;
+            }
+        }
+
+        if (img.startsWith("/")) {
+            return `${origin}${img}`;
+        }
+
+        const cleaned = img
+            .replace(/^(?:\.\.\/|\.\/)+/, "")
+            .replace(/^public\//, "")
+            .replace(/^\/+/, "");
+
+        return `${origin}/${cleaned}`.replace(/([^:]\/)\/+/g, "$1");
+    }
 
         // load user profile from  loadUser
         loadUser().then(() => {
@@ -62,27 +113,44 @@ export function ChatEventListener() {
                 const user = JSON.parse(stored);
                 const img = user?.profileImage || user?.profile_image;
                 if (!img) return;
-                if (/^https?:\/\//.test(img)) {
-                    CURRENT_USER_AVATAR = img;
-                } else if (img.startsWith('/')) {
-                    CURRENT_USER_AVATAR = `${window.location.origin}${img}`;
-                } else {
-                    CURRENT_USER_AVATAR = `${API_BASE_URL}/${img}`;
-                }
+                CURRENT_USER_AVATAR = resolveChatAvatar(img) || '/default.png';
             } catch (e) {
                 console.warn('failed to read stored user', e);
             }
         }).catch(() => {});
 
+
+
     //connect to socket.io
     if (CURRENT_USER_ID == null) {
-        console.warn('No user id found in token; chat not initialized');
         return;
     }
 
+    // initialize socket connection
     const TOKEN = localStorage.getItem('token') || '';
-    console.log('initializing socket with wsUrl', WS_URL);
     initializeSocket(CURRENT_USER_ID, WS_URL, TOKEN);
+
+   listenForPresenceEvents(
+  (userId) => {
+    setUserOnline(String(userId));
+    updateContactStatusUI(String(userId), "online");
+  },
+  (userId) => {
+    setUserOffline(String(userId));
+    updateContactStatusUI(String(userId), "offline");
+  }
+);
+
+
+
+
+
+    // block / unblock
+        listenForBlockEvents(({ by }) => {
+            if (String(by) === String(ACTIVE_CHAT_CONTACT_ID)) {
+                showBlockedMessage();
+            }
+    });
 
     //disable send button until socket connected
     const sendButtonEl = document.getElementById("sendMessageBtn") as HTMLButtonElement | null;
@@ -90,12 +158,10 @@ export function ChatEventListener() {
     // subscribe to connection changes to enable/disable the send button
     subscribeConnection((isConnected) => {
         if (sendButtonEl) sendButtonEl.disabled = !isConnected;
-        console.log('socket connection state changed:', isConnected);
     });
 
     // listen for server notification that *this* user was blocked by someone
     if (socket) {
-        socket.off('you_were_blocked');
         socket.on('you_were_blocked', (data: any) => {
             const by = String(data?.by || '');
             // if the blocked user is currently viewing the blocker, hide input
@@ -104,9 +170,10 @@ export function ChatEventListener() {
             } else {
             }
         });
+        
     }
 
-    // restore active chat 
+    
 
 
     // DOM 
@@ -117,7 +184,7 @@ export function ChatEventListener() {
     const chat = document.getElementById("main_chat");
     const chatHeader = document.getElementById("chatHeader");
     const backToContactsBtn = document.getElementById('backToContacts');
-
+    const contactinfo=document.getElementById('contactInfo');
     const chatUsername = document.getElementById('chatContactUsername');
     const chatStatus = document.getElementById('chatContactStatus');
     const chatAvatar = document.getElementById('chatContactAvatar') as HTMLImageElement | null;
@@ -145,7 +212,7 @@ export function ChatEventListener() {
     }
 
     // confirm block: call API and hide modal
-    confirmBlockBtn?.addEventListener("click", () => {
+    confirmBlockBtn?.addEventListener("click", async () => {
         const targetId = String(ACTIVE_CHAT_CONTACT_ID || '').trim();
         const meId = String(CURRENT_USER_ID || '').trim();
         if (!targetId || !meId) {
@@ -156,18 +223,52 @@ export function ChatEventListener() {
         }
         // call block API with string ids (supports UUIDs)
         checkIfBlocked(meId, targetId, (isBlocked) => {
-            if(isBlocked) {
-                
+            if (isBlocked) {
+                // already blocked: show blocked state on the button
                 if (blockBtn) {
-                    blockBtn.innerHTML = '<i class="fa fa-ban"></i> Unblock User';
+                    blockBtn.innerHTML = '<i class="fa fa-ban"></i> Blocked';
                     blockBtn.setAttribute('data-blocked', 'true');
+                    blockBtn.setAttribute('aria-pressed', 'true');
+                    try { (blockBtn as HTMLButtonElement).disabled = true; } catch (e) {}
+                    blockBtn.classList.add('opacity-50');
+                    blockBtn.classList.add('pointer-events-none');
                 }
-            }else {
-                blockUser(meId, targetId);
-                if (blockBtn) {
-                    blockBtn.innerHTML = '<i class="fa fa-ban"></i> Block User';
-                    blockBtn.setAttribute('data-blocked', 'false');
-                }
+            } else {
+                // perform block then close chat and show blocked state on the button
+                (async () => {
+                    const res = await blockUser(meId, targetId);
+
+                    if (blockBtn) {
+                        blockBtn.innerHTML = '<i class="fa fa-ban"></i> Blocked';
+                        blockBtn.setAttribute('data-blocked', 'true');
+                        blockBtn.setAttribute('aria-pressed', 'true');
+                        try { (blockBtn as HTMLButtonElement).disabled = true; } catch (e) {}
+                        blockBtn.classList.add('opacity-50');
+                        blockBtn.classList.add('pointer-events-none');
+                    }
+
+                    // close chat UI
+                    ACTIVE_CHAT_CONTACT_ID = null;
+                    setActiveChatUser(null);
+                    setChatUIState(false);
+                    // clear storage
+                    localStorage.removeItem('activeContactId');
+                    localStorage.removeItem('activeContactUsername');
+                    localStorage.removeItem('activeContactAvatar');
+                    localStorage.removeItem('activeContactStatus');
+
+                    // hide message input and reset messages panel
+                    document.getElementById("messageInputContainer")?.classList.add("hidden");
+                    const chatDiv = document.getElementById("messagesPanel");
+                    if (chatDiv) {
+                        chatDiv.innerHTML = `<div class="flex-1 flex items-center justify-center h-full">\n                            <h1 class="text-center text-primary/65 font-bold text-4xl">Ping Pong<br>Chat</h1>\n                        </div>`;
+                    }
+
+                    contactsSide?.classList.remove("hidden");
+                    chat?.classList.remove("hidden");
+                    chat?.classList.add("flex");
+                    document.getElementById("dropdownMenu")?.classList.add("hidden");
+                })();
             }
         });
         if (blockConfirmationDiv) blockConfirmationDiv.classList.add("hidden");
@@ -178,25 +279,21 @@ export function ChatEventListener() {
     cancelBlockBtn?.addEventListener("click", () => {
         if (blockConfirmationDiv) blockConfirmationDiv.classList.add("hidden");
     });
-
-            // if (ACTIVE_CHAT_CONTACT_ID) {
-            //     unblockUser(Number(CURRENT_USER_ID), Number(ACTIVE_CHAT_CONTACT_ID));
-            // } 
-    
-    // search input handler
-
-
-  
     const contactsListDiv = document.querySelector('#contacts_side .space-y-4') as HTMLElement | null;
 
     
     setChatUIState(false);
+    
 
     const debouncedSearch = debounce((query: string) => {
         if (!query.trim()) {
             if (contactsListDiv) {
                 fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
                     attachContactClickListeners(contactsListDiv, handleContactSelect);
+                    applyPresenceToRenderedContacts();
+
+                    
+                
                 });
             }
             return;
@@ -206,10 +303,16 @@ export function ChatEventListener() {
             if (contactsListDiv) {
                 renderSearchResults(results, contactsListDiv);
                 attachContactClickListeners(contactsListDiv, handleContactSelect);
+                applyPresenceToRenderedContacts();
+
             }
         });
     }, 250);
 
+
+    //
+
+   
     searchInput?.addEventListener('input', (e: Event) => {
         const value = (e.target as HTMLInputElement).value;
         debouncedSearch(value);
@@ -219,11 +322,17 @@ export function ChatEventListener() {
     const handleContactSelect = (contactId: string | number, username: string, avatar: string, status: string) => {
         ACTIVE_CHAT_CONTACT_ID = contactId;
         setChatUIState(true);
+        setActiveChatUser(String(contactId));
+
+        //clear unread
+        updateUnreadBadge(contactId, false);
 
         // save in case of refresh
         localStorage.setItem('activeContactId', String(contactId));
         localStorage.setItem('activeContactUsername', username);
-        localStorage.setItem('activeContactAvatar', avatar);
+        // normalize and store the contact avatar
+                const normAvatar = resolveChatAvatar(avatar);
+        localStorage.setItem('activeContactAvatar', normAvatar);
         localStorage.setItem('activeContactStatus', status);
 
         if (window.innerWidth < 768) {
@@ -235,11 +344,10 @@ export function ChatEventListener() {
         chat?.classList.add("flex");
 
        
-        updateChatHeader(chatUsername, chatStatus, chatAvatar, username, status, avatar);
+        updateChatHeader(chatUsername, chatStatus, chatAvatar, username, status, normAvatar);
 
         // check if contact is blocked
         checkIfBlocked(String(CURRENT_USER_ID), String(contactId), (isBlocked) => {
-            console.log(`Is contact (ID: ${contactId}) blocked?`, isBlocked);
             if (isBlocked) {
                 showBlockedMessage();
             } else {
@@ -265,16 +373,39 @@ export function ChatEventListener() {
             const userId1 = String(CURRENT_USER_ID);
             const userId2 = String(contactId);
             
-            //fetch 
-            fetch(`${API_BASE_URL}/chats/history/${userId1}/${userId2}`)
+            //fetch history with Authorization header so server can resolve avatars
+            const tokenForFetch = localStorage.getItem('token') || '';
+            fetch(`${API_BASE_URL}/chats/history/${userId1}/${userId2}`, {
+                headers: {
+                    'Authorization': tokenForFetch
+                }
+            })
                 .then(response => response.json())
-                .then(data => {
+                .then(async data => {
                     const messages = data?.messages || [];
                     
                     messages.forEach((msg: any) => {
-                        const friendAvatar= avatar;
-                        const isSender = String(msg.sender_id) === String(userId1);
-                        renderSingleMessage(msg, isSender, messagePanel,CURRENT_USER_AVATAR,friendAvatar);
+                        // normalize/cache any message-provided avatar
+                        if (msg.senderAvatar) {
+                            try {
+                                const fixedMsgAvatar = resolveChatAvatar(msg.senderAvatar);
+                                msg.senderAvatar = fixedMsgAvatar;
+                                try { sessionStorage.setItem('avatar:' + String(msg.sender_id), fixedMsgAvatar); } catch (e) {}
+                            } catch (e) {}
+                        }
+
+                        const isSenderMe = String(msg.sender_id) === String(userId1);
+
+                        const avatarToUse = isSenderMe
+                            ? CURRENT_USER_AVATAR
+                            : resolveChatAvatar(
+                                localStorage.getItem('activeContactAvatar')
+                                || sessionStorage.getItem('avatar:' + String(msg.sender_id))
+                                || msg.senderAvatar
+                                || '/default.png'
+                            );
+
+                        renderSingleMessage(msg, isSenderMe, messagePanel, CURRENT_USER_AVATAR, avatarToUse);
                     });
                 })
                 .catch(error => {
@@ -333,6 +464,36 @@ export function ChatEventListener() {
     }
 
     
+    if (contactinfo) {
+        contactinfo.addEventListener('click', async () => {
+            const contactId = localStorage.getItem('activeContactId') || String(ACTIVE_CHAT_CONTACT_ID || '');
+            if (!contactId) return;
+
+            const cachedUser: any = {
+                id: contactId,
+                userName: localStorage.getItem('activeContactUsername') || '',
+                profileImage: localStorage.getItem('activeContactAvatar') || '/default.png',
+                firstName: '',
+                lastName: ''
+            };
+            try { await viewFriendProfile(cachedUser); } catch (err) { console.warn('viewFriendProfile (cached) failed', err); }
+
+            const tokenFetch = localStorage.getItem('token') || '';
+            try {
+                const res = await fetch(`${API_BASE_URL}/users/${contactId}`, { headers: { Authorization: tokenFetch } });
+                if (res.ok) {
+                    const fullUser = await res.json();
+                    try { await viewFriendProfile(fullUser); } catch (err) { console.warn('viewFriendProfile (full) failed', err); }
+                }
+            } catch (err) {
+                console.warn('failed fetching full user', err);
+            }
+
+            dropdownMenu?.classList.add('hidden');
+        });
+    }
+
+
     if (closeButton) {
         setupCloseChat(closeButton, () => {
             ACTIVE_CHAT_CONTACT_ID = null;
@@ -362,7 +523,12 @@ export function ChatEventListener() {
     if (contactsListDiv) {
         fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
             attachContactClickListeners(contactsListDiv, handleContactSelect);
+            applyPresenceToRenderedContacts();
+            
         });
+
+
+        
     } else {
         console.error('Cannot fetch contacts - contactsListDiv is null');
     }
@@ -373,29 +539,40 @@ export function ChatEventListener() {
     const messageInput =document.getElementById("messageInput") as HTMLInputElement | null;
     const sendButton = document.getElementById("sendMessageBtn");
     const messagesPanel = document.getElementById("messagesPanel");
-    // sendButton?.addEventListener("click", () => {
-    //     const message = messageInput?.value.trim();
-    const handleSendMessage = () => {
+    
+
+    const handleSendMessage = async () => {
         const content = messageInput?.value.trim();
         if(!content || !ACTIVE_CHAT_CONTACT_ID) return;
         
-        console.log("sending message to", ACTIVE_CHAT_CONTACT_ID, "content:", content);
+        
         // optimistic render: show message immediately in UI
-        try {
-            const friendAvatar = localStorage.getItem('activeContactAvatar') || '../../public/default.svg';
+            try {
+                let friendAvatar = localStorage.getItem('activeContactAvatar')
+                            || (ACTIVE_CHAT_CONTACT_ID ? sessionStorage.getItem('avatar:' + String(ACTIVE_CHAT_CONTACT_ID)) : null)
+                            || null;
+            friendAvatar = friendAvatar || '/default.png';
             const optimisticMsg: any = {
                 content,
                 sender_id: String(CURRENT_USER_ID),
                 created_at: Math.floor(Date.now() / 1000)
             };
-            if (messagesPanel) {
-                renderSingleMessage(optimisticMsg, true, messagesPanel, CURRENT_USER_AVATAR, friendAvatar);
+
+            const isForActiveChat = Boolean(ACTIVE_CHAT_CONTACT_ID);
+
+            if (isForActiveChat && messagesPanel) {
+                renderSingleMessage(optimisticMsg, true, messagesPanel, CURRENT_USER_AVATAR, resolveChatAvatar(friendAvatar) || '/default.png');
             }
+
+            updateContactLastMessage(String(ACTIVE_CHAT_CONTACT_ID),{content,created_at: Math.floor(Date.now() / 1000)});
+            
+
+           
+
         } catch (e) { console.warn('optimistic render failed', e); }
 
         // send to server (ack used only for error handling, do not re-render on ack)
         sendMessage(ACTIVE_CHAT_CONTACT_ID, content, (res) => {
-            console.log("save ack:", res);
             if(res?.status === "error") {
                 console.warn("send failed ", res?.reason || "unknown");
                 if (res?.reason === 'blocked') {
@@ -415,17 +592,42 @@ export function ChatEventListener() {
         }
     });
 
-    listenForMessagesReceived((data) => {
+    listenForMessagesReceived(async (data) => {
         const msg = data?.message;
         const convo = data?.conversation;
         if (!msg) return;
 
+        // normalize & cache sender avatar so fresh tabs can use it
+        if (msg.senderAvatar) {
+            try {
+                const fixed = resolveChatAvatar(msg.senderAvatar);
+                msg.senderAvatar = fixed;
+                try { sessionStorage.setItem('avatar:' + String(msg.sender_id), fixed); } catch (e) {}
+            } catch (e) {}
+        }
+
         const otherId = convo ? (String(convo.user_a) === String(CURRENT_USER_ID) ? String(convo.user_b) : String(convo.user_a)) : null;
         const isForActiveChat = (String(msg.sender_id) === String(ACTIVE_CHAT_CONTACT_ID)) || (otherId && String(otherId) === String(ACTIVE_CHAT_CONTACT_ID));
 
-        if (isForActiveChat && messagesPanel) {
-            const friendAvatar = localStorage.getItem('activeContactAvatar') || '../../public/default.svg';
-            renderSingleMessage(msg, String(msg.sender_id) === String(CURRENT_USER_ID), messagesPanel, CURRENT_USER_AVATAR, friendAvatar);
+        if(otherId) {
+            updateContactLastMessage(otherId, msg);
+        }
+        if(!isForActiveChat && otherId)
+            updateUnreadBadge(otherId, true);
+        if (messagesPanel && isForActiveChat && ACTIVE_CHAT_CONTACT_ID) {
+            const isSenderMe = String(msg.sender_id) === String(CURRENT_USER_ID);
+
+            const raw =
+                localStorage.getItem('activeContactAvatar')
+                || sessionStorage.getItem('avatar:' + String(msg.sender_id))
+                || msg.senderAvatar
+                || '/default.png';
+
+            const avatarToUse = isSenderMe
+                ? CURRENT_USER_AVATAR
+                : (resolveChatAvatar(raw) || '/default.png');
+
+            renderSingleMessage(msg, isSenderMe, messagesPanel, CURRENT_USER_AVATAR, avatarToUse);
         }
     });
 

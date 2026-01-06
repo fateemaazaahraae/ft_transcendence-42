@@ -1,23 +1,71 @@
 import { Server } from "socket.io";
 import history from "../services/history.js";
-import Conversation from '../models/conversation.js';
-import Messages from '../models/messages.js';
+import jwt from "jsonwebtoken";
+
 
 export let socket = null;
-
+const onlineUsers = new Map();
 export const initSocket = (server) => {
-  socket = new Server(server, { path: "/ws/socket.io", cors: { origin: "*" }, transports: ["websocket", "polling"] });
- 
+  const io = new Server(server, {
+    path: "/ws/socket.io",
+    cors: { origin: "*" }
+  });
 
-  socket.on("connection", (socket) => {
-    
-    
-    socket.on("join", (userId) => {
-      socket.join(userId);
-      socket.data.userId = userId;
-      
-    });
+  // export the io instance for other modules if needed
+  socket = io;
 
+  io.on("connection", (socket) => {
+    const rawToken =
+      socket.handshake.headers?.authorization ||
+      socket.handshake.auth?.token;
+
+    if (!rawToken) {
+      socket.disconnect(true);
+      return;
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(
+        rawToken.replace(/^Bearer\s+/i, ""),
+        process.env.JWT_SECRET
+      );
+    } catch (err) {
+      try { socket.emit('unauthorized'); } catch(e){}
+      socket.disconnect(true);
+      return;
+    }
+
+    const userId = decoded.id;
+    socket.data.userId = userId;
+    console.log('[ws] connection from socket', socket.id, 'user=', userId);
+
+    // join personal room
+    socket.join(userId);
+
+
+    // send current online users to the newly connected client
+    try {
+      const onlineNow = Array.from(onlineUsers.keys()).filter(id => id !== userId);
+      socket.emit("online_users", onlineNow);
+      console.log('[presence] sent online_users snapshot to', userId, onlineNow);
+    } catch (e) {
+      console.warn('online_users snapshot error', e);
+    }
+
+    // maintain set of socket ids per user to handle multi-tab connections
+    const current = onlineUsers.get(userId) || new Set();
+    current.add(socket.id);
+    onlineUsers.set(userId, current);
+
+    // only emit user_online when the first socket for this user connects
+    if (current.size === 1) {
+      console.log('[presence] user_online emit for', userId, 'onlineCount=', current.size);
+      try {
+        socket.broadcast.emit("user_online", { userId });
+      } catch (e) { console.warn('presence emit error', e); }
+    }
+    try { console.log('[presence] onlineUsers keys now:', Array.from(onlineUsers.keys())); } catch (e) {}
     socket.on("send_message", async (payload, ack) => {
       try {
         const { from, to, content } = payload;
@@ -76,8 +124,26 @@ export const initSocket = (server) => {
     });
 
 
-    socket.on("disconnect", () => {});
+    socket.on("disconnect", () => {
+      try {
+        const s = onlineUsers.get(userId);
+        if (s) {
+          s.delete(socket.id);
+          if (s.size === 0) {
+            onlineUsers.delete(userId);
+            console.log('[presence] user_offline emit for', userId);
+            try { socket.broadcast.emit("user_offline", { userId }); } catch (e) { console.warn('presence emit error', e); }
+          } else {
+            onlineUsers.set(userId, s);
+          }
+        }
+      } catch (e) {
+        // don't let disconnect errors crash the server
+        console.warn('disconnect handler error', e);
+      }
+      try { console.log('[presence] onlineUsers keys now:', Array.from(onlineUsers.keys())); } catch (e) {}
+    });
   });
 
-  return socket;
+  return io;
 };
