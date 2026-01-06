@@ -24,6 +24,16 @@ const getUserDataFromToken = (token) => { // had lfunction kayreturni id&name&im
   }
 };
 
+function broadcastQueueState(io, waitingQueue) {
+  const avatars = waitingQueue.map(s => s.data.user.avatar);
+
+  waitingQueue.forEach((s) => {
+    s.emit("update_avatars", {
+      number: waitingQueue.length,
+      avatars: avatars
+    });
+  });
+}
 
 export const StartTournament = (server) => {
 
@@ -42,12 +52,10 @@ export const StartTournament = (server) => {
             return;
         }
         socket.data.user = userData; 
-        socket.data.userId = userData.id; // Keep this for backward compatibility
+        socket.data.userId = userData.id;
 
         console.log(`🔌 User ${userData.name} connected!`);
-        console.log(`----------------- pic is: ${userData.profileImage}`);
         console.log(`----------------- pic is: ${userData.avatar}`);
-        console.log('I think we are connected!!');
 
         socket.on("leave_queue", () => {
             const index = waitingQueue.findIndex(
@@ -56,6 +64,7 @@ export const StartTournament = (server) => {
             if (index !== -1) {
                 waitingQueue.splice(index, 1);
                 console.log(`${socket.data.userId} removed from queue (leave_queue)`);
+                broadcastQueueState(io, waitingQueue);
             }
         });
 
@@ -68,19 +77,18 @@ export const StartTournament = (server) => {
             );
     
             if (alreadyQueued) {
-                console.log(`${userId} already in queue, successfuly ignored hh`);
+                console.log(`${userId} already in queue, successfuly ignored`);
                 return;
             }
     
             waitingQueue.push(socket);
             playersPicInfo.push(userData.avatar);
-            // playersInfo.push(userData);
-            // console.log(`${userData.profileImage} joined the queue. queue size===:${waitingQueue.length}===`);
-            // console.log(`${userData.avatar} pic of player===:${userData.name}===`);
+            console.log(`Queue size: ${waitingQueue.length}`);
+            broadcastQueueState(io, waitingQueue);
             socket.emit("player_connected", {pic: userData.avatar, name: userData.name, number: waitingQueue.length, avatars: playersPicInfo})
             if (waitingQueue.length > 1) {
                 console.log(`hello waitingQueue.lenth is: ${waitingQueue.length}`)
-                io.emit('update_avatars', {number: waitingQueue.length, avatars: playersPicInfo})
+                io.emit('update_avatars', {number: waitingQueue.length})
             }
 
             if (waitingQueue.length >= 4) {
@@ -94,9 +102,9 @@ export const StartTournament = (server) => {
                 const matchId = `match_${Date.now()}`;
     
                 const matchInfo = {
-                matchId,
-                player1: player1.data.user,
-                player2: player2.data.user
+                    matchId,
+                    player1: player1.data.user,
+                    player2: player2.data.user
                 };
     
                 console.log(`🚀 Match: ${matchInfo.player1.avatar} vs ${matchInfo.player2.avatar}`);

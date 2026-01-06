@@ -289,6 +289,7 @@ export function RemoteGameEventListener() {
   if (quitBtn) {
     quitBtn.addEventListener('click', () => {
       cleanupGame();
+      leaveGame();
       navigate("/home");
     });
   }
@@ -305,11 +306,11 @@ export function RemoteGameEventListener() {
   });
 
   setTimeout(() => {
-      if (!hasReceivedGameData) {
-          console.log("No active game found (likely refreshed). Redirecting...");
-          showAlert("Game session lost or finished.");
-          navigate("/home");
-      }
+    if (!hasReceivedGameData) {
+      console.log("No active game found (likely refreshed). Redirecting...");
+      showAlert("Game session lost or finished.");
+      navigate("/home");
+    }
   }, 1500);
 
   return () => {

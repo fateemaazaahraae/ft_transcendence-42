@@ -45,7 +45,7 @@ export default function TrWaitingPlayers() {
               class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
                       lg:w-[200px] lg:h-[200px]
                       rounded-full border-2 border-primary object-cover
-                      opacity-70 transition-opacity duration-300"
+                      opacity-60 transition-opacity duration-300"
               />
           </div>
           <span class="text-white text-[30rem] font-serif font-light">}</span>
@@ -61,7 +61,7 @@ export default function TrWaitingPlayers() {
               class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
                       lg:w-[200px] lg:h-[200px]
                       rounded-full border-2 border-secondary object-cover
-                      opacity-70 transition-opacity duration-300"
+                      opacity-60 transition-opacity duration-300"
               />
               <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
               <img id="opponent4"
@@ -69,7 +69,7 @@ export default function TrWaitingPlayers() {
               class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
                       lg:w-[200px] lg:h-[200px]
                       rounded-full border-2 border-secondary object-cover
-                      opacity-70 transition-opacity duration-300"
+                      opacity-60 transition-opacity duration-300"
               />
           </div>
       </div>
@@ -156,11 +156,20 @@ export function TrWaitingPlayersEventListener() {
   // socket.on("update_avatars", (data: any) => {
   //   console.log("someoneeee is connecteddd hhhh");
   //   if (data.number === 2) {
+  //     console.log("hereeeeeeeeeee number of players iss twoo");
   //     const pl2 = document.getElementById("opponent2") as HTMLImageElement
   //     if (!pl2) return;
+  //     pl2.classList.remove("waiting");
+  //     // pl2.classList.remove("opacity-70");
+  //     // pl2.classList.add("opacity-100");
+  //     pl2.classList.add("locked");
+  //     console.log(`the size of avatar array is: ${data.avatars.length}`)
   //     pl2.src = data.avatars[1];
   //   }
   //   if (data.number === 3) {
+  //     const pl2 = document.getElementById("opponent2") as HTMLImageElement
+  //     if (!pl2) return;
+  //     pl2.src = data.avatars[1];
   //     const pl3 = document.getElementById("opponent3") as HTMLImageElement
   //     if (!pl3) return;
   //     pl3.classList.remove("waiting");
@@ -168,13 +177,36 @@ export function TrWaitingPlayersEventListener() {
   //     pl3.src = data.avatars[2];
   //   }
   //     if (data.number === 4) {
-  //     const pl3 = document.getElementById("opponent4") as HTMLImageElement
+  //     const pl2 = document.getElementById("opponent2") as HTMLImageElement
+  //     if (!pl2) return;
+  //     pl2.src = data.avatars[1];
+  //     const pl3 = document.getElementById("opponent3") as HTMLImageElement
   //     if (!pl3) return;
   //     pl3.classList.remove("waiting");
   //     pl3.classList.add("locked");
-  //     pl3.src = data.avatars[3];
+  //     pl3.src = data.avatars[2];
+  //     const pl4 = document.getElementById("opponent4") as HTMLImageElement
+  //     if (!pl4) return;
+  //     pl4.classList.remove("waiting");
+  //     pl4.classList.add("locked");
+  //     pl4.src = data.avatars[3];
   //   }
   // });
+    socket.on("update_avatars", (data: any) => {
+    if (!Array.isArray(data.avatars)) return;
+
+    data.avatars.forEach((avatar: string, index: number) => {
+      if (index === 0) return;
+
+      const img = document.getElementById(`opponent${index + 1}`) as HTMLImageElement;
+      if (!img) return;
+
+      img.classList.remove("waiting");
+      img.classList.add("locked");
+      img.src = avatar;
+    });
+  });
+
   socket.on("player_connected", (data: any) => {
     const slotId = `opponent${data.number}`;
     const img = document.getElementById(slotId) as HTMLImageElement;
@@ -182,7 +214,7 @@ export function TrWaitingPlayersEventListener() {
     console.log("a player connected with the pic: ", data.pic,
         "and number---> ", data.number);
     img.classList.remove("waiting");
-    img.classList.remove("opacity-70");
+    img.classList.remove("opacity-60");
     img.classList.add("opacity-100");
     img.classList.add("locked");
     console.log("deeeebuging :::: ", data.pic);

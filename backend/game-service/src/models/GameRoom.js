@@ -77,6 +77,8 @@ export default class GameRoom {
           WHERE id = ?`,
           [winnerId]
         );
+        console.log("***********updating the win/lose data***********");
+
 
         await db.run(
           `UPDATE wlxp
@@ -125,7 +127,7 @@ export default class GameRoom {
       socket.on('disconnect', () => {
           console.log(`❌ Player ${socket.data.userId} disconnected during match!`);
           
-          this.handlePlayerDisconnect(socket);
+          // this.handlePlayerDisconnect(socket);
       });
     }
 
@@ -269,6 +271,7 @@ export default class GameRoom {
           WHERE id = ?`,
           [winnerId]
         );
+        console.log("***********updating the win/lose data***********");
 
         await db.run(
           `UPDATE wlxp
