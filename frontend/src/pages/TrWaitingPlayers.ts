@@ -144,15 +144,16 @@ function startOpponentImageRotation() {
 
 export function TrWaitingPlayersEventListener() {
   const socket = getTrSocket(localStorage.getItem("token"));
+  startWaitingDots();
+  const RotatingInterval = startOpponentImageRotation();
   window.addEventListener('popstate', () => {
     socket.emit("leave_queue");
     socket.disconnect();
     console.log("You left!!");
+    window.clearInterval(RotatingInterval);
     // leaveGame();
   });
   // fillSettingsPage();
-  startWaitingDots();
-  startOpponentImageRotation();
   // socket.on("update_avatars", (data: any) => {
   //   console.log("someoneeee is connecteddd hhhh");
   //   if (data.number === 2) {
