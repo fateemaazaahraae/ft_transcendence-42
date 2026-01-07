@@ -6,6 +6,7 @@ import LocalMode, { LocalModeEventListener } from "./pages/localMode.ts";
 import GameStyle, { GameStyleEventListener } from "./pages/gameStyle.ts";
 import LocalGameStyle, { LocalGameStyleEventListener } from "./pages/LocalgameStyle.ts";
 import RemoteGameStyle, { RemoteGameStyleEventListener } from "./pages/RemotegameStyle.ts";
+import TrWaitingPlayers, { TrWaitingPlayersEventListener } from "./pages/TrWaitingPlayers.ts";
 import Game from "./pages/game.ts";
 import LocalGame, { LocalGameEventListener } from "./pages/Localgame.ts";
 import AiGame, { AiGameEventListener } from "./pages/Aigame.ts";
@@ -21,15 +22,16 @@ import Friends, {FriendsEventListener} from "./pages/friends.ts";
 import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
 import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
 import PageNotFound from "./pages/pageNotFound.ts"
-import { notifications, notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
+import { notificationBarListeners, renderNotifications, updateUnreadCount } from "./pages/notifications.ts";
 import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
-import Chat, {ChatEventListener } from "./pages/Chat.ts";
+import Chat from "./pages/Chat.ts";
+import { ChatEventListener } from "./pages/chatEventListener.ts";
 import { showAlert } from "./utils/alert.ts";
 import RemoteGame, { RemoteGameEventListener } from "./pages/RemoteGame.ts";////
 import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
 import { searchBar } from "./pages/searchBar.ts";
-import { tournamentChoices } from "./pages/tournamentChoices.ts";
+import { tournamentChoices, tournamentChoicesEventListener } from "./pages/tournamentChoices.ts";
 
 const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<void> }> = {
     "/": {render: Landing, setUp: LandingEventListener},
@@ -39,6 +41,7 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/gameStyle": {render: GameStyle, setUp: GameStyleEventListener},
     "/LocalgameStyle": {render: LocalGameStyle, setUp: LocalGameStyleEventListener},
     "/RemotegameStyle": {render: RemoteGameStyle, setUp: RemoteGameStyleEventListener},
+    "/TrWaitingPlayers": {render: TrWaitingPlayers, setUp: TrWaitingPlayersEventListener},
     "/game": {render: Game},
     "/Localgame": {render: LocalGame, setUp: LocalGameEventListener},
     "/Aigame": {render: AiGame, setUp: AiGameEventListener},
@@ -54,8 +57,8 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/invitations": {render: Invitations, setUp: InvitationsEventListener},
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
     "/chat": {render: Chat, setUp: ChatEventListener},
-    "/remote-game": { render: RemoteGame, setUp: RemoteGameEventListener },///
-    "/tournamentChoices": { render: tournamentChoices},
+    "/remotegame": { render: RemoteGame, setUp: RemoteGameEventListener },
+    "/tournamentChoices": { render: tournamentChoices, setUp: tournamentChoicesEventListener },
     404: {render: PageNotFound},
 };
 
@@ -77,9 +80,13 @@ async function render(path: string) {
     const currentLangBtn = document.getElementById("currentLang");
     if (currentLangBtn)
         currentLangBtn.innerHTML = `<i class="fa-solid fa-chevron-down text-xs"></i> ${lang.toUpperCase()}`;
-    renderNotifications(notifications);
+    // renderNotifications(notifications);
     initLogout();
     searchBar();
+    const logo = document.getElementById("logo");
+    logo?.addEventListener("click", () => {
+        navigate("/");
+    });
 }
 
 
@@ -106,9 +113,15 @@ window.addEventListener("DOMContentLoaded", async() => {
     const lang = await getSavedLang();
     translatePage(lang);
     await render(window.location.pathname);
-    notificationBarListeners();
+    const userId = localStorage.getItem("userId")
+    if (userId) {
+        notificationBarListeners(userId);
+        updateUnreadCount(userId);
+        setInterval(() => {
+            updateUnreadCount(userId);
+        }, 2000);
+    }
     LanguagesMenuEventListener();
-    // viewFriend();
 });
 
 const urlParams = new URLSearchParams(window.location.search);

@@ -1,14 +1,11 @@
+import { getGameSocket } from "../utils/gameSocket.ts";
 import { navigate } from "../main.ts";
 import { showAlert } from "../utils/alert";
 import { requiredAuth } from "../utils/authGuard.ts";
 
-export default function LocalGameStyle() {
+export default function RemoteGameStyle() {
   if (!requiredAuth())
     return "";
-  const match = {
-      user: "/public/pink-girl.svg",
-      player: "/public/purple-girl.svg",
-  };
   return `
   <div class="relative w-full h-screen overflow-x-hidden">
 
@@ -46,15 +43,15 @@ export default function LocalGameStyle() {
     <!-- Wait opponent -->
 
     <h1 id="waitingText"
-        class="text-3xl  md:text-4xl lg:text-5xl font-glitch text-center mt-[40%] md:mt-[20%] lg:mt-[14%]">
+        class="text-3xl md:text-4xl lg:text-5xl font-glitch text-center mt-[40%] md:mt-[20%] lg:mt-[14%]">
       Waiting For Opponent<span id="dots">...</span>
     </h1>
-    <div class="flex justify-center items-center mt-[5%] gap-10">
+    <div class="flex flex-col lg:flex-row justify-center items-center mt-[8%] lg:mt-[5%] gap-6 md:gap-10">
         <img src="" id="myImg" class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[250px] lg:h-[250px] rounded-full border-2 border-primary object-cover">
-        <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[170px]" />
+        <img src="vs.svg" class="w-[90px] md:w-[150px] lg:w-[170px]" />
         <img
           id="opponentImg"
-          src="/public/opponent1.png"
+          src="opponent1.png"
           class="w-[100px] h-[100px] md:w-[200px] md:h-[200px]
                 lg:w-[250px] lg:h-[250px]
                 rounded-full border-2 border-secondary object-cover
@@ -81,14 +78,14 @@ function startOpponentImageRotation() {
   if (!opponentImg) return;
 
   const images = [
-    "/public/dark-girl.svg",
-    "/public/white-boy2.svg",
-    "/public/pink-girl.svg",
-    "/public/purple-girl.svg",
-    "/public/red-boy.svg",
-    "/public/white-boy.svg",
-    "/public/green-girl.svg",
-    "/public/blue-boy.svg",
+    "dark-girl.svg",
+    "white-boy2.svg",
+    "pink-girl.svg",
+    "purple-girl.svg",
+    "red-boy.svg",
+    "white-boy.svg",
+    "green-girl.svg",
+    "blue-boy.svg",
   ];
 
   let index = 0;
@@ -108,8 +105,9 @@ async function fillSettingsPage()
 {
   const userId = localStorage.getItem("userId");
   if (!userId) {
-    showAlert("Login first");
+    // showAlert("Login first");
     navigate("/login");
+    return ;
   }
   try
   {
@@ -128,19 +126,17 @@ async function fillSettingsPage()
 }
 
 export function RemoteGameStyleEventListener() {
+  window.addEventListener('popstate', () => {
+  socket.emit("leave_queue");
+  socket.disconnect();
+  }); // user click back or forward in the browser
   fillSettingsPage();
   startWaitingDots();
   startOpponentImageRotation();
-  setTimeout(() => {
-      const match=document.getElementById("play");
-      match?.addEventListener("click", () =>{
-        console.log("Local multiplayer button clicked!");
-        navigate("/Localgame");
-      });
-      const matchai=document.getElementById("playai");
-      matchai?.addEventListener("click", () =>{
-        console.log("VS AI button clicked!");
-        navigate("/Aigame");
-      });
-  }, 100);
+  const socket = getGameSocket(localStorage.getItem("token"));
+  function leaveGame() {
+    console.log("You left!!");
+    socket.disconnect();
+    navigate("/gameStyle");
+  }
 }

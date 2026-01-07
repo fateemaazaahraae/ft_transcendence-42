@@ -46,26 +46,30 @@ export default async function RemoteVsLocal(){
             </div>
 
             <!-- Remote OR Local -->
-                <div class= "flex flex-col items-center mt-[60%] md:mt-[35%] lg:mt-[30%] xl:mt-[13%]">
-                    <h1 id="modePlayTitle"
-                    data-i18n="modePlay"
-                    data-glitch-text="How do you prefer to play?"
-                    class="relative font-glitch uppercase
+                <div class="min-h-screen flex flex-col items-center justify-center gap-0 md:gap-5 lg:gap-10">
+
+                    <div
+                    class="relative font-glitch inline-flex items-center justify-center
+                            uppercase tracking-[2px] lg:tracking-[5px]
                             xl:text-6xl lg:text-5xl md:text-3xl text-[18px]
-                            tracking-[5px] leading-none text-secondary
-                            before:content-[attr(data-glitch-text)]
-                            before:absolute before:inset-0 before:text-primary
-                            before:translate-x-[4px] before:animate-glitch
-                            after:content-[attr(data-glitch-text)]
-                            after:absolute after:inset-0 after:text-white/90
-                            after:-translate-x-[3px] after:animate-glitch-slow"
+                            mb-12 whitespace-nowrap text-center leading-none"
                     >
-                            How do you prefer to play?
-                    </h1>
+
+                        <span data-i18n="modePlay" class="absolute inset-0 text-secondary animate-glitch-slow z-20">
+                        How do you prefer to play?
+                        </span>
+
+                        <span data-i18n="modePlay" class="absolute inset-0 translate-x-[1px] translate-y-[2px] text-primary animate-glitch z-30">
+                        How do you prefer to play?
+                        </span>
+
+                        <span data-i18n="modePlay" class="relative translate-x-[5px] translate-y-[5px]  text-white/95 animate-glitch z-40">
+                        How do you prefer to play?
+                        </span>
+                    </div>
 
 
-
-                    <div class =" flex gap-[5%] mt-[7%] md:mt-[5%] w-full items-center justify-center">
+                    <div class =" flex gap-[5%] w-full items-center justify-center">
                         <button data-i18n="remote" id="remote" class="w-[100px] h-[50px] text-[15px] md:w-[150px] md:h-[60px] md:text-xl lg:w-[200px] lg:h-[80px] bg-black rounded-[20px] font-roboto font-bold lg:text-2xl drop-shadow-cyan hover:bg-primary"> Remote </button>
                         <span data-i18n="or" class=" font-roboto text-[17px] md:text-xl"> OR </span>
                         <button data-i18-n="local" id="local" class="w-[100px] h-[50px] text-[15px] md:w-[150px] md:h-[60px] md:text-xl lg:w-[200px] lg:h-[80px] bg-black rounded-[20px] font-roboto font-bold lg:text-2xl drop-shadow-pink hover:bg-secondary"> Local </button>

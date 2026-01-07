@@ -14,6 +14,7 @@ services:
       - profile-service
       - relationship-service
       - game-service
+      - chat-service
     networks:
       - ft_transcendence
     ports:
@@ -36,22 +37,40 @@ services:
       - "3000:3000"
     networks:
       - ft_transcendence
-    
 
-  # chat service
-  # chat-service:
-  #   build: ./backend/chat-service
-  #   container_name: chat-service
-  #   env_file:
-  #     - ./backend/chat-service/.env
-  #   environment:
-  #     - JWT_SECRET=${JWT_SECRET}
-  #     - API_URL=http://backend-api:3000
-  #   ports:
-  #     - "4000:4000"
-  #   networks:
-  #     - ft_transcendence
-  #   restart: always
+  chat-service:
+    build: ./backend/chat-service
+    container_name: chat-service
+    env_file:
+      - ./backend/.env
+    environment:
+      - API_URL=http://auth-service:3000
+    volumes:
+      - ./backend/chat-service/chat.sqlite:/app/chat.sqlite
+    ports:
+      - "4000:4000"
+    networks:
+      - ft_transcendence
+    restart: always
+
+
+  notification-service:
+    platform: linux/amd64
+    build: 
+      context: ./backend/notification-service
+      dockerfile: Dockerfile
+    image: notification-service
+    container_name: notification-service
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/notification-service:/app
+      - /app/node_modules
+    ports:
+      - "3005:3005"
+    networks:
+      - ft_transcendence
+    restart: always
 
   profile-service:
     platform: linux/amd64
@@ -86,6 +105,24 @@ services:
       - "3003:3003"
     networks:
       - ft_transcendence
+
+  tournament-service:
+    platform: linux/amd64
+    build:
+      context: ./backend/tournament-service
+      dockerfile: Dockerfile
+    image: tournament-service
+    container_name: tournament-service
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/tournament-service:/app
+      - /app/node_modules
+    ports:
+      - "3004:3004"
+    networks:
+      - ft_transcendence
+
   relationship-service:
     platform: linux/amd64
     build:
@@ -117,6 +154,7 @@ services:
       - profile-service
       - relationship-service
       - game-service
+      - tournament-service
     volumes:
       - uploads:/app/uploads
       # - profile-service

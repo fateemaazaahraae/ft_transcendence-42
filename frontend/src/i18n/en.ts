@@ -44,6 +44,13 @@ const en: translateDict = {
     pick: "Pick your mode",
     one: "One-vs-One",
     ai: "One-vs-Ai",
+    notFound:"Page Not Found",
+    tournament: "Tournament",
+    start: "Start",
+    availTour: "Available tournaments",
+    yours: "Create yours",
+    create: "Create",
+    nick: "Nick name",
 }
 
 export default en;

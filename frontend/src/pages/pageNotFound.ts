@@ -1,6 +1,9 @@
-export default function PageNotFound() {
+import { getSavedLang } from "../i18n/index.ts";
+
+export default async function PageNotFound() {
+   const currentLang = (await getSavedLang()).toUpperCase();
  return `
-  <div class="flex flex-col fixed items-center  min-h-screen top-1/3 left-[20%] xl:left-[30%] lg:top-1/4  text-center overflow-x-hidden overflow-y-auto">
+  <div class="fixed inset-0 flex flex-col items-center justify-center text-center overflow-hidden">
 
     <!-- Glitch 404 text -->
     <h1 class="text-[80px] md:text-[120px] lg:text-[150px] font-glitch tracking-[10px] 
@@ -13,7 +16,7 @@ export default function PageNotFound() {
     </h1>
 
     <!-- Subtitle -->
-    <p class="text-3xl md:text-6xl lg:text-8xl mt-4 text-black drop-shadow-pink animate-glitch font-glitch z-10">Page Not Found</p>
+    <p data-i18n="notFound" class="text-3xl md:text-6xl lg:text-8xl mt-4 text-black drop-shadow-pink animate-glitch font-glitch z-10">Page Not Found</p>
 </div>
    
 `;
