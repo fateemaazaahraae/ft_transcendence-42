@@ -3,7 +3,7 @@ import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../ut
 import { loadUser } from "../utils/loadUser.ts";
 import { viewFriendProfile } from "./viewFriendProfile.ts";
 import { blockUser, checkIfBlocked, showMessageInput, showBlockedMessage } from "../utils/blockHandler.ts";
-import { socket, initializeSocket, sendMessage, listenForMessagesReceived, subscribeConnection, listenForBlockEvents, listenForPresenceEvents } from "../utils/sockeService.ts";
+import { socket, initializeSocket, sendMessage, listenForMessagesReceived, subscribeConnection, listenForBlockEvents, listenForPresenceEvents,listenForFriendAccepted } from "../utils/sockeService.ts";
 import { setUserOnline, setUserOffline } from "../utils/presenceStore.ts";
 import {
     updateChatHeader,
@@ -129,7 +129,7 @@ export function ChatEventListener() {
     // initialize socket connection
     const TOKEN = localStorage.getItem('token') || '';
     initializeSocket(CURRENT_USER_ID, WS_URL, TOKEN);
-
+        
    listenForPresenceEvents(
   (userId) => {
     setUserOnline(String(userId));
@@ -140,6 +140,20 @@ export function ChatEventListener() {
     updateContactStatusUI(String(userId), "offline");
   }
 );
+
+
+    // refresh contacts when a friend is accepted in realtime
+    // try {
+    //     listenForFriendAccepted((friendId: string) => {
+    //         console.log('friendAccepted realtime received for', friendId);
+    //         if (contactsListDiv) {
+    //             fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
+    //                 attachContactClickListeners(contactsListDiv, handleContactSelect);
+    //                 applyPresenceToRenderedContacts();
+    //             });
+    //         }
+    //     });
+    // } catch (e) { console.warn('listenForFriendAccepted setup failed', e); }
 
 
 
@@ -292,10 +306,10 @@ export function ChatEventListener() {
                     attachContactClickListeners(contactsListDiv, handleContactSelect);
                     applyPresenceToRenderedContacts();
 
-                    
-                
                 });
             }
+        
+
             return;
         }
 
@@ -524,7 +538,17 @@ export function ChatEventListener() {
         fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
             attachContactClickListeners(contactsListDiv, handleContactSelect);
             applyPresenceToRenderedContacts();
-            
+            // register friend-accepted listener after contacts list exists
+            try {
+                listenForFriendAccepted(() => {
+                    console.log("🔁 FETCH CONTACTS TRIGGERED");
+                    // re-fetch contacts when a friend is accepted
+                    fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
+                        attachContactClickListeners(contactsListDiv, handleContactSelect);
+                        applyPresenceToRenderedContacts();
+                    });
+                });
+            } catch (e) { console.warn('listenForFriendAccepted setup failed', e); }
         });
 
 

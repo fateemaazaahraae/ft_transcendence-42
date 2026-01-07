@@ -3,6 +3,9 @@ import { io, Socket } from "socket.io-client";
 import { getActiveChatUser } from "../pages/chatHelpers";
 
 
+// const redis = new Redis(process.env.REDIS_URL);
+
+// global.io = io;
 export let socket: Socket | null = null;
 let currentUserId: string | number | null = null;
 
@@ -14,6 +17,8 @@ const connectionSubscribers: Array<(isConnected: boolean) => void> = [];
 const messageListeners: Array<(data: any) => void> = [];
 const blockListeners: Array<(data: any) => void> = [];
 const presenceListeners: Array<(userId: string, status: 'online' | 'offline') => void> = [];
+
+
 export function initializeSocket(userId: string | number, serverUrl: string, token?: string) {
     currentUserId = userId;
 
@@ -41,9 +46,15 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
 
     socket = io(serverUrl, opts);
 
-    
+
+        // friend accepted - will be handled centrally and forwarded to app listeners
+
+
+   
+
     socket.on("connect", () => {
         console.log("socket connected", socket?.id, 'userId=', userId);
+         console.log("✅ SOCKET CONNECTED", socket?.id);
         connected = true;
         // notify subscribers
         connectionSubscribers.forEach(cb => {
@@ -66,6 +77,8 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
             }
         }
     });
+
+    
 
     // presence events: forward to registered listeners 
     socket.off("user_online");
@@ -99,26 +112,27 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
             });
         });
 
+
     socket.on("new_message", (data: any) => {
-
-    //     const { message } = data;
-
-    // const otherUserId =
-    //     String(message.from) === String(currentUserId)
-    //         ? String(message.to)
-    //         : String(message.from);
-
-    // const activeChat = getActiveChatUser();
-
-    // if (activeChat && String(activeChat) === String(otherUserId)) {
-    //     messageListeners.forEach(cb => cb(data));
-    //     return;
-    // }
     messageListeners.forEach(cb => {
         try { cb(data); } catch (e) {
             console.warn("message listener error", e);
         }
     });
+    });
+
+    // central friend_accepted handler: notify DOM and registered listeners
+    socket.off('friend_accepted');
+    socket.on('friend_accepted', (payload: any) => {
+          console.log("🟢 FRONTEND RECEIVED friend_accepted");
+        const friendId = payload?.friendId || payload?.userId || '';
+        console.log('DBG recv friend_accepted', friendId);
+        try {
+            document.dispatchEvent(new CustomEvent('friendAccepted', { detail: { friendId } }));
+        } catch (e) {}
+        friendListeners.forEach(fn => {
+            try { fn(String(friendId)); } catch (e) { console.warn('friend listener error', e); }
+        });
     });
 
     socket.on("disconnect", (reason) => {
@@ -217,6 +231,18 @@ export function listenForPresence(cb: (userId: string, status: 'online' | 'offli
         const idx = presenceListeners.indexOf(cb);
         if (idx !== -1) presenceListeners.splice(idx, 1);
     };
+}
+
+
+const friendListeners: Array<(userId: string) => void> = [];
+
+export function listenForFriendAccepted(cb: (userId: string) => void) {
+  friendListeners.push(cb);
+
+  socket?.on("friend_accepted", ({ userId }) => {
+    console.log(" HHHHH === friend_accepted realtime received");
+    friendListeners.forEach(fn => fn(String(userId)));
+  });
 }
 
 

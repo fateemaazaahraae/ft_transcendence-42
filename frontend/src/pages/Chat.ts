@@ -135,14 +135,13 @@ export default async function Chat() {
                   <div class="relative">
                     
                     <i id="sendMessageBtn" class="fa-regular fa-paper-plane text-secondary absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"></i>
-                    <i class="fa-solid fa-plus text-secondary absolute left-3 top-1/2 -translate-y-1/2 cursor-pointer"></i>
-                    <i class="fa-solid fa-table-tennis-paddle-ball text-secondary absolute left-9 top-1/2 -translate-y-1/2 cursor-pointer"></i>
+                    <i class="fa-solid fa-table-tennis-paddle-ball text-secondary absolute left-3 top-1/2 -translate-y-1/2 cursor-pointer"></i>
                     
                     <input 
                       type="text" 
                       id="messageInput"
                       placeholder="Type a message..." 
-                      class="w-full pl-16 pr-10 py-2 rounded-full bg-primary/65 text-white placeholder-white focus:outline-none">
+                      class="w-full pl-10 pr-10 py-2 rounded-full bg-primary/65 text-white placeholder-white focus:outline-none">
                   </div>
                 </div>
 

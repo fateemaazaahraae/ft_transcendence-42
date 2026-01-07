@@ -40,10 +40,16 @@ export const initSocket = (server) => {
     socket.data.userId = userId;
     console.log('[ws] connection from socket', socket.id, 'user=', userId);
 
-    // join personal room
-    socket.join(userId);
+    //friend accepted
+    // io
 
+  if (!userId) {
+    console.log("❌ NO USER ID");
+    return;
+  }
 
+  socket.join(String(userId));
+  console.log("✅ USER JOINED ROOM", userId);
     // send current online users to the newly connected client
     try {
       const onlineNow = Array.from(onlineUsers.keys()).filter(id => id !== userId);

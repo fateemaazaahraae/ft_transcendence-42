@@ -13,6 +13,8 @@ export async function getContacts(request, reply) {
         return reply.status(401).send([]);
       }
     const res = await fetch(`${REL_SERVICE_URL}/friends`, { headers: { Authorization: authHeader } });
+    const resb = await fetch(`${REL_SERVICE_URL}/blocked`, { headers: { Authorization: authHeader } });
+
     console.log(' fetched /friends status:', res.status);
     const bodyText = await res.text().catch(() => null);
     try { console.log(' /friends raw body:', bodyText && bodyText.substring ? bodyText.substring(0, 500) : bodyText); } catch (e) {}
@@ -67,7 +69,9 @@ export async function getContacts(request, reply) {
       status: 'offline',
       last_message: lastMsg?.content,
       last_message_time: lastMsg?.created_at,
-      conversation_id: convo?.id
+      conversation_id: convo?.id,
+      // relationType: 
+      
     };
   }));
 
@@ -84,7 +88,9 @@ export async function searchContacts(request, reply) {
   let friendList = [];
   try {
     const res = await fetch(`${REL_SERVICE_URL}/friends`, { headers: { Authorization: authHeader } });
+    // const resb = await fetch(`${REL_SERVICE_URL}/blocked`, { headers: { Authorization: authHeader } });//added now
     if (res.ok) friendList = await res.json();
+    // if (resb.ok) blockedList = await resb.json();
     else console.warn('relationship service returned', res.status);
   } catch (e) {
     console.error('failed to fetch friends from relationship service', e.message);
