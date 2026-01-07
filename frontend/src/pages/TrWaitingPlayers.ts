@@ -7,7 +7,7 @@ export default function TrWaitingPlayers() {
   if (!requiredAuth())
     return "";
   return `
-  <div class="relative w-full h-screen overflow-x-hidden">
+  <div id="Container" class="relative w-full h-screen overflow-x-hidden">
 
 
     <!-- Controls Icons -->
@@ -29,7 +29,7 @@ export default function TrWaitingPlayers() {
         class="text-3xl md:text-4xl lg:text-5xl font-glitch text-center mt-[40%] md:mt-[20%] lg:mt-[4%]">
       Waiting For Players<span id="dots">...</span>
     </h1>
-    <h2 id="waitingText"
+    <h2
         class="text-3xl md:text-4xl lg:text-4xl font-glitch text-center mt-[40%] md:mt-[20%] lg:mt-[4%]">
       Tournament name
     </h2>
@@ -72,6 +72,22 @@ export default function TrWaitingPlayers() {
                       opacity-60 transition-opacity duration-300"
               />
           </div>
+      </div>
+      <div id="overlay-content" class="absolute inset-0 bg-black/90 z-[999] hidden flex flex-col items-center justify-center">
+        <div class="bg-black p-8 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
+          <h2 class="text-3xl font-glitch tracking-[1px] leading-[5px] text-primary mb-5">tournament host has been disconnected</h2>
+          <p class="font-roboto text-gray-300 mb-10">Chose</p>
+
+            <button id="new-tr" class="w-[200px] py-3 bg-secondary/80 hover:bg-secondary text-white rounded-lg font-roboto transition-all duration-300">
+              <i class="fa-solid fa-xmark mr-2"></i>
+              joing/create new tournament
+            </button>
+            
+            <button id="quit-btn" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
+              <i class="fa-solid fa-sign-out mr-2"></i>
+              Go to home
+            </button>
+        </div>
       </div>
     </div>
   </div>
@@ -191,7 +207,7 @@ export function TrWaitingPlayersEventListener() {
   //     pl4.src = data.avatars[3];
   //   }
   // });
-    socket.on("update_avatars", (data: any) => {
+  socket.on("update_avatars", (data: any) => {
     if (!Array.isArray(data.avatars)) return;
 
 
@@ -228,7 +244,46 @@ export function TrWaitingPlayersEventListener() {
       img.src = avatar;
     });
   });
+// tournament host has been disconnected joing/create new tournament OR Go to home
 
+  function leaveGame() {
+    console.log("someone left!!");
+    // socket.emit('leave_game');
+  }
+
+
+  function cleanupGame() {
+    console.log("Cleaning game");
+
+    socket.off();
+    socket.disconnect();
+
+    window.removeEventListener("popstate", leaveGame);
+  }
+
+  socket.on("host_exit", () => {
+    console.log('7rmha 3likom HHHH');
+    const LeaveOverlay = document.getElementById('overlay-content') as HTMLDivElement;
+    
+    if (!LeaveOverlay) {
+      console.error("overlay-content not found in DOM");
+      return;
+    }
+    const dots = document.getElementById("dots");
+    if (!dots) return;
+    dots.id = "stopanim";
+
+    LeaveOverlay.classList.remove('hidden');
+    LeaveOverlay.classList.add('flex');
+    document.getElementById("quit-btn")?.addEventListener("click", () => {
+      cleanupGame();
+      navigate("/home");
+    });
+    document.getElementById("new-tr")?.addEventListener("click", () => {
+      cleanupGame();
+      navigate("/tournamentChoices");
+    });
+  });
   socket.on("player_connected", (data: any) => {
     const slotId = `opponent${data.number}`;
     const img = document.getElementById(slotId) as HTMLImageElement;

@@ -35,6 +35,12 @@ function broadcastQueueState(io, waitingQueue) {
   });
 }
 
+function broadcastExitNotif(io, waitingQueue) {
+  waitingQueue.forEach((s) => {
+    s.emit("host_exit");
+  });
+}
+
 export const StartTournament = (server) => {
 
     const io = new Server(server, { cors: { origin: "*" }, methods: ["GET", "POST"] });
@@ -57,28 +63,31 @@ export const StartTournament = (server) => {
         console.log(`🔌 User ${userData.name} connected!`);
         console.log(`----------------- pic is: ${userData.avatar}`);
 
-        socket.on("leave_queue", () => {
+        // socket.on("leave_queue", () => {
+        //     console.log("entered the leave queue socket event handler")
+        //     const index = waitingQueue.findIndex(
+        //         s => s.data.userId === socket.data.userId
+        //     );
+        //     if (index !== -1 && index !== 0) {
+        //         waitingQueue.splice(index, 1);
+        //         playersPicInfo.splice(index, 1);
+        //         console.log(`${socket.data.userId} removed from queue (leave_queue)`);
+        //         broadcastQueueState(io, waitingQueue);
+        //     }
+        // });
+        socket.on("disconnect", (reason) => {
             console.log("entered the leave queue socket event handler")
             const index = waitingQueue.findIndex(
                 s => s.data.userId === socket.data.userId
             );
-            if (index !== -1) {
+            if (index !== -1 && index !== 0) {
                 waitingQueue.splice(index, 1);
                 playersPicInfo.splice(index, 1);
                 console.log(`${socket.data.userId} removed from queue (leave_queue)`);
                 broadcastQueueState(io, waitingQueue);
             }
-        });
-        socket.on("disconnect", (reason) => {
-            console.log("socket disconnected:", reason);
-            const index = waitingQueue.findIndex(
-                s => s.data.userId === socket.data.userId
-            );
-            if (index !== -1) {
-                waitingQueue.splice(index, 1);
-                playersPicInfo.splice(index, 1);
-                console.log(`${socket.data.userId} removed from queue (leave_queue)`);
-                broadcastQueueState(io, waitingQueue);
+            else if (index === 0) {
+                broadcastExitNotif(io, waitingQueue);
             }
         });
 
