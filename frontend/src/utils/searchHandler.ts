@@ -20,22 +20,26 @@ const renderContactItem = (u: any, lastMsg = 'Search result') => {
         const timeStr = u?.last_message_time 
         ? new Date(u.last_message_time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
         : '';
-        return `
-        <div class="scroll flex items-center gap-4 cursor-pointer hover:bg-primary/65  p-2 rounded-xl contact-item"
-             data-contact-id="${u.id}"
-             data-contact-username="${displayName}"
-             data-contact-avatar="${avatar}"
-             data-contact-status="${status}">
+        //    const blockedBadge = u?.isBlocked ? `<span class="ml-2 text-xs text-red-400 font-semibold">محظور</span>` : '';
+        //    const itemCursor = u?.isBlocked ? 'cursor-not-allowed opacity-80' : 'cursor-pointer';
+           return `
+           <div class="scroll flex items-center gap-4  hover:bg-primary/65  p-2 rounded-xl contact-item"
+               data-contact-id="${u.id}"
+               data-contact-username="${displayName}"
+               data-contact-avatar="${avatar}"
+               data-contact-status="${status}"
+               data-contact-isblocked="${u?.isBlocked ? '1' : '0'}">
             <div class="relative w-12 h-12 flex-shrink-0">
                 <img src="${avatar}" class="w-12 h-12 object-cover border border-primary rounded-full">
                 <div id="status-${u.id}" class="absolute bottom-0 right-0 w-3 h-3 rounded-full ${statusClass}"></div>
             </div>
             <div class="w-full">
             
-            <div class="flex w-full items-start">
+                <div class="flex w-full items-start">
                 <p class="font-medium text-sm text-secondary truncate">
                     ${displayName}
                 </p>
+                
                  <span
                 class="unread-badge hidden ml-2 bg-red-500 text-white text-[10px]
                     rounded-full px-2 py-[2px]"
@@ -69,9 +73,7 @@ const renderToList = (users: any[], div: HTMLElement, getLastMsg = (u: any) => '
         try { console.log('First user sample:', JSON.stringify(users[0]).substring(0, 150)); } catch (e) {}
     }
     const html = users.map(u => renderContactItem(u, getLastMsg(u))).join('');
-    console.log('generated HTML length:', html.length);
     div.innerHTML = html;
-    console.log('Div innerHTML set, now contains:', div.querySelectorAll('.contact-item').length, 'contact-item elements');
 };
 
 export const searchUsers = (q: string, API_BASE_URL: string, CURRENT_USER_ID: string | number, onResults: (users: any[]) => void) => {
