@@ -254,22 +254,22 @@ export function TrWaitingPlayersEventListener() {
     for (let i = 0; i < opponentCount; i++) {
       updateOpponent(i + 1, data.avatars[i])
     }
-    if (data.number === 1)
-    {
-      const opp4 = document.getElementById("opponent4") as HTMLImageElement;
-      opp4.src = "";
-      const opp3 = document.getElementById("opponent3") as HTMLImageElement;
-      opp3.src = "";
-      const opp2 = document.getElementById("opponent2") as HTMLImageElement;
-      opp2.src = "";
-    }
-    if (data.number === 2)
-    {
-      const opp4 = document.getElementById("opponent4") as HTMLImageElement;
-      opp4.src = "";
-      const opp3 = document.getElementById("opponent3") as HTMLImageElement;
-      opp3.src = "";
-    }
+    // if (data.number === 1)
+    // {
+    //   const opp4 = document.getElementById("opponent4") as HTMLImageElement;
+    //   opp4.src = "";
+    //   const opp3 = document.getElementById("opponent3") as HTMLImageElement;
+    //   opp3.src = "";
+    //   const opp2 = document.getElementById("opponent2") as HTMLImageElement;
+    //   opp2.src = "";
+    // }
+    // if (data.number === 2)
+    // {
+    //   const opp4 = document.getElementById("opponent4") as HTMLImageElement;
+    //   opp4.src = "";
+    //   const opp3 = document.getElementById("opponent3") as HTMLImageElement;
+    //   opp3.src = "";
+    // }
     // if (data.number === 2) {
     //   const pl1 = document.getElementById("opponent1") as HTMLImageElement
     //   if (!pl1) return;
