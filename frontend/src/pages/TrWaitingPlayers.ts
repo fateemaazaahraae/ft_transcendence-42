@@ -150,8 +150,6 @@ export function TrWaitingPlayersEventListener() {
     socket.emit("leave_queue");
     socket.disconnect();
     console.log("You left!!");
-    // window.clearInterval(RotatingInterval);
-    // leaveGame();
   });
   // fillSettingsPage();
   // socket.on("update_avatars", (data: any) => {
@@ -196,6 +194,29 @@ export function TrWaitingPlayersEventListener() {
     socket.on("update_avatars", (data: any) => {
     if (!Array.isArray(data.avatars)) return;
 
+
+    if (data.number === 1)
+    {
+      const opp4 = document.getElementById("opponent4") as HTMLImageElement;
+      opp4.src = "";
+      const opp3 = document.getElementById("opponent3") as HTMLImageElement;
+      opp3.src = "";
+      const opp2 = document.getElementById("opponent2") as HTMLImageElement;
+      opp2.src = "";
+    }
+    if (data.number === 2)
+    {
+      const opp4 = document.getElementById("opponent4") as HTMLImageElement;
+      opp4.src = "";
+      const opp3 = document.getElementById("opponent3") as HTMLImageElement;
+      opp3.src = "";
+    }
+    if (data.number === 3)
+    {
+      const opp4 = document.getElementById("opponent4") as HTMLImageElement;
+      opp4.src = "";
+    }
+
     data.avatars.forEach((avatar: string, index: number) => {
       if (index === 0) return;
 
@@ -232,6 +253,22 @@ export function TrWaitingPlayersEventListener() {
     const opponentCount = Math.min(data.number - 1, data.avatars.length)
     for (let i = 0; i < opponentCount; i++) {
       updateOpponent(i + 1, data.avatars[i])
+    }
+    if (data.number === 1)
+    {
+      const opp4 = document.getElementById("opponent4") as HTMLImageElement;
+      opp4.src = "";
+      const opp3 = document.getElementById("opponent3") as HTMLImageElement;
+      opp3.src = "";
+      const opp2 = document.getElementById("opponent2") as HTMLImageElement;
+      opp2.src = "";
+    }
+    if (data.number === 2)
+    {
+      const opp4 = document.getElementById("opponent4") as HTMLImageElement;
+      opp4.src = "";
+      const opp3 = document.getElementById("opponent3") as HTMLImageElement;
+      opp3.src = "";
     }
     // if (data.number === 2) {
     //   const pl1 = document.getElementById("opponent1") as HTMLImageElement

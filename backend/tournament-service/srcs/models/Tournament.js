@@ -58,11 +58,25 @@ export const StartTournament = (server) => {
         console.log(`----------------- pic is: ${userData.avatar}`);
 
         socket.on("leave_queue", () => {
+            console.log("entered the leave queue socket event handler")
             const index = waitingQueue.findIndex(
                 s => s.data.userId === socket.data.userId
             );
             if (index !== -1) {
                 waitingQueue.splice(index, 1);
+                playersPicInfo.splice(index, 1);
+                console.log(`${socket.data.userId} removed from queue (leave_queue)`);
+                broadcastQueueState(io, waitingQueue);
+            }
+        });
+        socket.on("disconnect", (reason) => {
+            console.log("socket disconnected:", reason);
+            const index = waitingQueue.findIndex(
+                s => s.data.userId === socket.data.userId
+            );
+            if (index !== -1) {
+                waitingQueue.splice(index, 1);
+                playersPicInfo.splice(index, 1);
                 console.log(`${socket.data.userId} removed from queue (leave_queue)`);
                 broadcastQueueState(io, waitingQueue);
             }
@@ -82,7 +96,7 @@ export const StartTournament = (server) => {
             }
     
             waitingQueue.push(socket);
-            playersPicInfo.push(userData.avatar);
+            playersPicInfo.push(userData.avatar);/// this is wronggggg
             console.log(`Queue size: ${waitingQueue.length}`);
             broadcastQueueState(io, waitingQueue);
             socket.emit("player_connected", {pic: userData.avatar, name: userData.name, number: waitingQueue.length, avatars: playersPicInfo})
