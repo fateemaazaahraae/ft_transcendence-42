@@ -139,7 +139,7 @@ export function tournamentChoicesEventListener(){
 
       const socket = getTrSocket(token); /// here is the key to send request to our game server
 
-      if (!socket.hasListeners("match_found")) {
+    //   if (!socket.hasListeners("match_found")) {
           
           socket.on("connect", () => {
               console.log("✅ Connected via Manager! ID:", socket.id);
@@ -147,16 +147,16 @@ export function tournamentChoicesEventListener(){
               socket.emit('join_queue');
           });
 
-          socket.on("match_found", (data: any) => {
-              console.log("🎉 MATCH FOUND! Navigating to game...");
-              localStorage.setItem("currentMatch", JSON.stringify(data));
-              navigate("/remotegame"); 
-          });
-      }
+        //   socket.on("match_found", (data: any) => {
+        //       console.log("🎉 MATCH FOUND! Navigating to game...");
+        //       localStorage.setItem("currentMatch", JSON.stringify(data));
+        //       navigate("/remotegame"); 
+        //   });
+    //   }
 
-      if (socket.connected) {
-            socket.emit('join_queue');
-      }
+    //   if (socket.connected) {
+    //         socket.emit('join_queue');
+    //   }
     });
   }
 }, 100);

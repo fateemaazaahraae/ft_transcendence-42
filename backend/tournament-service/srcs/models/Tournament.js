@@ -1,8 +1,8 @@
 import { Server } from "socket.io";
+import GameRoom from "./TournamentRoom.js";
 // import { getDb } from "./db.js";
 
 const waitingQueue = [];
-const playersPicInfo = [];
 
 const getUserDataFromToken = (token) => { // had lfunction kayreturni id&name&img of user from the token
   try {
@@ -25,8 +25,10 @@ const getUserDataFromToken = (token) => { // had lfunction kayreturni id&name&im
 };
 
 function broadcastQueueState(io, waitingQueue) {
+  // console.log("updating avatarsss!!");
   const avatars = waitingQueue.map(s => s.data.user.avatar);
 
+  // console.log(`the avatar is : ${avatars}`);
   waitingQueue.forEach((s) => {
     s.emit("update_avatars", {
       number: waitingQueue.length,
@@ -35,11 +37,16 @@ function broadcastQueueState(io, waitingQueue) {
   });
 }
 
-function broadcastExitNotif(io, waitingQueue) {
-  waitingQueue.forEach((s) => {
-    s.emit("host_exit");
-  });
+function getAvatars(waitingQueue) {
+  const avatars = waitingQueue.map(s => s.data.user.avatar);
+  return avatars;
 }
+
+// function broadcastExitNotif(io, waitingQueue) {
+//   waitingQueue.forEach((s) => {
+//     s.emit("host_exit");
+//   });
+// }
 
 export const StartTournament = (server) => {
 
@@ -64,7 +71,6 @@ export const StartTournament = (server) => {
         console.log(`----------------- pic is: ${userData.avatar}`);
 
         // socket.on("leave_queue", () => {
-        //     console.log("entered the leave queue socket event handler")
         //     const index = waitingQueue.findIndex(
         //         s => s.data.userId === socket.data.userId
         //     );
@@ -76,18 +82,14 @@ export const StartTournament = (server) => {
         //     }
         // });
         socket.on("disconnect", (reason) => {
-            console.log("entered the leave queue socket event handler")
+            // console.log("entered the leave queue socket event handler")
             const index = waitingQueue.findIndex(
                 s => s.data.userId === socket.data.userId
             );
-            if (index !== -1 && index !== 0) {
+            if (index !== -1) {
                 waitingQueue.splice(index, 1);
-                playersPicInfo.splice(index, 1);
                 console.log(`${socket.data.userId} removed from queue (leave_queue)`);
                 broadcastQueueState(io, waitingQueue);
-            }
-            else if (index === 0) {
-                broadcastExitNotif(io, waitingQueue);
             }
         });
 
@@ -105,7 +107,8 @@ export const StartTournament = (server) => {
             }
     
             waitingQueue.push(socket);
-            playersPicInfo.push(userData.avatar);/// this is wronggggg
+            let playersPicInfo = [];
+            playersPicInfo = getAvatars(waitingQueue);/// this is wronggggg
             console.log(`Queue size: ${waitingQueue.length}`);
             broadcastQueueState(io, waitingQueue);
             socket.emit("player_connected", {pic: userData.avatar, name: userData.name, number: waitingQueue.length, avatars: playersPicInfo})
@@ -117,30 +120,49 @@ export const StartTournament = (server) => {
             if (waitingQueue.length >= 4) {
                 const player1 = waitingQueue.shift();
                 const player2 = waitingQueue.shift();
+                const player3 = waitingQueue.shift();
+                const player4 = waitingQueue.shift();
     
                 if (player1.data.userId === player2.data.userId) {
-                return;
+                  return;
+                }
+                if (player3.data.userId === player4.data.userId) {
+                  return;
                 }
     
-                const matchId = `match_${Date.now()}`;
+                const match1Id = `match_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+                const match2Id = `match_${Date.now()}_${Math.random().toString(36).slice(2)}`;
     
-                const matchInfo = {
-                    matchId,
-                    player1: player1.data.user,
-                    player2: player2.data.user
+                // console.log(`match111Id is: ${match1Id}`);
+                // console.log(`match222Id is: ${match2Id}`);
+                const match1Info = {
+                  match1Id,
+                  player1: player1.data.user,
+                  player2: player2.data.user
+                };
+                const match2Info = {
+                  match2Id,
+                  player3: player3.data.user,
+                  player4: player4.data.user
                 };
     
-                console.log(`🚀 Match: ${matchInfo.player1.avatar} vs ${matchInfo.player2.avatar}`);
+                console.log(`🚀 Match: ${match1Info.player1.avatar} vs ${match1Info.player2.avatar}`);
+                console.log(`🚀 Match: ${match2Info.player3.avatar} vs ${match2Info.player4.avatar}`);
     
-                // player1.emit("match_found", matchInfo);
-                // player2.emit("match_found", matchInfo);
+                player1.emit("match_found1", match1Info);
+                player2.emit("match_found1", match1Info);
+
+                player3.emit("match_found2", match2Info);
+                player4.emit("match_found2", match2Info);
     
-                // const game = new GameRoom(io, matchId, player1, player2);
-                // game.start();
+                console.log("match 1 is en cours");
+                const game1 = new GameRoom(io, match1Id, player1, player2);
+                game1.start();
+                console.log("match 2 is en cours");
+                const game2 = new GameRoom(io, match2Id, player3, player4);
+                game2.start();
             } else {
-                socket.emit("waiting_for_match", {
-                message: "Waiting for players..."
-                });
+                console.log("Waiting for players...");
             }
         });
     });

@@ -7,8 +7,7 @@ export default function TrWaitingPlayers() {
   if (!requiredAuth())
     return "";
   return `
-  <div id="Container" class="relative w-full h-screen overflow-x-hidden">
-
+  <div class="relative w-full h-screen overflow-x-hidden">
 
     <!-- Controls Icons -->
     <div class="absolute top-10 right-[5%] flex items-center gap-4">
@@ -72,23 +71,6 @@ export default function TrWaitingPlayers() {
                       opacity-60 transition-opacity duration-300"
               />
           </div>
-      </div>
-      <div id="overlay-content" class="absolute inset-0 bg-black/90 z-[999] hidden flex flex-col items-center justify-center">
-        <div class="bg-black p-8 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
-          <h2 class="text-3xl font-glitch tracking-[1px] leading-[5px] text-primary mb-5">tournament host has been disconnected</h2>
-          <p class="font-roboto text-gray-300 mb-10">Chose</p>
-
-            <button id="new-tr" class="w-[200px] py-3 bg-secondary/80 hover:bg-secondary text-white rounded-lg font-roboto transition-all duration-300">
-              <i class="fa-solid fa-xmark mr-2"></i>
-              joing/create new tournament
-            </button>
-            
-            <button id="quit-btn" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
-              <i class="fa-solid fa-sign-out mr-2"></i>
-              Go to home
-            </button>
-        </div>
-      </div>
     </div>
   </div>
   `;
@@ -211,36 +193,40 @@ export function TrWaitingPlayersEventListener() {
     if (!Array.isArray(data.avatars)) return;
 
 
-    if (data.number === 1)
-    {
-      const opp4 = document.getElementById("opponent4") as HTMLImageElement;
-      opp4.src = "";
-      const opp3 = document.getElementById("opponent3") as HTMLImageElement;
-      opp3.src = "";
-      const opp2 = document.getElementById("opponent2") as HTMLImageElement;
-      opp2.src = "";
-    }
-    if (data.number === 2)
-    {
-      const opp4 = document.getElementById("opponent4") as HTMLImageElement;
-      opp4.src = "";
-      const opp3 = document.getElementById("opponent3") as HTMLImageElement;
-      opp3.src = "";
-    }
-    if (data.number === 3)
-    {
-      const opp4 = document.getElementById("opponent4") as HTMLImageElement;
-      opp4.src = "";
-    }
+    // if (data.number === 1)
+    // {
+    const opp4 = document.getElementById("opponent4") as HTMLImageElement;
+    opp4.src = "";
+    const opp3 = document.getElementById("opponent3") as HTMLImageElement;
+    opp3.src = "";
+    const opp2 = document.getElementById("opponent2") as HTMLImageElement;
+    opp2.src = "";
+    const opp1 = document.getElementById("opponent1") as HTMLImageElement;
+    opp1.src = "";
+    // }
+    // if (data.number === 2)
+    // {
+    //   const opp4 = document.getElementById("opponent4") as HTMLImageElement;
+    //   opp4.src = "";
+    //   const opp3 = document.getElementById("opponent3") as HTMLImageElement;
+    //   opp3.src = "";
+    // }
+    // if (data.number === 3)
+    // {
+    //   const opp4 = document.getElementById("opponent4") as HTMLImageElement;
+    //   opp4.src = "";
+    // }
 
     data.avatars.forEach((avatar: string, index: number) => {
-      if (index === 0) return;
+      // if (index === 0) return;
 
       const img = document.getElementById(`opponent${index + 1}`) as HTMLImageElement;
       if (!img) return;
 
       img.classList.remove("waiting");
       img.classList.add("locked");
+      img.classList.remove("opacity-60");
+      img.classList.add("opacity-100");
       img.src = avatar;
     });
   });
@@ -261,28 +247,40 @@ export function TrWaitingPlayersEventListener() {
     window.removeEventListener("popstate", leaveGame);
   }
 
-  socket.on("host_exit", () => {
-    console.log('7rmha 3likom HHHH');
-    const LeaveOverlay = document.getElementById('overlay-content') as HTMLDivElement;
+  // socket.on("host_exit", () => {
+  //   console.log('7rmha 3likom HHHH');
+  //   const LeaveOverlay = document.getElementById('overlay-content') as HTMLDivElement;
     
-    if (!LeaveOverlay) {
-      console.error("overlay-content not found in DOM");
-      return;
-    }
-    const dots = document.getElementById("dots");
-    if (!dots) return;
-    dots.id = "stopanim";
+  //   if (!LeaveOverlay) {
+  //     console.error("overlay-content not found in DOM");
+  //     return;
+  //   }
+  //   const dots = document.getElementById("dots");
+  //   if (!dots) return;
+  //   dots.id = "stopanim";
 
-    LeaveOverlay.classList.remove('hidden');
-    LeaveOverlay.classList.add('flex');
-    document.getElementById("quit-btn")?.addEventListener("click", () => {
-      cleanupGame();
-      navigate("/home");
-    });
-    document.getElementById("new-tr")?.addEventListener("click", () => {
-      cleanupGame();
-      navigate("/tournamentChoices");
-    });
+  //   LeaveOverlay.classList.remove('hidden');
+  //   LeaveOverlay.classList.add('flex');
+  //   document.getElementById("quit-btn")?.addEventListener("click", () => {
+  //     cleanupGame();
+  //     navigate("/home");
+  //   });
+  //   document.getElementById("new-tr")?.addEventListener("click", () => {
+  //     cleanupGame();
+  //     navigate("/tournamentChoices");
+  //   });
+  // });
+  socket.on("match_found1", (data: any) => {
+    console.log("🎉 MATCH FOUND!...");
+    console.log("Navigating to game...");
+    localStorage.setItem("currentMatch1", JSON.stringify(data));
+    navigate("/tournamentgame"); 
+  });
+  socket.on("match_found2", (data: any) => {
+    console.log("🎉 MATCH FOUND!...");
+    console.log("Navigating to game...");
+    localStorage.setItem("currentMatch2", JSON.stringify(data));
+    navigate("/tournamentgametwo"); 
   });
   socket.on("player_connected", (data: any) => {
     const slotId = `opponent${data.number}`;
@@ -291,8 +289,6 @@ export function TrWaitingPlayersEventListener() {
     console.log("a player connected with the pic: ", data.pic,
         "and number---> ", data.number);
     img.classList.remove("waiting");
-    img.classList.remove("opacity-60");
-    img.classList.add("opacity-100");
     img.classList.add("locked");
     console.log("deeeebuging :::: ", data.pic);
     img.src = data.pic;
@@ -303,6 +299,8 @@ export function TrWaitingPlayersEventListener() {
 
       el.classList.remove("waiting")
       el.classList.add("locked")
+      el.classList.remove("opacity-60");
+      el.classList.add("opacity-100");
       el.src = avatar
     }
     const opponentCount = Math.min(data.number - 1, data.avatars.length)

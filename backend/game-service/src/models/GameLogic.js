@@ -127,9 +127,7 @@ export const GameLogic = (server) => {
                 const game = new GameRoom(io, matchId, player1, player2);
                 game.start();
             } else {
-                socket.emit("waiting_for_match", {
-                message: "Waiting for opponent..."
-                });
+                console.log("Waiting for players...");
             }
         });
         socket.on('disconnect', () => {

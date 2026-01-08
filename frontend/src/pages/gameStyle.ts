@@ -129,7 +129,7 @@ export function GameStyleEventListener(){
           });
 
           socket.on("match_found", (data: any) => {
-              console.log("🎉 MATCH FOUND! Navigating to game...");
+              console.log("🎉 MATCH FOUND! Navigating to gameeeee...");
               localStorage.setItem("currentMatch", JSON.stringify(data));
               navigate("/remotegame"); 
           });
