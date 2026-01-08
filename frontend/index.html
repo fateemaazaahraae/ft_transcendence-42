@@ -18,7 +18,7 @@
   <div id="stars" class="relative top-0 left-0 w-full z-0 pointer-events-none"></div>
   <div class="relative">
     <header class="absolute top-2 left-3 md:top-8 md:left-8 z-[200]">
-      <img src="/logo.svg" class="w-[80px] md:w-[130px] h-auto" />
+      <img id="logo" src="logo.svg" class="w-[80px] md:w-[130px] h-auto" />
     </header>
   </div>
   <!-- Main content WITH scroll -->
@@ -38,27 +38,27 @@
   </ul>
 
   <!-- Notification Bar (global) -->
-  <div id="notificationBar" class="hidden fixed top-20 right-10 w-[300px] bg-primary/70 rounded-2xl shadow-lg p-3 flex-col gap-1 z-[9000]">
-    <div data-i18n="notifications" class="text-white font-roboto font-semibold text-lg pb-3 pl-2"></div>
-    <div id="notificationsContainer" class="flex flex-col gap-2 h-[300px] overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 pr-4"></div>
+  <div id="notificationBar" class="hidden fixed top-20 right-10 w-[300px] bg-primary/80 rounded-2xl shadow-lg p-3 flex-col gap-1 z-[9000]">
+    <div data-i18n="notifications" class="text-black font-roboto font-semibold text-lg pb-3 pl-2"></div>
+    <div id="notificationsContainer" class="flex flex-col gap-2 h-[300px] overflow-y-auto scrollbar scrollbar-thumb-primary/50 scrollbar-track-primary/10 pr-4"></div>
   </div>
 
   <!-- logout icon -->
   <div id="overlay" 
     class="fixed inset-0 bg-black/80 opacity-0 invisible z-[8000]">
   </div>
-  <div id="logout" class=" opacity-0 invisible fixed top-1/3 left-1/2 -translate-x-1/2 flex flex-col items-center font-glitch text-white z-[9000]">
+  <div id="logout" class="opacity-0 invisible fixed top-1/3 left-1/2 -translate-x-1/2 flex flex-col items-center font-glitch text-white z-[9000]">
      <div class="relative inline-block text-black text-sm md:text-xl lg:text-4xl xl:text-5xl text-center mb-[8%] whitespace-nowrap">
-      <span class="absolute text-secondary/80" data-i18n="logout_confirm"></span> 
-      <span class="absolute top-[3px] left-[3px] text-primary/90" data-i18n="logout_confirm"></span>
-      <span class="opacity-0" data-i18n="logout_confirm"></span>
+      <span class="absolute text-secondary/80 text-[25px] md:text-3xl lg:text-5xl" data-i18n="logout_confirm"></span> 
+      <span class="absolute top-[3px] left-[3px] text-primary/90 text-[25px] md:text-3xl lg:text-5xl" data-i18n="logout_confirm"></span>
+      <span class="opacity-0 text-[25px] md:text-3xl lg:text-5xl" data-i18n="logout_confirm"></span>
     </div>
 
-    <div class="flex gap-10">
-      <button id="cancel" data-i18n="cancel" class="w-[70px] h-[25px] md:w-[100px] md:h-[40px] lg:w-[130px] lg:h-[55px] font-roboto font-bold rounded-xl md:rounded-2xl text-[12px] md:text-[16px] lg:text-xl bg-primary/60  hover:bg-primary transition">
+    <div class="flex flex-col lg:flex-row gap-6 lg:gap-10">
+      <button id="cancel" data-i18n="cancel" class="w-[100px] h-[50px] lg:w-[130px] lg:h-[55px] font-roboto font-bold rounded-xl md:rounded-2xl text-[18px] md:text-[20px] lg:text-xl bg-primary/60  hover:bg-primary transition">
         Cancel
       </button>
-      <button id="confirm" data-i18n="confirm" class="w-[70px] h-[25px] md:w-[100px] md:h-[40px] lg:w-[130px] lg:h-[55px] font-roboto font-bold rounded-xl md:rounded-2xl text-[12px] md:text-[16px] lg:text-xl bg-secondary/80 hover:bg-secondary transition">
+      <button id="confirm" data-i18n="confirm" class="w-[100px] h-[50px] lg:w-[130px] lg:h-[55px] font-roboto font-bold rounded-xl md:rounded-2xl text-[18px] md:text-[20px] lg:text-xl bg-secondary/80 hover:bg-secondary transition">
         Yes
       </button>
     </div>

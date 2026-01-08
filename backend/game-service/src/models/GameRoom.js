@@ -1,6 +1,6 @@
-const { getDb } = require('./db');
+import { getDb } from "./db.js";
 
-class GameRoom {
+export default class GameRoom {
   constructor(io, roomId, player1Socket, player2Socket) {
     this.io = io;
     this.roomId = roomId;
@@ -10,13 +10,6 @@ class GameRoom {
     // my canvas size, 1344x580//(x, y)
     this.gameState = {// contain the new positions for ball and paddles
       ball: { x: 672, y: 290, dx: 5, dy: 5 },
-      // ball: {
-      // x: width / 2,
-      // y: height / 2,
-      // r: 10,
-      // vx: (Math.random() < 0.5 ? 1 : -1) * 300,
-      // vy: (Math.random() < 0.5 ? 1 : -1) * 200,
-      // },
       paddle1: { y: 250 },
       paddle2: { y: 250 },
       score: { p1: 0, p2: 0 }
@@ -29,13 +22,14 @@ class GameRoom {
 
     this.player1.join(roomId);
     this.player2.join(roomId);
-    
+
     this._setupListeners(this.player1);
     this._setupListeners(this.player2);
     this.isGameOver = false;
     }
 
-    handlePlayerDisconnect(disconnectedSocket) {
+    async handlePlayerDisconnect(disconnectedSocket) {
+      // console.log(this.player1.id, "<--- id1 id2--->", this.player2.id)
       if (this.isGameOver) return;
 
       this.isGameOver = true;
@@ -55,6 +49,62 @@ class GameRoom {
           score: this.gameState.score
         });
       }
+      const winnerId = winnerSocket.data.userId;
+      const loserId =
+      winnerId === this.player1.data.userId
+        ? this.player2.data.userId
+        : this.player1.data.userId;
+
+      try {
+        const db = await getDb();
+        const matchId = this.roomId;
+        const timestamp = Date.now();
+        const winner = winnerSocket.data.userId;
+
+        await db.run(
+          `INSERT OR IGNORE INTO wlxp (id) VALUES (?)`,
+          [winnerId]
+        );
+        await db.run(
+          `INSERT OR IGNORE INTO wlxp (id) VALUES (?)`,
+          [loserId]
+        );
+
+        await db.run(
+          `UPDATE wlxp
+          SET Wins = Wins + 1,
+              XPoints = XPoints + 50
+          WHERE id = ?`,
+          [winnerId]
+        );
+
+        await db.run(
+          `UPDATE wlxp
+          SET Losses = Losses + 1
+          WHERE id = ?`,
+          [loserId]
+        );
+
+        await db.run(
+            `INSERT INTO matches (id, player1Id, player2Id, score1, score2, winnerId, timestamp)
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [
+                matchId,
+                this.player1.data.userId,
+                this.player2.data.userId,
+                this.gameState.score.p1,
+                this.gameState.score.p2,
+                winner,
+                timestamp
+            ]
+        );
+        
+      console.log(this.player1.id, "<--- id1 id2--->", this.player2.id);
+        console.log("✅ Match saved to SQLite database!");
+
+    } catch (error) {
+        console.error("❌ Failed to save match:", error);
+    }
 
   this.stop();
 }
@@ -189,11 +239,43 @@ class GameRoom {
       winner: winnerId,
       score: this.gameState.score 
     });
+
+    const loserId =
+    winnerId === this.player1.data.userId
+      ? this.player2.data.userId
+      : this.player1.data.userId;
+
     
     try {
         const db = await getDb();
         const matchId = this.roomId;
         const timestamp = Date.now();
+
+
+        console.log("-------------winerid: ", winnerId, "----------------loserId: ", loserId);
+        await db.run(
+          `INSERT OR IGNORE INTO wlxp (id) VALUES (?)`,
+          [winnerId]
+        );
+        await db.run(
+          `INSERT OR IGNORE INTO wlxp (id) VALUES (?)`,
+          [loserId]
+        );
+
+        await db.run(
+          `UPDATE wlxp
+          SET Wins = Wins + 1,
+              XPoints = XPoints + 50
+          WHERE id = ?`,
+          [winnerId]
+        );
+
+        await db.run(
+          `UPDATE wlxp
+          SET Losses = Losses + 1
+          WHERE id = ?`,
+          [loserId]
+        );
 
         await db.run(
             `INSERT INTO matches (id, player1Id, player2Id, score1, score2, winnerId, timestamp)
@@ -230,7 +312,6 @@ class GameRoom {
   broadcast() {
     // Send the entire state to everyone in this specific room // using server instance socket.io and the room id so we know to which room we're talking yah ofc
     this.io.to(this.roomId).emit('game_update', this.gameState);
-    // this.io.to(this.roomId).emit('game_over');
   }
 
   stop() {
@@ -244,4 +325,3 @@ class GameRoom {
   }
 }
 
-module.exports = GameRoom;

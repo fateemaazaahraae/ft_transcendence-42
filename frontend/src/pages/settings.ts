@@ -163,8 +163,8 @@ async function fillSettingsPage()
 {
   const userId = localStorage.getItem("userId");
   if (!userId) {
-    showAlert("Login first");
     navigate("/login");
+    return ;
   }
   try
   {
@@ -187,7 +187,6 @@ async function fillSettingsPage()
   catch (err)
   {
     console.log(err);
-    showAlert("Error while fetching data: " + err);
   }
 }
 
@@ -196,7 +195,6 @@ function handleTwoFactorButton(twoFactorButton: HTMLButtonElement) {
     e.preventDefault();
     const userId = localStorage.getItem("userId");
     if (!userId) {
-      showAlert("Login first");
       navigate("/login");
       return;
     }
@@ -242,7 +240,6 @@ export function SettingsEventListner() {
     e.preventDefault();
     const userId = localStorage.getItem("userId");
     if (!userId) {
-      showAlert("Login first");
       navigate("/login");
       return;
     }
@@ -338,7 +335,6 @@ export function SettingsEventListner() {
       if (!file) return;
       const userId = localStorage.getItem("userId");
       if (!userId) {
-          showAlert("Login first");
           navigate("/login");
           return;
       }

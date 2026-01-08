@@ -1,5 +1,7 @@
+import { getGameSocket } from "../utils/gameSocket.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
+import { showAlert } from "../utils/alert.ts";
 
 export default function AiGame() {
   if (!requiredAuth())
@@ -8,12 +10,12 @@ export default function AiGame() {
   const game = {
     match: [{
       player1: {
-        avatar: "/public/pink-girl.svg",
-        name: "Salma",
+        // avatar: "/public/pink-girl.svg",
+        // name: "Salma",
         score: 0,
       }, 
       player2: {
-        avatar: "/public/Aipic.png", //"/public/Aiplayresize.png"
+        avatar: "robot.svg",
         name: "Ai",
         score: 0, 
       },
@@ -23,30 +25,22 @@ export default function AiGame() {
   return `
   <div id="container" class="relative w-full h-screen">
 
-    <!-- Top icons -->
-    <div class="absolute top-10 right-[5%] flex items-center gap-4">
-      <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
-          <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
-        </button>
-      </div>
-      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-      <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-    </div>
-
     <!-- Player Info & Score -->
-    <div class="absolute flex top-[25%] lg:top-[23%] xl:top-[18%] left-[12%] md:left-[2%] lg:left-[11%] xl:left-[22%] md:translate-x-1/2">
-        <img src="${game.match[0].player1.avatar}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
-        <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[3%] lg:ml-[10%] ">
-          <h1 class="font-glitch text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${game.match[0].player1.name} </h1>
-          <span id="player1-score-display" class="w-[40px] h-[30px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-primary text-xl bg-black drop-shadow-cyann">0</span>
+    <div class="absolute left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-4 lg:gap-60 top-[25%] md:top-[23%] xl:top-[18%]">
+      <div class="flex items-center justify-end w-[260px]">
+        <img src="" id="myImg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
+        <div class="flex flex-col items-center gap-1 md:gap-3">
+          <h1 id="userName" class="font-glitch text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"></h1>
+          <span id="player1-score-display" class="w-[40px] h-[30px] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-primary text-xl bg-black drop-shadow-cyann">0</span>
         </div>
-        <div class="flex flex-col items-center gap-1 md:gap-3 ml-[1%] md:ml-[20%] lg:ml-[35%]">
+      </div>
+      <div class="flex items-center justify-start w-[260px]">
+        <div class="flex flex-col items-center gap-1 md:gap-3">
           <h1 class="font-glitch text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${game.match[0].player2.name} </h1>
-          <span id="player2-score-display" class="w-[40px] h-[30px] pb-[30%] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-secondary text-xl bg-black drop-shadow-pink">0</span>
+          <span id="player2-score-display" class="w-[40px] h-[30px] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-secondary text-xl bg-black drop-shadow-pink">0</span>
         </div>
-        <img src="${game.match[0].player2.avatar}" class="w-[60px] h-[60px] ml-[1%] md:ml-[3%] lg:ml-[10%] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-secondary object-cover border-[2px]"/>
+        <img src="${game.match[0].player2.avatar}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-secondary p-2 border-[2px]"/>
+      </div>
     </div>
 
 
@@ -84,7 +78,7 @@ export default function AiGame() {
     </div>
 
     <!-- GAME CANVAS AREA -->
-    <div class="absolute rotate-90 lg:rotate-0 top-[43%] lg:top-[37%] xl:top-[32%] md:top-[38%]  md:left-[10%] h-[38%] md:h-[55%] w-[100%] md:w-[80%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
+    <div class="absolute left-1/2 transform -translate-x-1/2 rotate-90 lg:rotate-0 top-[43%] lg:top-[37%] xl:top-[32%] md:top-[38%] h-[38%] md:h-[55%] w-full md:w-[80%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
       <!-- This is where the game will be drawn -->
       <canvas 
         id="pongCanvas"
@@ -95,7 +89,33 @@ export default function AiGame() {
   `;
 }
 
+
+async function fillSettingsPage()
+{
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    // showAlert("Login first");
+    navigate("/login");
+    return ;
+  }
+  try
+  {
+    const res = await fetch(`http://localhost:3001/settings/${userId}`);
+    const data = await res.json();
+    // fill page
+    (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
+    (document.getElementById("userName") as HTMLElement).textContent = data.userName || "";
+  }
+  catch (err)
+  {
+    console.log(err);
+    showAlert("Error while fetching data: " + err);
+  }
+}
+
 export function AiGameEventListener() {
+  fillSettingsPage();
+  const socket = getGameSocket(localStorage.getItem("token"));
   setTimeout(() => {
     // Back button
     // const backBtn = document.getElementById('back-btn');
@@ -109,7 +129,7 @@ export function AiGameEventListener() {
     let animationId: number | null = null;
     let player1Score = 0;
     let player2Score = 0;
-    const WINNING_SCORE = 2; // Check which player WINS the match score 5
+    const WINNING_SCORE = 1; // Check which player WINS the match score 5
 
     const pauseBtn = document.getElementById('pause-btn') as HTMLButtonElement;
     const pauseOverlay = document.getElementById('pause-overlay') as HTMLDivElement;
@@ -326,7 +346,7 @@ export function AiGameEventListener() {
           const speedFactor = 0.7; // Ai padding moving speed // or we'll call it later difficulty level
           const move = Math.sign(diff) * PaddleSpeed * speedFactor * dt;
           // if (Math.abs(move) > Math.abs(diff)) paddleRightY = targetCenterY; else  // just to not make a gitch in the paddle's movement
-          paddleRightY += move;
+          paddleRightY += move / 2;
         }
         paddleRightY = Math.max(0, Math.min(height - paddleHeight, paddleRightY));
       }
@@ -407,56 +427,74 @@ export function AiGameEventListener() {
           ball.y = NewY;
         }
 
-        function displayWinner() {
-          const winner = player1Score >= WINNING_SCORE ? "Salma" : "héhé Ai";
-            const winnerOverlay = document.createElement('div');
-            winnerOverlay.id = 'winner-overlay';
-            winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[1000] flex flex-col items-center justify-center';
-            winnerOverlay.innerHTML = `
-              <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
-                <h2 class="text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
-                <p class="font-roboto text-2xl text-gray-300 mb-2">Final Score</p>
-                <div class="flex justify-center items-center gap-8 mb-8">
-                  <div class="text-center">
-                    <p class="text-primary text-3xl">${player1Score}</p>
-                    <p class="font-roboto text-gray-400">You</p>
+        async function displayWinner() {
+          const userId = localStorage.getItem("userId");
+          if (!userId) {
+            showAlert("Login first");
+            navigate("/login");
+          }
+          try
+          {
+            const res = await fetch(`http://localhost:3001/settings/${userId}`);
+            const data = await res.json();
+            const winner = player1Score >= WINNING_SCORE ? data.userName : "héhé Ai";
+              const winnerOverlay = document.createElement('div');
+              winnerOverlay.id = 'winner-overlay';
+              winnerOverlay.className = 'ml-12 md:ml-0 w-[80%] md:w-full absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
+              winnerOverlay.innerHTML = `
+                <div class="bg-black p-10 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
+                  <h2 class="text-2xl md:text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
+                  <p class="font-roboto text-xl md:text-2xl text-gray-300 mb-2">Final Score</p>
+                  <div class="flex justify-center items-center gap-8 mb-8">
+                    <div class="text-center">
+                      <p class="text-primary text-2xl md:text-3xl">${player1Score}</p>
+                      <p class="font-roboto text-gray-400">You</p>
+                    </div>
+                    <span class="text-3xl text-white">-</span>
+                    <div class="text-center">
+                      <p class="text-secondary text-2xl md:text-3xl">${player2Score}</p>
+                      <p class="font-roboto text-gray-400">Ai</p>
+                    </div>
                   </div>
-                  <span class="text-3xl text-white">-</span>
-                  <div class="text-center">
-                    <p class="text-secondary text-3xl">${player2Score}</p>
-                    <p class="font-roboto text-gray-400">Ai</p>
+                  <div class="space-y-4">
+                    <button id="play-again-btn" class="text-[15px] md:text-xl w-[150px] md:w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
+                      <i class="fa-solid fa-rotate-right mr-2"></i>
+                      Play Again
+                    </button>
+                    <button id="main-menu-btn" class="text-[15px] md:text-xl w-[150px] md:w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all duration-300">
+                      <i class="fa-solid fa-home mr-2"></i>
+                      Main Menu
+                    </button>
                   </div>
                 </div>
-                <div class="space-y-4">
-                  <button id="play-again-btn" class="w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
-                    <i class="fa-solid fa-rotate-right mr-2"></i>
-                    Play Again
-                  </button>
-                  <button id="main-menu-btn" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all duration-300">
-                    <i class="fa-solid fa-home mr-2"></i>
-                    Main Menu
-                  </button>
-                </div>
-              </div>
-            `;
-            
-            document.querySelector('#container')?.appendChild(winnerOverlay);
-
-              const playAgainBtn = document.getElementById('play-again-btn');
-              const mainMenuBtn = document.getElementById('main-menu-btn');
+              `;
               
-              if (playAgainBtn) {
-                playAgainBtn.addEventListener('click', () => {
-                  winnerOverlay.remove();
-                  restartGame();
-                });
-              }
-              
-              if (mainMenuBtn) {
-                mainMenuBtn.addEventListener('click', () => {
-                  navigate('/localMode');
-                });
-              }
+              document.querySelector('#container')?.appendChild(winnerOverlay);
+  
+                const playAgainBtn = document.getElementById('play-again-btn');
+                const mainMenuBtn = document.getElementById('main-menu-btn');
+                
+                if (playAgainBtn) {
+                  playAgainBtn.addEventListener('click', () => {
+                    winnerOverlay.remove();
+                    restartGame();
+                  });
+                }
+                
+                if (mainMenuBtn) {
+                  mainMenuBtn.addEventListener('click', () => {
+                    navigate('/localMode');
+                  });
+                }
+                if (winner === data.userName) {
+                  socket.emit('save-ai-match', { userId });
+                }
+          }
+          catch (err)
+          {
+            console.log(err);
+            showAlert("Error while fetching data: " + err);
+          }
         }
 
         if (ball.x - ball.r > width) {

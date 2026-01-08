@@ -1,9 +1,22 @@
 import { getSavedLang } from "../i18n";
-import { navigate } from "../main";
+import { getTrSocket } from "../utils/tournamentSocket.ts";
+import { navigate } from "../main.ts";
+
+interface AvTournaments {
+    img: string;
+    name: string;
+    numOfPlayers: number;
+}
 
 export async function tournamentChoices() {
-    const emptyAvTournaments = "";
-    const avTournaments = [
+    const emptyAvTournaments = /* html */
+    `
+    <div class="w-full flex flex-col items-center justify-center py-20 text-primary/80 rounded-2xl bg-black drop-shadow-cyan">
+        <i class="fa-solid fa-table-tennis-paddle-ball text-7xl mb-12"></i>
+        <h2 class="text-2xl font-bold mb-2">No tournament available</h2>
+    </div>
+    `;
+    const avTournaments: AvTournaments[] = [
         {img: "/dark-girl.svg", name: "Pong legends", numOfPlayers: 3},
         {img: "/dark-girl.svg", name: "tournowa d ramadan", numOfPlayers: 3},
         {img: "/dark-girl.svg", name: "tajamo3 l a7rar", numOfPlayers: 3},
@@ -24,7 +37,7 @@ export async function tournamentChoices() {
     ];
     const currentLang = (await getSavedLang()).toUpperCase();
     return `
-        <div class="min-h-screen text-white font-roboto px-6 md:px-20 py-10 relative overflow-y-auto">
+        <div class="text-white font-roboto px-6 md:px-20 py-10 relative">
             <!-- Sidebar -->
             <aside
                 class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
@@ -60,7 +73,7 @@ export async function tournamentChoices() {
             </div>
 
             <!-- Content Wrapper-->
-            <div class="grid grid-cols-1 gap-20 lg:grid-cols-[1fr_1fr] max-w-[1400px] max-h-[70px] justify-center md:ml-[10%] mt-36">
+            <div class="grid grid-cols-1 gap-20 lg:grid-cols-[1fr_1fr] max-w-[1400px] max-h-[70px] md:ml-[10%] lg:ml-[5%] xl:ml-[14%] mt-36">
                 <div class="md:flex md:gap-32">
                 <div class="flex flex-col justify-center">
                     <h1 class="font-glitch text-center text-3xl mb-8">Available tournaments</h1>
@@ -102,10 +115,50 @@ export async function tournamentChoices() {
                                 <i class="fa-solid fa-plus absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer text-secondary"></i>
                             </div>
                         </div>
-                        <button class="bg-primary/60 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary mb-16">Create</button>
+                        <button id=trcreate class="bg-primary/60 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary mb-16">Create</button>
                     </div>
                 </div>
             </div>
         </div>
     `
 }
+
+
+export function tournamentChoicesEventListener(){
+  setTimeout(() => {
+  const btnTr = document.getElementById("trcreate");
+  if (btnTr) {
+    btnTr.addEventListener("click", () => {
+      console.log("Create tr button is clicked!");
+
+      const token = localStorage.getItem("token"); // this will get JWT prolly
+      if (!token) {
+        navigate("/login"); 
+        return;
+      }
+
+      const socket = getTrSocket(token); /// here is the key to send request to our game server
+
+      if (!socket.hasListeners("match_found")) {
+          
+          socket.on("connect", () => {
+              console.log("✅ Connected via Manager! ID:", socket.id);
+              navigate("/TrWaitingPlayers");
+              socket.emit('join_queue');
+          });
+
+          socket.on("match_found", (data: any) => {
+              console.log("🎉 MATCH FOUND! Navigating to game...");
+              localStorage.setItem("currentMatch", JSON.stringify(data));
+              navigate("/remotegame"); 
+          });
+      }
+
+      if (socket.connected) {
+            socket.emit('join_queue');
+      }
+    });
+  }
+}, 100);
+}
+

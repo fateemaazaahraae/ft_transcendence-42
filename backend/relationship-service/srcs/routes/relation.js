@@ -14,6 +14,24 @@ export async function relationRoutes(fastify) {
             VALUES (?, ?, 'pending', ?)`,
             [from, to, Date.now()]
         );
+        // notif
+        try {
+            const id = from;
+            const fromUserRes = await fetch(`http://auth-service:3000/users/${id}`);
+            const fromUser = await fromUserRes.json()
+            await fetch("http://notification-service:3005/notifications", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId: to,
+                    type: "FRIEND_REQUEST",
+                    payload: { fromUserId: from, fromUserName: fromUser.userName}
+                })
+            });
+        }
+        catch(err) {
+            console.error("Failed to send notification:", err.message);
+        }
         return { success: true };
     })
 
@@ -35,6 +53,7 @@ export async function relationRoutes(fastify) {
             [me, from, Date.now()]
         );
 
+
         //  REALTIME PART 
     try {
         await fetch("http://chat-service:4000/internal/friend-accepted", {
@@ -53,6 +72,26 @@ export async function relationRoutes(fastify) {
     }
 
     
+
+        // notif
+        try {
+            const id = me;
+            const fromUserRes = await fetch(`http://auth-service:3000/users/${id}`);
+            const fromUser = await fromUserRes.json()
+            await fetch("http://notification-service:3005/notifications", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId: from,
+                    type: "FRIEND_REQUEST_ACCEPTED",
+                    payload: { fromUserId: from, fromUserName: fromUser.userName}
+                })
+            });
+        }
+        catch(err) {
+            console.error("Failed to send notification:", err.message);
+        }
+
         return { success: true };
     });
 

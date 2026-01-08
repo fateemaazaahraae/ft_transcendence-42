@@ -16,6 +16,7 @@ export const messages: Record<string, Record<string, string>> = {
     PASSWORD_MISMATCH: "Passwords do not match",
     INVALID_TOKEN: "Invalid token",
     NETWORK_ERROR: "Network error. Please try again.",
+    modePlay: "How do you prefer to play?",
   },
   fr: {
     USER_NOT_FOUND: "Utilisateur introuvable",
@@ -34,6 +35,7 @@ export const messages: Record<string, Record<string, string>> = {
     PASSWORD_MISMATCH: "Les mots de passe ne correspondent pas.",
     INVALID_TOKEN: "Jeton invalide",
     NETWORK_ERROR: "Erreur réseau. Veuillez réessayer.",
+    modePlay: "Comment préférez-vous jouer?",
 
   },
   sp: {
@@ -53,6 +55,6 @@ export const messages: Record<string, Record<string, string>> = {
     PASSWORD_MISMATCH: "Las contraseñas no coinciden",
     INVALID_TOKEN: "Token inválido",
     NETWORK_ERROR: "Error de red. Por favor, inténtalo de nuevo.",
-
+    modePlay: "¿Cómo prefieres jugar?",
   }
 };

@@ -70,6 +70,6 @@ module.exports = {
       });
       addUtilities(Object.fromEntries(newUtilities));
     },
-    require("tailwind-scrollbar")({ nocompatible: true }),
+    require('tailwind-scrollbar'),
   ],
 };

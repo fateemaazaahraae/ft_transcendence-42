@@ -14,6 +14,7 @@ services:
       - profile-service
       - relationship-service
       - game-service
+      - chat-service
     networks:
       - ft_transcendence
     ports:
@@ -36,9 +37,7 @@ services:
       - "3000:3000"
     networks:
       - ft_transcendence
-    
 
-  # chat service
   chat-service:
     build: ./backend/chat-service
     container_name: chat-service
@@ -50,6 +49,24 @@ services:
       - ./backend/chat-service/chat.sqlite:/app/chat.sqlite
     ports:
       - "4000:4000"
+    networks:
+      - ft_transcendence
+    restart: always
+
+  notification-service:
+    platform: linux/amd64
+    build: 
+      context: ./backend/notification-service
+      dockerfile: Dockerfile
+    image: notification-service
+    container_name: notification-service
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/notification-service:/app
+      - /app/node_modules
+    ports:
+      - "3005:3005"
     networks:
       - ft_transcendence
     restart: always
@@ -87,6 +104,24 @@ services:
       - "3003:3003"
     networks:
       - ft_transcendence
+
+  tournament-service:
+    platform: linux/amd64
+    build:
+      context: ./backend/tournament-service
+      dockerfile: Dockerfile
+    image: tournament-service
+    container_name: tournament-service
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/tournament-service:/app
+      - /app/node_modules
+    ports:
+      - "3004:3004"
+    networks:
+      - ft_transcendence
+
   relationship-service:
     platform: linux/amd64
     build:
@@ -118,6 +153,7 @@ services:
       - profile-service
       - relationship-service
       - game-service
+      - tournament-service
     volumes:
       - uploads:/app/uploads
       # - profile-service

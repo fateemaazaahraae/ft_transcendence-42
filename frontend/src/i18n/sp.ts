@@ -25,7 +25,25 @@ const sp: translateDict = {
     twoFA: "Autenticación de dos factores",
     FAdesc: "Agrega una capa extra de protección a tu cuenta requiriendo un código de verificación antes de acceder.",
     save: "Ahorrar",
-    changeAvt: "Cambia tu avatar"
+    changeAvt: "Cambia tu avatar",
+    level: "Nivel",
+    rank: "Rango",
+    winRate: "Ratio",
+    wins: "Victorias",
+    losses: "Derrotas",
+    achievements: "Logros",
+    matchHist: "Historial de partidas",
+    play: "jugar",
+    noMatches: "Aún no se han jugado partidas",
+    score: "Puntuación",
+    modePlay: "¿Cómo prefieres jugar?",
+    remote: "En línea",
+    local: "Local",
+    or: "O",
+    ready: "¿Listo para jugar?",
+    pick: "Elige tu modo",
+    one: "Uno-contra-Uno",
+    ai: "Uno-contra-IA",
 }
 
 export default sp;

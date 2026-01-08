@@ -25,7 +25,25 @@ const fr: translateDict = {
     twoFA: "Authentification à deux facteurs",
     FAdesc: "Ajoutez une couche supplémentaire de protection à votre compte en exigeant un code de vérification avant l'accès.",
     save: "Sauvegarder",
-    changeAvt: "Changez votre avatar"
+    changeAvt: "Changez votre avatar",
+    level: "Niveau",
+    rank: "rang",
+    winRate: "Taux de victoire",
+    wins: "Victoires",
+    losses: "Défaites",
+    achievements: "Réalisations",
+    matchHist: "Historique des matchs",
+    play: "jouer",
+    noMatches: "Aucun match joué pour le moment",
+    score:"Score",
+    modePlay:"Comment préférez-vous jouer?",
+    remote: "À distance",
+    local:"local",
+    or: "OU",
+    ready: "Prêt à jouer?",
+    pick: "Choisissez votre mode",
+    one: "Un-contre-Un",
+    ai: "Un-contre-IA"
 }
 
 export default fr;
