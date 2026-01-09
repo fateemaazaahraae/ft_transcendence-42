@@ -55,15 +55,15 @@ export default async function RemoteVsLocal(){
                             mb-12 whitespace-nowrap text-center leading-none"
                     >
 
-                        <span data-i18n="modePlay" class="absolute inset-0 text-secondary animate-glitch-slow z-20">
+                        <span data-i18n="modePlay" class="absolute text-secondary animate-glitch-slow  z-20">
                         How do you prefer to play?
                         </span>
 
-                        <span data-i18n="modePlay" class="absolute inset-0 translate-x-[1px] translate-y-[2px] text-primary animate-glitch z-30">
+                        <span data-i18n="modePlay" class="absolute  translate-x-[1px] translate-y-[1px] text-primary z-40">
                         How do you prefer to play?
                         </span>
 
-                        <span data-i18n="modePlay" class="relative translate-x-[5px] translate-y-[5px]  text-white/95 animate-glitch z-40">
+                        <span data-i18n="modePlay" class="absolute translate-x-[15px] translate-y-[25px]  text-white/95 animate-glitch z-50">
                         How do you prefer to play?
                         </span>
                     </div>
