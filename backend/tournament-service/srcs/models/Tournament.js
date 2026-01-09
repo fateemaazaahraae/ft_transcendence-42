@@ -93,6 +93,10 @@ export const StartTournament = (server) => {
             }
         });
 
+        socket.on('GoToFinal', () => {
+          console.log(`\n\n🔥Let'sss go to the final yalaaah🔥\n\n`);
+        });
+
         socket.on("join_queue", () => {
             const userId = socket.data.userId;
             const userData = socket.data.user;
