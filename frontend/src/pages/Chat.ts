@@ -76,10 +76,11 @@ export default async function Chat() {
         <div id="main_chat" 
          class="w-full h-full 
                 hidden md:block
+                block
                 absolute top-0 left-0  
                 shadow-lg overflow-hidden text-white rounded-xl
                 md:relative md:flex lg:w-[90%] md:w-[90%] md:h-[700px]">        <div id="chatContainer" class="w-full h-full flex flex-col">
-                <div id="chatHeader" class="hidden relative md:h-16 flex items-center justify-between pl-6 p-3 rounded-t-xl bg-primary/80"> <div class="flex items-center gap-3">
+                <div id="chatHeader" class="hidden relative md:h-16 flex items-center justify-between md:pl-8 p-3 rounded-t-xl bg-primary/80"> <div class="flex items-center gap-3">
                 <i id="backToContacts"
           class="fa-solid fa-arrow-left bg-primary cursor-pointer p-3 rounded-full text-white md:hidden"></i>
     <img id="chatContactAvatar" src="/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
@@ -94,7 +95,7 @@ export default async function Chat() {
             </button>
 
           <div id="dropdownMenu" class="hidden absolute right-3 top-12 bg-#35C6DD backdrop-blur-md rounded-lg shadow-lg py-2 w-40 z-50">
-            <button class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
+            <button id="contactInfo" class="w-full text-left px-2 py-2 hover:bg-primary/65 hover:rounded-2xl text-white text-[14px] transition-all duration-300 whitespace-nowrap flex items-center gap-2">
               <i class="fas fa-circle-info"></i>
               Contact Info
             </button>

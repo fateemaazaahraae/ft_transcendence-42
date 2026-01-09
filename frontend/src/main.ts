@@ -119,7 +119,7 @@ window.addEventListener("DOMContentLoaded", async() => {
         updateUnreadCount(userId);
         setInterval(() => {
             updateUnreadCount(userId);
-        }, 2000);
+        }, 5000);
     }
     LanguagesMenuEventListener();
 });

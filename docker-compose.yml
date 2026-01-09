@@ -53,7 +53,6 @@ services:
       - ft_transcendence
     restart: always
 
-
   notification-service:
     platform: linux/amd64
     build: 
