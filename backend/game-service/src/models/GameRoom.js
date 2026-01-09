@@ -77,6 +77,8 @@ export default class GameRoom {
           WHERE id = ?`,
           [winnerId]
         );
+        console.log("***********updating the win/lose data***********");
+
 
         await db.run(
           `UPDATE wlxp
@@ -123,9 +125,9 @@ export default class GameRoom {
       });
 
       socket.on('disconnect', () => {
-          console.log(`❌ Player ${socket.data.userId} disconnected during match!`);
+          console.log(`Player ${socket.data.userId} disconnected during or after match!`);
           
-          this.handlePlayerDisconnect(socket);
+          // this.handlePlayerDisconnect(socket);
       });
     }
 
@@ -194,8 +196,8 @@ export default class GameRoom {
     ) {
       this.gameState.ball.dx *= -1;
       // Speed up slightly for fun
-      this.gameState.ball.dx *= 0.9; 
-      this.gameState.ball.dy *= 0.9;
+      this.gameState.ball.dx *= 1.5; 
+      this.gameState.ball.dy *= 1.5;
     }
 
     if (
@@ -206,8 +208,8 @@ export default class GameRoom {
       this.gameState.ball.y <= this.gameState.paddle2.y + PADDLE_HEIGHT
     ) {
       this.gameState.ball.dx *= -1;
-      this.gameState.ball.dx *= 0.9; 
-      this.gameState.ball.dy *= 0.9;
+      this.gameState.ball.dx *= 1.5; 
+      this.gameState.ball.dy *= 1.5;
     }
 
 
@@ -269,6 +271,7 @@ export default class GameRoom {
           WHERE id = ?`,
           [winnerId]
         );
+        console.log("***********updating the win/lose data***********");
 
         await db.run(
           `UPDATE wlxp

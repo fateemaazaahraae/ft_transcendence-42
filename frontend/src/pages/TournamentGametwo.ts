@@ -1,10 +1,11 @@
-import { getGameSocket } from "../utils/gameSocket.ts";
+// import { getGameSocket } from "../utils/gameSocket.ts";
+import { getTrSocket } from "../utils/tournamentSocket.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 import { showAlert } from "../utils/alert.ts";
 import { match } from "node:assert";
 
-export default function RemoteGame() {
+export default function TournamentGametwo() {
   if (!requiredAuth()) return "";
   let p1 = { score: 0 };// Adding score
   let p2 = { score: 0 };
@@ -65,11 +66,11 @@ export default function RemoteGame() {
 
 export async function fillSettingsPage()
 {
-  const cachedData = localStorage.getItem("currentMatch");
+  const cachedData = localStorage.getItem("currentMatch2");
   if (cachedData) {
     const match = JSON.parse(cachedData);
-    const userId = match.player1.id;
-    const userId2 = match.player2.id;
+    const userId = match.player3.id;
+    const userId2 = match.player4.id;
     if (!userId || !userId2) {
       showAlert("Login first");
       navigate("/login");
@@ -122,9 +123,9 @@ export async function winnerdata(winner: any) {
     }
 }
 
-export function RemoteGameEventListener() {
+export function TournamentGametwoEventListener() {
   fillSettingsPage();
-  const socket = getGameSocket(localStorage.getItem("token"));
+  const socket = getTrSocket(localStorage.getItem("token"));
   const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
   const ctx = canvas?.getContext("2d");
   
@@ -152,6 +153,7 @@ export function RemoteGameEventListener() {
 
   socket.on("game_update", (gameState: any) => {// listen for a socket.emit('game_update') with the new positions
     if (!ctx || !canvas) return;
+    console.log()
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -230,7 +232,7 @@ export function RemoteGameEventListener() {
             winnerOverlay.id = 'winner-overlay';
             winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
             winnerOverlay.innerHTML = `
-              <div class="bg-black p-10 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
+              <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
                 <h3 class="text-3xl font-glitch ${h3ColorClass} mb-3">${h3Text}</h3>
                 <h2 class="text-green" mb-5>${HeaderMsg}</h2>
                 <h1 class="text-green text-bold" mb-4>WINNER IS</h1>

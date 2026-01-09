@@ -74,9 +74,8 @@ export default async function Chat() {
           <div class="h-full w-full md:w-[80%] "> 
             
         <div id="main_chat" 
-         class="w-full h-full 
+         class="w-full h-[700px] 
                 hidden md:block
-                block
                 absolute top-0 left-0  
                 shadow-lg overflow-hidden text-white rounded-xl
                 md:relative md:flex lg:w-[90%] md:w-[90%] md:h-[700px]">        <div id="chatContainer" class="w-full h-full flex flex-col">
@@ -112,7 +111,7 @@ export default async function Chat() {
     </div>
 
 
-            <div id="messagesPanel" class="flex-1 p-4 space-y-4 overflow-y-auto bg-primary/60 min-h-0">
+            <div id="messagesPanel" class="flex-1 p-4 space-y-4 overflow-y-auto bg-primary/60 min-h-0 hidden md:block">
               <div class="flex-1 flex items-center justify-center h-full">
                    <h1 class="text-center text-primary/65  font-bold text-4xl ">Ping Pong<br>Chat</h1>
               </div>

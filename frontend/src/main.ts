@@ -29,6 +29,8 @@ import Chat from "./pages/Chat.ts";
 import { ChatEventListener } from "./pages/chatEventListener.ts";
 import { showAlert } from "./utils/alert.ts";
 import RemoteGame, { RemoteGameEventListener } from "./pages/RemoteGame.ts";////
+import TournamentGame, { TournamentGameEventListener } from "./pages/TournamentGame.ts";////
+import TournamentGametwo, { TournamentGametwoEventListener } from "./pages/TournamentGametwo.ts";////
 import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
 import { searchBar } from "./pages/searchBar.ts";
 import { tournamentChoices, tournamentChoicesEventListener } from "./pages/tournamentChoices.ts";
@@ -58,6 +60,8 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
     "/chat": {render: Chat, setUp: ChatEventListener},
     "/remotegame": { render: RemoteGame, setUp: RemoteGameEventListener },
+    "/tournamentgame": {render: TournamentGame, setUp: TournamentGameEventListener},
+    "/tournamentgametwo": {render: TournamentGametwo, setUp: TournamentGametwoEventListener},
     "/tournamentChoices": { render: tournamentChoices, setUp: tournamentChoicesEventListener },
     404: {render: PageNotFound},
 };
@@ -120,6 +124,7 @@ window.addEventListener("DOMContentLoaded", async() => {
         setInterval(() => {
             updateUnreadCount(userId);
         }, 5000);
+        notificationBarListeners(userId);
     }
     LanguagesMenuEventListener();
 });
