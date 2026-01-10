@@ -226,7 +226,6 @@ export function TournamentGameEventListener() {
         HeaderMsg = ""
       }
       console.log(data.winner)
-/// here I will pull only to show this if he was a loser
       if (!isWinner) {
         const winnerOverlay = document.createElement('div');
         winnerOverlay.id = 'winner-overlay';
@@ -272,7 +271,6 @@ export function TournamentGameEventListener() {
         socket.emit("GoToFinal");
         navigate("/TrWaitingPlayers");
       }
-////and if winner redirect him to the final match or trwaitingplayers page
     });
   });
 

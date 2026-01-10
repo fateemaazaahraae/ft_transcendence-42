@@ -185,7 +185,7 @@ export function TrWaitingPlayersEventListener() {
     console.log("🎉 MATCH Fiiiiiiiiiiinal!...");
     console.log("Navigating to gameFinal...");
     localStorage.setItem("LastMatch", JSON.stringify(data));
-    navigate("/FinalMatchTr"); 
+    navigate("/FinalMatchTr");
   });
 
   socket.on("match_found1", (data: any) => {

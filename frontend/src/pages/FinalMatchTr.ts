@@ -288,8 +288,8 @@ export function FinalMatchTrEventListener() {
 
   if (quitBtn) {
     quitBtn.addEventListener('click', () => {
-      cleanupGame();
       leaveGame();
+      cleanupGame();
       navigate("/home");
     });
   }
