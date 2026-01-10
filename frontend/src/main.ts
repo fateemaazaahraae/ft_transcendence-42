@@ -29,6 +29,7 @@ import Chat from "./pages/Chat.ts";
 import { ChatEventListener } from "./pages/chatEventListener.ts";
 import { showAlert } from "./utils/alert.ts";
 import RemoteGame, { RemoteGameEventListener } from "./pages/RemoteGame.ts";////
+import FinalMatchTr, { FinalMatchTrEventListener } from "./pages/FinalMatchTr.ts";////
 import TournamentGame, { TournamentGameEventListener } from "./pages/TournamentGame.ts";////
 import TournamentGametwo, { TournamentGametwoEventListener } from "./pages/TournamentGametwo.ts";////
 import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
@@ -60,6 +61,7 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
     "/chat": {render: Chat, setUp: ChatEventListener},
     "/remotegame": { render: RemoteGame, setUp: RemoteGameEventListener },
+    "/FinalMatchTr": { render: FinalMatchTr, setUp: FinalMatchTrEventListener },
     "/tournamentgame": {render: TournamentGame, setUp: TournamentGameEventListener},
     "/tournamentgametwo": {render: TournamentGametwo, setUp: TournamentGametwoEventListener},
     "/tournamentChoices": { render: tournamentChoices, setUp: tournamentChoicesEventListener },

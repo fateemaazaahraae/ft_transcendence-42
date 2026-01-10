@@ -1,4 +1,3 @@
-// import { getGameSocket } from "../utils/gameSocket.ts";
 import { getTrSocket } from "../utils/tournamentSocket.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
@@ -271,7 +270,7 @@ export function TournamentGameEventListener() {
         window.removeEventListener("popstate", leaveGame);
         window.removeEventListener("beforeunload", leaveGame);
         socket.emit("GoToFinal");
-        // navigate("/TrWaitingPlayers");
+        navigate("/TrWaitingPlayers");
       }
 ////and if winner redirect him to the final match or trwaitingplayers page
     });
