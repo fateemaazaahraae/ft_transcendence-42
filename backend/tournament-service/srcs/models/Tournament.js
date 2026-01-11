@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import GameRoom from "./TournamentRoom.js";
-// import { getDb } from "./db.js";
+import { openDb } from "./db.js";
 
 const waitingQueue = [];
 
@@ -48,7 +48,7 @@ function getAvatars(waitingQueue) {
 //   });
 // }
 
-export const StartTournament = (server) => {
+export const StartTournament =(server) => {
 
     const io = new Server(server, { cors: { origin: "*" }, methods: ["GET", "POST"] });
     
@@ -93,7 +93,7 @@ export const StartTournament = (server) => {
             }
         });
 
-        socket.on("join_queue", () => {
+        socket.on("join_queue", (data) => {
             const userId = socket.data.userId;
             const userData = socket.data.user;
 
@@ -110,6 +110,20 @@ export const StartTournament = (server) => {
             let playersPicInfo = [];
             playersPicInfo = getAvatars(waitingQueue);/// this is wronggggg
             console.log(`Queue size: ${waitingQueue.length}`);
+            try {
+                  const db = await openDb();
+
+                  await db.run(
+                  `UPDATE players
+                  SET players = ?
+                  WHERE id = ?`,
+                  [waitingQueue.length, data.tournamentId]
+                  );
+                  
+                  console.log("✅ Match vs Ai is saved to SQLite database!");
+              } catch (error) {
+                  console.error("❌ Failed to save Ai match:", error);
+              }
             broadcastQueueState(io, waitingQueue);
             socket.emit("player_connected", {pic: userData.avatar, name: userData.name, number: waitingQueue.length, avatars: playersPicInfo})
             if (waitingQueue.length > 1) {
