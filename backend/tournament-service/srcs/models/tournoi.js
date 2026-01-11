@@ -10,6 +10,7 @@ export async function createTournament(tournamentName, nickName)
          VALUES (?, ?, ?, ?)`,
          [id, tournamentName, nickName, 1]
     );
+    const players = await db.get(`SELECT players from tournaments WHERE id = ?`, [id] );
     return {id, tournamentName, nickName, players};
 }
 

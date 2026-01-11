@@ -52,27 +52,42 @@ export async function relationRoutes(fastify) {
             VALUES (?, ?, 'accepted', ?)`,
             [me, from, Date.now()]
         );
-
+        // notif
+        // try {
+        //     const id = me;
+        //     const fromUserRes = await fetch(`http://auth-service:3000/users/${id}`);
+        //     const fromUser = await fromUserRes.json()
+        //     await fetch("http://notification-service:3005/notifications", {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify({
+        //             userId: from,
+        //             type: "FRIEND_REQUEST_ACCEPTED",
+        //             payload: { fromUserId: from, fromUserName: fromUser.userName}
+        //         })
+        //     });
+        // }
+        // catch(err) {
+        //     console.error("Failed to send notification:", err.message);
+        // }
 
         //  REALTIME PART 
-    try {
-        await fetch("http://chat-service:4000/internal/friend-accepted", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "x-service-token": process.env.SERVICE_TOKEN
-            },
-            body: JSON.stringify({
-                userId: me,
-                friendId: from
-            })
-        });
-    } catch (e) {
-        console.error('friend accepted realtime failed', e);
-    }
-
-    
-
+        try {
+            await fetch("http://chat-service:4000/internal/friend-accepted", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-service-token": process.env.SERVICE_TOKEN
+                },
+                body: JSON.stringify({
+                    userId: me,
+                    friendId: from
+                })
+            });
+        }
+        catch (e) {
+            console.error('friend accepted realtime failed', e);
+        }
         // notif
         try {
             const id = me;
@@ -107,44 +122,44 @@ export async function relationRoutes(fastify) {
     });
 
     // block user
-fastify.post("/block", { preHandler: fastify.authenticate }, async (req, reply) => {
-    const user_id = req.user?.id;
-    const { blockedId } = req.body;
+    fastify.post("/block", { preHandler: fastify.authenticate }, async (req, reply) => {
+        const user_id = req.user?.id;
+        const { blockedId } = req.body;
 
-    // validate
-    if (!blockedId) {
-        try { console.warn(' POST /block missing blockedId from user:', user_id); } catch (e) {}
-        return reply.code(400).send({ error: 'missing blockedId' });
-    }
+        // validate
+        if (!blockedId) {
+            try { console.warn(' POST /block missing blockedId from user:', user_id); } catch (e) {}
+            return reply.code(400).send({ error: 'missing blockedId' });
+        }
 
-    const db = await openDb();
-    try {
-        await db.run(
-            `INSERT OR IGNORE INTO blocked_users (user_id, blocked_user_id, created_at)
-             VALUES (?, ?, ?)`,
-            [user_id, blockedId, Date.now()]
-        );
+        const db = await openDb();
+        try {
+            await db.run(
+                `INSERT OR IGNORE INTO blocked_users (user_id, blocked_user_id, created_at)
+                VALUES (?, ?, ?)`,
+                [user_id, blockedId, Date.now()]
+            );
 
-        await db.run(
-            `DELETE FROM friends
-             WHERE (user_id = ? AND friend_id = ?)
-             OR (user_id = ? AND friend_id = ?)`,
-            [user_id, blockedId, blockedId, user_id]
-        );
+            await db.run(
+                `DELETE FROM friends
+                WHERE (user_id = ? AND friend_id = ?)
+                OR (user_id = ? AND friend_id = ?)`,
+                [user_id, blockedId, blockedId, user_id]
+            );
 
-        return { success: true, blocked: { user_id: String(user_id), blocked_user_id: String(blockedId) } };
-    } catch (err) {
-        console.error(' /block error:', err && err.message ? err.message : err);
-        return reply.code(500).send({ error: 'block failed' });
-    }
-});
+            return { success: true, blocked: { user_id: String(user_id), blocked_user_id: String(blockedId) } };
+        } catch (err) {
+            console.error(' /block error:', err && err.message ? err.message : err);
+            return reply.code(500).send({ error: 'block failed' });
+        }
+    });
 
 // DEBUG: dump blocked_users (local testing only - remove when done)
-fastify.get('/debug/blocked-all', async (req, reply) => {
-  const db = await openDb();
-  const rows = await db.all('SELECT user_id, blocked_user_id, created_at FROM blocked_users');
-  return reply.send(rows);
-});
+    fastify.get('/debug/blocked-all', async (req, reply) => {
+    const db = await openDb();
+    const rows = await db.all('SELECT user_id, blocked_user_id, created_at FROM blocked_users');
+    return reply.send(rows);
+    });
 
     // unblock user
     fastify.post("/unblock", { preHandler: fastify.authenticate }, async (req) => {

@@ -52,8 +52,9 @@ export default async function TournamentRoutes(fastify) {
         const db = await openDb();
         const tournaments = await db.all(
             `SELECT id, tournamentName, nickName, players
-             FROM tournaments`
+            FROM tournaments`
         );
+
         return tournaments;
     });
 

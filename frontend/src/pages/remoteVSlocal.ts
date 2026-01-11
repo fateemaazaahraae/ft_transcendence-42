@@ -80,18 +80,12 @@ export default async function RemoteVsLocal(){
 }
 
 export async function RemoteVsLocalEventListener(){
-    // const title = document.getElementById("modePlayTitle");
-    // if (title) {
-    //     const currentLang = (await getSavedLang()).toUpperCase();
-    //     const text = await translateMsg("modePlay");
-    //     title.textContent = text;
-    //     title.setAttribute("data-glitch-text", text);
-
-    // }
     const remote = document.getElementById("remote");
-    remote?.addEventListener("click", () => {navigate("/gameStyle");
+    remote?.addEventListener("click", () => {
+        navigate("/gameStyle");
     });
     const local = document.getElementById("local");
-    local?.addEventListener("click", () => {navigate("/localMode");
+    local?.addEventListener("click", () => {
+        navigate("/localMode");
     });
 }

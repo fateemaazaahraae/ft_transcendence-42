@@ -23,7 +23,7 @@ export async function tournamentChoices() {
         if (!res.ok)
             showAlert("error here!!");
         tournaments = await res.json();
-        alert(tournaments[tournaments.length - 1].players)
+        // alert(tournaments[tournaments.length - 1].players)
 
     }
     catch(err)
@@ -84,7 +84,7 @@ export async function tournamentChoices() {
                                                 <img src="/golden_trophy.svg" class="w-[55px] h-[55px] rounded-full border border-primary/50"/>
                                                 <div class="flex flex-col items-start ml-8">
                                                     <p class="font-bold">${tour.tournamentName}</p>
-                                                    <p class="text-white/70 ">${tour.players}</p>
+                                                    <p class="text-white/70 ">${tour.players} players</p>
                                                 </div>
                                                 <i class="fa-solid fa-right-to-bracket text-secondary text-3xl absolute right-6 cursor-pointer"></i>
                                             </div>
@@ -120,6 +120,7 @@ export async function tournamentChoices() {
 function handleTournamentbtn(tournamentId: string) {
     console.log("Create tr button is clicked!");
     const token = localStorage.getItem("token"); // this will get JWT prolly
+    console.log("hereeeeeeeeeeeee" + token);
     if (!token) {
         navigate("/login"); 
         return;
@@ -133,7 +134,7 @@ function handleTournamentbtn(tournamentId: string) {
 }
 
 export async function tournamentChoicesEventListener() {
-
+    let tournamentId: string;
     const form = document.getElementById("tourForm") as HTMLFormElement | null;
     if(!form)
         return;
@@ -150,24 +151,25 @@ export async function tournamentChoicesEventListener() {
             });
             
             const data = await res.json();
-            const tournamentId = data.id;
-            const btnTr = document.getElementById("submit");
-            if (btnTr) {
-                btnTr.removeEventListener("click", () => handleTournamentbtn(tournamentId));
-                btnTr.addEventListener("click", () => handleTournamentbtn(tournamentId));            }
-        if (!res.ok){
-            showAlert("Tournament creation failed");
+            if (!res.ok){
+                showAlert("Tournament creation failed");
+                return;
+            }
+             tournamentId = data.id;
+            
+            console.log("Tournament created:", data);
+            
+        } catch (err) {
+            console.error(err);
+            showAlert("Problem in creation of tournament");
             return;
         }
-
-        console.log("Tournament created:", data);
-
-      } catch (err) {
-        console.error(err);
-        showAlert("Problem in creation of tournament");
-        return;
-      }
     });
+    const btnTr = document.getElementById("submit");
+    if (btnTr) {
+        btnTr.addEventListener("click", () => handleTournamentbtn(tournamentId));
+        btnTr.removeEventListener("click", () => handleTournamentbtn(tournamentId));
+    }
 }
 
 

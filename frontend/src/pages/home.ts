@@ -74,7 +74,7 @@ export default async function Home() {
   try{
     const res = await fetch(`http://localhost:3003/leaderboard`);
     if (!res.ok)
-      return[];
+      return "";
     players = await res.json();
    // players.sort((a, b)=> b.XPoints - a.XPoints);
     const myIndex = players.findIndex(
@@ -85,7 +85,7 @@ export default async function Home() {
   catch(err)
   {
     console.log(err);
-    return;
+    return "";
   }
 
   const currentLang = (await getSavedLang()).toUpperCase();
@@ -289,13 +289,8 @@ export default async function Home() {
 }
 
 
-async function GetWinsLosses()
+export async function GetWinsLosses(userId: string)
 {
-  const userId = localStorage.getItem("userId");
-  if (!userId) {
-    showAlert("Login first");
-    navigate("/login");
-  }
     try {
     const res = await fetch(`http://localhost:3003/wlxp/${userId}`);
     if (res.status === 404) {
@@ -339,14 +334,17 @@ function updateWinRateDisplay(wins: any, losses: any) {
 export async function HomeEventListener()
 {
   const btnPlay = document.getElementById("play-btn2");
-  btnPlay?.addEventListener("click", () => {navigate("/remoteVSlocal");
+  btnPlay?.addEventListener("click", () => {
+    navigate("/remoteVSlocal");
   });
   const Wins = document.getElementById("Wins");
   const Losses = document.getElementById("Losses");
   const Level = document.getElementById("level");
   const Score = document.getElementById("xpoints");
   if (!Wins || !Losses || !Level || !Score) return;
-  const data = await GetWinsLosses();
+  const userId = localStorage.getItem("userId");
+  if (!userId) return;
+  const data = await GetWinsLosses(userId);
   if (!data) return;
   Wins.textContent = data.Wins;
   Losses.textContent = data.Losses;
@@ -360,6 +358,3 @@ export async function HomeEventListener()
   if(lvl)
     lvl.style.width = `${percentage}%`;
 }
-
-
-// if (matches.length > 0) {
