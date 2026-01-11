@@ -289,13 +289,8 @@ export default async function Home() {
 }
 
 
-async function GetWinsLosses()
+export async function GetWinsLosses(userId: string)
 {
-  const userId = localStorage.getItem("userId");
-  if (!userId) {
-    showAlert("Login first");
-    navigate("/login");
-  }
     try {
     const res = await fetch(`http://localhost:3003/wlxp/${userId}`);
     if (res.status === 404) {
@@ -346,7 +341,9 @@ export async function HomeEventListener()
   const Level = document.getElementById("level");
   const Score = document.getElementById("xpoints");
   if (!Wins || !Losses || !Level || !Score) return;
-  const data = await GetWinsLosses();
+  const userId = localStorage.getItem("userId");
+  if (!userId) return;
+  const data = await GetWinsLosses(userId);
   if (!data) return;
   Wins.textContent = data.Wins;
   Losses.textContent = data.Losses;

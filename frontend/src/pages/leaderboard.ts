@@ -100,7 +100,7 @@ export default async function Leaderboard() {
             <div class="w-[85px] h-[140px] bg-primary/40 flex flex-col items-center justify-end pb-4 relative">
               <img src="${topThree[1].profileImage}" alt="pink-girl"
                 class="w-[60px] h-[60px] object-cover rounded-full border border-primary/50 absolute top-[5px]" />
-              <div class="text-white text-[15px] font-roboto font-semibold">${topThree[1].userName}</div>
+              <div class="text-white text-[15px] font-roboto font-semibold truncate w-[60px] text-center">${topThree[1].userName}</div>
               <div class="text-white text-[12px] font-roboto font-medium">${topThree[1].XPoints}</div>
               <img src="/silver.svg" alt="silver" class="w-[35px] h-[35px] absolute bottom-[-30px]" />
             </div>
@@ -113,7 +113,7 @@ export default async function Leaderboard() {
           <div class="w-[90px] h-[160px] bg-primary/40 flex flex-col items-center justify-end pb-4 relative">
             <img src="${topThree[0].profileImage}" alt="blue-boy"
               class="w-[70px] h-[70px] object-cover rounded-full border border-primary/50 absolute top-[10px]" />
-            <div class="text-white text-[15px] font-roboto font-semibold">${topThree[0].userName}</div>
+            <div class="text-white text-[15px] font-roboto font-semibold truncate w-[60px] text-center">${topThree[0].userName}</div>
             <div class="text-white text-[12px] font-roboto font-medium">${topThree[0].XPoints}</div>
             <img src="/gold.svg" alt="gold" class="w-[40px] h-[40px] absolute bottom-[-30px]" />
           </div>
@@ -128,7 +128,7 @@ export default async function Leaderboard() {
             <div class="w-[85px] h-[140px] bg-primary/40 flex flex-col items-center justify-end pb-4 relative">
               <img src="${topThree[2].profileImage}" alt="white-boy"
                 class="w-[60px] h-[60px] object-cover rounded-full border border-primary/50 absolute top-[5px]" />
-              <div class="text-white text-[15px] font-roboto font-semibold">${topThree[2].userName}</div>
+              <div class="text-white text-[15px] font-roboto font-semibold truncate w-[60px] text-center">${topThree[2].userName}</div>
               <div class="text-white text-[12px] font-roboto font-medium">${topThree[2].XPoints}</div>
               <img src="/bronze.svg" alt="bronze" class="w-[35px] h-[35px] absolute bottom-[-30px]" />
             </div>
