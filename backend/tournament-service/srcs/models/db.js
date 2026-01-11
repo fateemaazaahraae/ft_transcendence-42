@@ -13,7 +13,7 @@ export async function openDb() {
         id TEXT PRIMARY KEY,
         tournamentName TEXT NOT NULL,
         nickName TEXT NOT NULL,
-        image TEXT NOT NULL
+        players INTEGER
         )`
     );
     return db; 

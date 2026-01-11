@@ -74,7 +74,7 @@ export default async function Home() {
   try{
     const res = await fetch(`http://localhost:3003/leaderboard`);
     if (!res.ok)
-      return[];
+      return "";
     players = await res.json();
    // players.sort((a, b)=> b.XPoints - a.XPoints);
     const myIndex = players.findIndex(
@@ -85,7 +85,7 @@ export default async function Home() {
   catch(err)
   {
     console.log(err);
-    return;
+    return "";
   }
 
   const currentLang = (await getSavedLang()).toUpperCase();
@@ -215,12 +215,12 @@ export default async function Home() {
       <h1 data-i18n="achievements" class="text-white font-glitch md:text-2xl xl:text-4xl mt-[10%] md:mt-[5%] lg:mt-[20%] mr-[80%] lg:mr-[40%] xl:mr-0 xl:mt-0">Achievements</h1>
 
       <div class="relative group w-[340px] h-[220px] ">
-        <!-- Main trophy -->
+  <!-- Main trophy -->
         <div  class="flex items-center justify-center absolute mt-[20%] md:mt-[23%] lg:mt-[20%] xl:mt-0 xl:top-1/2 left-[10%] lg:left-[30%] xl:left-1/2 w-[120px] h-[120px] md:w-[130px] md:h-[130px] xl:w-[190px] xl:h-[190px] rounded-full border-[3px] border-[#35C6DD] drop-shadow-cyan cursor-pointer 
                 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500 group-hover:opacity-0" > 
           <img src="golden_trophy.svg" class=" w-[80px] md:w-[90px] xl:w-[120px]" />
         </div>
-        <!-- Hidden trophies in 2x3 grid -->
+  <!-- Hidden trophies in 2x3 grid -->
         <div class="absolute top-[30%] lg:top-[30%] xl:top-[50%] left-[10%] lg:left-[30%] xl:left-[37%] flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-700 -translate-x-1/2 -translate-y-1/2">
           <div class="flex gap-2 mb-1">
             <img src="trophy1.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
@@ -334,7 +334,8 @@ function updateWinRateDisplay(wins: any, losses: any) {
 export async function HomeEventListener()
 {
   const btnPlay = document.getElementById("play-btn2");
-  btnPlay?.addEventListener("click", () => {navigate("/remoteVSlocal");
+  btnPlay?.addEventListener("click", () => {
+    navigate("/remoteVSlocal");
   });
   const Wins = document.getElementById("Wins");
   const Losses = document.getElementById("Losses");
@@ -357,6 +358,3 @@ export async function HomeEventListener()
   if(lvl)
     lvl.style.width = `${percentage}%`;
 }
-
-
-// if (matches.length > 0) {
