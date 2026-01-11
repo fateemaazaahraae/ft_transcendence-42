@@ -113,7 +113,7 @@ export default async function Friends() {
                       ${friend.userName}
                     </div>
                     <div class="flex gap-6 mb-6">
-                      <i class="fa-solid fa-comment text-[30px] text-primary/50 hover:text-primary"></i>
+                      <i id="to_chat" class="fa-solid fa-comment text-[30px] text-primary/50 hover:text-primary"></i>
                       <button data-i18n="remove"
                         class="remove-btn w-[100px] h-[35px] bg-primary/50 rounded-2xl font-bold hover:bg-redRemove" data-id="${friend.friend_id}">
                       </button>

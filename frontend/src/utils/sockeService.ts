@@ -47,14 +47,10 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
     socket = io(serverUrl, opts);
 
 
-        // friend accepted - will be handled centrally and forwarded to app listeners
-
-
-   
-
+    // friend accepted 
     socket.on("connect", () => {
-        console.log("socket connected", socket?.id, 'userId=', userId);
-         console.log("✅ SOCKET CONNECTED", socket?.id);
+       
+         console.log("SOCKET CONNECTED", socket?.id);
         connected = true;
         // notify subscribers
         connectionSubscribers.forEach(cb => {
@@ -81,8 +77,8 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
     
 
     // presence events: forward to registered listeners 
-    socket.off("user_online");
-    socket.off("user_offline");
+    // socket.off("user_online");
+    // socket.off("user_offline");
     socket.on("user_online", ({ userId }) => {
         console.log('DBG recv user_online', userId);
         presenceListeners.forEach(cb => {
@@ -122,14 +118,12 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
     });
 
     // central friend_accepted handler: notify DOM and registered listeners
-    socket.off('friend_accepted');
+    // socket.off('friend_accepted');
     socket.on('friend_accepted', (payload: any) => {
-          console.log("🟢 FRONTEND RECEIVED friend_accepted");
+          console.log(" FRONTEND RECEIVED friend_accepted");
         const friendId = payload?.friendId || payload?.userId || '';
         console.log('DBG recv friend_accepted', friendId);
-        try {
-            document.dispatchEvent(new CustomEvent('friendAccepted', { detail: { friendId } }));
-        } catch (e) {}
+
         friendListeners.forEach(fn => {
             try { fn(String(friendId)); } catch (e) { console.warn('friend listener error', e); }
         });
@@ -187,12 +181,12 @@ export function subscribeConnection(cb: (isConnected: boolean) => void) {
 export function listenForMessagesReceived(cb: (data: any) => void) {
     messageListeners.push(cb);
 
-    if (!socket) return;
+    // if (!socket) return;
 
-    socket.off("new_message");
-    socket.on("new_message", (data) => {
-        messageListeners.forEach(fn => fn(data));
-    });
+    // // socket.off("new_message");
+    // socket.on("new_message", (data) => {
+    //     messageListeners.forEach(fn => fn(data));
+    // });
 }
 
 export function listenForBlockEvents(cb: (data: any) => void) {
@@ -211,7 +205,7 @@ export function listenForPresenceEvents(
   onOnline: (userId: string) => void,
   onOffline: (userId: string) => void
 ) {
-    // maintain backward-compatible API using new listenForPresence
+    
     const handler = (userId: string, status: 'online' | 'offline') => {
         if (status === 'online') onOnline(String(userId));
         else onOffline(String(userId));
@@ -239,10 +233,10 @@ const friendListeners: Array<(userId: string) => void> = [];
 export function listenForFriendAccepted(cb: (userId: string) => void) {
   friendListeners.push(cb);
 
-  socket?.on("friend_accepted", ({ userId }) => {
-    console.log(" HHHHH === friend_accepted realtime received");
-    friendListeners.forEach(fn => fn(String(userId)));
-  });
+//   socket?.on("friend_accepted", ({ userId }) => {
+//     console.log(" HHHHH === friend_accepted realtime received");
+//     friendListeners.forEach(fn => fn(String(userId)));
+//   });
 }
 
 

@@ -139,7 +139,7 @@ fastify.post("/block", { preHandler: fastify.authenticate }, async (req, reply) 
     }
 });
 
-// DEBUG: dump blocked_users (local testing only - remove when done)
+//  blocked_users
 fastify.get('/debug/blocked-all', async (req, reply) => {
   const db = await openDb();
   const rows = await db.all('SELECT user_id, blocked_user_id, created_at FROM blocked_users');
@@ -238,17 +238,30 @@ fastify.get('/debug/blocked-all', async (req, reply) => {
         return blocked;
     });
 
+    // get users who blocked me added by bouchra
+    fastify.get("/blocked/me", { preHandler: fastify.authenticate }, async (req) => {
+        const me = req.user.id;
+        const db = await openDb();
+        const rows = await db.all(
+            `SELECT user_id AS blocker_id
+             FROM blocked_users
+             WHERE blocked_user_id = ?`,
+            [me]
+        );
+        return rows;
+    });
+
     // is-blocked check (used by chat-service)
     fastify.get('/is-blocked/:blockerId/:blockedId', async (req, reply) => {
         const { blockerId, blockedId } = req.params;
         const incomingServiceToken = req.headers['x-service-token'] || req.headers['X-Service-Token'];
         const serviceToken = process.env.SERVICE_TOKEN || 'dev_service_token';
 
-        // If correct service token provided, allow the check
+
         if (incomingServiceToken && incomingServiceToken === serviceToken) {
             try { console.log('[rel] /is-blocked called with valid service token'); } catch (e) {}
         } else {
-            // Otherwise require user JWT and allow only the blocker to query
+            
             try {
                 await fastify.authenticate(req, reply);
                 if (String(req.user.id) !== String(blockerId)) {

@@ -142,23 +142,6 @@ export function ChatEventListener() {
 );
 
 
-    // refresh contacts when a friend is accepted in realtime
-    // try {
-    //     listenForFriendAccepted((friendId: string) => {
-    //         console.log('friendAccepted realtime received for', friendId);
-    //         if (contactsListDiv) {
-    //             fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
-    //                 attachContactClickListeners(contactsListDiv, handleContactSelect);
-    //                 applyPresenceToRenderedContacts();
-    //             });
-    //         }
-    //     });
-    // } catch (e) { console.warn('listenForFriendAccepted setup failed', e); }
-
-
-
-
-
     // block / unblock
         listenForBlockEvents(({ by }) => {
             if (String(by) === String(ACTIVE_CHAT_CONTACT_ID)) {
@@ -223,6 +206,25 @@ export function ChatEventListener() {
         blockBtn.addEventListener("click", (): void => {
             if (blockConfirmationDiv) blockConfirmationDiv.classList.remove("hidden");
         });
+    }
+
+    function setBlockButtonUI(isBlocked: boolean) {
+        if (!blockBtn) return;
+        if (isBlocked) {
+            blockBtn.innerHTML = '<i class="fa fa-ban"></i> Blocked';
+            blockBtn.setAttribute('data-blocked', 'true');
+            blockBtn.setAttribute('aria-pressed', 'true');
+            try { (blockBtn as HTMLButtonElement).disabled = true; } catch (e) {}
+            blockBtn.classList.add('opacity-50');
+            blockBtn.classList.add('pointer-events-none');
+        } else {
+            blockBtn.innerHTML = '<i class="fa fa-ban"></i> Block User';
+            blockBtn.removeAttribute('data-blocked');
+            blockBtn.removeAttribute('aria-pressed');
+            try { (blockBtn as HTMLButtonElement).disabled = false; } catch (e) {}
+            blockBtn.classList.remove('opacity-50');
+            blockBtn.classList.remove('pointer-events-none');
+        }
     }
 
     // confirm block: call API and hide modal
@@ -360,13 +362,14 @@ export function ChatEventListener() {
        
         updateChatHeader(chatUsername, chatStatus, chatAvatar, username, status, normAvatar);
 
-        // check if contact is blocked
+        // check if contact is blocked and update UI accordingly
         checkIfBlocked(String(CURRENT_USER_ID), String(contactId), (isBlocked) => {
             if (isBlocked) {
                 showBlockedMessage();
             } else {
                 showMessageInput();
             }
+            setBlockButtonUI(Boolean(isBlocked));
         });
 
     
@@ -375,6 +378,12 @@ export function ChatEventListener() {
             contactsSide?.classList.add("hidden");
             chat?.classList.remove("hidden");
             chat?.classList.add("flex");
+        }
+
+        // Ensure messages panel is visible on mobile when opening a chat
+        const messagesPanelEl = document.getElementById("messagesPanel");
+        if (messagesPanelEl) {
+            messagesPanelEl.classList.remove("hidden");
         }
 
 
@@ -445,6 +454,8 @@ export function ChatEventListener() {
                 contactsSide?.classList.remove("hidden");
                 chat?.classList.add("hidden");
                 chat?.classList.remove("flex");
+                // hide messages panel on mobile when returning to contacts
+                document.getElementById("messagesPanel")?.classList.add("hidden");
             } else {
                
                 contactsSide?.classList.remove("hidden");
@@ -507,6 +518,17 @@ export function ChatEventListener() {
         });
     }
 
+        // if there's an active contact persisted, ensure block button reflects its state on load
+        try {
+            const persisted = localStorage.getItem('activeContactId');
+            if (persisted && CURRENT_USER_ID) {
+                checkIfBlocked(String(CURRENT_USER_ID), String(persisted), (isBlocked) => {
+                    setBlockButtonUI(Boolean(isBlocked));
+                    if (isBlocked) showBlockedMessage();
+                });
+            }
+        } catch (e) { /* ignore */ }
+
 
     if (closeButton) {
         setupCloseChat(closeButton, () => {
@@ -528,6 +550,8 @@ export function ChatEventListener() {
             contactsSide?.classList.remove("hidden");
             chat?.classList.remove("hidden");
             chat?.classList.add("flex");
+            // hide messages panel when closing the chat (mobile)
+            document.getElementById("messagesPanel")?.classList.add("hidden");
             document.getElementById("messageInputContainer")?.classList.add("hidden");
             document.getElementById("dropdownMenu")?.classList.add("hidden");
         });
@@ -598,7 +622,7 @@ export function ChatEventListener() {
         // send to server (ack used only for error handling, do not re-render on ack)
         sendMessage(ACTIVE_CHAT_CONTACT_ID, content, (res) => {
             if(res?.status === "error") {
-                console.warn("send failed ", res?.reason || "unknown");
+                console.debug("send failed", res?.reason || "unknown");
                 if (res?.reason === 'blocked') {
                     showBlockedMessage();
                 }
