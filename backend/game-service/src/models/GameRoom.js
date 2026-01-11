@@ -125,7 +125,7 @@ export default class GameRoom {
       });
 
       socket.on('disconnect', () => {
-          console.log(`Player ${socket.data.userId} disconnected during or after match!`);
+          console.log(`Player ${socket.data.userId} disconnected !`);
           
           // this.handlePlayerDisconnect(socket);
       });

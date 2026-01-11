@@ -51,7 +51,7 @@ export default async function TournamentRoutes(fastify) {
     fastify.get("/tournaments", async() => {
         const db = await openDb();
         const tournaments = await db.all(
-            `SELECT id, tournamentName, nickName
+            `SELECT id, tournamentName, nickName, players
              FROM tournaments`
         );
         return tournaments;

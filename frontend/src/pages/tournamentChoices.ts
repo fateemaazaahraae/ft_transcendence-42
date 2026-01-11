@@ -23,6 +23,7 @@ export async function tournamentChoices() {
         if (!res.ok)
             showAlert("error here!!");
         tournaments = await res.json();
+        alert(tournaments[tournaments.length - 1].players)
 
     }
     catch(err)
@@ -83,7 +84,7 @@ export async function tournamentChoices() {
                                                 <img src="/golden_trophy.svg" class="w-[55px] h-[55px] rounded-full border border-primary/50"/>
                                                 <div class="flex flex-col items-start ml-8">
                                                     <p class="font-bold">${tour.tournamentName}</p>
-                                                    <p class="text-white/70 ">4 Players</p>
+                                                    <p class="text-white/70 ">${tour.players}</p>
                                                 </div>
                                                 <i class="fa-solid fa-right-to-bracket text-secondary text-3xl absolute right-6 cursor-pointer"></i>
                                             </div>
@@ -116,7 +117,20 @@ export async function tournamentChoices() {
     `
 }
 
-
+function handleTournamentbtn(tournamentId: string) {
+    console.log("Create tr button is clicked!");
+    const token = localStorage.getItem("token"); // this will get JWT prolly
+    if (!token) {
+        navigate("/login"); 
+        return;
+    }
+    const socket = getTrSocket(token); /// here is the key to send request to our game server
+    socket.on("connect", () => {
+        console.log("✅ Connected via Manager! ID:", socket.id);
+        navigate("/TrWaitingPlayers");
+        socket.emit('join_queue', { tournamentId });
+    });
+}
 
 export async function tournamentChoicesEventListener() {
 
@@ -125,18 +139,22 @@ export async function tournamentChoicesEventListener() {
         return;
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-      const tourName = (document.getElementById("tourName") as HTMLInputElement).value;
-      const nickName = (document.getElementById("nick") as HTMLInputElement).value;
-
-      try {
-        const res = await fetch("http://localhost:3004/createTournament", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({tourName, nickName}),
-        });
-
-        const data = await res.json();
-        const tournamentId = data.id;
+        const tourName = (document.getElementById("tourName") as HTMLInputElement).value;
+        const nickName = (document.getElementById("nick") as HTMLInputElement).value;
+        
+        try {
+            const res = await fetch("http://localhost:3004/createTournament", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({tourName, nickName}),
+            });
+            
+            const data = await res.json();
+            const tournamentId = data.id;
+            const btnTr = document.getElementById("submit");
+            if (btnTr) {
+                btnTr.removeEventListener("click", () => handleTournamentbtn(tournamentId));
+                btnTr.addEventListener("click", () => handleTournamentbtn(tournamentId));            }
         if (!res.ok){
             showAlert("Tournament creation failed");
             return;
@@ -150,41 +168,16 @@ export async function tournamentChoicesEventListener() {
         return;
       }
     });
-
-
-//   setTimeout(() => {
-//     const btnTr = document.getElementById("trcreate");
-
-//     if (!btnTr) return;
-
-//     btnTr.addEventListener("click", async () => {
-//       console.log("Create tr button is clicked!");
-
-//       const token = localStorage.getItem("token");
-//       if (!token) {
-//         navigate("/login");
-//         return;
-//       }
-
-//       const socket = getTrSocket(token);
-
-//       if (!socket.hasListeners("match_found")) {
-//         socket.on("connect", () => {
-//           console.log("✅ Connected via Manager! ID:", socket.id);
-//           navigate("/TrWaitingPlayers");
-//           socket.emit("join_queue", {tournamentId});
-//         });
-
-//         socket.on("match_found", (data: any) => {
-//           console.log("🎉 MATCH FOUND!");
-//           localStorage.setItem("currentMatch", JSON.stringify(data));
-//           navigate("/remotegame");
-//         });
-//       }
-
-//       if (socket.connected) {
-//         socket.emit("join_queue");
-//       }
-//     });
-//   }, 100);
 }
+
+
+
+// export function tournamentChoicesEventListener() {
+//     setTimeout(() => {
+//         const btnTr = document.getElementById("trcreate");
+//         if (btnTr) {
+//             btnTr.removeEventListener("click", (handleTournamentbtn));
+//             btnTr.addEventListener("click", (handleTournamentbtn));
+//         }
+//     }, 100);
+// }

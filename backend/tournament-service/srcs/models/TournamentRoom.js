@@ -1,6 +1,3 @@
-// import { getDb } from "./db.js";
-
-
 export default class GameRoom {
   constructor(io, roomId, player1Socket, player2Socket) {
     this.io = io;
@@ -56,6 +53,7 @@ export default class GameRoom {
       winnerId === this.player1.data.userId
         ? this.player2.data.userId
         : this.player1.data.userId;
+      this.stop();
     }
 
 
@@ -73,11 +71,10 @@ export default class GameRoom {
         this.handlePlayerDisconnect(socket);
       });
 
-    //   socket.on('disconnect', () => {
-    //     console.log(`Player ${socket.data.userId} disconnected during or after match!`);
-          
-    //       // this.handlePlayerDisconnect(socket);
-    //   });
+      socket.on('disconnect', () => {
+        console.log(`Player ${socket.data.userId} disconnected !`);
+        this.handlePlayerDisconnect(socket);
+      });
     }
 
     start() {
@@ -105,15 +102,6 @@ export default class GameRoom {
         this.gameState.ball.x += this.gameState.ball.dx;
         this.gameState.ball.y += this.gameState.ball.dy;
 
-        // const dt = Math.min((now - last) / 1000, 0.04);
-        // last = now;
-
-        // const PrevX = ball.x;
-        // const PrevY = ball.y;
-        // const NewX = ball.x + ball.vx * dt;// following the rule : position' = position + velocity * dt; (to calculate value in px)
-        // const NewY = ball.y + ball.vy * dt;
-
-
         if (this.input[this.player1.id].up) {
         this.gameState.paddle1.y = Math.max(0, this.gameState.paddle1.y - SPEED);
         }
@@ -135,10 +123,6 @@ export default class GameRoom {
         this.gameState.ball.dy *= -1;
         }
 
-        // Later we will check for paddle collisions here
-        // if (this.gameState.ball.x - BALL_SIZE <= 0 || this.gameState.ball.x + BALL_SIZE >= CANVAS_WIDTH) {
-        //   this.gameState.ball.dx *= -1;
-        // }
         if (
         this.gameState.ball.dx < 0 && // Only check if moving left
         this.gameState.ball.x - BALL_SIZE <= PADDLE_WIDTH + 8 && // Ball hit the paddle's right edge
