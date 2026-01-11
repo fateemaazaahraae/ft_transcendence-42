@@ -1,11 +1,11 @@
 {
   "name": "tournament-service",
   "version": "1.0.0",
-  "description": "",
+   "description": "",
   "main": "index.js",
-  "scripts": {
-    "dev": "node srcs/server.js",
-    "start": "node srcs/server.js"
+   "scripts": {
+  "dev": "node srcs/server.js",
+  "test": "nodemon --watch srcs --exec ts-node srcs/server.js"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +14,24 @@
   "dependencies": {
     "@fastify/cors": "^11.2.0",
     "fastify": "^5.6.2",
+    "socket.io": "^4.7.1",
     "socket.io-client": "^4.8.3",
-    "socket.io": "^4.7.1"
+    "@fastify/jwt": "^10.0.0",
+    "@fastify/multipart": "^9.0.0",
+    "@fastify/oauth2": "^8.1.2",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "fastify-swagger": "^5.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^7.0.10",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
   }
 }
