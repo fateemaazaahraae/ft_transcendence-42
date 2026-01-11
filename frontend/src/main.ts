@@ -60,10 +60,10 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/invitations": {render: Invitations, setUp: InvitationsEventListener},
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
     "/chat": {render: Chat, setUp: ChatEventListener},
-    "/remotegame": { render: RemoteGame, setUp: RemoteGameEventListener() },
-    "/FinalMatchTr": { render: FinalMatchTr, setUp: FinalMatchTrEventListener() },
-    "/tournamentgame": {render: TournamentGame, setUp: TournamentGameEventListener() },
-    "/tournamentgametwo": {render: TournamentGametwo, setUp: TournamentGametwoEventListener() },
+    "/remotegame": { render: RemoteGame, setUp: RemoteGameEventListener },
+    "/FinalMatchTr": { render: FinalMatchTr, setUp: FinalMatchTrEventListener },
+    "/tournamentgame": {render: TournamentGame, setUp: TournamentGameEventListener },
+    "/tournamentgametwo": {render: TournamentGametwo, setUp: TournamentGametwoEventListener },
     "/tournamentChoices": { render: tournamentChoices, setUp: tournamentChoicesEventListener },
     404: {render: PageNotFound},
 };
@@ -123,9 +123,9 @@ window.addEventListener("DOMContentLoaded", async() => {
     if (userId) {
         notificationBarListeners(userId);
         updateUnreadCount(userId);
-        setInterval(() => {
-            updateUnreadCount(userId);
-        }, 5000);
+        // setInterval(() => {
+        //     updateUnreadCount(userId);
+        // }, 5000);
         notificationBarListeners(userId);
     }
     LanguagesMenuEventListener();
