@@ -355,8 +355,10 @@ export async function HomeEventListener()
   Level.textContent = `${levelRate}%`;
   updateWinRateDisplay(data.Wins, data.Losses);
   const lvl = document.getElementById("levelPourcen");
+  let percentage = levelRate - Math.floor(levelRate);
+  percentage = Math.round(percentage * 100) ; 
   if(lvl)
-    lvl.style.width = `${levelRate}%`;
+    lvl.style.width = `${percentage}%`;
 }
 
 
