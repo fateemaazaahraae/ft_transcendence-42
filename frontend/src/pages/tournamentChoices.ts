@@ -76,7 +76,7 @@ export async function tournamentChoices() {
             <div class="grid grid-cols-1 gap-20 lg:grid-cols-[1fr_1fr] max-w-[1400px] max-h-[70px] md:ml-[10%] lg:ml-[5%] xl:ml-[14%] mt-36">
                 <div class="md:flex md:gap-32">
                 <div class="flex flex-col justify-center">
-                    <h1 class="font-glitch text-center text-3xl mb-8">Available tournaments</h1>
+                    <h1 data-i18n = "availTour" class="font-glitch text-center text-3xl mb-8">Available tournaments</h1>
                     <div class="flex">
                         <div class="flex flex-col gap-4 h-[600px] w-[600px] mx-auto overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4 pb-6">
                                 ${
@@ -101,7 +101,7 @@ export async function tournamentChoices() {
                 <div class="bg-primary/50 h-[700px] w-[3px] rounded-full hidden lg:flex"></div>
                 </div>
                 <div>
-                    <h1 class="font-glitch text-center text-3xl pt-4">Create yours</h1>
+                    <h1 data-i18n = "yours" class="font-glitch text-center text-3xl pt-4">Create yours</h1>
                     <div class="flex flex-col items-center mt-10 gap-12">
                         <div class="relative">
                             <img src="white-boy.svg" class="w-[200px] h-[200px] border border-primary rounded-full object-cover" />
@@ -109,13 +109,13 @@ export async function tournamentChoices() {
                         </div>
                         <div class="flex flex-col gap-6">
                             <input type="text" placeholder="Tournament's name" class="placeholder-white/70 w-[320px] bg-black shadow-[0_0_10px_rgba(53,198,221,0.99)]  rounded-2xl px-6 py-3 focus:outline-none focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] " />
-                            <input type="text" placeholder="Nick name" class="placeholder-white/70 w-[320px] bg-black shadow-[0_0_10px_rgba(53,198,221,0.99)]  rounded-2xl px-6 py-3 focus:outline-none focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] " />
+                            <input data-i18n = "nick" type="text" placeholder="Nick name" class="placeholder-white/70 w-[320px] bg-black shadow-[0_0_10px_rgba(53,198,221,0.99)]  rounded-2xl px-6 py-3 focus:outline-none focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] " />
                             <div class="relative">
                                 <input type="text" placeholder="Add players" class="placeholder-white/70 w-[320px] bg-black shadow-[0_0_10px_rgba(53,198,221,0.99)]  rounded-2xl px-6 py-3 focus:outline-none focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] " />
                                 <i class="fa-solid fa-plus absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer text-secondary"></i>
                             </div>
                         </div>
-                        <button id=trcreate class="bg-primary/60 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary mb-16">Create</button>
+                        <button data-i18n= "create" id=trcreate class="bg-primary/60 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary mb-16">Create</button>
                     </div>
                 </div>
             </div>
@@ -139,7 +139,7 @@ export function tournamentChoicesEventListener(){
 
       const socket = getTrSocket(token); /// here is the key to send request to our game server
 
-      if (!socket.hasListeners("match_found")) {
+    //   if (!socket.hasListeners("match_found")) {
           
           socket.on("connect", () => {
               console.log("✅ Connected via Manager! ID:", socket.id);
@@ -147,16 +147,16 @@ export function tournamentChoicesEventListener(){
               socket.emit('join_queue');
           });
 
-          socket.on("match_found", (data: any) => {
-              console.log("🎉 MATCH FOUND! Navigating to game...");
-              localStorage.setItem("currentMatch", JSON.stringify(data));
-              navigate("/remotegame"); 
-          });
-      }
+        //   socket.on("match_found", (data: any) => {
+        //       console.log("🎉 MATCH FOUND! Navigating to game...");
+        //       localStorage.setItem("currentMatch", JSON.stringify(data));
+        //       navigate("/remotegame"); 
+        //   });
+    //   }
 
-      if (socket.connected) {
-            socket.emit('join_queue');
-      }
+    //   if (socket.connected) {
+    //         socket.emit('join_queue');
+    //   }
     });
   }
 }, 100);

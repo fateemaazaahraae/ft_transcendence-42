@@ -82,7 +82,44 @@ export const initSocket = (server) => {
         const masked = authHeader ? (authHeader.length > 12 ? authHeader.slice(0,8) + '...' + authHeader.slice(-8) : '***') : '(no-token)';
         const { convo, msg } = await history.sendMessage(from, to, content, authHeader);
         socket.to(to).emit("new_message", { conversation: convo, message: msg });
-        if (ack) ack({ status: "ok", message: msg });
+        
+        // Send a notification to notification-service (fire-and-forget, non-blocking)
+
+
+        try {
+          const AUTH_URL = process.env.API_URL || 'http://auth-service:3000';
+          const pr = await fetch(`${AUTH_URL.replace(/\/$/, '')}/users/${from}`, {
+            headers: authHeader ? { Authorization: authHeader } : {}
+          }).catch(() => null);
+          const senderName = pr && pr.ok ? (await pr.json().catch(() => ({}))).userName || '' : '';
+
+          const NOTIF_URL = process.env.NOTIF_URL || 'http://notification-service:3005';
+          const notificationBody = {
+            userId: String(to),
+            type: 'MESSAGE',
+            payload: {
+              fromUserId: String(from),
+              fromUserName: senderName,
+              conversationId: convo?.id,
+              message: content
+            }
+          };
+
+          fetch(`${NOTIF_URL.replace(/\/$/, '')}/notifications`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(notificationBody)
+          }).catch((e) => console.warn('notification post failed', e));
+        } catch (e) {
+          console.warn('notification send error', e);
+        }
+
+
+
+
+
+
+    if (ack) ack({ status: "ok", message: msg });
       } catch (err) {
         console.warn(' send_message error', err.message || err);
         if (err.code === "BLOCKED") {

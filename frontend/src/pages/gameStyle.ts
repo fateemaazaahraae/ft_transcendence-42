@@ -59,9 +59,9 @@ export default async function GameStyle() {
         <div class="search-results absolute top-full left-0 w-full h-auto backdrop-blur-md mt-1 hidden z-[9000] rounded-xl"></div>
       </div>
       <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
+        <button id="currentLang" class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
           <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
+          ${currentLang}
         </button>
       </div>
       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
@@ -86,13 +86,13 @@ export default async function GameStyle() {
             <button data-i18n="play" id=play class=" w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Play</button>
         </div>
         <div class="flex flex-col gap-9 md:gap-7 lg:gap-11 items-center w-[350px] h-[300px] md:w-[450px] md:h-[310px] lg:w-[500px] lg:h-[400px] xl:w-[600px] xl:h-[430px] bg-primary/60 rounded-3xl">
-            <h1 class="mt-[5%] font-glitch text-center text-2xl md:text-3xl lg:text-4xl"> Tournament</h1>
+            <h1 data-i18n = "tournament" class="mt-[5%] font-glitch text-center text-2xl md:text-3xl lg:text-4xl"> Tournament</h1>
             <div class="flex justify-center">
                 <img src="boys-team.svg" class="w-[120px] md:w-[150px] lg:w-[180px] xl:w-[200px]" />
                 <img src="golden_trophy.svg" class="w-[70px] md:w-[90px] lg:w-[120px] xl:w-[150px]"/>
                 <img src="girls-team.svg" class="w-[120px] md:w-[150px] lg:w-[180px] xl:w-[200px]" />
             </div>
-            <button id=start class="w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Start</button>
+            <button data-i18n = "start" id=start class="w-[100px] md:w-[120px] h-[30px] font-roboto bg-secondary rounded-full">Start</button>
         </div>
       </div>
     </div>
@@ -129,7 +129,7 @@ export function GameStyleEventListener(){
           });
 
           socket.on("match_found", (data: any) => {
-              console.log("🎉 MATCH FOUND! Navigating to game...");
+              console.log("🎉 MATCH FOUND! Navigating to gameeeee...");
               localStorage.setItem("currentMatch", JSON.stringify(data));
               navigate("/remotegame"); 
           });
@@ -142,52 +142,3 @@ export function GameStyleEventListener(){
   }
 }, 100);
 }
-
-//   setTimeout(() => {
-//     const btnPlay = document.getElementById("play-btn");
-//     if (btnPlay) {
-//       btnPlay.addEventListener("click", () => {
-//         console.log("play Button clicked");
-//         navigate("/LocalgameStyle");
-//       });
-//     }
-
-//     const btnRemote = document.getElementById("remote-btn");
-//     if (btnRemote) {
-//       btnRemote.addEventListener("click", () => {
-//         console.log("Remote Play Clicked - Attempting Connection...");
-
-//         const token = localStorage.getItem("token"); // this will get JWT prolly
-//         if (!token) {
-//           navigate("/login"); 
-//           return;
-//         }
-
-//         const socket = getGameSocket(token); /// here is the key to send request to our game server
-
-//         if (!socket.hasListeners("match_found")) {
-            
-//             socket.on("connect", () => {
-//                 console.log("✅ Connected via Manager! ID:", socket.id);
-//                 navigate("/RemotegameStyle");
-//                 socket.emit('join_queue');
-//             });
-
-//             socket.on("match_found", (data) => {
-//                 console.log("🎉 MATCH FOUND! Navigating to game...");
-//                 localStorage.setItem("currentMatch", JSON.stringify(data));
-//                 navigate("/remotegame"); 
-//             });
-
-//             socket.on("waiting_for_match", (data) => {
-//                 console.log(`Status: ${data.message}`);
-//             });
-//         }
-
-//         if (socket.connected) {
-//              socket.emit('join_queue');
-//         }
-//       });
-//     }
-//   }, 100);
-// }

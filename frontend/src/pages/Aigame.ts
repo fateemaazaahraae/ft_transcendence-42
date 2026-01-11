@@ -59,7 +59,7 @@ export default function AiGame() {
         <p class="font-roboto text-gray-300 mb-10">Take a break, adjust settings, or resume</p>
         
         <div class="space-y-4">
-          <button id="resume-btn" class="w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
+          <button id="resume-btn" class="w-[200px] py-3 bg-primary/80 bg-primary text-white rounded-lg font-roboto transition-all duration-300">
             <i class="fa-solid fa-play mr-2"></i>
             Resume Game
           </button>

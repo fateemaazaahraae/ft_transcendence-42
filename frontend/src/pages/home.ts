@@ -37,35 +37,56 @@ export default async function Home() {
       console.log("login first");
       navigate("/login");
     }
+
     //Game data
+
    let matches: any[] = [];
-let opponent: any[] = [];
+  let opponent: any[] = [];
+  let userId: any;
+  try {
+    userId = localStorage.getItem("userId");
 
-try {
-  const userId = localStorage.getItem("userId");
+    const resGame = await fetch(`game/matches/user/${userId}`);
+    if (!resGame.ok) throw new Error("Can't fetch matches");
 
-  const resGame = await fetch(`game/matches/user/${userId}`);
-  if (!resGame.ok) throw new Error("Can't fetch matches");
+    matches = await resGame.json();
 
-  matches = await resGame.json();
+    if (matches.length > 0) {
+      opponent = await Promise.all(
+        matches.map(async (match: any) => {
+          const otherId =
+            userId === match.player1Id
+              ? match.player2Id
+              : match.player1Id;
 
-  if (matches.length > 0) {
-    opponent = await Promise.all(
-      matches.map(async (match: any) => {
-        const otherId =
-          userId === match.player1Id
-            ? match.player2Id
-            : match.player1Id;
-
-        const res = await fetch(`http://localhost:3000/users/${otherId}`);
-        return await res.json();
-      })
-    );
+          const res = await fetch(`http://localhost:3000/users/${otherId}`);
+          return await res.json();
+        })
+      );
+    }
+  } catch (err) {
+    console.error(err);
   }
-} catch (err) {
-  console.error(err);
-}
 
+  //Rank
+  let players: any[] = [];
+  let myRank: any;
+  try{
+    const res = await fetch(`http://localhost:3003/leaderboard`);
+    if (!res.ok)
+      return[];
+    players = await res.json();
+   // players.sort((a, b)=> b.XPoints - a.XPoints);
+    const myIndex = players.findIndex(
+    (player) => player.id === userId
+  );
+   myRank = myIndex !== -1 ? myIndex + 1 : "0";
+  }
+  catch(err)
+  {
+    console.log(err);
+    return;
+  }
 
   const currentLang = (await getSavedLang()).toUpperCase();
 
@@ -102,7 +123,10 @@ try {
           ${currentLang}
         </button>
       </div>
-      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+      <div class="relative">
+        <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+        <div id="notifBadge" class="absolute hidden top-1 inset-0 w-[7px] h-[7px] rounded-full bg-red-600"></div>
+      </div>
       <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
@@ -127,8 +151,8 @@ try {
 
             <div class="w-[210px] h-[5px] md:w-[300px] md:h-[8px] xl:w-[400px] xl:h-[12px] bg-secondary rounded-full overflow-hidden relative">
               <div 
-                class="absolute top-0 left-0 h-full bg-[#35C6DD] rounded-full transition-all duration-700 ease-in-out"
-                style="width: %;"
+                id="levelPourcen" class="absolute top-0 left-0 h-full bg-[#35C6DD] rounded-full transition-all duration-700 ease-in-out"
+                style="width: 0%;"
               ></div>
             </div>
           </div>
@@ -136,7 +160,7 @@ try {
           <div class="mt-[4%] xl:mt-[7%] flex text-[10px] md:text-[11px] xl:text-[13px] text-secondary w-[210px] md:w-[300px] h-[12px] md:h-[15px] xl:w-[400px] xl:h-[20px] bg-[#35C6DD]/90 rounded-full justify-between items-center px-4">
             <p class="font-roboto">
             <span data-i18n="rank" class="text-white">Rank</span>
-            <span class="text-secondary ml-2">2</span>
+            <span class="text-secondary ml-2">${myRank}</span>
             </p>
             <p class="font-roboto">
             <span data-i18n="score" class="text-white">Score</span>
@@ -240,9 +264,9 @@ try {
               <!-- Score -->
               <div class= "flex flex-col items-center font-normal text-[12px] text-white/60">
               <p class="flex items-center justify-center text-white font-roboto font-bold lg:text-[17px] xl:text-xl lg:gap-4 xl:gap-6">
-              <span>${match.score1}</span>
+              <span>${userId === match.player1Id ? match.score1 : match.score2}</span>
               <span>-</span>
-              <span>${match.score2}</span>
+              <span>${userId === match.player2Id ? match.score1 : match.score2}</span>
               </p>
               <span>${formatDate(match.timestamp)}</span> 
               </div>
@@ -323,7 +347,6 @@ export async function HomeEventListener()
   const Score = document.getElementById("xpoints");
   if (!Wins || !Losses || !Level || !Score) return;
   const data = await GetWinsLosses();
-  console.log("WLXP data:", data);
   if (!data) return;
   Wins.textContent = data.Wins;
   Losses.textContent = data.Losses;
@@ -331,6 +354,9 @@ export async function HomeEventListener()
   const levelRate = data.XPoints / 100;
   Level.textContent = `${levelRate}%`;
   updateWinRateDisplay(data.Wins, data.Losses);
+  const lvl = document.getElementById("levelPourcen");
+  if(lvl)
+    lvl.style.width = `${levelRate}%`;
 }
 
 

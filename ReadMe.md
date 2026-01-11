@@ -400,7 +400,7 @@ how I did that:
         game.start();
         }
     else {// mazal mawslna l joj dial players
-        socket.emit('waiting_for_match', { message: `Waiting for opponent... Current queue: ${waitingQueue.length}` });
+        console.log("Waiting for players...");
     }
     ```
 * lastly handle if a player disconnect.

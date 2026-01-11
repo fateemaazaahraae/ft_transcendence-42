@@ -44,4 +44,11 @@ export interface translateDict {
     pick: string;
     one: string;
     ai:string;
+    notFound: string;
+    tournament: string;
+    start:string;
+    availTour: string;
+    yours: string;
+    create: string;
+    nick: string;
 }

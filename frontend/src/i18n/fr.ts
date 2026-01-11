@@ -43,7 +43,13 @@ const fr: translateDict = {
     ready: "Prêt à jouer?",
     pick: "Choisissez votre mode",
     one: "Un-contre-Un",
-    ai: "Un-contre-IA"
+    ai: "Un-contre-IA",
+    notFound: "Page Intouvable",
+    tournament: "Tournoi",
+    start: "Démarrer",
+    availTour: "Tournois disponibles",
+    yours: "Crée le tien",
+    create: "Créer",
 }
 
 export default fr;
