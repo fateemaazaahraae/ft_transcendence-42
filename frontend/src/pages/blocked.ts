@@ -125,7 +125,7 @@ export function BlockedEventListener() {
   })
 
   invitations?.addEventListener("click", () => {
-    navigate("/invitations");
+    navigate("/invifriendstations");
   })
 
   const unblockFriends = document.querySelectorAll(".unblock-btn");
