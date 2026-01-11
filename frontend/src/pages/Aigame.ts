@@ -153,7 +153,6 @@ export function AiGameEventListener() {
       // The canvas size l(height and width)
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
-      console.log(canvas.height);
       
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
@@ -161,8 +160,6 @@ export function AiGameEventListener() {
       const c = ctx;
       const width = canvas.width;
       const height = canvas.height;
-      console.log('widthhh is: ', width);
-      // widthhh is:  1344
 
       const paddleWidth = 10;
       const paddleHeight = 115;
@@ -350,11 +347,9 @@ export function AiGameEventListener() {
         }
         paddleRightY = Math.max(0, Math.min(height - paddleHeight, paddleRightY));
       }
-////////******** */
 
       resetGameBall();
       let last = performance.now(); // this one needed to calculate delta time(it's the time between frames)
-      console.log('the last var is: ', last);
 
       function animate(now = performance.now()) {
         if (!gameRunning) {
@@ -403,7 +398,6 @@ export function AiGameEventListener() {
             bounceAngle -= 0.3;
           else if (bounceAngle < -1)
             bounceAngle += 0.3;
-          console.log("the bounce Angle issss: ", bounceAngle);
 
           // we multiply by SpeedIncreasing to increase speed during the game
           const speed = Math.hypot(ball.vx, ball.vy) * SpeedIncreasing; // Math.hypot(a, b) returns the length of a 2D vector.////In other words:///It calculates the speed of something moving with horizontal velocity a and vertical velocity b. we now in hight school that` la vitesse = sqrt(a² + b²) this is exactly : ls vitesse = Math.hypot(ball.vx, ball.vy)`

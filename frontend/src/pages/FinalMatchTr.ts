@@ -131,8 +131,6 @@ export async function FinalMatchTrEventListener() {
 
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
-  // console.log(canvas.height);
-  // console.log(canvas.width);
 
   const LeaveOverlay = document.getElementById('leave-overlay') as HTMLDivElement;
   const quitBtn = document.getElementById('quit-btn') as HTMLButtonElement;

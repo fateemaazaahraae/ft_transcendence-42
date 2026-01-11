@@ -124,7 +124,6 @@ export function LocalGameEventListener() {
       // The canvas size l(height and width)
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
-      console.log(canvas.height);
       
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
@@ -181,7 +180,7 @@ export function LocalGameEventListener() {
         const k = e.key.toLowerCase();
         if (k === 'w' || k === 's' || k === 'arrowup' || k === 'arrowdown') keys[k] = false;
       });
-  ////////////////////
+  //
 
       function togglePause() {
         gameRunning = !gameRunning;
@@ -232,7 +231,7 @@ export function LocalGameEventListener() {
         }
         console.log('Game Restarting');
       }
-/////////////////////////
+//
 
       function drawMyScene() {
         // Drawing Midle line
@@ -283,7 +282,6 @@ export function LocalGameEventListener() {
 
       resetGameBall();
       let last = performance.now(); // this one needed to calculate delta time(it's the time between frames)
-      console.log('the last var is: ', last);
 
       function animate(now = performance.now()) {
         if (!gameRunning) {
@@ -329,7 +327,6 @@ export function LocalGameEventListener() {
             bounceAngle -= 0.3;
           else if (bounceAngle < -1)
             bounceAngle += 0.3;
-          console.log("the bounce Angle issss: ", bounceAngle);
 
           // we multiply by SpeedIncreasing to increase speed during the game
           const speed = Math.hypot(ball.vx, ball.vy) * SpeedIncreasing; // Math.hypot(a, b) returns the length of a 2D vector.////In other words:///It calculates the speed of something moving with horizontal velocity a and vertical velocity b. we now in hight school that` la vitesse = sqrt(a² + b²) this is exactly : ls vitesse = Math.hypot(ball.vx, ball.vy)`
