@@ -250,7 +250,7 @@ export async function tournamentChoicesEventListener() {
           }
         });
       }
-      setupAvatarModal();
+    setupAvatarModal();
     const form = document.getElementById("tourForm") as HTMLFormElement | null;
     if(!form)
         return;
@@ -281,8 +281,6 @@ export async function tournamentChoicesEventListener() {
         return;
       }
     });
-
-
 //   setTimeout(() => {
 //     const btnTr = document.getElementById("trcreate");
 

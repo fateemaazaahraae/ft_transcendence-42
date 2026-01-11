@@ -122,7 +122,7 @@ export async function winnerdata(winner: any) {
     }
 }
 
-export function RemoteGameEventListener() {
+export async function RemoteGameEventListener() {
   fillSettingsPage();
   const socket = getGameSocket(localStorage.getItem("token"));
   const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;

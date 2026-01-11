@@ -74,7 +74,7 @@ export default async function Home() {
   try{
     const res = await fetch(`http://localhost:3003/leaderboard`);
     if (!res.ok)
-      return[];
+      return "";
     players = await res.json();
    // players.sort((a, b)=> b.XPoints - a.XPoints);
     const myIndex = players.findIndex(
@@ -85,7 +85,7 @@ export default async function Home() {
   catch(err)
   {
     console.log(err);
-    return;
+    return "";
   }
 
   const currentLang = (await getSavedLang()).toUpperCase();
@@ -334,7 +334,8 @@ function updateWinRateDisplay(wins: any, losses: any) {
 export async function HomeEventListener()
 {
   const btnPlay = document.getElementById("play-btn2");
-  btnPlay?.addEventListener("click", () => {navigate("/remoteVSlocal");
+  btnPlay?.addEventListener("click", () => {
+    navigate("/remoteVSlocal");
   });
   const Wins = document.getElementById("Wins");
   const Losses = document.getElementById("Losses");
@@ -357,6 +358,3 @@ export async function HomeEventListener()
   if(lvl)
     lvl.style.width = `${percentage}%`;
 }
-
-
-// if (matches.length > 0) {

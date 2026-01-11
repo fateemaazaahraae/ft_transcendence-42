@@ -35,7 +35,7 @@ import { translatePage, getSavedLang, setLang } from "./i18n/index.ts";
 import { searchBar } from "./pages/searchBar.ts";
 import { tournamentChoices, tournamentChoicesEventListener } from "./pages/tournamentChoices.ts";
 
-const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<void> }> = {
+const routes: Record<string, { render: () => string | Promise<string>; setUp?: () => void | Promise<() => void> | Promise<void>}> = {
     "/": {render: Landing, setUp: LandingEventListener},
     "/home": {render: Home, setUp: HomeEventListener},
     "/remoteVSlocal": {render: RemoteVsLocal, setUp: RemoteVsLocalEventListener},
@@ -87,6 +87,9 @@ async function render(path: string) {
     // renderNotifications(notifications);
     initLogout();
     searchBar();
+    const userId = localStorage.getItem("userId")
+    if (userId)
+        notificationBarListeners(userId);
     const logo = document.getElementById("logo");
     logo?.addEventListener("click", () => {
         navigate("/");
@@ -121,9 +124,9 @@ window.addEventListener("DOMContentLoaded", async() => {
     if (userId) {
         notificationBarListeners(userId);
         updateUnreadCount(userId);
-        // setInterval(() => {
-        //     updateUnreadCount(userId);
-        // }, 5000);
+        setInterval(() => {
+            updateUnreadCount(userId);
+        }, 2000);
         notificationBarListeners(userId);
     }
     LanguagesMenuEventListener();
