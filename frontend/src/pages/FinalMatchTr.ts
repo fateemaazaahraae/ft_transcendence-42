@@ -119,7 +119,7 @@ export async function winnerdata(winner: any) {
     }
 }
 
-export function FinalMatchTrEventListener() {
+export async function FinalMatchTrEventListener() {
   fillSettingsPage();
   const socket = getTrSocket(localStorage.getItem("token"));
   const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;

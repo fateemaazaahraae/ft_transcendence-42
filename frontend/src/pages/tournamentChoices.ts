@@ -1,6 +1,7 @@
 import { getSavedLang } from "../i18n";
 import { getTrSocket } from "../utils/tournamentSocket.ts";
 import { navigate } from "../main.ts";
+import { requiredAuth } from "../utils/authGuard.ts";
 import { showAlert } from "../utils/alert.ts";
 
 // interface AvTournaments {
@@ -10,6 +11,7 @@ import { showAlert } from "../utils/alert.ts";
 // }
 
 export async function tournamentChoices() {
+    if (!requiredAuth()) return "";
     const emptyAvTournaments = /* html */
     `
     <div class="w-full flex flex-col items-center justify-center py-20  rounded-2xl bg-black drop-shadow-cyan">
