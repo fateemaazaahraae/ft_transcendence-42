@@ -22,7 +22,7 @@ import Friends, {FriendsEventListener} from "./pages/friends.ts";
 import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
 import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
 import PageNotFound from "./pages/pageNotFound.ts"
-import { notifications, notificationBarListeners, renderNotifications } from "./pages/notifications.ts";
+import { notificationBarListeners, renderNotifications, updateUnreadCount } from "./pages/notifications.ts";
 import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
 import Chat from "./pages/Chat.ts";
@@ -60,10 +60,10 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/invitations": {render: Invitations, setUp: InvitationsEventListener},
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
     "/chat": {render: Chat, setUp: ChatEventListener},
-    "/remotegame": { render: RemoteGame, setUp: RemoteGameEventListener },
-    "/FinalMatchTr": { render: FinalMatchTr, setUp: FinalMatchTrEventListener },
-    "/tournamentgame": {render: TournamentGame, setUp: TournamentGameEventListener},
-    "/tournamentgametwo": {render: TournamentGametwo, setUp: TournamentGametwoEventListener},
+    "/remotegame": { render: RemoteGame, setUp: RemoteGameEventListener() },
+    "/FinalMatchTr": { render: FinalMatchTr, setUp: FinalMatchTrEventListener() },
+    "/tournamentgame": {render: TournamentGame, setUp: TournamentGameEventListener() },
+    "/tournamentgametwo": {render: TournamentGametwo, setUp: TournamentGametwoEventListener() },
     "/tournamentChoices": { render: tournamentChoices, setUp: tournamentChoicesEventListener },
     404: {render: PageNotFound},
 };
@@ -86,13 +86,13 @@ async function render(path: string) {
     const currentLangBtn = document.getElementById("currentLang");
     if (currentLangBtn)
         currentLangBtn.innerHTML = `<i class="fa-solid fa-chevron-down text-xs"></i> ${lang.toUpperCase()}`;
-    renderNotifications(notifications);
+    // renderNotifications(notifications);
     initLogout();
     searchBar();
     const logo = document.getElementById("logo");
     logo?.addEventListener("click", () => {
         navigate("/");
-    })
+    });
 }
 
 
@@ -119,9 +119,16 @@ window.addEventListener("DOMContentLoaded", async() => {
     const lang = await getSavedLang();
     translatePage(lang);
     await render(window.location.pathname);
-    notificationBarListeners();
+    const userId = localStorage.getItem("userId")
+    if (userId) {
+        notificationBarListeners(userId);
+        updateUnreadCount(userId);
+        setInterval(() => {
+            updateUnreadCount(userId);
+        }, 5000);
+        notificationBarListeners(userId);
+    }
     LanguagesMenuEventListener();
-    // viewFriend();
 });
 
 const urlParams = new URLSearchParams(window.location.search);

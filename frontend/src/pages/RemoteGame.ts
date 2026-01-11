@@ -107,9 +107,6 @@ export async function winnerdata(winner: any) {
       const userName = data.userName || "";
 
       return {profileImage, userName};
-      
-      // (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
-      // (document.getElementById("userName") as HTMLElement).textContent = data.userName || "";
     }
     catch (err)
     {
@@ -131,16 +128,11 @@ export function RemoteGameEventListener() {
 
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
-  // console.log(canvas.height);
-  // console.log(canvas.width);
 
   const LeaveOverlay = document.getElementById('leave-overlay') as HTMLDivElement;
   const quitBtn = document.getElementById('quit-btn') as HTMLButtonElement;
   const player1ScoreDisplay = document.getElementById('player1-score-display') as HTMLSpanElement;
   const player2ScoreDisplay = document.getElementById('player2-score-display') as HTMLSpanElement;
-  // const modal = document.getElementById("game-over-modal");
-  // const resultTitle = document.getElementById("game-result-title");
-  // const finalScoreText = document.getElementById("final-score");
 
   function updateScoreDisplay() {
     if (player1ScoreDisplay) player1ScoreDisplay.textContent = player1Score.toString();
@@ -222,7 +214,7 @@ export function RemoteGameEventListener() {
             winnerOverlay.id = 'winner-overlay';
             winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
             winnerOverlay.innerHTML = `
-              <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
+              <div class="bg-black p-10 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
                 <h3 class="text-3xl font-glitch ${h3ColorClass} mb-3">${h3Text}</h3>
                 <h2 class="text-green" mb-5>${HeaderMsg}</h2>
                 <h1 class="text-green text-bold" mb-4>WINNER IS</h1>

@@ -196,8 +196,8 @@ export default class GameRoom {
     ) {
       this.gameState.ball.dx *= -1;
       // Speed up slightly for fun
-      this.gameState.ball.dx *= 0.9; 
-      this.gameState.ball.dy *= 0.9;
+      this.gameState.ball.dx *= 1.28; 
+      this.gameState.ball.dy *= 1.28;
     }
 
     if (
@@ -208,8 +208,8 @@ export default class GameRoom {
       this.gameState.ball.y <= this.gameState.paddle2.y + PADDLE_HEIGHT
     ) {
       this.gameState.ball.dx *= -1;
-      this.gameState.ball.dx *= 0.9; 
-      this.gameState.ball.dy *= 0.9;
+      this.gameState.ball.dx *= 1.28; 
+      this.gameState.ball.dy *= 1.28;
     }
 
 
@@ -304,7 +304,7 @@ export default class GameRoom {
     this.stop(); 
   }
   
-  resetBall (moveTo = null) {
+  resetBall (MoveTo = null) {
     this.gameState.ball = { x: 672, y: 290, dx: 5, dy: 5 };
     // Serve to the player who lost the point (or random)
     const dir = typeof MoveTo === 'boolean' ? (MoveTo ? 1 : -1) : (Math.random() < 0.5 ? 1 : -1); // if a boolean value is entred si nn randomly right or left

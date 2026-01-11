@@ -65,9 +65,6 @@ export default async function GameRoutes(fastify, options) {
          FROM wlxp
          ORDER BY XPoints DESC`
       );
-      console.log("-----------------------\n")
-      console.log(users)
-      console.log("-----------------------\n")
       return users;
   });
 }

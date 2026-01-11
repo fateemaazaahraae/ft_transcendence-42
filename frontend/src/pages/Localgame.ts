@@ -8,12 +8,12 @@ export default function LocalGame() {
   const game = {
     match: [{
       player1: {
-        avatar: "/public/pink-girl.svg",
+        avatar: "pink-girl.svg",
         name: "Player 1",
         score: 0,
       }, 
       player2: {
-        avatar: "/public/purple-girl.svg", 
+        avatar: "purple-girl.svg", 
         name: "Player 2",
         score: 0, 
       },

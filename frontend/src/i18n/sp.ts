@@ -1,3 +1,4 @@
+
 import { translateDict } from "./types"
 
 const sp: translateDict = {
@@ -44,6 +45,13 @@ const sp: translateDict = {
     pick: "Elige tu modo",
     one: "Uno-contra-Uno",
     ai: "Uno-contra-IA",
+    notFound: "Página no encontrada",
+    tournament: "Torneo",
+    start: "Comenzar",
+    availTour:"Torneos disponibles",
+    yours: "Crea el tuyo",
+    create: "Crear",
+
 }
 
 export default sp;

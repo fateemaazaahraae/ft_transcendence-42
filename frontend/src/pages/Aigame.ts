@@ -15,7 +15,7 @@ export default function AiGame() {
         score: 0,
       }, 
       player2: {
-        avatar: "/public/Aipic.png", //"/public/Aiplayresize.png"
+        avatar: "robot.svg",
         name: "Ai",
         score: 0, 
       },
@@ -39,7 +39,7 @@ export default function AiGame() {
           <h1 class="font-glitch text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px]"> ${game.match[0].player2.name} </h1>
           <span id="player2-score-display" class="w-[40px] h-[30px] lg:w-[60px] lg:h-[35px] text-[16px] lg:text-[18px] xl:w-[80px] lg:pt-[6%] xl:h-[40px] rounded-2xl text-center font-roboto text-secondary text-xl bg-black drop-shadow-pink">0</span>
         </div>
-        <img src="${game.match[0].player2.avatar}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-secondary object-cover border-[2px]"/>
+        <img src="${game.match[0].player2.avatar}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-secondary p-2 border-[2px]"/>
       </div>
     </div>
 
@@ -59,7 +59,7 @@ export default function AiGame() {
         <p class="font-roboto text-gray-300 mb-10">Take a break, adjust settings, or resume</p>
         
         <div class="space-y-4">
-          <button id="resume-btn" class="w-[200px] py-3 bg-primary/80 hover:bg-primary text-white rounded-lg font-roboto transition-all duration-300">
+          <button id="resume-btn" class="w-[200px] py-3 bg-primary/80 bg-primary text-white rounded-lg font-roboto transition-all duration-300">
             <i class="fa-solid fa-play mr-2"></i>
             Resume Game
           </button>
@@ -346,7 +346,7 @@ export function AiGameEventListener() {
           const speedFactor = 0.7; // Ai padding moving speed // or we'll call it later difficulty level
           const move = Math.sign(diff) * PaddleSpeed * speedFactor * dt;
           // if (Math.abs(move) > Math.abs(diff)) paddleRightY = targetCenterY; else  // just to not make a gitch in the paddle's movement
-          paddleRightY += move / 2;
+          paddleRightY += move;
         }
         paddleRightY = Math.max(0, Math.min(height - paddleHeight, paddleRightY));
       }
@@ -442,7 +442,7 @@ export function AiGameEventListener() {
               winnerOverlay.id = 'winner-overlay';
               winnerOverlay.className = 'ml-12 md:ml-0 w-[80%] md:w-full absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
               winnerOverlay.innerHTML = `
-                <div class="bg-black p-10 rounded-2xl shadow-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
+                <div class="bg-black p-10 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
                   <h2 class="text-2xl md:text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>
                   <p class="font-roboto text-xl md:text-2xl text-gray-300 mb-2">Final Score</p>
                   <div class="flex justify-center items-center gap-8 mb-8">

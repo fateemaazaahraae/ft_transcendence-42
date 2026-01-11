@@ -37,35 +37,56 @@ export default async function Home() {
       console.log("login first");
       navigate("/login");
     }
+
     //Game data
+
    let matches: any[] = [];
-let opponent: any[] = [];
+  let opponent: any[] = [];
+  let userId: any;
+  try {
+    userId = localStorage.getItem("userId");
 
-try {
-  const userId = localStorage.getItem("userId");
+    const resGame = await fetch(`game/matches/user/${userId}`);
+    if (!resGame.ok) throw new Error("Can't fetch matches");
 
-  const resGame = await fetch(`game/matches/user/${userId}`);
-  if (!resGame.ok) throw new Error("Can't fetch matches");
+    matches = await resGame.json();
 
-  matches = await resGame.json();
+    if (matches.length > 0) {
+      opponent = await Promise.all(
+        matches.map(async (match: any) => {
+          const otherId =
+            userId === match.player1Id
+              ? match.player2Id
+              : match.player1Id;
 
-  if (matches.length > 0) {
-    opponent = await Promise.all(
-      matches.map(async (match: any) => {
-        const otherId =
-          userId === match.player1Id
-            ? match.player2Id
-            : match.player1Id;
-
-        const res = await fetch(`http://localhost:3000/users/${otherId}`);
-        return await res.json();
-      })
-    );
+          const res = await fetch(`http://localhost:3000/users/${otherId}`);
+          return await res.json();
+        })
+      );
+    }
+  } catch (err) {
+    console.error(err);
   }
-} catch (err) {
-  console.error(err);
-}
 
+  //Rank
+  let players: any[] = [];
+  let myRank: any;
+  try{
+    const res = await fetch(`http://localhost:3003/leaderboard`);
+    if (!res.ok)
+      return[];
+    players = await res.json();
+   // players.sort((a, b)=> b.XPoints - a.XPoints);
+    const myIndex = players.findIndex(
+    (player) => player.id === userId
+  );
+   myRank = myIndex !== -1 ? myIndex + 1 : "0";
+  }
+  catch(err)
+  {
+    console.log(err);
+    return;
+  }
 
   const currentLang = (await getSavedLang()).toUpperCase();
 
@@ -102,7 +123,10 @@ try {
           ${currentLang}
         </button>
       </div>
-      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+      <div class="relative">
+        <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+        <div id="notifBadge" class="absolute hidden top-1 inset-0 w-[7px] h-[7px] rounded-full bg-red-600"></div>
+      </div>
       <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
@@ -122,13 +146,13 @@ try {
           <div class="lg:gap-3 xl:gap-6 lg:mt-[5%] xl:mt-[10%]">
             <div class="flex text-white font-roboto justify-between text-[10px] md:text-[13px] w-[210px] md:w-[300px] xl:w-[400px]">
               <p data-i18n="level">Level</p>
-              <p id="level" >"7.5%"</p>
+              <p id="level" >7.5%</p>
             </div>
 
             <div class="w-[210px] h-[5px] md:w-[300px] md:h-[8px] xl:w-[400px] xl:h-[12px] bg-secondary rounded-full overflow-hidden relative">
               <div 
-                class="absolute top-0 left-0 h-full bg-[#35C6DD] rounded-full transition-all duration-700 ease-in-out"
-                style="width: %;"
+                id="levelPourcen" class="absolute top-0 left-0 h-full bg-[#35C6DD] rounded-full transition-all duration-700 ease-in-out"
+                style="width: 0%;"
               ></div>
             </div>
           </div>
@@ -136,7 +160,7 @@ try {
           <div class="mt-[4%] xl:mt-[7%] flex text-[10px] md:text-[11px] xl:text-[13px] text-secondary w-[210px] md:w-[300px] h-[12px] md:h-[15px] xl:w-[400px] xl:h-[20px] bg-[#35C6DD]/90 rounded-full justify-between items-center px-4">
             <p class="font-roboto">
             <span data-i18n="rank" class="text-white">Rank</span>
-            <span class="text-secondary ml-2">2</span>
+            <span class="text-secondary ml-2">${myRank}</span>
             </p>
             <p class="font-roboto">
             <span data-i18n="score" class="text-white">Score</span>
@@ -194,19 +218,19 @@ try {
         <!-- Main trophy -->
         <div  class="flex items-center justify-center absolute mt-[20%] md:mt-[23%] lg:mt-[20%] xl:mt-0 xl:top-1/2 left-[10%] lg:left-[30%] xl:left-1/2 w-[120px] h-[120px] md:w-[130px] md:h-[130px] xl:w-[190px] xl:h-[190px] rounded-full border-[3px] border-[#35C6DD] drop-shadow-cyan cursor-pointer 
                 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500 group-hover:opacity-0" > 
-          <img src="/public/golden_trophy.svg" class=" w-[80px] md:w-[90px] xl:w-[120px]" />
+          <img src="golden_trophy.svg" class=" w-[80px] md:w-[90px] xl:w-[120px]" />
         </div>
         <!-- Hidden trophies in 2x3 grid -->
         <div class="absolute top-[30%] lg:top-[30%] xl:top-[50%] left-[10%] lg:left-[30%] xl:left-[37%] flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-700 -translate-x-1/2 -translate-y-1/2">
           <div class="flex gap-2 mb-1">
-            <img src="/public/trophy1.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-            <img src="/public/trophy6.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-            <img src="/public/trophy3.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="trophy1.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="trophy6.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="trophy3.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
           </div>
           <div class="flex gap-2 mt-1">
-            <img src="/public/trophy4.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-            <img src="/public/trophy5.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-            <img src="/public/trophy2.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="trophy4.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="trophy5.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+            <img src="trophy2.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
           </div>
         </div>
       </div>
@@ -240,9 +264,9 @@ try {
               <!-- Score -->
               <div class= "flex flex-col items-center font-normal text-[12px] text-white/60">
               <p class="flex items-center justify-center text-white font-roboto font-bold lg:text-[17px] xl:text-xl lg:gap-4 xl:gap-6">
-              <span>${match.score1}</span>
+              <span>${userId === match.player1Id ? match.score1 : match.score2}</span>
               <span>-</span>
-              <span>${match.score2}</span>
+              <span>${userId === match.player2Id ? match.score1 : match.score2}</span>
               </p>
               <span>${formatDate(match.timestamp)}</span> 
               </div>
@@ -256,7 +280,7 @@ try {
         </div>
     </div>  
     <div class="flex flex-col mt-[10%] md:mt-[5%]  lg:mt-[5%] lg:mr-[5%] xl:mr-[8%] mb-[20%] md:mb-[5%] lg:mb-0 xl:mt-[2%] items-center gap-5  ">
-      <img src="/public/match.svg" class="md:w-[350px] lg:w-[260px] xl:w-[350px]"/>
+      <img src="match.svg" class="md:w-[350px] lg:w-[260px] xl:w-[350px]"/>
       <button data-i18n="play" id="play-btn2" class="w-[100px] xl:w-[160px] h-[30px] xl:h-[40px] rounded-3xl bg-primary/60 text-center text-white font-glitch hover:bg-secondary xl:text-2xl">play</button>
     </div>
   </div>
@@ -328,8 +352,13 @@ export async function HomeEventListener()
   Losses.textContent = data.Losses;
   Score.textContent = data.XPoints;
   const levelRate = data.XPoints / 100;
-  Level.textContent = `"${levelRate}"%`;
+  Level.textContent = `${levelRate}%`;
   updateWinRateDisplay(data.Wins, data.Losses);
+  const lvl = document.getElementById("levelPourcen");
+  let percentage = levelRate - Math.floor(levelRate);
+  percentage = Math.round(percentage * 100) ; 
+  if(lvl)
+    lvl.style.width = `${percentage}%`;
 }
 
 

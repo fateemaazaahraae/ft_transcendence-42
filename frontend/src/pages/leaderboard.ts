@@ -38,13 +38,6 @@ export default async function Leaderboard() {
   if (!requiredAuth())
     return "";
   const users: User[] = await fetchLeaderboard();
-  // if (users.length < 3) {
-  //   return `
-  //     <div class="min-h-screen flex items-center justify-center text-white text-xl">
-  //       Not enough users to display leaderboard
-  //     </div>
-  //   `;
-  // }
   const topThree: User[] = users.slice(0, 3);
   const restUsers: User[] = users.slice(3, 7);
   console.log(topThree);
