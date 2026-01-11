@@ -55,6 +55,7 @@
     "escalade": "^3.2.0",
     "fast-glob": "^3.3.3",
     "fastq": "^1.19.1",
+    "@scienta/ioredis": "5.3.2",
     "fdir": "^6.5.0",
     "fill-range": "^7.1.1",
     "foreground-child": "^3.3.1",
