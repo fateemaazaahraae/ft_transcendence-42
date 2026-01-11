@@ -145,6 +145,11 @@ export async function tournamentChoicesEventListener() {
         return;
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
+        const btnTr = document.getElementById("submit");
+        if (btnTr) {
+            btnTr.addEventListener("click", () => handleTournamentbtn(tournamentId));
+            btnTr.removeEventListener("click", () => handleTournamentbtn(tournamentId));
+        }
         const tourName = (document.getElementById("tourName") as HTMLInputElement).value;
         const nickName = (document.getElementById("nick") as HTMLInputElement).value;
         
@@ -170,11 +175,7 @@ export async function tournamentChoicesEventListener() {
             return;
         }
     });
-    const btnTr = document.getElementById("submit");
-    if (btnTr) {
-        btnTr.addEventListener("click", () => handleTournamentbtn(tournamentId));
-        btnTr.removeEventListener("click", () => handleTournamentbtn(tournamentId));
-    }
+    
 }
 
 
