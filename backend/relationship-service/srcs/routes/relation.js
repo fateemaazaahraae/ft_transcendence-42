@@ -8,6 +8,19 @@ export async function relationRoutes(fastify) {
         const { to } = req.body;
         const db = await openDb();
 
+        // BEFORE creating friend request
+        const isBlocked = await db.get(
+        `SELECT 1 FROM blocked_users
+        WHERE (user_id = ? AND blocked_user_id = ?)
+            OR (user_id = ? AND blocked_user_id = ?)`,
+        [from, to, to, from]
+        );
+
+        if (isBlocked)
+            return rep.code(403).send({
+                error: "You can't sent the request, user blocked you"
+            });
+
         await db.run(
             `INSERT OR IGNORE INTO friends
             (user_id, friend_id, status, created_at)
