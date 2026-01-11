@@ -123,42 +123,28 @@ export async function tournamentChoices() {
     `
 }
 
-
-export function tournamentChoicesEventListener(){
-  setTimeout(() => {
-  const btnTr = document.getElementById("trcreate");
-  if (btnTr) {
-    btnTr.addEventListener("click", () => {
-      console.log("Create tr button is clicked!");
-
-      const token = localStorage.getItem("token"); // this will get JWT prolly
-      if (!token) {
+function handleTournamentbtn() {
+    console.log("Create tr button is clicked!");
+    const token = localStorage.getItem("token"); // this will get JWT prolly
+    if (!token) {
         navigate("/login"); 
         return;
-      }
-
-      const socket = getTrSocket(token); /// here is the key to send request to our game server
-
-    //   if (!socket.hasListeners("match_found")) {
-          
-          socket.on("connect", () => {
-              console.log("✅ Connected via Manager! ID:", socket.id);
-              navigate("/TrWaitingPlayers");
-              socket.emit('join_queue');
-          });
-
-        //   socket.on("match_found", (data: any) => {
-        //       console.log("🎉 MATCH FOUND! Navigating to game...");
-        //       localStorage.setItem("currentMatch", JSON.stringify(data));
-        //       navigate("/remotegame"); 
-        //   });
-    //   }
-
-    //   if (socket.connected) {
-    //         socket.emit('join_queue');
-    //   }
+    }
+    const socket = getTrSocket(token); /// here is the key to send request to our game server
+    socket.on("connect", () => {
+        console.log("✅ Connected via Manager! ID:", socket.id);
+        navigate("/TrWaitingPlayers");
+        socket.emit('join_queue');
     });
-  }
-}, 100);
+}
+
+export function tournamentChoicesEventListener() {
+    setTimeout(() => {
+        const btnTr = document.getElementById("trcreate");
+        if (btnTr) {
+            btnTr.removeEventListener("click", (handleTournamentbtn));
+            btnTr.addEventListener("click", (handleTournamentbtn));
+        }
+    }, 100);
 }
 

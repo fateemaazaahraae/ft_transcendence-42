@@ -102,12 +102,9 @@ export async function winnerdata(winner: any) {
     {
       const res = await fetch(`http://localhost:3001/settings/${winner}`);
       const data = await res.json();
-      // fill page
-      console.log('winner img', data.profileImage);
-      console.log('winner userName', data.userName);
 
       const profileImage = data.profileImage || "";
-        const userName = data.userName || "";
+      const userName = data.userName || "";
 
       return {profileImage, userName};
       
@@ -185,8 +182,6 @@ export function FinalMatchTrEventListener() {
     }
   });
   function cleanupGame() {
-    console.log("Cleaning game");
-
     socket.off();
     socket.disconnect();
 
@@ -199,9 +194,6 @@ export function FinalMatchTrEventListener() {
 
   socket.once("game_over", (data: any) => {
       const myId = localStorage.getItem("userId");
-      console.log('we have a winnnner!!!');
-      console.log(myId);
-      console.log(data.winner);
       const isWinner = data.winner === myId;
       let h3ColorClass: string;
       let h3Text: string;
