@@ -7,7 +7,7 @@ export default async function Chat() {
     const currentLang = (await getSavedLang()).toUpperCase();
     
     return `
-    <div class="h-screen overflow-hidden flex items-center justify-center text-white font-roboto px-6 md:px-20 py-6 relative flex flex-col">
+    <div class="h-screen overflow-hidden flex items-center justify-center text-white font-roboto px-6 md:px-20 py-6 relative flex-col">
         <aside class="fixed md:left-6 md:bottom-[40%] md:flex-col md:gap-8
            bottom-0 left-0 w-full bg-black/40 backdrop-blur-md md:w-auto
            flex justify-around md:justify-normal items-center py-3 md:py-0
@@ -34,7 +34,10 @@ export default async function Chat() {
           ${currentLang}
         </button>
       </div>
-      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+      <div class="relative">
+        <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+        <div id="notifBadge" class="absolute hidden top-1 inset-0 w-[7px] h-[7px] rounded-full bg-red-600"></div>
+      </div>
       <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
