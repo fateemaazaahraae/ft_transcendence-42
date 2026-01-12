@@ -2,6 +2,7 @@ import { StartTournament } from "./models/Tournament.js";
 import TournamentRoutes from "./routes/Tournament.js";
 import Fastify from "fastify";
 import fastifyCors from "@fastify/cors";
+import { initTrophies } from "./models/tournoi.js";
 
 const fastify = Fastify({ logger: true });
 
@@ -10,7 +11,7 @@ fastify.register(fastifyCors, { origin: '*' });
 // fastify.get('/test', async (request, reply) => {
 //     return { message: 'tournament server is Running!' };
 // });
-
+await initTrophies();
 fastify.register(TournamentRoutes);
 
 const start = async () => {

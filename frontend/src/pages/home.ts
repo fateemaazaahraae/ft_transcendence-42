@@ -11,7 +11,7 @@ import { showAlert } from "../utils/alert";
 
 
 export default async function Home() {
-  //Auth data
+  //GET AUTHENTICATION DATA
   let user:any;
   try{
     const params = new URLSearchParams(window.location.search);
@@ -38,7 +38,7 @@ export default async function Home() {
       navigate("/login");
     }
 
-    //Game data
+    //GET GAME DATA
 
    let matches: any[] = [];
   let opponent: any[] = [];
@@ -68,7 +68,7 @@ export default async function Home() {
     console.error(err);
   }
 
-  //Rank
+  //GET RANK
   let players: any[] = [];
   let myRank: any;
   try{
@@ -85,6 +85,19 @@ export default async function Home() {
   {
     console.log(err);
     return "";
+  }
+
+  //GET ACHIEVEMENTS
+  let trophies: any[] = [];
+  try{
+    const res = await fetch(`http://localhost:3004/achievements/${userId}`);
+    if(!res.ok)
+      throw new Error("can't fetch achievements");
+    trophies = await res.json();
+  }
+  catch(err)
+  {
+    console.error(err);
   }
 
   const currentLang = (await getSavedLang()).toUpperCase();
@@ -220,17 +233,17 @@ export default async function Home() {
           <img src="golden_trophy.svg" class=" w-[80px] md:w-[90px] xl:w-[120px]" />
         </div>
   <!-- Hidden trophies in 2x3 grid -->
-        <div class="absolute top-[30%] lg:top-[30%] xl:top-[50%] left-[10%] lg:left-[30%] xl:left-[37%] flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-700 -translate-x-1/2 -translate-y-1/2">
-          <div class="flex gap-2 mb-1">
-            <img src="trophy1.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-            <img src="trophy6.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-            <img src="trophy3.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-          </div>
-          <div class="flex gap-2 mt-1">
-            <img src="trophy4.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-            <img src="trophy5.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-            <img src="trophy2.svg" class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-          </div>
+        <div class="absolute top-[30%] lg:top-[30%] xl:top-[10%] left-[10%] lg:left-0 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-700 ">
+          ${trophies.length === 0 ?
+            `<div class = "flex flex-col  items-center justify-center gap-5 mr-[10%] w-[200px] md:w-[400px]  h-full rounded-[30px]">
+            <i class="fa-duotone fa-solid fa-trophy text-secondary drop-shadow-cyan text-[40px] md:text-[50px]"></i>
+            <p data-i18n="noTrophies" class="font-regular font-roboto text-primary text-center text-[18px] md:text-xl"> No trophies yet!</br> Play now and become </br> a champion! </p> 
+           </div>`
+          : trophies.map((trophy: any) =>{
+            return`
+            <img src=${trophy.img_src} class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
+          `;}).join("")}
+          
         </div>
       </div>
     </div>

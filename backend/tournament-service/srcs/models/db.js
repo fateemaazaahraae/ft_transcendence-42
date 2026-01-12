@@ -17,6 +17,22 @@ export async function openDb() {
         )`
     );
 
+    await db.exec(
+        `CREATE TABLE IF NOT EXISTS achievements (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        winnerId TEXT NOT NULL,
+        trophyId INTEGER NOT NULL,
+        FOREIGN KEY (trophyId) REFERENCES trophies(id)
+        )`
+    );
+
+    await db.exec(
+        `CREATE TABLE IF NOT EXISTS trophies (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        img_src TEXT NOT NULL
+        )`
+    );
+
     // await db.exec(
     //     `CREATE TABLE IF NOT EXISTS Trmatches (
     //         id TEXT PRIMATY KEY,

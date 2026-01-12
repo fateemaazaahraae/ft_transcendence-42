@@ -107,7 +107,7 @@ export async function tournamentChoices() {
 				<!--JOIN TOURNAMENT MODAL -->
 				<div id="joinTour" class="fixed  inset-0 z-50 hidden items-center justify-center bg-black/70">
 					<div id="joinBox" class="flex flex-col justify-center items-center gap-6 w-[350px] h-[300px] rounded-3xl bg-black drop-shadow-pink">
-						<h3 id="title" class="text-3xl mt-10 font-glitch text-white/90"> Join Tournament </h3>
+						<h3 id="title" class="text-3xl mt-10 font-glitch text-center text-white/90"> Join Tournament </h3>
 						<input id="joinNick" type="text" placeholder="Nick name" class="mt-3 placeholder-white/70 w-[220px] bg-black drop-shadow-pink  rounded-2xl px-6 py-3 focus:outline-none focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] " />
 						<button data-i18n= "join" type="submit" id="joinBtn" class="bg-secondary/90 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary mb-16 mt-4 ">Join</button>
 					</div>
@@ -215,7 +215,7 @@ export function joinTournament(): string {
 	{
 		const title = document.getElementById("title");
 		if (title)
-			title.innerHTML = `Join Tournament </br> <span class="text-secondary ml-14">"${tournamentName}"</span>`;
+			title.innerHTML = `Join Tournament </br> <span class="text-secondary">"${tournamentName}"</span>`;
 	}
     modal.classList.remove("hidden");
     modal.classList.add("flex");
