@@ -2,8 +2,7 @@ import { Server } from "socket.io";
 import GameRoom from "./TournamentRoom.js";
 import { openDb } from "./db.js";
 
-const waitingQueue = [];
-const SaveQueue = [];
+const tournaments = {}; 
 
 const getUserDataFromToken = (token) => {
   try {
@@ -25,29 +24,24 @@ const getUserDataFromToken = (token) => {
   }
 };
 
-function broadcastQueueState(io, waitingQueue) {
-  // console.log("updating avatarsss!!");
-  const avatars = waitingQueue.map(s => s.data.user.avatar);
+function broadcastQueueState(io, tournamentId) {
+  const QueueState = tournaments[tournamentId];
+  if (!QueueState) return;
+  const avatars = getAvatars(QueueState.waiting);
 
   // console.log(`the avatar is : ${avatars}`);
-  waitingQueue.forEach((s) => {
+  QueueState.waiting.forEach((s) => {
     s.emit("update_avatars", {
-      number: waitingQueue.length,
+      number: QueueState.waiting.length,
       avatars: avatars
     });
   });
 }
 
-function getAvatars(waitingQueue) {
-  const avatars = waitingQueue.map(s => s.data.user.avatar);
+function getAvatars(queue) {
+  const avatars = queue.map(s => s.data.user.avatar);
   return avatars;
 }
-
-// function broadcastExitNotif(io, waitingQueue) {
-//   waitingQueue.forEach((s) => {
-//     s.emit("host_exit");
-//   });
-// }
 
 export const StartTournament =(server) => {
 
@@ -69,15 +63,17 @@ export const StartTournament =(server) => {
         socket.data.userId = userData.id;
 
         console.log(`🔌 User ${userData.name} connected!`);
-        console.log(`----------------- pic is: ${userData.avatar}`);
 
-        socket.on("leave_queue", async (data) => {
-          const index = waitingQueue.findIndex(
+        const handleLeave = async (tournamentId) => {
+          if (!tournamentId || !tournaments[tournamentId]) return;
+          
+          const QueueState = tournaments[tournamentId];
+          const index = QueueState.waiting.findIndex(
             s => s.data.userId === socket.data.userId
           );
           if (index !== -1) {
-            waitingQueue.splice(index, 1);
-            SaveQueue.splice(index, 1);
+            QueueState.waiting.splice(index, 1);
+            QueueState.save.splice(index, 1);
             try {
               const db = await openDb();
 
@@ -85,99 +81,82 @@ export const StartTournament =(server) => {
               `UPDATE tournaments
               SET players = ?
               WHERE id = ?`,
-              [waitingQueue.length, data.tournamentId]
+              [QueueState.waiting.length, tournamentId]
               );
-              
-              console.log("✅ Tr Match is saved to SQLite database!" + waitingQueue.length);
+              console.log("✅ Tr Match is saved to SQLite database!" + QueueState.waiting.length);
             } catch (error) {
               console.error("❌ Failed to save Tr match:", error);
             }
-            console.log(`${socket.data.userId} removed from queue from socket.leave_queue`);
-            broadcastQueueState(io, waitingQueue);
+            broadcastQueueState(io, tournamentId);
           }
-        });
-        socket.on("disconnect", async (reason) => {
-          const index = waitingQueue.findIndex(
-            s => s.data.userId === socket.data.userId
-          );
-          if (index !== -1) {
-              waitingQueue.splice(index, 1);
-              SaveQueue.splice(index, 1);
-              // try {
-              //   const db = await openDb();
-
-              //   await db.run(
-              //   `UPDATE tournaments
-              //   SET players = ?
-              //   WHERE id = ?`,
-              //   [waitingQueue.length, data.tournamentId]
-              //   );
-                
-              //   console.log("✅ Tr Match is saved to SQLite database!");
-              // } catch (error) {
-              //   console.error("❌ Failed to save Tr match:", error);
-              // }
-              console.log(`${socket.data.userId} removed from queue from socket.disconnect`);
-              broadcastQueueState(io, waitingQueue);
-          }
-        });
+        }
 
         socket.on('GoToFinal', () => {
           console.log(`\n\n🔥Let'sss go to the final yalaaah🔥\n\n`);
-          let WinnerSide;
-          console.log(`the pic in index 0 is: ${SaveQueue[0].data.user.avatar}`)
-          console.log(`the pic in index 1 is: ${SaveQueue[1].data.user.avatar}`)
-          console.log(`the pic in index 2 is: ${SaveQueue[2].data.user.avatar}`)
-          console.log(`the pic in index 3 is: ${SaveQueue[3].data.user.avatar}`)
-          if (socket == SaveQueue[0] || socket == SaveQueue[1]) {
+          let WinnerSide = 1;
+          const tId = socket.data.tournamentId;
+          if (!tId || !tournaments[tId]) return;
+
+          const QueueState = tournaments[tId];
+          if (QueueState.save.length >= 2 && (socket === QueueState.save[0] || socket === QueueState.save[1])) {
             console.log(`\n\nUr player with the pic: ${socket.data.user.avatar} is in the ---first--- half of the game tournament \n\n`);
             WinnerSide = 1;
           } else {
             console.log(`\n\nUr player with the pic: ${socket.data.user.avatar} is in the ---second--- half of the game tournament \n\n`);
             WinnerSide = 2;
           }
-          SaveQueue.push(socket);
-          let playersPicInfo = [];
-          playersPicInfo = getAvatars(SaveQueue);
-          socket.emit("startWaitFinal", {avatars: playersPicInfo, WinnerSide: WinnerSide});
-          if (SaveQueue.length === 6) {
-            const player1 = SaveQueue[4];
-            const player2 = SaveQueue[5];
+
+          if (!QueueState.finalists) QueueState.finalists = [];
+          QueueState.finalists.push(socket);///////
+
+          let playersPicInfo = getAvatars(QueueState.finalists);
+
+          io.to(tId).emit("startWaitFinal", {avatars: playersPicInfo, WinnerSide: WinnerSide});
+          if (QueueState.finalists.length === 2) {
+            const player1 = QueueState.finalists[0];
+            const player2 = QueueState.finalists[1];
             const matchId = `match_${Date.now()}`;
             const matchInfo = {
               matchId,
               player1: player1.data.user,
               player2: player2.data.user
             };
-            player1.emit("start_final_game", matchInfo);
-            player2.emit("start_final_game", matchInfo);
+            io.to(tId).emit("start_final_game", matchInfo);
             console.log("match final en cours");
             const gameFinal = new GameRoom(io, matchId, player1, player2);
             gameFinal.start();
-            SaveQueue.length = 0;
+            delete tournaments[tId]; 
           }
         });
 
         socket.on("join_queue", async (data) => {
-            const userId = socket.data.userId;
-            const userData = socket.data.user;
+          const tournamentId = data.tournamentId;
 
+            if(!tournaments[tournamentId]) {
+              tournaments[tournamentId] = {
+                waiting: [],
+                save: [],
+                finalists: [],
+                Nicknames: []
+              };
+            }
+            const QueueState = tournaments[tournamentId];
 
-            console.log(`salamo 3alaykom khoti tournament Id howa: ${data.tournamentId} ----- w nickname dial luser howaa: ${data.nick}`);
-            const alreadyQueued = waitingQueue.some(
-                s => s.data.userId === userId
+            const alreadyQueued = QueueState.waiting.some(
+                s => s.data.userId === socket.data.userId
             );
-    
             if (alreadyQueued) {
-                console.log(`${userId} already in queue, successfuly ignored`);
+                console.log(`${socket.data.userId} already in queue, successfuly ignored`);
                 return;
             }
     
-            waitingQueue.push(socket);
-            SaveQueue.push(socket);
-            let playersPicInfo = [];
-            playersPicInfo = getAvatars(waitingQueue);
-            console.log(`Queue size: ${waitingQueue.length}`);
+            QueueState.waiting.push(socket);
+            QueueState.save.push(socket);
+            QueueState.Nicknames.push(data.nick)
+
+            socket.join(tournamentId);
+            socket.data.tournamentId = tournamentId;
+            console.log(`Queue size: ${QueueState.waiting.length}`);
             try {
                   const db = await openDb();
 
@@ -185,60 +164,67 @@ export const StartTournament =(server) => {
                   `UPDATE tournaments
                   SET players = ?
                   WHERE id = ?`,
-                  [waitingQueue.length, data.tournamentId]
+                  [QueueState.waiting.length, tournamentId]
                   );
                   
                   console.log("✅ Tr Match is saved to SQLite database!");
               } catch (error) {
                   console.error("❌ Failed to save Tr match:", error);
               }
-            broadcastQueueState(io, waitingQueue);
-            socket.emit("player_connected", {pic: userData.avatar, name: userData.name, number: waitingQueue.length, avatars: playersPicInfo, tournamentId: data.tournamentId})
-            if (waitingQueue.length > 1) {
-                console.log(`hello waitingQueue.lenth is: ${waitingQueue.length}`)
-                io.emit('update_avatars', {number: waitingQueue.length})
-            }
+            socket.emit("player_connected", {
+              pic: userData.avatar,
+              name: userData.name,
+              number: QueueState.waiting.length,
+              avatars: getAvatars(QueueState.waiting),
+              tournamentId: tournamentId
+            });
+            broadcastQueueState(io, tournamentId);
+            // if (waitingQueue.length > 1) {
+            //     console.log(`hello waitingQueue.lenth is: ${waitingQueue.length}`)
+            //     io.emit('update_avatars', {number: waitingQueue.length})
+            // }
 
-            if (waitingQueue.length >= 4) {
-                const player1 = waitingQueue.shift();
-                const player2 = waitingQueue.shift();
-                const player3 = waitingQueue.shift();
-                const player4 = waitingQueue.shift();
+            if (QueueState.waiting.length >= 4) {
+                const player1 = QueueState.waiting.shift();
+                const player2 = QueueState.waiting.shift();
+                const player3 = QueueState.waiting.shift();
+                const player4 = QueueState.waiting.shift();
+                // const nick1 = QueueState.Nick.shift();
+                // const nick2 = QueueState.Nick.shift();
+                // const nick3 = QueueState.Nick.shift();
+                // const nick4 = QueueState.Nick.shift();
+                
 
-                console.log(`the size of ----SaveQueue----- become: ${SaveQueue.length} `)
+                console.log(`the size of ----SaveQueue----- become: ${QueueState.save.length} `)
     
-                if (player1.data.userId === player2.data.userId) {
-                  return;
-                }
-                if (player3.data.userId === player4.data.userId) {
-                  return;
-                }
+                if ((player1.data.userId === player2.data.userId) || (player3.data.userId === player4.data.userId)) return;
     
                 const match1Id = `match_${Date.now()}_${Math.random().toString(36).slice(2)}`;
                 const match2Id = `match_${Date.now()}_${Math.random().toString(36).slice(2)}`;
     
-                // console.log(`match111Id is: ${match1Id}`);
-                // console.log(`match222Id is: ${match2Id}`);
                 const match1Info = {
                   match1Id,
                   player1: player1.data.user,
-                  player2: player2.data.user
+                  player2: player2.data.user,
+                  Nickname1: QueueState.Nicknames.shift(),
+                  Nickname2: QueueState.Nicknames.shift()
                 };
                 const match2Info = {
                   match2Id,
                   player3: player3.data.user,
-                  player4: player4.data.user
+                  player4: player4.data.user,
+                  Nickname3: QueueState.Nicknames.shift(),
+                  Nickname4: QueueState.Nicknames.shift()
                 };
-    
-                console.log(`🚀 Match: ${match1Info.player1.avatar} vs ${match1Info.player2.avatar}`);
-                console.log(`🚀 Match: ${match2Info.player3.avatar} vs ${match2Info.player4.avatar}`);
-    
+                
                 player1.emit("match_found1", match1Info);
                 player2.emit("match_found1", match1Info);
-
                 player3.emit("match_found2", match2Info);
                 player4.emit("match_found2", match2Info);
-    
+                
+                console.log(`🚀 Match: ${match1Info.player1.avatar} vs ${match1Info.player2.avatar}`);
+                console.log(`🚀 Match: ${match2Info.player3.avatar} vs ${match2Info.player4.avatar}`);
+                
                 console.log("match 1 is en cours");
                 const game1 = new GameRoom(io, match1Id, player1, player2);
                 game1.start();
@@ -248,6 +234,34 @@ export const StartTournament =(server) => {
             } else {
                 console.log("Waiting for players...");
             }
+        });
+        socket.on("leave_queue", (data) => {
+          handleLeave(data.tournamentId);
+          // const index = waitingQueue.findIndex(
+          //   s => s.data.userId === socket.data.userId
+          // );
+          // if (index !== -1) {
+          //   waitingQueue.splice(index, 1);
+          //   SaveQueue.splice(index, 1);
+          //   try {
+          //     const db = await openDb();
+
+          //     await db.run(
+          //     `UPDATE tournaments
+          //     SET players = ?
+          //     WHERE id = ?`,
+          //     [waitingQueue.length, data.tournamentId]
+          //     );
+              
+          //     console.log("✅ Tr Match is saved to SQLite database!" + waitingQueue.length);
+          //   } catch (error) {
+          //     console.error("❌ Failed to save Tr match:", error);
+          //   }
+          //   broadcastQueueState(io, waitingQueue);
+          // }
+        });
+        socket.on("disconnect", (data) => {
+          handleLeave(socket.data.tournamentId);
         });
     });
 }
