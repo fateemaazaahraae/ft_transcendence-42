@@ -233,17 +233,33 @@ export default async function Home() {
           <img src="golden_trophy.svg" class=" w-[80px] md:w-[90px] xl:w-[120px]" />
         </div>
   <!-- Hidden trophies in 2x3 grid -->
-        <div class="absolute top-[30%] lg:top-[30%] xl:top-[10%] left-[10%] lg:left-0 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-700 ">
-          ${trophies.length === 0 ?
-            `<div class = "flex flex-col  items-center justify-center gap-5 mr-[10%] w-[200px] md:w-[400px]  h-full rounded-[30px]">
-            <i class="fa-duotone fa-solid fa-trophy text-secondary drop-shadow-cyan text-[40px] md:text-[50px]"></i>
-            <p data-i18n="noTrophies" class="font-regular font-roboto text-primary text-center text-[18px] md:text-xl"> No trophies yet!</br> Play now and become </br> a champion! </p> 
-           </div>`
-          : trophies.map((trophy: any) =>{
-            return`
-            <img src=${trophy.img_src} class="w-[60px] xl:w-[100px] h-[60px] xl:h-[100px]" />
-          `;}).join("")}
-          
+        <div class="absolute top-[7%] lg:top-[10%] mr-50 lg:mr-0 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-700 ">
+          ${
+  trophies.length === 0
+    ? `
+      <div class="flex flex-col items-center justify-center gap-5 lg:mr-[10%] w-[200px] md:w-[400px] h-full rounded-[30px]">
+        <i class="fa-duotone fa-solid fa-trophy text-secondary drop-shadow-cyan text-[40px] md:text-[50px]"></i>
+        <p data-i18n="noTrophies"
+          class="font-regular font-roboto text-primary text-center text-[18px] md:text-xl">
+          No trophies yet!<br/>Play now and become<br/>a champion!
+        </p>
+      </div>
+    `
+    : `
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-1 ml-0 lg:ml-5 xl:ml-10 ">
+        ${trophies
+          .map(
+            (trophy: any) => `
+              <img
+                src="${trophy.img_src}"
+                class="w-[60px] xl:w-[90px] h-[60px] xl:h-[90px]"
+              />
+            `
+          )
+          .join("")}
+      </div>
+      `
+        }
         </div>
       </div>
     </div>

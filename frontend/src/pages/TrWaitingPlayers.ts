@@ -104,7 +104,7 @@ export default function TrWaitingPlayers() {
 
 
     <!-- Wait opponent -->
-  <div class = "flex flex-col items-center justify-center mt-[10%] gap-10">
+  <div class = "flex flex-col items-center justify-center mt-[20%] xl:mt-[10%] gap-10">
     <h1 id="waitingText"
         class="font-glitch text-3xl md:text-4xl xl:text-6xl lg:text-5xl text-black leading-[1.9] "
        style="-webkit-text-stroke: 2px rgba(53,198,221,0.8);"">
@@ -114,16 +114,15 @@ export default function TrWaitingPlayers() {
       Tournament name
     </h2>
     </div>
-    <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[1%] gap-2 md:gap-32">
+    <div class="flex flex-row justify-center items-center md:mt-[3%] lg:mt-[1%] gap-5 md:gap-10 lg:gap-20">
       <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[2%] gap-2 md:gap-[3px]">
-          <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
+          <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-4 md:gap-10">
               <img id="opponent1"
               src=""
-              class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
+              class="justify-center w-[100px] h-[100px] md:w-[150px] md:h-[150px] lg:w-[170px] lg:h-[170px] xl:w-[200px] xl:h-[200px] rounded-full border-2 border-primary object-cover">
               <img id="opponent2"
               src="/public/opponent1.png"
-              class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
-                      lg:w-[200px] lg:h-[200px]
+              class="opponentImg waiting w-[100px] h-[100px] md:w-[150px] md:h-[150px] lg:w-[170px] lg:h-[170px] xl:w-[200px] xl:h-[200px]
                       rounded-full border-2 border-primary object-cover
                        transition-opacity duration-300"
               />
@@ -131,22 +130,20 @@ export default function TrWaitingPlayers() {
           
       </div>
       <div  class="flex items-center justify-center w-[120px] h-[120px] md:w-[130px] md:h-[130px] xl:w-[190px] xl:h-[190px] rounded-full drop-shadow-cyan " > 
-							<img src="golden_trophy.svg" class=" w-[80px] md:w-[90px] xl:w-[190px]" />
+							<img src="golden_trophy.svg" class=" w-[70px] md:w-[110px] lg:w-[150px] xl:w-[190px] mt-6 lg:mt-0" />
 						</div>
       <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[2%] gap-2 md:gap-[3px]">
   
-          <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
+          <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-4 md:gap-10">
               <img id="opponent3"
               src="/public/opponent1.png"
-              class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
-                      lg:w-[200px] lg:h-[200px]
+              class="opponentImg waiting w-[100px] h-[100px] md:w-[150px] md:h-[150px] lg:w-[170px] lg:h-[170px] xl:w-[200px] xl:h-[200px]
                       rounded-full border-2 border-secondary object-cover
                        transition-opacity duration-300"
               />
               <img id="opponent4"
               src="/public/opponent1.png"
-              class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
-                      lg:w-[200px] lg:h-[200px]
+              class="opponentImg waiting w-[100px] h-[100px] md:w-[150px] md:h-[150px] lg:w-[170px] lg:h-[170px] xl:w-[200px] xl:h-[200px]
                       rounded-full border-2 border-secondary object-cover
                        transition-opacity duration-300"
               />

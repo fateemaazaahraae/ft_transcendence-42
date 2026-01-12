@@ -79,8 +79,9 @@ export async function tournamentChoices() {
 									tournaments.length === 0
 									? emptyAvTournaments
 									: tournaments.map(
-										(tour) => `
-											<div class="relative flex items-center bg-primary/50 rounded-[20px] px-6 py-[5px] w-full mx-auto">
+										(tour) => 
+										tour.players < 4 ?
+											`<div class="relative flex items-center bg-primary/50 rounded-[20px] px-6 py-[5px] w-full mx-auto">
 												<div class = "flex items-center justify-center w-[55px] h-[55px] border-[1.5px] rounded-full border-primary/60">
 													<img src="/golden_trophy.svg" class="w-[35px]"/>
 												</div>
@@ -98,6 +99,7 @@ export async function tournamentChoices() {
 
 											</div>
 										`
+										: ""
 									)
 									.join("")}
 						</div> 
