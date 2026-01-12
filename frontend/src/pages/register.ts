@@ -210,7 +210,8 @@ export function RegisterEventListener() {
         return;
       }
 
-      localStorage.setItem("token", data.token);
+      // localStorage.setItem("token", data.token);
+      console.log("hooonaaa ->>>> " + data.user.id);
       localStorage.setItem("userId", data.user.id);
 
       showAlert("Registration successful", "success");

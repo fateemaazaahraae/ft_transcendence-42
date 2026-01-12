@@ -18,7 +18,11 @@ const getUserDataFromToken = (token) => {
     return {
         id: decoded.id,
         name: decoded.userName,       // Make sure these match your JWT fields
-        avatar: decoded.profileImage || "/public/default.png" // Fallback
+        avatar:
+            decoded.profileImage ??
+            decoded.avatar ??
+            "/public/default.png"
+        // avatar: decoded.profileImage || "/public/default.png" // Fallback
     };
   } catch (error) {
     console.error("Failed to decode token:", error.message);

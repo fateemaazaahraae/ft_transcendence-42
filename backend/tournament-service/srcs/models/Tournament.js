@@ -56,7 +56,7 @@ export const StartTournament =(server) => {
     io.on('connection', (socket) => {
         const token = socket.handshake.auth.token;
         if (!token) { // check tocken (JWT)
-            // console.log('❌ Connection rejected: No token provided.');
+            console.log('❌ Connection rejected: No token provided.');
             socket.disconnect();
             return;
         }
