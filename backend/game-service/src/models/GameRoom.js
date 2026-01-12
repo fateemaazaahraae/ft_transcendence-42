@@ -300,7 +300,6 @@ export default class GameRoom {
         console.error("❌ Failed to save match:", error);
     }
 
-    // Stop the loop
     this.stop(); 
   }
   

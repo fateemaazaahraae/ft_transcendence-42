@@ -70,6 +70,9 @@ export async function fillSettingsPage()
     const match = JSON.parse(cachedData);
     const userId = match.player1.id;
     const userId2 = match.player2.id;
+
+    const Nick1 = match.Nickname1;
+    const Nick2 = match.Nickname2;
     if (!userId || !userId2) {
       showAlert("Login first");
       navigate("/login");
@@ -80,14 +83,14 @@ export async function fillSettingsPage()
       const data = await res.json();
       // fill page
       (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
-      (document.getElementById("userName") as HTMLElement).textContent = data.userName || "";
+      (document.getElementById("userName") as HTMLElement).textContent = Nick1 || "";
       
 
       const res2 = await fetch(`http://localhost:3001/settings/${userId2}`);
       const data2 = await res2.json();
       // fill page
       (document.getElementById("myImg2") as HTMLImageElement).src = data2.profileImage || "";
-      (document.getElementById("userName2") as HTMLElement).textContent = data2.userName || "";
+      (document.getElementById("userName2") as HTMLElement).textContent = Nick2 || "";
     }
     catch (err)
     {
@@ -120,6 +123,7 @@ export async function winnerdata(winner: any) {
 }
 
 export async function TournamentGameEventListener() {
+  let Nickname : string;
   fillSettingsPage();
   const socket = getTrSocket(localStorage.getItem("token"));
   const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
@@ -146,6 +150,7 @@ export async function TournamentGameEventListener() {
   }
 
   socket.on("game_update", (gameState: any) => {// listen for a socket.emit('game_update') with the new positions
+    // Nickname = data.nick;    
     if (!ctx || !canvas) return;
     console.log()
 
