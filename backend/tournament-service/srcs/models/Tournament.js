@@ -107,7 +107,7 @@ export const StartTournament =(server) => {
           }
 
           if (!QueueState.finalists) QueueState.finalists = [];
-          QueueState.finalists.push(socket);///////
+          QueueState.finalists.push(socket);
 
           let playersPicInfo = getAvatars(QueueState.finalists);
 
@@ -152,7 +152,7 @@ export const StartTournament =(server) => {
     
             QueueState.waiting.push(socket);
             QueueState.save.push(socket);
-            QueueState.Nicknames.push(data.nick)
+            QueueState.Nicknames.push(data.nick);
 
             socket.join(tournamentId);
             socket.data.tournamentId = tournamentId;
@@ -189,11 +189,6 @@ export const StartTournament =(server) => {
                 const player2 = QueueState.waiting.shift();
                 const player3 = QueueState.waiting.shift();
                 const player4 = QueueState.waiting.shift();
-                // const nick1 = QueueState.Nick.shift();
-                // const nick2 = QueueState.Nick.shift();
-                // const nick3 = QueueState.Nick.shift();
-                // const nick4 = QueueState.Nick.shift();
-                
 
                 console.log(`the size of ----SaveQueue----- become: ${QueueState.save.length} `)
     
@@ -216,15 +211,15 @@ export const StartTournament =(server) => {
                   Nickname3: QueueState.Nicknames.shift(),
                   Nickname4: QueueState.Nicknames.shift()
                 };
-                
+    
+                console.log(`🚀 Match: ${match1Info.player1.avatar} vs ${match1Info.player2.avatar}`);
+                console.log(`🚀 Match: ${match2Info.player3.avatar} vs ${match2Info.player4.avatar}`);
+    
                 player1.emit("match_found1", match1Info);
                 player2.emit("match_found1", match1Info);
                 player3.emit("match_found2", match2Info);
                 player4.emit("match_found2", match2Info);
-                
-                console.log(`🚀 Match: ${match1Info.player1.avatar} vs ${match1Info.player2.avatar}`);
-                console.log(`🚀 Match: ${match2Info.player3.avatar} vs ${match2Info.player4.avatar}`);
-                
+    
                 console.log("match 1 is en cours");
                 const game1 = new GameRoom(io, match1Id, player1, player2);
                 game1.start();

@@ -6,8 +6,6 @@ export default class GameRoom {
     this.roomId = roomId;
     this.player1 = player1Socket;
     this.player2 = player2Socket;
-    // this.nick1 = player1Nick;
-    // this.nick2 = player2Nick;
 
     // my canvas size, 1344x580//(x, y)
     this.gameState = {// contain the new positions for ball and paddles
@@ -305,8 +303,7 @@ export default class GameRoom {
     
     broadcast() {
         // Send the entire state to everyone in this specific room // using server instance socket.io and the room id so we know to which room we're talking yah ofc
-        this.io.to(this.player1.id).emit('game_update', {gameState: this.gameState});
-        this.io.to(this.player2.id).emit('game_update', {gameState: this.gameState});
+        this.io.to(this.roomId).emit('game_update', this.gameState);
     }
 
     stop() {

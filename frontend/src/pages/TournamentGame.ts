@@ -2,7 +2,6 @@ import { getTrSocket } from "../utils/tournamentSocket.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 import { showAlert } from "../utils/alert.ts";
-import { match } from "node:assert";
 
 export default function TournamentGame() {
   if (!requiredAuth()) return "";
@@ -123,7 +122,6 @@ export async function winnerdata(winner: any) {
 }
 
 export async function TournamentGameEventListener() {
-  let Nickname : string;
   fillSettingsPage();
   const socket = getTrSocket(localStorage.getItem("token"));
   const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
@@ -150,7 +148,6 @@ export async function TournamentGameEventListener() {
   }
 
   socket.on("game_update", (gameState: any) => {// listen for a socket.emit('game_update') with the new positions
-    // Nickname = data.nick;    
     if (!ctx || !canvas) return;
     console.log()
 
