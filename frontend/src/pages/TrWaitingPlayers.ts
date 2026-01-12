@@ -95,7 +95,10 @@ export default function TrWaitingPlayers() {
           En
         </button>
       </div>
-      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+      <div class="relative">
+        <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+        <div id="notifBadge" class="absolute hidden top-1 inset-0 w-[7px] h-[7px] rounded-full bg-red-600"></div>
+      </div>
       <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
@@ -238,7 +241,6 @@ export function TrWaitingPlayersEventListener() {
       img.src = avatar;
     });
   });
-// tournament host has been disconnected joing/create new tournament OR Go to home
 
   function leaveGame() {
     console.log("someone left!!");
@@ -247,33 +249,32 @@ export function TrWaitingPlayersEventListener() {
 
 
   function cleanupGame() {
-    console.log("Cleaning game");
-
     socket.off();
     socket.disconnect();
 
     window.removeEventListener("popstate", leaveGame);
   }
 
+  socket.off("start_final_game");
+
   socket.on("start_final_game", (data: any) => {
     console.log("🎉 MATCH Fiiiiiiiiiiinal!...");
-    console.log("Navigating to gameFinal...");
     localStorage.setItem("LastMatch", JSON.stringify(data));
-    navigate("/FinalMatchTr"); 
+    navigate("/FinalMatchTr");
   });
 
   socket.on("match_found1", (data: any) => {
     console.log("🎉 MATCH FOUND!...");
-    console.log("Navigating to game...");
     localStorage.setItem("currentMatch1", JSON.stringify(data));
     navigate("/tournamentgame"); 
   });
+
   socket.on("match_found2", (data: any) => {
     console.log("🎉 MATCH FOUND!...");
-    console.log("Navigating to game...");
     localStorage.setItem("currentMatch2", JSON.stringify(data));
     navigate("/tournamentgametwo"); 
   });
+
   socket.on("player_connected", (data: any) => {
     const slotId = `opponent${data.number}`;
     const img = document.getElementById(slotId) as HTMLImageElement;

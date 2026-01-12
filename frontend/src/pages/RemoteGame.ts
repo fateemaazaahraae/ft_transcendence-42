@@ -102,17 +102,11 @@ export async function winnerdata(winner: any) {
     {
       const res = await fetch(`http://localhost:3001/settings/${winner}`);
       const data = await res.json();
-      // fill page
-      console.log('winner img', data.profileImage);
-      console.log('winner userName', data.userName);
 
       const profileImage = data.profileImage || "";
-        const userName = data.userName || "";
+      const userName = data.userName || "";
 
       return {profileImage, userName};
-      
-      // (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
-      // (document.getElementById("userName") as HTMLElement).textContent = data.userName || "";
     }
     catch (err)
     {
@@ -134,16 +128,11 @@ export async function RemoteGameEventListener() {
 
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
-  // console.log(canvas.height);
-  // console.log(canvas.width);
 
   const LeaveOverlay = document.getElementById('leave-overlay') as HTMLDivElement;
   const quitBtn = document.getElementById('quit-btn') as HTMLButtonElement;
   const player1ScoreDisplay = document.getElementById('player1-score-display') as HTMLSpanElement;
   const player2ScoreDisplay = document.getElementById('player2-score-display') as HTMLSpanElement;
-  // const modal = document.getElementById("game-over-modal");
-  // const resultTitle = document.getElementById("game-result-title");
-  // const finalScoreText = document.getElementById("final-score");
 
   function updateScoreDisplay() {
     if (player1ScoreDisplay) player1ScoreDisplay.textContent = player1Score.toString();
@@ -185,8 +174,6 @@ export async function RemoteGameEventListener() {
     }
   });
   function cleanupGame() {
-    console.log("Cleaning game");
-
     socket.off();
     socket.disconnect();
 
@@ -199,9 +186,6 @@ export async function RemoteGameEventListener() {
 
   socket.once("game_over", (data: any) => {
       const myId = localStorage.getItem("userId");
-      console.log('we have a winnnner!!!');
-      console.log(myId);
-      console.log(data.winner);
       const isWinner = data.winner === myId;
       let h3ColorClass: string;
       let h3Text: string;
@@ -288,8 +272,8 @@ export async function RemoteGameEventListener() {
 
   if (quitBtn) {
     quitBtn.addEventListener('click', () => {
-      cleanupGame();
       leaveGame();
+      cleanupGame();
       navigate("/home");
     });
   }

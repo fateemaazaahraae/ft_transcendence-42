@@ -346,7 +346,7 @@ export function AiGameEventListener() {
           const speedFactor = 0.7; // Ai padding moving speed // or we'll call it later difficulty level
           const move = Math.sign(diff) * PaddleSpeed * speedFactor * dt;
           // if (Math.abs(move) > Math.abs(diff)) paddleRightY = targetCenterY; else  // just to not make a gitch in the paddle's movement
-          paddleRightY += move / 2;
+          paddleRightY += move;
         }
         paddleRightY = Math.max(0, Math.min(height - paddleHeight, paddleRightY));
       }

@@ -103,12 +103,8 @@ export async function winnerdata(winner: any) {
     {
       const res = await fetch(`http://localhost:3001/settings/${winner}`);
       const data = await res.json();
-      // fill page
-      console.log('winner img', data.profileImage);
-      console.log('winner userName', data.userName);
-
       const profileImage = data.profileImage || "";
-        const userName = data.userName || "";
+      const userName = data.userName || "";
 
       return {profileImage, userName};
       
@@ -187,8 +183,6 @@ export async function TournamentGametwoEventListener() {
     }
   });
   function cleanupGame() {
-    console.log("Cleaning game");
-
     socket.off();
     socket.disconnect();
 
@@ -201,9 +195,6 @@ export async function TournamentGametwoEventListener() {
 
   socket.once("game_over", (data: any) => {
       const myId = localStorage.getItem("userId");
-      console.log('we have a winnnner!!!');
-      console.log(myId);
-      console.log(data.winner);
       const isWinner = data.winner === myId;
       let h3ColorClass: string;
       let h3Text: string;
@@ -259,12 +250,6 @@ export async function TournamentGametwoEventListener() {
           navigate("/home");
         });
       } else {
-        // cleanupGame();
-        console.log("Cleaning game");
-
-        // socket.off();
-        // socket.disconnect();
-
         document.getElementById("winner-overlay")?.remove();
         document.getElementById("leave-overlay")?.classList.add("hidden");
 

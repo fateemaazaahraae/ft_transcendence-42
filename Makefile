@@ -13,3 +13,14 @@ logs:
 
 ps:
 	docker compose ps
+
+db:
+	> backend/auth-service/database.sqlite
+	> backend/game-service/game_data.sqlite
+	> backend/profile-service/profileDb.sqlite
+	> backend/tournament-service/tournament_data.sqlite
+	> backend/chat-service/chat.sqlite
+	> backend/notification-service/notifications.sqlite
+	> backend/relationship-service/relation.sqlite
+
+.PHONY: re down up logs ps db

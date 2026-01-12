@@ -53,13 +53,13 @@ export default async function Leaderboard() {
          flex justify-around md:justify-normal items-center py-3 md:py-0
          md:bg-transparent md:backdrop-blur-0 z-50">
 
-      <i data-path="/home" class="fa-solid fa-house text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i data-path="/home" class="fa-solid fa-house text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
       <div data-path="/leaderboard" class="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center">
         <i class="fa-solid fa-trophy text-[18px] text-black"></i>
       </div>
-      <i data-path="/friends" class="fa-solid fa-user-group text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i data-path="/chat" class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i data-path="/settings" class="fa-solid fa-gear text-primary hover:text-secondary transition-all duration-400 ease-in-out text-[18px]"></i>
+      <i data-path="/friends" class="fa-solid fa-user-group text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
+      <i data-path="/chat" class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
+      <i data-path="/settings" class="fa-solid fa-gear text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out text-[18px]"></i>
     </aside>
 
 
@@ -76,7 +76,10 @@ export default async function Leaderboard() {
           ${currentLang}
         </button>
       </div>
-      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+      <div class="relative">
+        <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+        <div id="notifBadge" class="absolute hidden top-1 inset-0 w-[7px] h-[7px] rounded-full bg-red-600"></div>
+      </div>
       <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
@@ -148,11 +151,11 @@ export default async function Leaderboard() {
             (leader, index) => `
           <div class="w-[350px] md:w-[500px] h-[50px] bg-primary/40 rounded-lg flex items-center pl-5">
             <div class="flex items-center gap-3">
-              <div class="text-white text-[22px] font-roboto font-medium">${index + 4}</div>
+              <div class="text-white text-[22px] font-roboto font-medium">${index + 4}.</div>
               <img src="${leader.profileImage}" class="w-[38px] h-[38px] object-cover rounded-full border border-primary/50" />
               <div class="text-white text-[20px] font-roboto font-semibold truncate w-[200px]">${leader.userName}</div>
             </div>
-            <div class="ml-auto w-[130px] h-[50px] bg-secondary rounded-lg flex items-center justify-center">
+            <div class="ml-auto w-[100px] h-[50px] bg-secondary rounded-lg flex items-center justify-center">
               <div class="text-white text-[20px] font-roboto font-medium">${leader.XPoints}</div>
             </div>
           </div>

@@ -107,27 +107,31 @@ export function renderSingleMessage(message:{
         if (isSender) {
         messageDiv.innerHTML = `
             <div class="flex flex-col items-end mb-4 w-full pr-4">
+                <div class="flex flex-col items-end w-auto"> 
                 <div class="flex items-end gap-2">
-                    <div class="flex flex-row items-end"> 
-                    <div class="bg-primary/65 text-sm p-3 rounded-xl rounded-br-none max-w-[250px] break-words text-white">
-                    ${message.content || ""}
-                    <p class="text-[10px] opacity-70 ">${timeStr}</p>
+                        <div class="bg-primary/65 text-sm p-3 rounded-xl rounded-br-none break-words text-white max-w-[250px]">
+                            ${message.content || ""}
+                        </div>
+                        <img src="${myAvatar}" class="w-12 h-12 object-cover border border-primary rounded-full flex-shrink-0">
                     </div>
-                    </div>    
-                    <img src="${myAvatar}" data-sender-id="${(message as any).sender_id}" class="w-12 h-12 object-cover border border-primary rounded-full flex-shrink-0">
+                    
+                    <p class="text-[10px] opacity-70 mt-1 self-start">${timeStr}</p>
                 </div>
             </div>
         `;
     } else {
         messageDiv.innerHTML = `
             <div class="flex flex-col items-start mb-4 w-full pl-4">
-                <div class="flex items-end gap-2">
-                    <img src="${(message as any).senderAvatar ? messageAvatar : friendAvatarUrl}" data-sender-id="${(message as any).sender_id}" class="w-12 h-12 object-cover border border-primary rounded-full flex-shrink-0">
-                    <div class="bg-primary/20 text-white text-sm p-3 rounded-xl rounded-bl-none  max-w-[250px] break-words">
-                    ${message.content || ""}
+                <div class="flex flex-col items-start w-auto">
+                 <div class="flex items-end gap-2">
+                        <img src="${(message as any).senderAvatar ? messageAvatar : friendAvatarUrl}" data-sender-id="${(message as any).sender_id}" class="w-12 h-12 object-cover border border-primary rounded-full flex-shrink-0 ">
+                        <div class="bg-primary/20 text-white text-sm p-3 rounded-xl rounded-bl-none break-words max-w-[250px]">
+                            ${message.content || ""}
+                        </div>
                     </div>
+                    
+                    <p class="text-[10px] opacity-70 mt-1 self-end ">${timeStr}</p>
                 </div>
-                <p class="text-[10px] opacity-70 mt-1 ml-12">${timeStr}</p>
             </div>
         `;
     }

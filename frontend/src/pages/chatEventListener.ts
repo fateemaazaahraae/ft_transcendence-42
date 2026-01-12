@@ -142,23 +142,6 @@ export function ChatEventListener() {
 );
 
 
-    // refresh contacts when a friend is accepted in realtime
-    // try {
-    //     listenForFriendAccepted((friendId: string) => {
-    //         console.log('friendAccepted realtime received for', friendId);
-    //         if (contactsListDiv) {
-    //             fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
-    //                 attachContactClickListeners(contactsListDiv, handleContactSelect);
-    //                 applyPresenceToRenderedContacts();
-    //             });
-    //         }
-    //     });
-    // } catch (e) { console.warn('listenForFriendAccepted setup failed', e); }
-
-
-
-
-
     // block / unblock
         listenForBlockEvents(({ by }) => {
             if (String(by) === String(ACTIVE_CHAT_CONTACT_ID)) {
@@ -223,6 +206,25 @@ export function ChatEventListener() {
         blockBtn.addEventListener("click", (): void => {
             if (blockConfirmationDiv) blockConfirmationDiv.classList.remove("hidden");
         });
+    }
+
+    function setBlockButtonUI(isBlocked: boolean) {
+        if (!blockBtn) return;
+        if (isBlocked) {
+            blockBtn.innerHTML = '<i class="fa fa-ban"></i> Blocked';
+            blockBtn.setAttribute('data-blocked', 'true');
+            blockBtn.setAttribute('aria-pressed', 'true');
+            try { (blockBtn as HTMLButtonElement).disabled = true; } catch (e) {}
+            blockBtn.classList.add('opacity-50');
+            blockBtn.classList.add('pointer-events-none');
+        } else {
+            blockBtn.innerHTML = '<i class="fa fa-ban"></i> Block User';
+            blockBtn.removeAttribute('data-blocked');
+            blockBtn.removeAttribute('aria-pressed');
+            try { (blockBtn as HTMLButtonElement).disabled = false; } catch (e) {}
+            blockBtn.classList.remove('opacity-50');
+            blockBtn.classList.remove('pointer-events-none');
+        }
     }
 
     // confirm block: call API and hide modal
@@ -299,6 +301,16 @@ export function ChatEventListener() {
     setChatUIState(false);
     
 
+    let PENDING_CHAT_USER_ID: string | null = null;
+    // support SPA opener: other pages can set `openChatUser` in localStorage
+    try {
+        const pendingFromStorage = localStorage.getItem('openChatUser');
+        if (pendingFromStorage) {
+            PENDING_CHAT_USER_ID = pendingFromStorage;
+            localStorage.removeItem('openChatUser');
+        }
+    } catch (e) { /* ignore storage errors */ }
+
     const debouncedSearch = debounce((query: string) => {
         if (!query.trim()) {
             if (contactsListDiv) {
@@ -360,13 +372,14 @@ export function ChatEventListener() {
        
         updateChatHeader(chatUsername, chatStatus, chatAvatar, username, status, normAvatar);
 
-        // check if contact is blocked
+        // check if contact is blocked and update UI 
         checkIfBlocked(String(CURRENT_USER_ID), String(contactId), (isBlocked) => {
             if (isBlocked) {
                 showBlockedMessage();
             } else {
                 showMessageInput();
             }
+            setBlockButtonUI(Boolean(isBlocked));
         });
 
     
@@ -375,6 +388,12 @@ export function ChatEventListener() {
             contactsSide?.classList.add("hidden");
             chat?.classList.remove("hidden");
             chat?.classList.add("flex");
+        }
+
+        //check messages panel is visible on mobile when opening a chat
+        const messagesPanelEl = document.getElementById("messagesPanel");
+        if (messagesPanelEl) {
+            messagesPanelEl.classList.remove("hidden");
         }
 
 
@@ -399,7 +418,6 @@ export function ChatEventListener() {
                     const messages = data?.messages || [];
                     
                     messages.forEach((msg: any) => {
-                        // normalize/cache any message-provided avatar
                         if (msg.senderAvatar) {
                             try {
                                 const fixedMsgAvatar = resolveChatAvatar(msg.senderAvatar);
@@ -428,6 +446,47 @@ export function ChatEventListener() {
         }
     };
 
+    //  open a conversation for a given user id from friends
+   
+    async function openConversationWith(userId: string | null) {
+        if (!userId) return;
+        // prefer the already-rendered contact element
+        try {
+            if (contactsListDiv) {
+                const contactEl = contactsListDiv.querySelector(`[data-contact-id="${userId}"]`) as HTMLElement | null;
+                if (contactEl) {
+                    const username = contactEl.getAttribute('data-contact-username') || String(userId);
+                    const avatar = contactEl.getAttribute('data-contact-avatar') || '/default.png';
+                    const status = contactEl.getAttribute('data-contact-status') || 'offline';
+                    handleContactSelect(userId, username, avatar, status);
+                    return;
+                }
+            }
+        } catch (e) {
+            console.warn('openConversationWith => failed to find rendered contact', e);
+        }
+
+        // fetch user profile 
+        try {
+            const tokenFetch = localStorage.getItem('token') || '';
+            const res = await fetch(`${API_BASE_URL}/users/${String(userId)}`, { headers: { Authorization: tokenFetch } });
+            if (res && res.ok) {
+                const json = await res.json();
+                const username = json?.userName || json?.username || String(userId);
+                const img = json?.profileImage || json?.profile_image || null;
+                const avatar = resolveChatAvatar(img) || '/default.png';
+                const status = 'offline';
+                handleContactSelect(userId, username, avatar, status);
+                return;
+            }
+        } catch (e) {
+            console.warn('openConversationWith: failed to fetch user', e);
+        }
+
+    //open chat with minimal info
+        try { handleContactSelect(userId, String(userId), '/default.png', 'offline'); } catch (e) {}
+    }
+
     if (backToContactsBtn) {
         setupBackToContacts(backToContactsBtn, () => {
             ACTIVE_CHAT_CONTACT_ID = null;
@@ -440,11 +499,13 @@ export function ChatEventListener() {
             localStorage.removeItem('activeContactStatus');
             
             const isMobile = window.innerWidth < 768;
-            // on mobile: show contacts, hide chat
+            // on mobile: show contacts hide chat
             if (isMobile) {
                 contactsSide?.classList.remove("hidden");
                 chat?.classList.add("hidden");
                 chat?.classList.remove("flex");
+                // hide messages panel on mobile when returning to contacts
+                document.getElementById("messagesPanel")?.classList.add("hidden");
             } else {
                
                 contactsSide?.classList.remove("hidden");
@@ -507,6 +568,17 @@ export function ChatEventListener() {
         });
     }
 
+        // check if blocked to setblocked button state
+        try {
+            const persisted = localStorage.getItem('activeContactId');
+            if (persisted && CURRENT_USER_ID) {
+                checkIfBlocked(String(CURRENT_USER_ID), String(persisted), (isBlocked) => {
+                    setBlockButtonUI(Boolean(isBlocked));
+                    if (isBlocked) showBlockedMessage();
+                });
+            }
+        } catch (e) {}
+
 
     if (closeButton) {
         setupCloseChat(closeButton, () => {
@@ -528,6 +600,8 @@ export function ChatEventListener() {
             contactsSide?.classList.remove("hidden");
             chat?.classList.remove("hidden");
             chat?.classList.add("flex");
+            // hide messages panel when closing the chat (mobile)
+            document.getElementById("messagesPanel")?.classList.add("hidden");
             document.getElementById("messageInputContainer")?.classList.add("hidden");
             document.getElementById("dropdownMenu")?.classList.add("hidden");
         });
@@ -541,7 +615,7 @@ export function ChatEventListener() {
             // register friend-accepted listener after contacts list exists
             try {
                 listenForFriendAccepted(() => {
-                    console.log("🔁 FETCH CONTACTS TRIGGERED");
+                    console.log(" FETCH CONTACTS TRIGGERED");
                     // re-fetch contacts when a friend is accepted
                     fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
                         attachContactClickListeners(contactsListDiv, handleContactSelect);
@@ -552,10 +626,38 @@ export function ChatEventListener() {
         });
 
 
+        //  auto-open chat if redirected with ?user=
+        if (PENDING_CHAT_USER_ID) {
+            // contact items are rendered with `data-contact-id` and related attrs
+            const contactEl = contactsListDiv.querySelector(
+                `[data-contact-id="${PENDING_CHAT_USER_ID}"]`
+            ) as HTMLElement | null;
+
+            if (contactEl) {
+                const username = contactEl.getAttribute("data-contact-username") || "";
+                const avatar = contactEl.getAttribute("data-contact-avatar") || "/default.png";
+                const status = contactEl.getAttribute("data-contact-status") || "offline";
+
+                handleContactSelect(
+                    PENDING_CHAT_USER_ID,
+                    username,
+                    avatar,
+                    status
+                );
+
+                PENDING_CHAT_USER_ID = null;
+            } else {
+                // contact not rendered  try 
+                openConversationWith(PENDING_CHAT_USER_ID).catch((e) => console.warn('auto open fallback failed', e));
+                PENDING_CHAT_USER_ID = null;
+            }
+        }
         
     } else {
         console.error('Cannot fetch contacts - contactsListDiv is null');
     }
+
+    
 
 
 
@@ -598,7 +700,7 @@ export function ChatEventListener() {
         // send to server (ack used only for error handling, do not re-render on ack)
         sendMessage(ACTIVE_CHAT_CONTACT_ID, content, (res) => {
             if(res?.status === "error") {
-                console.warn("send failed ", res?.reason || "unknown");
+                console.debug("send failed", res?.reason || "unknown");
                 if (res?.reason === 'blocked') {
                     showBlockedMessage();
                 }
@@ -654,5 +756,17 @@ export function ChatEventListener() {
             renderSingleMessage(msg, isSenderMe, messagesPanel, CURRENT_USER_AVATAR, avatarToUse);
         }
     });
+
+
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get("user");
+
+    if (userId) {
+    // openConversationWith(userId);
+        PENDING_CHAT_USER_ID = userId;
+
+
+    }
+
 
 }

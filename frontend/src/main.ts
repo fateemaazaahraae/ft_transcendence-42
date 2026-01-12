@@ -62,8 +62,8 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/chat": {render: Chat, setUp: ChatEventListener},
     "/remotegame": { render: RemoteGame, setUp: RemoteGameEventListener },
     "/FinalMatchTr": { render: FinalMatchTr, setUp: FinalMatchTrEventListener },
-    "/tournamentgame": {render: TournamentGame, setUp: TournamentGameEventListener},
-    "/tournamentgametwo": {render: TournamentGametwo, setUp: TournamentGametwoEventListener},
+    "/tournamentgame": {render: TournamentGame, setUp: TournamentGameEventListener },
+    "/tournamentgametwo": {render: TournamentGametwo, setUp: TournamentGametwoEventListener },
     "/tournamentChoices": { render: tournamentChoices, setUp: tournamentChoicesEventListener },
     404: {render: PageNotFound},
 };
