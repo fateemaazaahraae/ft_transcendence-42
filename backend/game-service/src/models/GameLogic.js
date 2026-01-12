@@ -8,7 +8,7 @@ import Fastify from 'fastify';
 // const fastify = Fastify({ logger: true });
 const waitingQueue = [];
 
-const getUserDataFromToken = (token) => { // had lfunction kayreturni id&name&img of user from the token
+const getUserDataFromToken = (token) => {
   try {
     const payloadBase64 = token.split('.')[1];
     const decodedJson = Buffer.from(payloadBase64, 'base64').toString();

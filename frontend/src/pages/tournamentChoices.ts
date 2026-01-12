@@ -176,9 +176,11 @@ export async function tournamentChoicesEventListener() {
 				showAlert("Tournament creation failed");
 				return;
 			}
-			 tournamentId = data.id;
+			tournamentId = data.tournament.id;
 			
 			console.log("Tournament created:", data);
+			console.log("w lId dialha howa:", tournamentId);
+			handleTournamentbtn(tournamentId, nickName);
 			
 		} catch (err) {
 			console.error(err);
@@ -186,12 +188,6 @@ export async function tournamentChoicesEventListener() {
 			return;
 		}
 	});
-	const btnTr = document.getElementById("submit");
-	if (btnTr) {
-		btnTr.addEventListener("click", () => handleTournamentbtn(tournamentId, nick));
-		btnTr.removeEventListener("click", () => handleTournamentbtn(tournamentId, nick));
-	}
-
 }
 
 //JOIN TOURNAMENT

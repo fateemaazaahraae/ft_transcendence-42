@@ -96,11 +96,12 @@ function startWaitingDots() {
 
 
 export function TrWaitingPlayersEventListener() {
+  let tournamentId: string | undefined;
   const socket = getTrSocket(localStorage.getItem("token"));
   startWaitingDots();
   window.addEventListener('popstate', () => {
-    socket.emit("leave_queue");
-    socket.disconnect();
+    socket.emit("leave_queue", { tournamentId });
+    socket.disconnect();/////////
     console.log("You left!!");
   });
 
@@ -202,6 +203,7 @@ export function TrWaitingPlayersEventListener() {
   });
 
   socket.on("player_connected", (data: any) => {
+    tournamentId = data.tournamentId;
     const slotId = `opponent${data.number}`;
     const img = document.getElementById(slotId) as HTMLImageElement;
     if (!img) return;
@@ -224,9 +226,4 @@ export function TrWaitingPlayersEventListener() {
       updateOpponent(i + 1, data.avatars[i])
     }
   });
-  // function leaveGame() {
-  //   console.log("You left!!");
-  //   socket.disconnect();
-  //   navigate("/gameStyle");
-  // }
 }
