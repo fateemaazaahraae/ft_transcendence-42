@@ -20,10 +20,10 @@ export default async function RemoteVsLocal(){
             <div data-path="/home" class="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center">
                 <i class="fa-solid fa-house text-[18px] text-black"></i>
             </div>
-            <i data-path="/leaderboard" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-            <i data-path="/friends" class="fa-solid fa-user-group text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-            <i data-path="/chat" class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-            <i data-path="/settings" class="fa-solid fa-gear text-primary hover:text-secondary transition-all duration-400 ease-in-out text-[18px]"></i>
+            <i data-path="/leaderboard" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
+            <i data-path="/friends" class="fa-solid fa-user-group text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
+            <i data-path="/chat" class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
+            <i data-path="/settings" class="fa-solid fa-gear text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out text-[18px]"></i>
 
             </aside>
 

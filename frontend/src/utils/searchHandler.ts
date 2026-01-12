@@ -15,9 +15,7 @@ const renderContactItem = (u: any, lastMsg = 'Search result') => {
 
     // hide status dot for blocked contacts
     const statusClass = u?.isBlocked ? 'hidden' : (status === 'online' ? 'bg-greenAdd' : 'bg-redRemove');
-    // const avatar = u?.avatar || '../../public/default.svg';
-
-    // const statusClass = status === 'online' ? 'bg-greenAdd' : 'bg-redRemove';
+    
     const avatar = u?.avatar || 'default.svg';
 
     const displayName = (u?.username && String(u.username).trim())
@@ -26,8 +24,7 @@ const renderContactItem = (u: any, lastMsg = 'Search result') => {
         const timeStr = u?.last_message_time 
         ? new Date(u.last_message_time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
         : '';
-        //    const blockedBadge = u?.isBlocked ? `<span class="ml-2 text-xs text-red-400 font-semibold">محظور</span>` : '';
-        //    const itemCursor = u?.isBlocked ? 'cursor-not-allowed opacity-80' : 'cursor-pointer';
+        //    const blockedBadge = u?.isBlocke
            return `
            <div class="scroll flex items-center gap-4  hover:bg-primary/65  p-2 rounded-xl contact-item"
                data-contact-id="${u.id}"
@@ -114,23 +111,19 @@ export const fetchContacts = (API_BASE_URL: string, CURRENT_USER_ID: string | nu
          headers: { 'Authorization': `Bearer ${token}` }
         })
         .then(async (res) => {
-            console.log('fetchContacts response status:', res.status, 'url:', url);
+            console.log('fetchContacts response status:', res.status, url);
             const text = await res.text().catch(() => null);
             console.log('fetchContacts raw body:', text);
             let contacts: any = null;
-            try {
-                contacts = text ? JSON.parse(text) : null;
-            } catch (e) {
-                console.error('fetchContacts JSON parse error', e);
-                contacts = null;
-            }
+            contacts = text ? JSON.parse(text) : null;
+           
             if (!contacts) {
                 console.warn('fetchContacts: received no contacts, returning empty list');
                 renderToList([], div, c => c.last_message || 'No messages yet.');
                 onComplete?.();
                 return;
             }
-            console.log('received', Array.isArray(contacts) ? contacts.length : typeof contacts, 'contacts');
+            console.log('received', contacts);
             renderToList(contacts, div, c => c.last_message || 'No messages yet.');
             onComplete?.();
         })

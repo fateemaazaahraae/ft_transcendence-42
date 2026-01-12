@@ -4,64 +4,65 @@ import db from '../config/db.js';
 const API_URL = process.env.API_URL || 'http://auth-service:3000';
 const REL_SERVICE_URL = process.env.REL_SERVICE_URL || 'http://relationship-service:3002';
 
+function extractBlockedIdFromBlockedEntry(b) {
+  return String(b.blocked_user_id || b.blockedId || b.blocked_user || b.id || '');
+}
+
+function extractBlockedIdFromBlockedMeEntry(b) {
+  return String(b.user_id || b.blockedBy || b.blocker_id || b.id || '');
+}
+
 export async function getContacts(request, reply) {
   const userId = String(request.user.id);
   const authHeader = request.headers.authorization || '';
   let friendList = [];
   let blockedList = [];
+  let blockedMe = [];
   try {
     if (!authHeader) {
-        return reply.status(401).send([]);
-      }
+      return reply.code(401).send([]);
+    }
     const res = await fetch(`${REL_SERVICE_URL}/friends`, { headers: { Authorization: authHeader } });
     const resb = await fetch(`${REL_SERVICE_URL}/blocked`, { headers: { Authorization: authHeader } });
+    const resBlockedMe = await fetch(`${REL_SERVICE_URL}/blocked/me`, { headers: { Authorization: authHeader } });
 
-    console.log(' fetched /friends status:', res.status);
-    console.log(' fetched /blocked status:', resb.status);
+    const bodyText = res.ok ? await res.text().catch(() => null) : null;
+    const blockedText = resb.ok ? await resb.text().catch(() => null) : null;
+    const blockedMeText = resBlockedMe.ok ? await resBlockedMe.text().catch(() => null) : null;
 
-    const blockedText = await resb.text().catch(() => null);
-    try { console.log(' /blocked raw body:', blockedText && blockedText.substring ? blockedText.substring(0, 500) : blockedText); } catch (e) {}
-    const bodyText = await res.text().catch(() => null);
-    try { console.log(' /friends raw body:', bodyText && bodyText.substring ? bodyText.substring(0, 500) : bodyText); } catch (e) {}
-    if (res.ok) {
-      try {
-        friendList = bodyText ? JSON.parse(bodyText) : [];
-      } catch (e) {
-        console.error(' failed to parse /friends JSON', e);
-        friendList = [];
-      }
-    } else {
-      console.warn('relationship service returned', res.status);
-    }
-    if (resb.ok) {
-      try {
-        blockedList = blockedText ? JSON.parse(blockedText) : [];
-      } catch (e) {
-        console.error(' failed to parse /blocked JSON', e);
-        blockedList = [];
-      }
-    } else {
-      console.warn('relationship service returned', resb.status);
-    }
+    
+    friendList = bodyText ? JSON.parse(bodyText) : [];
+    blockedList = blockedText ? JSON.parse(blockedText) : [];
+    blockedMe = blockedMeText ? JSON.parse(blockedMeText) : [];
   } catch (e) {
-    console.error('failed to fetch friends from relationship service', e.message);
+    console.error('failed to fetch friends/blocked from relationship service', e && e.message ? e.message : e);
   }
 
-const blockedIds = new Set(
-  (blockedList || []).map(b => String(
-    b.blocked_user_id || b.blockedId || b.blocked_user || b.id
-  ))
-);
+  const blockedIds = new Set([
+    ...(blockedList || []).map(extractBlockedIdFromBlockedEntry),
+    ...(blockedMe || []).map(extractBlockedIdFromBlockedMeEntry)
+  ]);
 
-  // Merge friends and blocked users so blocked-only users are also shown in contacts
+  // merge friends and blocked users so blocked-only users are also shown in contacts
   const combinedMap = new Map();
   (friendList || []).forEach(f => {
-    const id = String(f.friend_id || f.friendId || f.id);
+    const id = String(f.friend_id || f.friendId || f.id || '');
     if (!id) return;
     combinedMap.set(id, { friend_id: id, _fromFriend: true });
   });
   (blockedList || []).forEach(b => {
-    const id = String(b.blocked_user_id || b.blockedId || b.blocked_user || b.id);
+    const id = extractBlockedIdFromBlockedEntry(b);
+    if (!id) return;
+    if (combinedMap.has(id)) {
+      const entry = combinedMap.get(id);
+      entry._blocked = true;
+      combinedMap.set(id, entry);
+    } else {
+      combinedMap.set(id, { friend_id: id, _fromFriend: false, _blocked: true });
+    }
+  });
+  (blockedMe || []).forEach(b => {
+    const id = extractBlockedIdFromBlockedMeEntry(b);
     if (!id) return;
     if (combinedMap.has(id)) {
       const entry = combinedMap.get(id);
@@ -95,12 +96,9 @@ const blockedIds = new Set(
         const u = await res.json();
         username = u?.userName || u?.username || '';
         avatar = u?.profileImage || u?.avatar || '';
-      } else {
-        // profile fetch failed
-        console.warn(' user profile fetch failed ');
       }
     } catch (e) {
-      console.error(' profile fetch error for', f.friend_id, ':', e.message);
+      console.error(' profile fetch error for', f.friend_id, ':', e && e.message ? e.message : e);
     }
 
     const displayName = username || String(f.friend_id).slice(0, 8);
@@ -112,10 +110,7 @@ const blockedIds = new Set(
       last_message: lastMsg?.content,
       last_message_time: lastMsg?.created_at,
       conversation_id: convo?.id,
-        isBlocked: blockedIds.has(String(f.friend_id))
-
-      // relationType: 
-      
+      isBlocked: blockedIds.has(String(f.friend_id))
     };
   }));
 
@@ -131,17 +126,62 @@ export async function searchContacts(request, reply) {
 
   let friendList = [];
   let blockedList = [];
+  let blockedMe = [];
   try {
     const res = await fetch(`${REL_SERVICE_URL}/friends`, { headers: { Authorization: authHeader } });
-    const resb = await fetch(`${REL_SERVICE_URL}/blocked`, { headers: { Authorization: authHeader } });//added now
-    if (res.ok) friendList = await res.json();
-    if (resb.ok) blockedList = await resb.json();
-    else console.warn('relationship service returned', res.status);
+    const resb = await fetch(`${REL_SERVICE_URL}/blocked`, { headers: { Authorization: authHeader } });
+    const resBlockedMe = await fetch(`${REL_SERVICE_URL}/blocked/me`, { headers: { Authorization: authHeader } });
+
+    const bodyText = res.ok ? await res.text().catch(() => null) : null;
+    const blockedText = resb.ok ? await resb.text().catch(() => null) : null;
+    const blockedMeText = resBlockedMe.ok ? await resBlockedMe.text().catch(() => null) : null;
+
+    
+    friendList = bodyText ? JSON.parse(bodyText) : [];
+    blockedList = blockedText ? JSON.parse(blockedText) : [];
+    blockedMe = blockedMeText ? JSON.parse(blockedMeText) : [];
   } catch (e) {
-    console.error('failed to fetch friends from relationship service', e.message);
+    console.error('failed to fetch friends/blocked from relationship service', e && e.message ? e.message : e);
   }
 
-  const enriched = await Promise.all(friendList.map(async (f) => {
+  const blockedIds = new Set([
+    ...(blockedList || []).map(extractBlockedIdFromBlockedEntry),
+    ...(blockedMe || []).map(extractBlockedIdFromBlockedMeEntry)
+  ]);
+
+  // build combined map to include friends and blocked-only users 
+  const combinedMap = new Map();
+  (friendList || []).forEach(f => {
+    const id = String(f.friend_id || f.friendId || f.id || '');
+    if (!id) return;
+    combinedMap.set(id, { friend_id: id, _fromFriend: true });
+  });
+  (blockedList || []).forEach(b => {
+    const id = extractBlockedIdFromBlockedEntry(b);
+    if (!id) return;
+    if (combinedMap.has(id)) {
+      const entry = combinedMap.get(id);
+      entry._blocked = true;
+      combinedMap.set(id, entry);
+    } else {
+      combinedMap.set(id, { friend_id: id, _fromFriend: false, _blocked: true });
+    }
+  });
+  (blockedMe || []).forEach(b => {
+    const id = extractBlockedIdFromBlockedMeEntry(b);
+    if (!id) return;
+    if (combinedMap.has(id)) {
+      const entry = combinedMap.get(id);
+      entry._blocked = true;
+      combinedMap.set(id, entry);
+    } else {
+      combinedMap.set(id, { friend_id: id, _fromFriend: false, _blocked: true });
+    }
+  });
+
+  const combinedList = Array.from(combinedMap.values());
+
+  const enriched = await Promise.all(combinedList.map(async (f) => {
     if (String(f.friend_id) === userId) return null;
 
     const convo = db.prepare(
@@ -163,9 +203,8 @@ export async function searchContacts(request, reply) {
         username = u?.userName || u?.username || '';
         avatar = u?.profileImage || u?.avatar || '';
       }
-    } catch {}
-    
-    const blockedIds = new Set((blockedList || []).map(b => String(b.blocked_user_id || b.blockedId || b.blocked_user || b.id))); 
+    } catch (e) {}
+
     const displayName = username || String(f.friend_id).slice(0, 8);
     return {
       id: f.friend_id,

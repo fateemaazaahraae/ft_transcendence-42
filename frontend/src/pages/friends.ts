@@ -62,15 +62,15 @@ export default async function Friends() {
        flex justify-around md:justify-normal items-center py-3 md:py-0
        md:bg-transparent md:backdrop-blur-0 z-50">
 
-      <i data-path="/home" class="fa-solid fa-house text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i data-path="/leaderboard" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i data-path="/home" class="fa-solid fa-house text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
+      <i data-path="/leaderboard" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
 
       <div data-path="/friends" class="md:w-[40px] md:h-[40px] w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center mt-2 md:mt-2">
         <i class="fa-solid fa-user-group text-black text-[18px]"></i>
       </div>
 
-      <i data-path="/chat" class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i data-path="/settings" class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i data-path="/chat" class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
+      <i data-path="/settings" class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
     </aside>
 
     <!-- Controls Icons -->
@@ -116,7 +116,8 @@ export default async function Friends() {
                       ${friend.userName}
                     </div>
                     <div class="flex gap-6 mb-6">
-                      <i class="fa-solid fa-comment text-[30px] text-primary/50 hover:text-primary"></i>
+                    <i class="to-chat-btn fa-solid fa-comment text-[30px] text-primary/50 hover:text-primary cursor-pointer"
+                      data-id="${friend.friend_id}"> </i>
                       <button data-i18n="remove"
                         class="remove-btn w-[100px] h-[35px] bg-primary/50 rounded-2xl font-bold hover:bg-redRemove" data-id="${friend.friend_id}">
                       </button>
@@ -165,4 +166,25 @@ export function FriendsEventListener() {
       navigate("/friends");
     });
   });
+
+
+  // to chat event listener
+  const toChatButtons = document.querySelectorAll(".to-chat-btn");
+
+  toChatButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const friend_id = button.getAttribute("data-id");
+
+      if (!friend_id) {
+        console.error("missing data-id on chat button", button);
+        return;
+      }
+
+      try {
+        localStorage.setItem('openChatUser', String(friend_id));
+      } catch (e) {}
+      navigate(`/chat`);
+    });
+  });
+
 }

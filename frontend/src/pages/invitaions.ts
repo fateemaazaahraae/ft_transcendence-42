@@ -60,15 +60,15 @@ export default async function Invitations() {
        flex justify-around md:justify-normal items-center py-3 md:py-0
        md:bg-transparent md:backdrop-blur-0 z-50">
 
-      <i data-path="/home" class="fa-solid fa-house text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i data-path="/leaderboard" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i data-path="/home" class="fa-solid fa-house text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
+      <i data-path="/leaderboard" class="fa-solid fa-trophy text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
 
       <div data-path="/friends" class="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center mt-2 md:mt-2">
         <i class="fa-solid fa-user-group text-black text-[18px]"></i>
       </div>
 
-      <i data-path="/chat" class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
-      <i data-path="/settings" class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary transition-all duration-400 ease-in-out"></i>
+      <i data-path="/chat" class="fa-solid fa-comments text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
+      <i data-path="/settings" class="fa-solid fa-gear text-[18px] text-primary hover:text-secondary hover:scale-125 transition-all duration-700 ease-in-out"></i>
     </aside>
 
     <!-- Controls Icons -->

@@ -23,7 +23,7 @@ export default fp(async (fastify) => {
 
   // Internal endpoint used by relationship-service to notify chat-service
   fastify.post('/internal/friend-accepted', async (request, reply) => {
-    console.log("🔥 FRIEND ACCEPTED EVENT", request.body);
+    console.log("FRIEND ACCEPTED EVENT", request.body);
     const incomingServiceToken = request.headers['x-service-token'] || request.headers['X-Service-Token'];
     const serviceToken = process.env.SERVICE_TOKEN;
 
