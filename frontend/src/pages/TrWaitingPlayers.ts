@@ -3,6 +3,84 @@ import { navigate } from "../main.ts";
 import { showAlert } from "../utils/alert";
 import { requiredAuth } from "../utils/authGuard.ts";
 
+// export default function TrWaitingPlayers() {
+//   if (!requiredAuth())
+//     return "";
+//   return `
+//   <div class="relative w-full h-screen overflow-x-hidden">
+
+//     <!-- Controls Icons -->
+//     <div class="absolute top-10 right-[5%] flex items-center gap-4">
+//       <div class="arrow relative group">
+//         <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
+//           <i class="fa-solid fa-chevron-down text-xs"></i>
+//           En
+//         </button>
+//       </div>
+//       <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+//       <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+//     </div>
+
+
+//     <!-- Wait opponent -->
+//   <div class = "flex flex-col items-center justify-center mt-[10%] gap-10">
+//     <h1 id="waitingText"
+//         class="font-glitch text-3xl md:text-4xl xl:text-6xl lg:text-5xl text-black leading-[1.9] "
+//        style="-webkit-text-stroke: 2px rgba(53,198,221,0.6);"">
+//       Waiting For Players<span id="dots">...</span>
+//     </h1>
+//     <h2 class="text-3xl md:text-4xl lg:text-4xl font-glitch">
+//       Tournament name
+//     </h2>
+//     </div>
+//     <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[1%] gap-2 md:gap-[30px]">
+//       <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[2%] gap-2 md:gap-[3px]">
+//           <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
+//               <img id="opponent1"
+//               src=""
+//               class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
+//               <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
+//               <img id="opponent2"
+//               src="/public/opponent1.png"
+//               class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
+//                       lg:w-[200px] lg:h-[200px]
+//                       rounded-full border-2 border-primary object-cover
+//                       opacity-60 transition-opacity duration-300"
+//               />
+//           </div>
+//           <span class="text-white text-[30rem] font-serif font-light">}</span>
+//           <img id="opponent5"
+//               src=""
+//               class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
+//       </div>
+//       <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[150px]" />
+//       <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[2%] gap-2 md:gap-[3px]">
+//       <img id="opponent6"
+//               src=""
+//               class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
+//           <span class="text-white text-[30rem] font-serif">{</span>
+//           <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
+//               <img id="opponent3"
+//               src="/public/opponent1.png"
+//               class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
+//                       lg:w-[200px] lg:h-[200px]
+//                       rounded-full border-2 border-secondary object-cover
+//                       opacity-60 transition-opacity duration-300"
+//               />
+//               <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
+//               <img id="opponent4"
+//               src="/public/opponent1.png"
+//               class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
+//                       lg:w-[200px] lg:h-[200px]
+//                       rounded-full border-2 border-secondary object-cover
+//                       opacity-60 transition-opacity duration-300"
+//               />
+//           </div>
+//     </div>
+//   </div>
+//   `;
+// }
+
 export default function TrWaitingPlayers() {
   if (!requiredAuth())
     return "";
@@ -23,62 +101,58 @@ export default function TrWaitingPlayers() {
 
 
     <!-- Wait opponent -->
-
+  <div class = "flex flex-col items-center justify-center mt-[10%] gap-10">
     <h1 id="waitingText"
-        class="text-3xl md:text-4xl lg:text-5xl font-glitch text-center mt-[40%] md:mt-[20%] lg:mt-[4%]">
+        class="font-glitch text-3xl md:text-4xl xl:text-6xl lg:text-5xl text-black leading-[1.9] "
+       style="-webkit-text-stroke: 2px rgba(53,198,221,0.8);"">
       Waiting For Players<span id="dots">...</span>
     </h1>
-    <h2
-        class="text-3xl md:text-4xl lg:text-4xl font-glitch text-center mt-[40%] md:mt-[20%] lg:mt-[4%]">
+    <h2 class="text-3xl md:text-4xl lg:text-4xl font-glitch">
       Tournament name
     </h2>
-    <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[1%] gap-2 md:gap-[30px]">
+    </div>
+    <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[1%] gap-2 md:gap-32">
       <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[2%] gap-2 md:gap-[3px]">
           <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
               <img id="opponent1"
               src=""
               class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
-              <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
               <img id="opponent2"
               src="/public/opponent1.png"
               class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
                       lg:w-[200px] lg:h-[200px]
                       rounded-full border-2 border-primary object-cover
-                      opacity-60 transition-opacity duration-300"
+                       transition-opacity duration-300"
               />
           </div>
-          <span class="text-white text-[30rem] font-serif font-light">}</span>
-          <img id="opponent5"
-              src=""
-              class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
+          
       </div>
-      <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[150px]" />
+      <div  class="flex items-center justify-center w-[120px] h-[120px] md:w-[130px] md:h-[130px] xl:w-[190px] xl:h-[190px] rounded-full drop-shadow-cyan " > 
+							<img src="golden_trophy.svg" class=" w-[80px] md:w-[90px] xl:w-[190px]" />
+						</div>
       <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[2%] gap-2 md:gap-[3px]">
-      <img id="opponent6"
-              src=""
-              class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
-          <span class="text-white text-[30rem] font-serif">{</span>
+  
           <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
               <img id="opponent3"
               src="/public/opponent1.png"
               class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
                       lg:w-[200px] lg:h-[200px]
                       rounded-full border-2 border-secondary object-cover
-                      opacity-60 transition-opacity duration-300"
+                       transition-opacity duration-300"
               />
-              <img src="/public/vs.svg" class="w-[90px] md:w-[150px] lg:w-[120px]" />
               <img id="opponent4"
               src="/public/opponent1.png"
               class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
                       lg:w-[200px] lg:h-[200px]
                       rounded-full border-2 border-secondary object-cover
-                      opacity-60 transition-opacity duration-300"
+                       transition-opacity duration-300"
               />
           </div>
     </div>
   </div>
   `;
 }
+
 
 function startWaitingDots() {
   const dots = document.getElementById("dots");

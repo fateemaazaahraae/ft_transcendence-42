@@ -80,14 +80,16 @@ export async function tournamentChoices() {
 									: tournaments.map(
 										(tour) => `
 											<div class="relative flex items-center bg-primary/50 rounded-[20px] px-6 py-[5px] w-full mx-auto">
-												<img src="/golden_trophy.svg" class="w-[55px] h-[55px] rounded-full border border-primary/50"/>
+												<div class = "flex items-center justify-center w-[55px] h-[55px] border-[1.5px] rounded-full border-primary/60">
+													<img src="/golden_trophy.svg" class="w-[35px]"/>
+												</div>
 												<div class="flex flex-col items-start ml-8">
 													<p class="font-bold">${tour.tournamentName}</p>
 													<p class="text-white/70 ">${tour.players} players</p>
 												</div>
 												<button
 												class="join-btn absolute right-6 cursor-pointer text-secondary text-3xl"
-												data-tournament-id="${tour.id}"
+												data-tournament-id="${tour.id}", data-tournament-name="${tour.tournamentName}"
 												aria-label="Join tournament"
 												>
 												<i class="fa-solid fa-right-to-bracket"></i>
@@ -104,7 +106,7 @@ export async function tournamentChoices() {
 				<!--JOIN TOURNAMENT MODAL -->
 				<div id="joinTour" class="fixed  inset-0 z-50 hidden items-center justify-center bg-black/70">
 					<div id="joinBox" class="flex flex-col justify-center items-center gap-6 w-[350px] h-[300px] rounded-3xl bg-black drop-shadow-pink">
-						<h3 class="text-3xl mt-10 font-glitch text-white/90"> Join Tournament </h3>
+						<h3 id="title" class="text-3xl mt-10 font-glitch text-white/90"> Join Tournament </h3>
 						<input id="joinNick" type="text" placeholder="Nick name" class="mt-3 placeholder-white/70 w-[220px] bg-black drop-shadow-pink  rounded-2xl px-6 py-3 focus:outline-none focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] " />
 						<button data-i18n= "join" type="submit" id="joinBtn" class="bg-secondary/90 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary mb-16 mt-4 ">Join</button>
 					</div>
@@ -115,8 +117,8 @@ export async function tournamentChoices() {
 				<div>
 					<h1 data-i18n = "yours" class="font-glitch text-center text-3xl pt-4">Create yours</h1>
 					<div class="flex flex-col items-center mt-10 gap-12">
-						<div class="relative border border-primary rounded-full">
-							<img src="golden_trophy.svg" class="w-[200px] h-[200px] p-2 rounded-full " />
+						<div  class="flex items-center justify-center w-[120px] h-[120px] md:w-[130px] md:h-[130px] xl:w-[190px] xl:h-[190px] rounded-full border-[3px] border-primary/70 drop-shadow-cyan " > 
+							<img src="golden_trophy.svg" class=" w-[80px] md:w-[90px] xl:w-[120px]" />
 						</div>
 						<form id="tourForm">
 						<div class="flex flex-col gap-6">
@@ -149,8 +151,8 @@ function handleTournamentbtn(tournamentId: string, nick: string) {
 	});
 }
 
+//CREATE TOURNAMENT
 export async function tournamentChoicesEventListener() {
-	//CREATE TOURNAMENT
 	let nick = joinTournament();
 	let tournamentId: string;
 	const form = document.getElementById("tourForm") as HTMLFormElement | null;
@@ -160,7 +162,6 @@ export async function tournamentChoicesEventListener() {
 		e.preventDefault();
 		const tourName = (document.getElementById("tourName") as HTMLInputElement).value;
 		const nickName = (document.getElementById("nick") as HTMLInputElement).value;
-		
 		try {
 			const res = await fetch("http://localhost:3004/createTournament", {
 				method: "POST",
@@ -174,6 +175,8 @@ export async function tournamentChoicesEventListener() {
 				return;
 			}
 			 tournamentId = data.id;
+			 localStorage.setItem("tourId",tournamentId);
+			 handleTournamentbtn(tournamentId, nick);
 			
 			console.log("Tournament created:", data);
 			
@@ -183,11 +186,11 @@ export async function tournamentChoicesEventListener() {
 			return;
 		}
 	});
-	const btnTr = document.getElementById("submit");
-	if (btnTr) {
-		btnTr.addEventListener("click", () => handleTournamentbtn(tournamentId, nick));
-		btnTr.removeEventListener("click", () => handleTournamentbtn(tournamentId, nick));
-	}
+	// const btnTr = document.getElementById("submit");
+	// if (btnTr) {
+	// 	btnTr.addEventListener("click", () => handleTournamentbtn(tournamentId, nick));
+	// 	btnTr.removeEventListener("click", () => handleTournamentbtn(tournamentId, nick));
+	// }
 
 }
 
@@ -205,14 +208,20 @@ export function joinTournament(): string {
 
   let selectedTournamentId: string | null = null;
 
-  // ✅ Open modal (event delegation)
+  // Open modal (event delegation)
   document.addEventListener("click", (e) => {
     const btn = (e.target as HTMLElement).closest(".join-btn");
     if (!btn) return;
 
     selectedTournamentId = btn.getAttribute("data-tournament-id");
     if (!selectedTournamentId) return;
-
+	const tournamentName = btn.getAttribute("data-tournament-name");
+	if(tournamentName)
+	{
+		const title = document.getElementById("title");
+		if (title)
+			title.innerHTML = `Join Tournament </br> <span class="text-secondary ml-14">"${tournamentName}"</span>`;
+	}
     modal.classList.remove("hidden");
     modal.classList.add("flex");
 
@@ -223,14 +232,14 @@ export function joinTournament(): string {
     );
   });
 
-  // ✅ Click outside modal box → close
+  // Click outside modal box → close
   modal.addEventListener("click", (e) => {
     if (!box.contains(e.target as Node)) {
       closeModal();
     }
   });
 
-  // ✅ Join button
+  // Join button
   let nick: string;
   nick = "";
   joinBtn.addEventListener("click", () => {

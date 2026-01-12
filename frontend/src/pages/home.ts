@@ -76,7 +76,6 @@ export default async function Home() {
     if (!res.ok)
       return "";
     players = await res.json();
-   // players.sort((a, b)=> b.XPoints - a.XPoints);
     const myIndex = players.findIndex(
     (player) => player.id === userId
   );
