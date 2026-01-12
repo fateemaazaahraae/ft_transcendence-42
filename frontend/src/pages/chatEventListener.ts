@@ -130,16 +130,47 @@ export function ChatEventListener() {
     const TOKEN = localStorage.getItem('token') || '';
     initializeSocket(CURRENT_USER_ID, WS_URL, TOKEN);
         
-   listenForPresenceEvents(
-  (userId) => {
-    setUserOnline(String(userId));
-    updateContactStatusUI(String(userId), "online");
-  },
-  (userId) => {
-    setUserOffline(String(userId));
-    updateContactStatusUI(String(userId), "offline");
-  }
-);
+     // presence listener: before marking a user online/offline
+     listenForPresenceEvents(
+        async (userId) => {
+            try {
+                if (!CURRENT_USER_ID) return;
+
+                const me = String(CURRENT_USER_ID);
+                const other = String(userId);
+
+                // helper to wrap checkIfBlocked 
+                const isBlockedBy = (blocker: string, blocked: string) => {
+                    return new Promise<boolean>((resolve) => {
+                        try {
+                            checkIfBlocked(blocker, blocked, resolve);
+                        } catch (e) {
+                            console.warn('isBlockedBy: check failed', e);
+                            resolve(false);
+                        }
+                    });
+                };
+
+                // if I blocked them OR they blocked me, hide presence
+                const [iBlockedThem, theyBlockedMe] = await Promise.all([isBlockedBy(me, other), isBlockedBy(other, me)]);
+                if (iBlockedThem || theyBlockedMe) return;
+
+                setUserOnline(other);
+                updateContactStatusUI(other, "online");
+            } catch (e) {
+                console.warn('presence onOnline handler error', e);
+            }
+        },
+        (userId) => {
+            try {
+                const other = String(userId);
+                setUserOffline(other);
+                updateContactStatusUI(other, "offline");
+            } catch (e) {
+                console.warn('presence onOffline handler error', e);
+            }
+        }
+    );
 
 
     // block / unblock
@@ -157,15 +188,36 @@ export function ChatEventListener() {
         if (sendButtonEl) sendButtonEl.disabled = !isConnected;
     });
 
-    // listen for server notification that *this* user was blocked by someone
+
+    
+    // listen for server notification that this user was blocked by someone
     if (socket) {
         socket.on('you_were_blocked', (data: any) => {
             const by = String(data?.by || '');
-            // if the blocked user is currently viewing the blocker, hide input
+            // if the blocked user is currently viewing the blocker hide input
             if (String(ACTIVE_CHAT_CONTACT_ID) === by) {
                 showBlockedMessage();
             } else {
             }
+        });
+
+        
+        // helper to refresh contacts 
+        const refreshContacts = () => {
+            if (!contactsListDiv) return;
+            fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
+                attachContactClickListeners(contactsListDiv, handleContactSelect);
+                applyPresenceToRenderedContacts();
+            });
+        };
+
+        // When someone unblocks a user refresh the contacts list so UI updates
+        socket?.on("unblock_done", ({ target }: { target: string }) => {
+            refreshContacts();
+        });
+        // refresh contacts in that case too so UI immediately reflects the change
+        socket?.on("you_were_unblocked", () => {
+            refreshContacts();
         });
         
     }
@@ -253,6 +305,9 @@ export function ChatEventListener() {
                 // perform block then close chat and show blocked state on the button
                 (async () => {
                     const res = await blockUser(meId, targetId);
+
+                    setUserOffline(targetId);
+                    updateContactStatusUI(targetId, "offline");
 
                     if (blockBtn) {
                         blockBtn.innerHTML = '<i class="fa fa-ban"></i> Blocked';

@@ -10,7 +10,7 @@ export default function Login() {
         <div class="absolute rounded-full blur-[55px] opacity-80  w-[170px] h-[240px] md:w-[400px] md:h-[250px] bg-[#35C6DDE5] left-[calc(50%-175px)] md:left-[calc(50%-320px)]  top-[15%] md:top-[19%] -rotate-[20deg] md:rotate-[63deg]"></div>
         <div class="absolute rounded-full blur-[55px] opacity-100 w-[130px] h-[260px] md:w-[400px] md:h-[250px] bg-[#D02EA48A] right-[calc(50%-146px)] md:left-[calc(50%-60px)] md:bottom-[60%] top-[50%] md:top-[53%] -rotate-[35deg] md:rotate-[45deg]"></div>
 
-        <div class="relative inset-0 m-auto w-[320px] md:w-[480px] lg:w-[480px] h-[500px] md:h-full px-2 sm:px-6 py-6 sm:py-10 pt-[40px] pb-[60px] items-center bg-black rounded-[40px] md:rounded-[50px] backdrop-blur-[10px] mt-[50px]">
+        <div class="relative inset-0 m-auto w-[70%] md:w-[480px] lg:w-[480px] h-[500px] md:h-full px-2 sm:px-6 py-6 sm:py-10 pt-[40px] pb-[60px] items-center bg-black rounded-[40px] md:rounded-[50px] backdrop-blur-[10px] mt-[50px]">
           <form id="loginForm" action="">
             <h2
                 class="text-white text-center font-glitch text-[1.1em] md:text-[1.5em] leading-[10px] md:leading-[35px] tracking-[2px] mt-[5px] mb-[25px]">
@@ -21,7 +21,7 @@ export default function Login() {
                 type="text" 
                 required 
                 placeholder="User name" 
-                class="block mx-auto w-[85%] h-[40px] md:h-[52px] px-5 items-center bg-black font-roboto text-white border-none rounded-[20px]
+                class="block mx-auto w-[85%] h-[40px] md:h-[52px] px-5 items-center bg-black font-roboto text-white border-none rounded-[17px] md:rounded-[20px]
                   shadow-[0_0_10px_rgba(53,198,221,0.9)] 
                   focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] 
                   text-[1.1em] md:text-[1.5em] font-medium outline-none
@@ -34,7 +34,7 @@ export default function Login() {
                 type="password" 
                 required 
                 placeholder="Password" 
-                class="block mx-auto w-[85%] h-[40px] md:h-[52px] px-5 items-center bg-black font-roboto text-white border-none rounded-[20px]
+                class="block mx-auto w-[85%] h-[40px] md:h-[52px] px-5 items-center bg-black font-roboto text-white border-none rounded-[17px] md:rounded-[20px]
                   shadow-[0_0_10px_rgba(53,198,221,0.9)] 
                   focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] 
                   text-[1.1em] md:text-[1.5em] font-medium outline-none
@@ -74,15 +74,15 @@ export default function Login() {
           </div>
 
             <div class="social-icons flex text-white text-[1.5em] md:text-[2.1em] gap-[15px] justify-center cursor-pointer mb-[20px] md:mt-2">
-                <a href="http://localhost:3000/auth/google">
+              <a href="http://localhost:3000/auth/google">
                 <i class="fa-brands fa-google"></i>
-            </a>
-            <a href="http://localhost:3000/auth/42">
-              <img src="/intra42.png" class="mt-[15%] w-[45px]" />
-            </a>
+              </a>
+              <a href="http://localhost:3000/auth/42">
+                <img src="/intra42.png" class="mt-[15%] w-[35px] md:w-[50px]" />
+              </a>
             </div>
-            <div class="text-white mt-3 md:mt-9 text-center text-[0.8em] md:text-[0.9em] font-roboto font-semibold">
-                <p class="mb-[5px]">Don’t have an account? Click here to </p>
+            <div class="text-white mt-3 md:mt-9 text-center text-[0.7em] md:text-[0.9em] font-roboto font-semibold">
+                <p class="mb-[5px]">Don't have an account? Click here to </p>
                 <a href="" id="register-link" class="text-primary/60 text-[0.8em] md:text-[0.9em] items-end font-bold border-b  hover:text-primary hover:border-primary border-primary/60">Register Now</a>
             </div>
           </form>

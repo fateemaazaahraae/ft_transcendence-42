@@ -76,7 +76,10 @@ export default async function Leaderboard() {
           ${currentLang}
         </button>
       </div>
-      <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+      <div class="relative">
+        <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+        <div id="notifBadge" class="absolute hidden top-1 inset-0 w-[7px] h-[7px] rounded-full bg-red-600"></div>
+      </div>
       <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
     </div>
 
@@ -100,7 +103,7 @@ export default async function Leaderboard() {
             <div class="w-[85px] h-[140px] bg-primary/40 flex flex-col items-center justify-end pb-4 relative">
               <img src="${topThree[1].profileImage}" alt="pink-girl"
                 class="w-[60px] h-[60px] object-cover rounded-full border border-primary/50 absolute top-[5px]" />
-              <div class="text-white text-[15px] font-roboto font-semibold">${topThree[1].userName}</div>
+              <div class="text-white text-[15px] font-roboto font-semibold truncate w-[60px] text-center">${topThree[1].userName}</div>
               <div class="text-white text-[12px] font-roboto font-medium">${topThree[1].XPoints}</div>
               <img src="/silver.svg" alt="silver" class="w-[35px] h-[35px] absolute bottom-[-30px]" />
             </div>
@@ -113,7 +116,7 @@ export default async function Leaderboard() {
           <div class="w-[90px] h-[160px] bg-primary/40 flex flex-col items-center justify-end pb-4 relative">
             <img src="${topThree[0].profileImage}" alt="blue-boy"
               class="w-[70px] h-[70px] object-cover rounded-full border border-primary/50 absolute top-[10px]" />
-            <div class="text-white text-[15px] font-roboto font-semibold">${topThree[0].userName}</div>
+            <div class="text-white text-[15px] font-roboto font-semibold truncate w-[60px] text-center">${topThree[0].userName}</div>
             <div class="text-white text-[12px] font-roboto font-medium">${topThree[0].XPoints}</div>
             <img src="/gold.svg" alt="gold" class="w-[40px] h-[40px] absolute bottom-[-30px]" />
           </div>
@@ -128,7 +131,7 @@ export default async function Leaderboard() {
             <div class="w-[85px] h-[140px] bg-primary/40 flex flex-col items-center justify-end pb-4 relative">
               <img src="${topThree[2].profileImage}" alt="white-boy"
                 class="w-[60px] h-[60px] object-cover rounded-full border border-primary/50 absolute top-[5px]" />
-              <div class="text-white text-[15px] font-roboto font-semibold">${topThree[2].userName}</div>
+              <div class="text-white text-[15px] font-roboto font-semibold truncate w-[60px] text-center">${topThree[2].userName}</div>
               <div class="text-white text-[12px] font-roboto font-medium">${topThree[2].XPoints}</div>
               <img src="/bronze.svg" alt="bronze" class="w-[35px] h-[35px] absolute bottom-[-30px]" />
             </div>
@@ -148,11 +151,11 @@ export default async function Leaderboard() {
             (leader, index) => `
           <div class="w-[350px] md:w-[500px] h-[50px] bg-primary/40 rounded-lg flex items-center pl-5">
             <div class="flex items-center gap-3">
-              <div class="text-white text-[22px] font-roboto font-medium">${index + 4}</div>
+              <div class="text-white text-[22px] font-roboto font-medium">${index + 4}.</div>
               <img src="${leader.profileImage}" class="w-[38px] h-[38px] object-cover rounded-full border border-primary/50" />
               <div class="text-white text-[20px] font-roboto font-semibold truncate w-[200px]">${leader.userName}</div>
             </div>
-            <div class="ml-auto w-[130px] h-[50px] bg-secondary rounded-lg flex items-center justify-center">
+            <div class="ml-auto w-[100px] h-[50px] bg-secondary rounded-lg flex items-center justify-center">
               <div class="text-white text-[20px] font-roboto font-medium">${leader.XPoints}</div>
             </div>
           </div>

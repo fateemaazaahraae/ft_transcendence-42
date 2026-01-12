@@ -8,7 +8,7 @@ rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 
-RUN npm install --build-from-source=sqlite3
+RUN npm install
 
 COPY . .
 

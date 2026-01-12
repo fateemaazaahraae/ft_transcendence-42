@@ -21,4 +21,4 @@ export const disconnectTrSocket = () => {
     socket.disconnect();
     socket = null;
   }
-};
+}; 

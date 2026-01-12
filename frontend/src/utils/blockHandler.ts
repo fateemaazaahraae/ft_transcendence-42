@@ -1,5 +1,9 @@
 import { socket } from "./sockeService.ts";
-const API_BASE = window.location.origin.replace(/\/$/, "");
+
+// Resolve API base in the same way other pages do so requests go to the chat-service proxy.
+const HOST = window.location.hostname;
+const PROTO = window.location.protocol;
+const API_BASE = (PROTO === 'https:') ? `${window.location.origin}/api` : `${PROTO}//${HOST}:4000/api`;
 
 export function checkIfBlocked(blockerId: number | string, blockedId: number | string, callback: (isBlocked: boolean) => void) {
     // validate ids
@@ -7,7 +11,7 @@ export function checkIfBlocked(blockerId: number | string, blockedId: number | s
     const b1 = String(blockerId);
     const b2 = String(blockedId);
     const token = localStorage.getItem('token') || '';
-    fetch(`${API_BASE}/api/is-blocked/${encodeURIComponent(b1)}/${encodeURIComponent(b2)}`, {
+    fetch(`${API_BASE}/is-blocked/${encodeURIComponent(b1)}/${encodeURIComponent(b2)}`, {
         headers: { 'Authorization': `Bearer ${token}` }
     })
         .then(response => response.json())
@@ -47,7 +51,7 @@ export async function blockUser(blockerId: number | string, blockedId: number | 
         console.log('[frontend] blockUser payload:', { blockedId }, 'tokenPresent:', !!token);
 
         // then the existing fetch...
-        const res = await fetch(`${API_BASE}/api/block`, {
+        const res = await fetch(`${API_BASE}/block`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -94,7 +98,7 @@ export async function unblockUser(blockerId: number | string, blockedId: number 
     }
     const token = localStorage.getItem('token') || '';
     try {
-        const res = await fetch(`${API_BASE}/api/unblock`, {
+        const res = await fetch(`${API_BASE}/unblock`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -116,52 +120,3 @@ export async function unblockUser(blockerId: number | string, blockedId: number 
         console.error('Error unblocking user failed:', error);
     }
 }
-
-// const REL_SERVICE_URL = process.env.REL_SERVICE_URL || 'http://relationship-service:3002';
-
-// async function handleJson(response) {
-//   const text = await response.text();
-//   let payload = {};
-//   try {
-//     payload = text ? JSON.parse(text) : {};
-//   } catch {
-//     payload = { raw: text };
-//   }
-//   if (!response.ok) {
-//     const err = new Error(payload?.error || response.statusText || `HTTP ${response.status}`);
-//     err.status = response.status;
-//     err.payload = payload;
-//     throw err;
-//   }
-//   return payload;
-// }
-
-// export async function block(authHeader, blockerId, blockedId) {
-//   const response = await fetch(`${REL_SERVICE_URL}/block`, {
-//     method: 'POST',
-//     headers: { Authorization: authHeader, 'Content-Type': 'application/json' },
-//     body: JSON.stringify({ blockedId })
-//   });
-//   return handleJson(response);
-// }
-
-// export async function unblock(authHeader, blockerId, blockedId) {
-//   const response = await fetch(`${REL_SERVICE_URL}/unblock`, {
-//     method: 'POST',
-//     headers: { Authorization: authHeader, 'Content-Type': 'application/json' },
-//     body: JSON.stringify({ blockedId })
-//   });
-//   return handleJson(response);
-// }
-
-// export async function isBlocked(authHeader, blockerId, blockedId) {
-//   try {
-//     const response = await fetch(`${REL_SERVICE_URL}/is-blocked/${blockerId}/${blockedId}`, {
-//       headers: { Authorization: authHeader }
-//     });
-//     const data = await response.json();
-//     return data.isBlocked || false;
-//   } catch {
-//     return false;
-//   }
-// }

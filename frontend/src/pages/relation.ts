@@ -55,6 +55,13 @@ export async function addFriend(id: string, removeCard: () => void) {
             },
             body: JSON.stringify({ to: id})
         });
+        if (!res.ok)
+        {
+            const data = await res.json();
+            showAlert(data.error);
+            removeCard();
+            return;
+        }
         showAlert("Invitation sent", "success")
         removeCard();
     }

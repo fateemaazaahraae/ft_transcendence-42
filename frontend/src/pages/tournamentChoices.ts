@@ -1,40 +1,38 @@
 import { getSavedLang } from "../i18n";
 import { getTrSocket } from "../utils/tournamentSocket.ts";
 import { navigate } from "../main.ts";
+import { requiredAuth } from "../utils/authGuard.ts";
+import { showAlert } from "../utils/alert.ts";
 
-interface AvTournaments {
-    img: string;
-    name: string;
-    numOfPlayers: number;
-}
+// interface AvTournaments {
+//     img: string;
+//     name: string;
+//     numOfPlayers: number;
+// }
 
 export async function tournamentChoices() {
+    if (!requiredAuth()) return "";
     const emptyAvTournaments = /* html */
     `
-    <div class="w-full flex flex-col items-center justify-center py-20 text-primary/80 rounded-2xl bg-black drop-shadow-cyan">
-        <i class="fa-solid fa-table-tennis-paddle-ball text-7xl mb-12"></i>
-        <h2 class="text-2xl font-bold mb-2">No tournament available</h2>
+    <div class="w-full flex flex-col items-center justify-center py-20  rounded-2xl bg-black drop-shadow-cyan">
+        <i class="fa-solid fa-table-tennis-paddle-ball text-7xl mb-12 text-secondary/90"></i>
+        <h2 class="text-2xl font-bold mb-2 text-white/70">No tournament available</h2>
     </div>
     `;
-    const avTournaments: AvTournaments[] = [
-        {img: "/dark-girl.svg", name: "Pong legends", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "tournowa d ramadan", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "tajamo3 l a7rar", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3},
-        {img: "/dark-girl.svg", name: "wewewewe", numOfPlayers: 3}
-    ];
+    let tournaments: any[] = [];
+    try{
+        const res = await fetch(`http://localhost:3004/tournaments`);
+        if (!res.ok)
+            showAlert("error here!!");
+        tournaments = await res.json();
+        // alert(tournaments[tournaments.length - 1].players)
+
+    }
+    catch(err)
+    {
+        console.error(err);
+    }
+   
     const currentLang = (await getSavedLang()).toUpperCase();
     return `
         <div class="text-white font-roboto px-6 md:px-20 py-10 relative">
@@ -68,7 +66,10 @@ export async function tournamentChoices() {
                 ${currentLang}
                 </button>
             </div>
-            <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+            <div class="relative">
+              <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
+              <div id="notifBadge" class="absolute hidden top-1 inset-0 w-[7px] h-[7px] rounded-full bg-red-600"></div>
+            </div>
             <i id="logout-icon" class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
             </div>
 
@@ -80,22 +81,22 @@ export async function tournamentChoices() {
                     <div class="flex">
                         <div class="flex flex-col gap-4 h-[600px] w-[600px] mx-auto overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4 pb-6">
                                 ${
-                                    avTournaments.length === 0
+                                    tournaments.length === 0
                                     ? emptyAvTournaments
-                                    : avTournaments.map(
+                                    : tournaments.map(
                                         (tour) => `
                                             <div class="relative flex items-center bg-primary/50 rounded-[20px] px-6 py-[5px] w-full mx-auto">
-                                                <img src="${tour.img}" class="w-[55px] h-[55px] rounded-full border border-primary/50 object-cover"/>
+                                                <img src="/golden_trophy.svg" class="w-[55px] h-[55px] rounded-full border border-primary/50"/>
                                                 <div class="flex flex-col items-start ml-8">
-                                                    <p class="font-bold">${tour.name}</p>
-                                                    <p class="text-white/70 ">${tour.numOfPlayers} Players</p>
+                                                    <p class="font-bold">${tour.tournamentName}</p>
+                                                    <p class="text-white/70 ">${tour.players} players</p>
                                                 </div>
                                                 <i class="fa-solid fa-right-to-bracket text-secondary text-3xl absolute right-6 cursor-pointer"></i>
                                             </div>
                                         `
                                     )
                                     .join("")}
-                        </div>
+                        </div> 
                     </div>
                 </div>
                 <div class="bg-primary/50 h-[700px] w-[3px] rounded-full hidden lg:flex"></div>
@@ -103,19 +104,17 @@ export async function tournamentChoices() {
                 <div>
                     <h1 data-i18n = "yours" class="font-glitch text-center text-3xl pt-4">Create yours</h1>
                     <div class="flex flex-col items-center mt-10 gap-12">
-                        <div class="relative">
-                            <img src="white-boy.svg" class="w-[200px] h-[200px] border border-primary rounded-full object-cover" />
-                            <i class="fa-solid fa-pen-to-square absolute bottom-6 right-4 md:bottom-9 md:right-5 lg:bottom-6 text-[15px] text-primary/90 cursor-pointer"></i>
+                        <div class="relative border border-primary rounded-full">
+                            <img src="golden_trophy.svg" class="w-[190px] h-[190px]  rounded-full" />
                         </div>
+                        <form id="tourForm">
                         <div class="flex flex-col gap-6">
-                            <input type="text" placeholder="Tournament's name" class="placeholder-white/70 w-[320px] bg-black shadow-[0_0_10px_rgba(53,198,221,0.99)]  rounded-2xl px-6 py-3 focus:outline-none focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] " />
-                            <input data-i18n = "nick" type="text" placeholder="Nick name" class="placeholder-white/70 w-[320px] bg-black shadow-[0_0_10px_rgba(53,198,221,0.99)]  rounded-2xl px-6 py-3 focus:outline-none focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] " />
-                            <div class="relative">
-                                <input type="text" placeholder="Add players" class="placeholder-white/70 w-[320px] bg-black shadow-[0_0_10px_rgba(53,198,221,0.99)]  rounded-2xl px-6 py-3 focus:outline-none focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] " />
-                                <i class="fa-solid fa-plus absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer text-secondary"></i>
-                            </div>
+                            <input id="tourName" type="text" placeholder="Tournament's name" class="placeholder-white/70 w-[320px] bg-black shadow-[0_0_10px_rgba(53,198,221,0.99)]  rounded-2xl px-6 py-3 focus:outline-none focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] " />
+                            <input id="nick" type="text" placeholder="Nick name" class="placeholder-white/70 w-[320px] bg-black shadow-[0_0_10px_rgba(53,198,221,0.99)]  rounded-2xl px-6 py-3 focus:outline-none focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] " />
+                           
                         </div>
-                        <button data-i18n= "create" id=trcreate class="bg-primary/60 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary mb-16">Create</button>
+                        <button data-i18n= "create" type="submit" id="submit" class="bg-primary/60 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary mb-16 mt-8 ml-20">Create</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -123,42 +122,70 @@ export async function tournamentChoices() {
     `
 }
 
-
-export function tournamentChoicesEventListener(){
-  setTimeout(() => {
-  const btnTr = document.getElementById("trcreate");
-  if (btnTr) {
-    btnTr.addEventListener("click", () => {
-      console.log("Create tr button is clicked!");
-
-      const token = localStorage.getItem("token"); // this will get JWT prolly
-      if (!token) {
+function handleTournamentbtn(tournamentId: string) {
+    console.log("Create tr button is clicked!");
+    const token = localStorage.getItem("token"); // this will get JWT prolly
+    console.log("hereeeeeeeeeeeee" + token);
+    if (!token) {
         navigate("/login"); 
         return;
-      }
-
-      const socket = getTrSocket(token); /// here is the key to send request to our game server
-
-    //   if (!socket.hasListeners("match_found")) {
-          
-          socket.on("connect", () => {
-              console.log("✅ Connected via Manager! ID:", socket.id);
-              navigate("/TrWaitingPlayers");
-              socket.emit('join_queue');
-          });
-
-        //   socket.on("match_found", (data: any) => {
-        //       console.log("🎉 MATCH FOUND! Navigating to game...");
-        //       localStorage.setItem("currentMatch", JSON.stringify(data));
-        //       navigate("/remotegame"); 
-        //   });
-    //   }
-
-    //   if (socket.connected) {
-    //         socket.emit('join_queue');
-    //   }
+    }
+    const socket = getTrSocket(token); /// here is the key to send request to our game server
+    socket.on("connect", () => {
+        console.log("✅ Connected via Manager! ID:", socket.id);
+        navigate("/TrWaitingPlayers");
+        socket.emit('join_queue', { tournamentId });
     });
-  }
-}, 100);
 }
 
+export async function tournamentChoicesEventListener() {
+    let tournamentId: string;
+    const form = document.getElementById("tourForm") as HTMLFormElement | null;
+    if(!form)
+        return;
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const btnTr = document.getElementById("submit");
+        if (btnTr) {
+            btnTr.addEventListener("click", () => handleTournamentbtn(tournamentId));
+            btnTr.removeEventListener("click", () => handleTournamentbtn(tournamentId));
+        }
+        const tourName = (document.getElementById("tourName") as HTMLInputElement).value;
+        const nickName = (document.getElementById("nick") as HTMLInputElement).value;
+        
+        try {
+            const res = await fetch("http://localhost:3004/createTournament", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({tourName, nickName}),
+            });
+            
+            const data = await res.json();
+            if (!res.ok){
+                showAlert("Tournament creation failed");
+                return;
+            }
+             tournamentId = data.id;
+            
+            console.log("Tournament created:", data);
+            
+        } catch (err) {
+            console.error(err);
+            showAlert("Problem in creation of tournament");
+            return;
+        }
+    });
+    
+}
+
+
+
+// export function tournamentChoicesEventListener() {
+//     setTimeout(() => {
+//         const btnTr = document.getElementById("trcreate");
+//         if (btnTr) {
+//             btnTr.removeEventListener("click", (handleTournamentbtn));
+//             btnTr.addEventListener("click", (handleTournamentbtn));
+//         }
+//     }, 100);
+// }

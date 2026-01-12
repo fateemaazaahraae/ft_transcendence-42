@@ -1,8 +1,9 @@
 import { Server } from "socket.io";
 import GameRoom from "./TournamentRoom.js";
-// import { getDb } from "./db.js";
+import { openDb } from "./db.js";
 
 const waitingQueue = [];
+const SaveQueue = [];
 
 const getUserDataFromToken = (token) => { // had lfunction kayreturni id&name&img of user from the token
   try {
@@ -48,7 +49,7 @@ function getAvatars(waitingQueue) {
 //   });
 // }
 
-export const StartTournament = (server) => {
+export const StartTournament =(server) => {
 
     const io = new Server(server, { cors: { origin: "*" }, methods: ["GET", "POST"] });
     
@@ -82,18 +83,54 @@ export const StartTournament = (server) => {
         //     }
         // });
         socket.on("disconnect", (reason) => {
-            // console.log("entered the leave queue socket event handler")
             const index = waitingQueue.findIndex(
                 s => s.data.userId === socket.data.userId
             );
             if (index !== -1) {
                 waitingQueue.splice(index, 1);
+                SaveQueue.splice(index, 1);
                 console.log(`${socket.data.userId} removed from queue (leave_queue)`);
                 broadcastQueueState(io, waitingQueue);
             }
         });
 
-        socket.on("join_queue", () => {
+        socket.on('GoToFinal', () => {
+          console.log(`\n\n🔥Let'sss go to the final yalaaah🔥\n\n`);
+          let WinnerSide;
+          console.log(`the pic in index 0 is: ${SaveQueue[0].data.user.avatar}`)
+          console.log(`the pic in index 1 is: ${SaveQueue[1].data.user.avatar}`)
+          console.log(`the pic in index 2 is: ${SaveQueue[2].data.user.avatar}`)
+          console.log(`the pic in index 3 is: ${SaveQueue[3].data.user.avatar}`)
+          if (socket == SaveQueue[0] || socket == SaveQueue[1]) {
+            console.log(`\n\nUr player with the pic: ${socket.data.user.avatar} is in the ---first--- half of the game tournament \n\n`);
+            WinnerSide = 1;
+          } else {
+            console.log(`\n\nUr player with the pic: ${socket.data.user.avatar} is in the ---second--- half of the game tournament \n\n`);
+            WinnerSide = 2;
+          }
+          SaveQueue.push(socket);
+          let playersPicInfo = [];
+          playersPicInfo = getAvatars(SaveQueue);
+          socket.emit("startWaitFinal", {avatars: playersPicInfo, WinnerSide: WinnerSide});
+          if (SaveQueue.length === 6) {
+            const player1 = SaveQueue[4];
+            const player2 = SaveQueue[5];
+            const matchId = `match_${Date.now()}`;
+            const matchInfo = {
+              matchId,
+              player1: player1.data.user,
+              player2: player2.data.user
+            };
+            player1.emit("start_final_game", matchInfo);
+            player2.emit("start_final_game", matchInfo);
+            console.log("match final en cours");
+            const gameFinal = new GameRoom(io, matchId, player1, player2);
+            gameFinal.start();
+            SaveQueue.length = 0;
+          }
+        });
+
+        socket.on("join_queue", async (data) => {
             const userId = socket.data.userId;
             const userData = socket.data.user;
 
@@ -107,9 +144,24 @@ export const StartTournament = (server) => {
             }
     
             waitingQueue.push(socket);
+            SaveQueue.push(socket);
             let playersPicInfo = [];
-            playersPicInfo = getAvatars(waitingQueue);/// this is wronggggg
+            playersPicInfo = getAvatars(waitingQueue);
             console.log(`Queue size: ${waitingQueue.length}`);
+            try {
+                  const db = await openDb();
+
+                  await db.run(
+                  `UPDATE players
+                  SET players = ?
+                  WHERE id = ?`,
+                  [waitingQueue.length, data.tournamentId]
+                  );
+                  
+                  console.log("✅ Match vs Ai is saved to SQLite database!");
+              } catch (error) {
+                  console.error("❌ Failed to save Ai match:", error);
+              }
             broadcastQueueState(io, waitingQueue);
             socket.emit("player_connected", {pic: userData.avatar, name: userData.name, number: waitingQueue.length, avatars: playersPicInfo})
             if (waitingQueue.length > 1) {
@@ -122,6 +174,8 @@ export const StartTournament = (server) => {
                 const player2 = waitingQueue.shift();
                 const player3 = waitingQueue.shift();
                 const player4 = waitingQueue.shift();
+
+                console.log(`the size of ----SaveQueue----- become: ${SaveQueue.length} `)
     
                 if (player1.data.userId === player2.data.userId) {
                   return;

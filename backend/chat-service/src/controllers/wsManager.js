@@ -44,12 +44,12 @@ export const initSocket = (server) => {
     // io
 
   if (!userId) {
-    console.log("❌ NO USER ID");
+    console.log(" NO USER ID");
     return;
   }
 
   socket.join(String(userId));
-  console.log("✅ USER JOINED ROOM", userId);
+  console.log(" USER JOINED ROOM", userId);
     // send current online users to the newly connected client
     try {
       const onlineNow = Array.from(onlineUsers.keys()).filter(id => id !== userId);
