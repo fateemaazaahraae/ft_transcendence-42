@@ -152,7 +152,7 @@ function handleTournamentbtn(tournamentId: string, nick: string) {
 	});
 }
 
-//CREATE TOURNAMENT
+// CREATE TOURNAMENT
 export async function tournamentChoicesEventListener() {
 	let nick = joinTournament();
 	let tournamentId: string;
