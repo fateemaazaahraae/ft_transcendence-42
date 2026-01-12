@@ -3,15 +3,32 @@ import { updateAvatar, findUserById } from "../models/user.js";
 
 export default async function avatarRoutes(fastify) {
 
- fastify.post("/user/avatar", { preHandler: fastify.authenticate }, async (req, reply) => {
+ fastify.post("/user/avatar/:id", async (req, reply) => {
   try {
-    const userId = req.user.id;
+    const userId = req.params.id;
     const { profileImage } = req.body;
     if (!profileImage) {
       return reply.status(400).send({ error: "Profile image is required" });
     }
     await updateAvatar(userId, profileImage);
-    return reply.send({ message: "Profile image saved successfully" });
+    const user = await findUserById(userId);
+    const token = fastify.jwt.sign({
+        id: userId,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userName: user.userName,
+        profileImage: profileImage
+      });
+    return reply.send({ message: "Profile image saved successfully",
+      user1: {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          userName: user.userName,
+          email: user.email,
+        },
+        token });
 
   } catch (err) {
     console.error(err);

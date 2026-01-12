@@ -106,27 +106,27 @@ export function ChoseAvatarEventListener() {
     }
 
     try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      showAlert("Invalid token");
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      showAlert("Invalid userId");
       navigate("/login");
       return;
     }
 
-    const res = await fetch("http://localhost:3000/user/avatar", {
+    const res = await fetch(`http://localhost:3000/user/avatar/${userId}`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({ profileImage: avatarToSend }),
     });
     const data = await res.json();
-
+    
     if (!res.ok) {
       alert(data.error || "Could not save avatar");
       return;
     }
+    localStorage.setItem("token", data.token);
     navigate("/home");
     }
     catch (err) {

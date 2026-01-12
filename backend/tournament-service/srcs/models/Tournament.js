@@ -5,7 +5,7 @@ import { openDb } from "./db.js";
 const waitingQueue = [];
 const SaveQueue = [];
 
-const getUserDataFromToken = (token) => { // had lfunction kayreturni id&name&img of user from the token
+const getUserDataFromToken = (token) => {
   try {
     const payloadBase64 = token.split('.')[1];
     const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
@@ -16,7 +16,7 @@ const getUserDataFromToken = (token) => { // had lfunction kayreturni id&name&im
 
     return {
         id: decoded.id,
-        name: decoded.userName,       // Make sure these match your JWT fields
+        name: decoded.userName,       // Make sure these match JWT fields
         avatar: decoded.profileImage || "/public/default.png" // Fallback
     };
   } catch (error) {
@@ -56,7 +56,7 @@ export const StartTournament =(server) => {
     io.on('connection', (socket) => {
         const token = socket.handshake.auth.token;
         if (!token) { // check tocken (JWT)
-            // console.log('❌ Connection rejected: No token provided.');
+            console.log('❌ Connection rejected: No token provided.');
             socket.disconnect();
             return;
         }
@@ -71,27 +71,55 @@ export const StartTournament =(server) => {
         console.log(`🔌 User ${userData.name} connected!`);
         console.log(`----------------- pic is: ${userData.avatar}`);
 
-        // socket.on("leave_queue", () => {
-        //     const index = waitingQueue.findIndex(
-        //         s => s.data.userId === socket.data.userId
-        //     );
-        //     if (index !== -1 && index !== 0) {
-        //         waitingQueue.splice(index, 1);
-        //         playersPicInfo.splice(index, 1);
-        //         console.log(`${socket.data.userId} removed from queue (leave_queue)`);
-        //         broadcastQueueState(io, waitingQueue);
-        //     }
-        // });
-        socket.on("disconnect", (reason) => {
-            const index = waitingQueue.findIndex(
-                s => s.data.userId === socket.data.userId
-            );
-            if (index !== -1) {
-                waitingQueue.splice(index, 1);
-                SaveQueue.splice(index, 1);
-                console.log(`${socket.data.userId} removed from queue (leave_queue)`);
-                broadcastQueueState(io, waitingQueue);
+        socket.on("leave_queue", async (data) => {
+          const index = waitingQueue.findIndex(
+            s => s.data.userId === socket.data.userId
+          );
+          if (index !== -1) {
+            waitingQueue.splice(index, 1);
+            SaveQueue.splice(index, 1);
+            try {
+              const db = await openDb();
+
+              await db.run(
+              `UPDATE tournaments
+              SET players = ?
+              WHERE id = ?`,
+              [waitingQueue.length, data.tournamentId]
+              );
+              
+              console.log("✅ Tr Match is saved to SQLite database!" + waitingQueue.length);
+            } catch (error) {
+              console.error("❌ Failed to save Tr match:", error);
             }
+            console.log(`${socket.data.userId} removed from queue from socket.leave_queue`);
+            broadcastQueueState(io, waitingQueue);
+          }
+        });
+        socket.on("disconnect", async (reason) => {
+          const index = waitingQueue.findIndex(
+            s => s.data.userId === socket.data.userId
+          );
+          if (index !== -1) {
+              waitingQueue.splice(index, 1);
+              SaveQueue.splice(index, 1);
+              // try {
+              //   const db = await openDb();
+
+              //   await db.run(
+              //   `UPDATE tournaments
+              //   SET players = ?
+              //   WHERE id = ?`,
+              //   [waitingQueue.length, data.tournamentId]
+              //   );
+                
+              //   console.log("✅ Tr Match is saved to SQLite database!");
+              // } catch (error) {
+              //   console.error("❌ Failed to save Tr match:", error);
+              // }
+              console.log(`${socket.data.userId} removed from queue from socket.disconnect`);
+              broadcastQueueState(io, waitingQueue);
+          }
         });
 
         socket.on('GoToFinal', () => {
@@ -134,6 +162,8 @@ export const StartTournament =(server) => {
             const userId = socket.data.userId;
             const userData = socket.data.user;
 
+
+            console.log(`salamo 3alaykom khoti tournament Id howa: ${data.tournamentId} ----- w nickname dial luser howaa: ${data.nick}`);
             const alreadyQueued = waitingQueue.some(
                 s => s.data.userId === userId
             );
@@ -152,18 +182,18 @@ export const StartTournament =(server) => {
                   const db = await openDb();
 
                   await db.run(
-                  `UPDATE players
+                  `UPDATE tournaments
                   SET players = ?
                   WHERE id = ?`,
                   [waitingQueue.length, data.tournamentId]
                   );
                   
-                  console.log("✅ Match vs Ai is saved to SQLite database!");
+                  console.log("✅ Tr Match is saved to SQLite database!");
               } catch (error) {
-                  console.error("❌ Failed to save Ai match:", error);
+                  console.error("❌ Failed to save Tr match:", error);
               }
             broadcastQueueState(io, waitingQueue);
-            socket.emit("player_connected", {pic: userData.avatar, name: userData.name, number: waitingQueue.length, avatars: playersPicInfo})
+            socket.emit("player_connected", {pic: userData.avatar, name: userData.name, number: waitingQueue.length, avatars: playersPicInfo, tournamentId: data.tournamentId})
             if (waitingQueue.length > 1) {
                 console.log(`hello waitingQueue.lenth is: ${waitingQueue.length}`)
                 io.emit('update_avatars', {number: waitingQueue.length})

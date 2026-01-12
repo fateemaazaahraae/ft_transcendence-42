@@ -8,7 +8,7 @@ import Fastify from 'fastify';
 // const fastify = Fastify({ logger: true });
 const waitingQueue = [];
 
-const getUserDataFromToken = (token) => { // had lfunction kayreturni id&name&img of user from the token
+const getUserDataFromToken = (token) => {
   try {
     const payloadBase64 = token.split('.')[1];
     const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
@@ -18,7 +18,11 @@ const getUserDataFromToken = (token) => { // had lfunction kayreturni id&name&im
     return {
         id: decoded.id,
         name: decoded.userName,       // Make sure these match your JWT fields
-        avatar: decoded.profileImage || "/public/default.png" // Fallback
+        avatar:
+            decoded.profileImage ??
+            decoded.avatar ??
+            "/public/default.png"
+        // avatar: decoded.profileImage || "/public/default.png" // Fallback
     };
   } catch (error) {
     console.error("Failed to decode token:", error.message);

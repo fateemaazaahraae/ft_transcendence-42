@@ -26,11 +26,11 @@ export function registerRoutes(fastify) {
 
       const newuser = await createUser(firstName, lastName, userName, email, password);
 
-      const token = fastify.jwt.sign({
-        id: newuser.id,
-        email: newuser.email,
-        userName: newuser.userName,
-      });
+      // const token = fastify.jwt.sign({
+      //   id: newuser.id,
+      //   email: newuser.email,
+      //   userName: newuser.userName,
+      // });
       return reply.code(201).send({
         message: "User registred Successfully",
         user: {
@@ -39,8 +39,8 @@ export function registerRoutes(fastify) {
           lastName: newuser.lastName,
           userName: newuser.userName,
           email: newuser.email,
-        },
-        token,
+        }
+        // token,
       });
     } catch (err) {
       console.error(err);

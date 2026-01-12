@@ -196,8 +196,8 @@ export default class GameRoom {
     ) {
       this.gameState.ball.dx *= -1;
       // Speed up slightly for fun
-      this.gameState.ball.dx *= 1.28; 
-      this.gameState.ball.dy *= 1.28;
+      this.gameState.ball.dx *= 1.13; 
+      this.gameState.ball.dy *= 1.13;
     }
 
     if (
@@ -208,8 +208,8 @@ export default class GameRoom {
       this.gameState.ball.y <= this.gameState.paddle2.y + PADDLE_HEIGHT
     ) {
       this.gameState.ball.dx *= -1;
-      this.gameState.ball.dx *= 1.28; 
-      this.gameState.ball.dy *= 1.28;
+      this.gameState.ball.dx *= 1.13; 
+      this.gameState.ball.dy *= 1.13;
     }
 
 
