@@ -257,6 +257,7 @@ export function TrWaitingPlayersEventListener() {
   socket.off("start_final_game");
 
   socket.on("start_final_game", (data: any) => {
+    // hasReceivedGameData = true;
     console.log("🎉 MATCH Fiiiiiiiiiiinal!...");
     localStorage.setItem("LastMatch", JSON.stringify(data));
     navigate("/FinalMatchTr");
@@ -305,14 +306,14 @@ export function TrWaitingPlayersEventListener() {
     for (let i = 0; i < opponentCount; i++) {
       updateOpponent(i + 1, data.avatars[i])
     }
+      setTimeout(() => {
+      if (!hasReceivedGameData) {
+        console.log("No active game found (likely refreshed). Redirecting...");
+        showAlert("Game session lost or finished.");
+        navigate("/home");
+      }
+    }, 1500);
   });
 
-  setTimeout(() => {
-  if (!hasReceivedGameData) {
-    console.log("No active game found (likely refreshed). Redirecting...");
-    showAlert("Game session lost or finished.");
-    navigate("/home");
-  }
-}, 1500);
 
 }
