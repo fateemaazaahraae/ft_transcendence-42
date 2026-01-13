@@ -188,7 +188,8 @@ export const StartTournament = (server) => {
               name: userData.name,
               number: QueueState.waiting.length,
               avatars: getAvatars(QueueState.waiting),
-              tournamentId: tournamentId
+              tournamentId: tournamentId,
+              tourName: data.tourName
             });
             broadcastQueueState(io, tournamentId);
 

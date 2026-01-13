@@ -110,9 +110,7 @@ export default function TrWaitingPlayers() {
        style="-webkit-text-stroke: 2px rgba(53,198,221,0.8);"">
       Waiting For Players<span id="dots">...</span>
     </h1>
-    <h2 class="text-3xl md:text-4xl lg:text-4xl font-glitch">
-      Tournament name
-    </h2>
+    <h2 id="TrName" class="text-3xl md:text-4xl lg:text-4xl font-glitch"> </h2>
     </div>
     <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[1%] gap-2 md:gap-32">
       <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[2%] gap-2 md:gap-[3px]">
@@ -286,6 +284,7 @@ export function TrWaitingPlayersEventListener() {
     img.classList.remove("waiting");
     img.classList.add("locked");
     img.src = data.pic;
+    (document.getElementById("TrName") as HTMLElement).textContent = data.tourName || "";
     function updateOpponent(index: number, avatar: string) {
       const el = document.getElementById(`opponent${index}`)
 

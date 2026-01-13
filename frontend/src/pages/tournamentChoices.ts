@@ -136,7 +136,7 @@ export async function tournamentChoices() {
 	`
 }
 
-function handleTournamentbtn(tournamentId: string, nick: string) {
+function handleTournamentbtn(tournamentId: string, nick: string, tourName?: string) {
 	console.log("Create tr button is clicked!");
 	const token = localStorage.getItem("token"); // this will get JWT prolly
 	console.log("hereeeeeeeeeeeee" + token);
@@ -148,7 +148,7 @@ function handleTournamentbtn(tournamentId: string, nick: string) {
 	socket.on("connect", () => {
 		console.log("✅ Connected via Manager! ID:", socket.id);
 		navigate("/TrWaitingPlayers");
-		socket.emit('join_queue', { tournamentId , nick});
+		socket.emit('join_queue', { tournamentId , nick, tourName});
 	});
 }
 
@@ -179,7 +179,7 @@ export async function tournamentChoicesEventListener() {
 			
 			console.log("Tournament created:", data);
 			console.log("w lId dialha howa:", tournamentId);
-			handleTournamentbtn(tournamentId, nickName);
+			handleTournamentbtn(tournamentId, nickName, tourName);
 			
 		} catch (err) {
 			console.error(err);
@@ -202,6 +202,7 @@ export function joinTournament(): string {
 	 return "";
 
   let selectedTournamentId: string | null = null;
+  let selectedTournamentName: string | null = null;
 
   // Open modal (event delegation)
   document.addEventListener("click", (e) => {
@@ -209,13 +210,13 @@ export function joinTournament(): string {
     if (!btn) return;
 
     selectedTournamentId = btn.getAttribute("data-tournament-id");
+	selectedTournamentName = btn.getAttribute("data-tournament-name"); 
     if (!selectedTournamentId) return;
-	const tournamentName = btn.getAttribute("data-tournament-name");
-	if(tournamentName)
+	if(selectedTournamentName)
 	{
 		const title = document.getElementById("title");
 		if (title)
-			title.innerHTML = `Join Tournament </br> <span class="text-secondary ml-14">"${tournamentName}"</span>`;
+			title.innerHTML = `Join Tournament </br> <span class="text-secondary ml-14">"${selectedTournamentName}"</span>`;
 	}
     modal.classList.remove("hidden");
     modal.classList.add("flex");
@@ -239,10 +240,10 @@ export function joinTournament(): string {
   nick = "";
   joinBtn.addEventListener("click", () => {
     nick = input.value.trim();
-    if (!nick || !selectedTournamentId) {
+    if (!nick || !selectedTournamentId || !selectedTournamentName) {
       return;
     }
-    handleTournamentbtn(selectedTournamentId, nick);
+    handleTournamentbtn(selectedTournamentId, nick, selectedTournamentName);
     closeModal();
     input.value = "";
   });
