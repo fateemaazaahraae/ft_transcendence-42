@@ -7,12 +7,13 @@ import { tournamentRoutes } from "./routes/TournamentRoute.js";
 const fastify = Fastify({ logger: true });
 
 
-fastify.register(fastifyCors, {
-  origin: '*',
+await fastify.register(fastifyCors, {
+    origin: '*',
+    credentials: true,
 });
 
-fastify.register(GameRoutes);
-fastify.register(tournamentRoutes);
+await fastify.register(GameRoutes);
+tournamentRoutes(fastify)
 
 
 const start = async () => {

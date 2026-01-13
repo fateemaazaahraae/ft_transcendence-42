@@ -55,68 +55,24 @@ export default class GameRoom {
       winnerId === this.player1.data.userId
         ? this.player2.data.userId
         : this.player1.data.userId;
-
-        await fetch(`http://localhost:3003/tournamentwinner/${winnerId}`, {
-          method: "POST",
+        await fetch(`http://game-service:3003/tournamentwinner/${winnerId}`, {
+          method: "POST"
         });
-        await fetch(`http://localhost:3003/tournamentloser/${loserId}`, {
-          method: "POST",
+        await fetch(`http://game-service:3003/tournamentloser/${loserId}`, {
+          method: "POST"
         });
-      
-      // try {
-      //         const db = await openDb();
-      //         const matchId = this.roomId;
-      //         const timestamp = Date.now();
-      //         const winner = winnerSocket.data.userId;
-      
-      //         await db.run(
-      //           `INSERT OR IGNORE INTO Trwlxp (id) VALUES (?)`,
-      //           [winnerId]
-      //         );
-      //         await db.run(
-      //           `INSERT OR IGNORE INTO Trwlxp (id) VALUES (?)`,
-      //           [loserId]
-      //         );
-      
-      //         await db.run(
-      //           `UPDATE Trwlxp
-      //           SET Wins = Wins + 1,
-      //               XPoints = XPoints + 50
-      //           WHERE id = ?`,
-      //           [winnerId]
-      //         );
-      //         // console.log("***********updating the win/lose of Tournament***********");
-      
-      
-      //         await db.run(
-      //           `UPDATE Trwlxp
-      //           SET Losses = Losses + 1
-      //           WHERE id = ?`,
-      //           [loserId]
-      //         );
-      
-      //         await db.run(
-      //           `INSERT INTO Trmatches (id, player1Id, player2Id, score1, score2, winnerId, timestamp)
-      //             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      //           [
-      //               matchId,
-      //               this.player1.data.userId,
-      //               this.player2.data.userId,
-      //               this.gameState.score.p1,
-      //               this.gameState.score.p2,
-      //               winner,
-      //               timestamp
-      //           ]
-      //         );
-              
-      //       console.log(this.player1.id, "<--- id1 id2--->", this.player2.id);
-      //         console.log("✅ tournament Match saved to SQLite database!");
-      
-      //     } catch (error) {
-      //         console.error("❌ Failed to save Tr match:", error);
-      //     }
-
-      
+        await fetch(`http://game-service:3003/tournamentmatches`, {
+          method: "POST",
+          headers: { "Content-Type" : "application/json" },
+          body: JSON.stringify({matchId: this.roomId,
+             player1: this.player1.data.userId,
+                player2: this.player2.data.userId,
+                score1: this.gameState.score.p1,
+                score2: this.gameState.score.p2,
+                winner: winnerId,
+                timestamp: Date.now()
+          })
+        });
       this.stop();
     }
 
@@ -246,6 +202,24 @@ export default class GameRoom {
       ? this.player2.data.userId
       : this.player1.data.userId;
 
+        await fetch(`http://game-service:3003/tournamentwinner/${winnerId}`, {
+          method: "POST"
+        });
+        await fetch(`http://game-service:3003/tournamentloser/${loserId}`, {
+          method: "POST"
+        });
+        await fetch(`http://game-service:3003/tournamentmatches`, {
+          method: "POST",
+          headers: { "Content-Type" : "application/json" },
+          body: JSON.stringify({matchId: this.roomId,
+             player1: this.player1.data.userId,
+                player2: this.player2.data.userId,
+                score1: this.gameState.score.p1,
+                score2: this.gameState.score.p2,
+                winner: winnerId,
+                timestamp: Date.now()
+          })
+        });
       // try {
       //   const db = await getDb();
       //   const matchId = this.roomId;

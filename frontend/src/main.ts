@@ -126,9 +126,9 @@ window.addEventListener("DOMContentLoaded", async() => {
     if (userId) {
         notificationBarListeners(userId);
         updateUnreadCount(userId);
-        setInterval(() => {
-            updateUnreadCount(userId);
-        }, 2000);
+        // setInterval(() => {
+        //     updateUnreadCount(userId);
+        // }, 2000);
         notificationBarListeners(userId);
     }
     LanguagesMenuEventListener();
