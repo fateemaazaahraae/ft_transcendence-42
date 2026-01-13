@@ -327,3 +327,4 @@ export default class GameRoom {
     this.player2.leave(this.roomId);
   }
 }
+
