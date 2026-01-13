@@ -70,9 +70,6 @@ export async function fillSettingsPage()
     const match = JSON.parse(cachedData);
     const userId = match.player1.id;
     const userId2 = match.player2.id;
-
-    const Nick1 = match.Nickname1;
-    const Nick2 = match.Nickname2;
     if (!userId || !userId2) {
       showAlert("Login first");
       navigate("/login");
@@ -83,14 +80,14 @@ export async function fillSettingsPage()
       const data = await res.json();
       // fill page
       (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
-      (document.getElementById("userName") as HTMLElement).textContent = Nick1 || "";
+      (document.getElementById("userName") as HTMLElement).textContent = data.userName || "";
       
 
       const res2 = await fetch(`http://localhost:3001/settings/${userId2}`);
       const data2 = await res2.json();
       // fill page
       (document.getElementById("myImg2") as HTMLImageElement).src = data2.profileImage || "";
-      (document.getElementById("userName2") as HTMLElement).textContent = Nick2 || "";
+      (document.getElementById("userName2") as HTMLElement).textContent = data2.userName || "";
     }
     catch (err)
     {
@@ -195,7 +192,6 @@ export async function TournamentGameEventListener() {
   }
 
   socket.once("game_over", (data: any) => {
-    
       const myId = localStorage.getItem("userId");
       const isWinner = data.winner === myId;
       let h3ColorClass: string;
@@ -246,9 +242,7 @@ export async function TournamentGameEventListener() {
         
         
         document.querySelector('#container')?.appendChild(winnerOverlay);
-        console.log("YOUuuuuuuuu are a looser🚀🚀🚀")
         document.getElementById("quit-game-btn")?.addEventListener("click", () => {
-        console.log("agaaaain YOUu are a looser🚀🚀🚀")
           cleanupGame();
           navigate("/home");
         });
@@ -310,10 +304,6 @@ export async function TournamentGameEventListener() {
   socket.once("game_update", () => {
       hasReceivedGameData = true;
   });
-
-  // socket.once("game_over", () => {
-  //     hasReceivedGameData = true;
-  // });
 
   setTimeout(() => {
     if (!hasReceivedGameData) {
