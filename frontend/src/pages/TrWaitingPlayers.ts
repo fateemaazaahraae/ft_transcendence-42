@@ -273,8 +273,15 @@ export function TrWaitingPlayersEventListener() {
     localStorage.setItem("currentMatch2", JSON.stringify(data));
     navigate("/tournamentgametwo"); 
   });
+  
+  let hasReceivedGameData = false;
 
   socket.on("player_connected", (data: any) => {
+    if (data.number === 0) {
+      hasReceivedGameData = false;
+    } else {
+      hasReceivedGameData = true;
+    }
     tournamentId = data.tournamentId;
     const slotId = `opponent${data.number}`;
     const img = document.getElementById(slotId) as HTMLImageElement;
@@ -299,4 +306,13 @@ export function TrWaitingPlayersEventListener() {
       updateOpponent(i + 1, data.avatars[i])
     }
   });
+
+  setTimeout(() => {
+  if (!hasReceivedGameData) {
+    console.log("No active game found (likely refreshed). Redirecting...");
+    showAlert("Game session lost or finished.");
+    navigate("/home");
+  }
+}, 1500);
+
 }
