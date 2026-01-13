@@ -2,6 +2,7 @@ import { getTrSocket } from "../utils/tournamentSocket.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 import { showAlert } from "../utils/alert.ts";
+import { match } from "node:assert";
 
 export default function TournamentGametwo() {
   if (!requiredAuth()) return "";
@@ -69,6 +70,9 @@ export async function fillSettingsPage()
     const match = JSON.parse(cachedData);
     const userId = match.player3.id;
     const userId2 = match.player4.id;
+
+    const Nick1 = match.Nickname1;
+    const Nick2 = match.Nickname2;
     if (!userId || !userId2) {
       showAlert("Login first");
       navigate("/login");
@@ -79,14 +83,14 @@ export async function fillSettingsPage()
       const data = await res.json();
       // fill page
       (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
-      (document.getElementById("userName") as HTMLElement).textContent = data.userName || "";
+      (document.getElementById("userName") as HTMLElement).textContent = Nick1 || "";
       
 
       const res2 = await fetch(`http://localhost:3001/settings/${userId2}`);
       const data2 = await res2.json();
       // fill page
       (document.getElementById("myImg2") as HTMLImageElement).src = data2.profileImage || "";
-      (document.getElementById("userName2") as HTMLElement).textContent = data2.userName || "";
+      (document.getElementById("userName2") as HTMLElement).textContent = Nick2 || "";
     }
     catch (err)
     {

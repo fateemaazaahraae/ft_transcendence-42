@@ -2,6 +2,7 @@ import { getTrSocket } from "../utils/tournamentSocket.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 import { showAlert } from "../utils/alert.ts";
+import { match } from "node:assert";
 
 export default function TournamentGame() {
   if (!requiredAuth()) return "";
@@ -194,6 +195,7 @@ export async function TournamentGameEventListener() {
   }
 
   socket.once("game_over", (data: any) => {
+    
       const myId = localStorage.getItem("userId");
       const isWinner = data.winner === myId;
       let h3ColorClass: string;
@@ -244,7 +246,9 @@ export async function TournamentGameEventListener() {
         
         
         document.querySelector('#container')?.appendChild(winnerOverlay);
+        console.log("YOUuuuuuuuu are a looser🚀🚀🚀")
         document.getElementById("quit-game-btn")?.addEventListener("click", () => {
+        console.log("agaaaain YOUu are a looser🚀🚀🚀")
           cleanupGame();
           navigate("/home");
         });
@@ -306,6 +310,10 @@ export async function TournamentGameEventListener() {
   socket.once("game_update", () => {
       hasReceivedGameData = true;
   });
+
+  // socket.once("game_over", () => {
+  //     hasReceivedGameData = true;
+  // });
 
   setTimeout(() => {
     if (!hasReceivedGameData) {
