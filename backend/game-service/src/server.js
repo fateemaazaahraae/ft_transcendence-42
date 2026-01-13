@@ -2,6 +2,7 @@ import { GameLogic } from "./models/GameLogic.js"
 import Fastify from "fastify";
 import fastifyCors from "@fastify/cors";
 import GameRoutes from "./routes/gameRoutes.js"
+import { tournamentRoutes } from "./routes/TournamentRoute.js";
 
 const fastify = Fastify({ logger: true });
 
@@ -11,6 +12,7 @@ fastify.register(fastifyCors, {
 });
 
 fastify.register(GameRoutes);
+fastify.register(tournamentRoutes);
 
 
 const start = async () => {

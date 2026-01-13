@@ -55,6 +55,13 @@ export default class GameRoom {
       winnerId === this.player1.data.userId
         ? this.player2.data.userId
         : this.player1.data.userId;
+
+        await fetch(`http://localhost:3003/tournamentwinner/${winnerId}`, {
+          method: "POST",
+        });
+        await fetch(`http://localhost:3003/tournamentloser/${loserId}`, {
+          method: "POST",
+        });
       
       // try {
       //         const db = await openDb();
