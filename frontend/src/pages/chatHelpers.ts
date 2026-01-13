@@ -194,11 +194,13 @@ export function updateContactStatusUI(
     `.contact-item[data-contact-id="${userId}"]`
   ) as HTMLElement | null;
 
-  if (!row) {
-    pendingPresence.set(userId, status);
-    console.warn("[presence] contact not rendered yet:", userId);
-    return;
-  }
+    if (!row) {
+        pendingPresence.set(userId, status);
+        console.warn("[presence] contact not rendered yet:", userId);
+        return;
+    }
+
+    console.log('[presence] updateContactStatusUI called for', userId, 'status=', status, 'rowExists=true');
 
   // update dataset safely
   row.dataset.contactStatus = status;
@@ -216,18 +218,21 @@ export function updateContactStatusUI(
     } else {
         dot.classList.add("bg-redRemove");
     }
+    console.log('[presence] updated dot for', userId, 'to', status);
 }
 
 export function applyPresenceToRenderedContacts() {
-        pendingPresence.forEach((status, userId) => {
-    const row = document.querySelector(
-      `.contact-item[data-contact-id="${userId}"]`
-    );
-    if (row) {
-      updateContactStatusUI(userId, status);
-      pendingPresence.delete(userId);
-    }
-  });
+    pendingPresence.forEach((status, userId) => {
+        const row = document.querySelector(
+            `.contact-item[data-contact-id="${userId}"]`
+        );
+        console.log('[presence] applyPresenceToRenderedContacts checking', userId, 'status=', status, 'rowExists=', !!row);
+        if (row) {
+            updateContactStatusUI(userId, status);
+            pendingPresence.delete(userId);
+            console.log('[presence] applied pending presence for', userId);
+        }
+    });
     }
 
 

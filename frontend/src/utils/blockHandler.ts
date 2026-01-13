@@ -66,13 +66,7 @@ export async function blockUser(blockerId: number | string, blockedId: number | 
         }
         console.log('User blocked successfully:', data);
         showBlockedMessage();
-        try {
-            if (socket && socket.connected) {
-                socket.emit('user_blocked', { blockedId, blockerId });
-            }
-        } catch (e) {
-            console.warn('failed to emit user_blocked', e);
-        }
+        // realtime notifications are handled by server-side controller; no socket emit from client
     } catch (error) {
         console.error('Error blocking user failed:', error);
     }
@@ -113,9 +107,7 @@ export async function unblockUser(blockerId: number | string, blockedId: number 
         }
         console.log('User unblocked successfully:', data);
         showMessageInput();
-        if (socket && socket.connected) {
-        socket.emit('user_unblocked', { unblockedId: blockedId, unblockedBy: blockerId });
-        }
+        // realtime notifications are handled by server-side controller; no socket emit from client
     } catch (error) {
         console.error('Error unblocking user failed:', error);
     }

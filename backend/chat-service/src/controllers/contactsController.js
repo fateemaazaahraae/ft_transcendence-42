@@ -1,4 +1,5 @@
 import db from '../config/db.js';
+import { socket as ioInstance } from './wsManager.js';
 // history service not used directly here; keep DB import
 
 const API_URL = process.env.API_URL || 'http://auth-service:3000';
@@ -102,11 +103,25 @@ export async function getContacts(request, reply) {
     }
 
     const displayName = username || String(f.friend_id).slice(0, 8);
+    // determine online status from socket rooms when possible
+    let status = 'offline';
+    try {
+      const isBlocked = blockedIds.has(String(f.friend_id));
+      if (!isBlocked && ioInstance && ioInstance.sockets && ioInstance.sockets.adapter && ioInstance.sockets.adapter.rooms) {
+        const room = ioInstance.sockets.adapter.rooms.get(String(f.friend_id));
+        const isOnline = room && room.size > 0;
+        if (isOnline) status = 'online';
+      }
+    } catch (e) {
+      // fallback to offline on error
+      status = 'offline';
+    }
+
     return {
       id: f.friend_id,
       username: displayName,
       avatar,
-      status: 'offline',
+      status,
       last_message: lastMsg?.content,
       last_message_time: lastMsg?.created_at,
       conversation_id: convo?.id,

@@ -191,13 +191,6 @@ export function listenForMessagesReceived(cb: (data: any) => void) {
 
 export function listenForBlockEvents(cb: (data: any) => void) {
     blockListeners.push(cb);
-
-    if (!socket) return;
-
-    socket.off("user_blocked");
-    socket.on("user_blocked", data => {
-        blockListeners.forEach(fn => fn(data));
-    });
 }
 
 //temporarly
