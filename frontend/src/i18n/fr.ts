@@ -67,6 +67,9 @@ const fr: translateDict = {
     leaveSent: "Votre progression pour ce match sera perdue.",
     stay: "Rester",
     waitP: "En attente des joueurs",
+    joinTour: "Rejoindre le tournoi",
+    join: "Rejoindre",
+    notSupp: "Ce jeu n’est pas compatible avec les téléphones et les tablettes. Veuillez utiliser un ordinateur portable ou de bureau pour jouer.",
 }
 
 export default fr;

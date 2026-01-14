@@ -1,4 +1,4 @@
-import { storeAchievements } from "./tournoi";
+import { storeAchievements } from "./tournoi.js";
 export default class GameRoom {
   constructor(io, roomId, player1Socket, player2Socket) {
     this.io = io;
