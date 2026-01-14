@@ -1,6 +1,6 @@
 import db from '../config/db.js';
 import { socket as ioInstance } from './wsManager.js';
-// history service not used directly here; keep DB import
+// history service not used directly here
 
 const API_URL = process.env.API_URL || 'http://auth-service:3000';
 const REL_SERVICE_URL = process.env.REL_SERVICE_URL || 'http://relationship-service:3002';
@@ -86,6 +86,8 @@ export async function getContacts(request, reply) {
     const lastMsg = convo ? db.prepare(
       'SELECT content, created_at FROM messages WHERE conversation_id = ? ORDER BY created_at DESC LIMIT 1'
     ).get(convo.id) : null;
+
+    
 
     let username = '';
     let avatar = '';

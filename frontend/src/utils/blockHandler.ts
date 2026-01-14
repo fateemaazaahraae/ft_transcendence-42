@@ -22,10 +22,10 @@ export function checkIfBlocked(blockerId: number | string, blockedId: number | s
         });
 }
 
-export function showBlockedMessage(){
-    //hide message input area 
+export function showBlockedMessage(hideInput: boolean = true){
+    // hide message input area only when requested (blocker UX)
     const messageInputDiv = document.getElementById('messageInputContainer') as HTMLElement;
-   if(messageInputDiv){
+   if(messageInputDiv && hideInput){
         messageInputDiv.classList.add('hidden');
     }
     const blockedDiv=document.getElementById('blockeddiv');

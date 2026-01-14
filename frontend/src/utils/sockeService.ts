@@ -33,16 +33,19 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
         socket = null;
     }
 
-    // Connect to chat service
+    // connect to chat service
     console.log('connecting to', serverUrl, 'with token?', !!token);
     const opts: any = {
         transports: ["websocket", "polling"],
         withCredentials: false,
-        // send raw token (without Bearer prefix) in auth so server can normalize
         auth: { token: token ? String(token).replace(/^Bearer\s+/i, '') : undefined },
-        // always use the proxied socket.io path so requests go through /ws
         path: '/ws/socket.io'
     };
+
+    // increase timeout and prefer polling first to avoid initial websocket timeout
+    opts.transports = ["polling", "websocket"];
+    opts.timeout = 20000; // 20s connection timeout
+    opts.reconnectionAttempts = Infinity;
 
     socket = io(serverUrl, opts);
 
@@ -57,7 +60,6 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
             try { cb(true); } catch (e) { console.warn('connection subscriber error', e); }
         });
 
-        // flush queued messages
         while (messageQueue.length > 0 && socket && connected) {
             const q = messageQueue.shift();
             if (!q) break;
@@ -75,10 +77,6 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
     });
 
     
-
-    // presence events: forward to registered listeners 
-    // socket.off("user_online");
-    // socket.off("user_offline");
     socket.on("user_online", ({ userId }) => {
         console.log('DBG recv user_online', userId);
         presenceListeners.forEach(cb => {
@@ -86,7 +84,7 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
         });
     });
     socket.on("user_offline", ({ userId }) => {
-        console.log('DBG recv user_offline', userId);
+        // console.log('DBG recv user_offline', userId);
         presenceListeners.forEach(cb => {
             try { cb(String(userId), 'offline'); } catch (e) { console.warn('presence listener error', e); }
         });
@@ -117,8 +115,7 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
     });
     });
 
-    // central friend_accepted handler: notify DOM and registered listeners
-    // socket.off('friend_accepted');
+  
     socket.on('friend_accepted', (payload: any) => {
           console.log(" FRONTEND RECEIVED friend_accepted");
         const friendId = payload?.friendId || payload?.userId || '';
@@ -159,7 +156,6 @@ export function sendMessage(receiverId: string | number, message: string, ack?: 
         return;
     }
 
-    // otherwise queue the message and return queued ack
     console.warn("socket not connected, queuing message", { socketExists: !!socket, socketId: socket?.id, connected });
     messageQueue.push({ to: receiverId, message, ack });
     if (ack) ack({ status: 'queued' });
@@ -180,13 +176,6 @@ export function subscribeConnection(cb: (isConnected: boolean) => void) {
 
 export function listenForMessagesReceived(cb: (data: any) => void) {
     messageListeners.push(cb);
-
-    // if (!socket) return;
-
-    // // socket.off("new_message");
-    // socket.on("new_message", (data) => {
-    //     messageListeners.forEach(fn => fn(data));
-    // });
 }
 
 export function listenForBlockEvents(cb: (data: any) => void) {
@@ -225,11 +214,6 @@ const friendListeners: Array<(userId: string) => void> = [];
 
 export function listenForFriendAccepted(cb: (userId: string) => void) {
   friendListeners.push(cb);
-
-//   socket?.on("friend_accepted", ({ userId }) => {
-//     console.log(" HHHHH === friend_accepted realtime received");
-//     friendListeners.forEach(fn => fn(String(userId)));
-//   });
 }
 
 

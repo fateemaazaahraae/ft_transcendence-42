@@ -39,7 +39,6 @@ async function isBlocked(authHeader, blockerId, blockedId) {
   try {
     const headers = {};
     if (authHeader) headers.Authorization = authHeader;
-    // for internal callers (no user authHeader) use service token if available
     const svc = process.env.SERVICE_TOKEN;
     if (!authHeader && svc) headers['x-service-token'] = svc;
 

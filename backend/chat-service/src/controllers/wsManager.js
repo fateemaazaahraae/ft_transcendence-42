@@ -6,8 +6,7 @@ import jwt from "jsonwebtoken";
 
 export let socket = null;
 const onlineUsers = new Map();
-// suppression map to prevent immediate re-online events after we emit offline due to block
-const reonlineSuppress = new Map(); // key -> expiry timestamp
+const reonlineSuppress = new Map(); 
 
 export function suppressReonline(recipientId, targetId, durationMs = 3000) {
   try {
@@ -38,7 +37,6 @@ export const initSocket = (server) => {
     cors: { origin: "*" }
   });
 
-  // export the io instance for other modules if needed
   socket = io;
 
   io.on("connection", async (socket) => {
@@ -203,6 +201,8 @@ export const initSocket = (server) => {
       }
     });
 
+    
+
     // // forward block notifications to the blocked user
     // socket.on('user_blocked', (payload) => {
     //   try {
@@ -248,7 +248,6 @@ export const initSocket = (server) => {
             onlineUsers.delete(userId);
             console.log('[presence] user_offline emit for', userId);
             try {
-              // emit user_offline only to users who may see this user's presence
               for (const [otherId] of onlineUsers.entries()) {
                 if (String(otherId) === String(userId)) continue;
                 try {
@@ -257,7 +256,7 @@ export const initSocket = (server) => {
                     console.log('[presence] skipping user_offline to', otherId, 'about', userId, '(blocked)');
                     continue;
                   }
-                  // do not suppress offline emits; just send them
+                  // do not suppress offline emits just send them
                   console.log('[presence] emitting user_offline to', otherId, 'about', userId);
                   io.to(String(otherId)).emit("user_offline", { userId });
                 } catch (e) { console.warn('[presence] per-recipient emit error', e); }
@@ -268,7 +267,6 @@ export const initSocket = (server) => {
           }
         }
       } catch (e) {
-        // don't let disconnect errors crash the server
         console.warn('disconnect handler error', e);
       }
       try { console.log('[presence] onlineUsers keys now:', Array.from(onlineUsers.keys())); } catch (e) {}

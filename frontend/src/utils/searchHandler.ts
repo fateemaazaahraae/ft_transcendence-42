@@ -9,7 +9,7 @@ export const debounce = <T extends (...args: any[]) => void>(fn: T, wait = 250) 
     };
 };
 
-// render contact item HTML
+
 const renderContactItem = (u: any, lastMsg = 'Search result') => {
     const status = u?.status || 'offline';
 
@@ -43,7 +43,7 @@ const renderContactItem = (u: any, lastMsg = 'Search result') => {
                     ${displayName}
                 </p>
                 
-                 <span
+                <span
                 class="unread-badge hidden ml-2 bg-red-500 text-white text-[10px]
                     rounded-full px-2 py-[2px]"
                 data-unread="0"
@@ -77,6 +77,22 @@ const renderToList = (users: any[], div: HTMLElement, getLastMsg = (u: any) => '
     }
     const html = users.map(u => renderContactItem(u, getLastMsg(u))).join('');
     div.innerHTML = html;
+    // restore  unread counts
+    try {
+        users.forEach(u => {
+            try {
+                const badge = div.querySelector(`.contact-item[data-contact-id="${u.id}"] .unread-badge`) as HTMLElement | null;
+                if (!badge) return;
+                const saved = localStorage.getItem(`unread:${String(u.id)}`);
+                if (saved != null) {
+                    const n = parseInt(saved, 10) || 0;
+                    badge.dataset.unread = String(n);
+                    badge.textContent = String(n);
+                    if (n > 0) badge.classList.remove('hidden'); else badge.classList.add('hidden');
+                }
+            } catch (e) {}
+        });
+    } catch (e) {}
 };
 
 export const searchUsers = (q: string, API_BASE_URL: string, CURRENT_USER_ID: string | number, onResults: (users: any[]) => void) => {

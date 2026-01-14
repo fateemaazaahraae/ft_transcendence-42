@@ -8,7 +8,6 @@ import { socket as ioInstance, suppressReonline } from "../controllers/wsManager
 export default fp(async (fastify) => {
 
   //get all contacts with last message
-  // require JWT for chat endpoints and populate request.user
   const ensureAuth = async (request, reply) => {
     try {
       const payload = await request.jwtVerify();
@@ -21,13 +20,12 @@ export default fp(async (fastify) => {
 
   fastify.get('/api/chats/contacts', { preHandler: ensureAuth }, getContacts);
 
-  // Internal endpoint used by relationship-service to notify chat-service
+  //  endpoint used by relationship-service to notify chat-service
   fastify.post('/internal/friend-accepted', async (request, reply) => {
     console.log("FRIEND ACCEPTED EVENT", request.body);
     const incomingServiceToken = request.headers['x-service-token'] || request.headers['X-Service-Token'];
     const serviceToken = process.env.SERVICE_TOKEN;
 
-    // If a SERVICE_TOKEN is set, require the header to match.
     if (serviceToken) {
       if (!incomingServiceToken || incomingServiceToken !== serviceToken) {
         request.log && request.log.warn && request.log.warn('internal friend-accepted: invalid or missing x-service-token');
@@ -57,7 +55,7 @@ export default fp(async (fastify) => {
     }
   });
 
-  // Internal endpoint: relationship-service notifies that a user blocked another
+  //relationship-service notifies that a user blocked another
   fastify.post('/internal/user-blocked', async (request, reply) => {
     const incomingServiceToken = request.headers['x-service-token'] || request.headers['X-Service-Token'];
     const serviceToken = process.env.SERVICE_TOKEN;
@@ -90,7 +88,7 @@ export default fp(async (fastify) => {
     }
   });
 
-  // Internal endpoint: relationship-service notifies that a user unblocked another
+
   fastify.post('/internal/user-unblocked', async (request, reply) => {
     const incomingServiceToken = request.headers['x-service-token'] || request.headers['X-Service-Token'];
     const serviceToken = process.env.SERVICE_TOKEN;
@@ -114,7 +112,7 @@ export default fp(async (fastify) => {
       io.to(String(blockedId)).emit('you_were_unblocked', { by });
       io.to(String(by)).emit('unblock_done', { target: blockedId });
 
-      // If unblocked user is online, inform the unblocking user
+      // if unblocked user is online inform the unblocking user
       try {
         const room = io.sockets && io.sockets.adapter && io.sockets.adapter.rooms && io.sockets.adapter.rooms.get(String(blockedId));
         const isOnline = room && room.size > 0;

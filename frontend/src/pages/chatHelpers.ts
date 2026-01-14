@@ -196,11 +196,10 @@ export function updateContactStatusUI(
 
     if (!row) {
         pendingPresence.set(userId, status);
-        console.warn("[presence] contact not rendered yet:", userId);
         return;
     }
 
-    console.log('[presence] updateContactStatusUI called for', userId, 'status=', status, 'rowExists=true');
+    // console.log('[presence] updateContactStatusUI called for', userId, 'status=', status, 'rowExists=true');
 
   // update dataset safely
   row.dataset.contactStatus = status;
@@ -210,7 +209,6 @@ export function updateContactStatusUI(
     console.warn("[presence] status dot not found:", userId);
     return;
   }
-    // remove any known status classes (support both old and new class names)
     dot.classList.remove("bg-green-500", "bg-gray-400", "bg-greenAdd", "bg-redRemove");
 
     if (status === "online") {
