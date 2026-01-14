@@ -28,7 +28,6 @@ export async function storeAchievements(winnerId)
     `SELECT trophyId FROM achievements WHERE winnerId = ?`,[winnerId]
   );
 
-  console.log(`*&&&&&&&&&&&&${trophies}\n\n\n`);
   if (trophies.length < 6)
   {
       await db.run(

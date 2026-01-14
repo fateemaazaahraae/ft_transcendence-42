@@ -173,14 +173,12 @@ export async function tournamentChoicesEventListener() {
 			});
 			
 			const data = await res.json();
-			if (!res.ok){frontend/src/pages/tournamentChoices.ts
+			if (!res.ok){
 				showAlert("Tournament creation failed");
 				return;
 			}
 			tournamentId = data.tournament.id;
-			
-			console.log("Tournament created:", data);
-			console.log("w lId dialha howa:", tournamentId);
+
 			handleTournamentbtn(tournamentId, nickName, tourName);
 			
 		} catch (err) {

@@ -88,8 +88,18 @@ export const StartTournament = (server) => {
           }
         }
 
+        let ThereIsFinalist = false;
+
+        socket.on("finalist_quit", (data) => {
+            console.log("someone QUUUUUUUUIIIIIT*********^^^\N\N");
+          if (QueueState.finalists === 1 && ThereIsFinalist) {
+            console.log("FINAAAAAAAAAAAAAAAAAAAALIST QUIIIIIIIIIIIT*********^^^\N\N");
+            handleLeave(data.tournamentId);
+          }
+        });
+
         socket.on('GoToFinal', (data) => {
-          console.log(`\n\n🔥Let'sss go to the final yalaaah🔥\n\n`);
+          console.log(`🔥Let'sss go to the final yalaaah🔥`);
           let WinnerSide = 1;
           const tId = socket.data.tournamentId;
           
@@ -109,6 +119,7 @@ export const StartTournament = (server) => {
           if (!QueueState.finalists) QueueState.finalists = [];
           
           if (!QueueState.finalists.includes(socket)) {
+            ThereIsFinalist = true;
             QueueState.finalists.push(socket);
             QueueState.finalistNickname.push(data.winnerNickname);
           }

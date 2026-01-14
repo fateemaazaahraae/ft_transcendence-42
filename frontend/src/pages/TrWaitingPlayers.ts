@@ -197,19 +197,13 @@ export function TrWaitingPlayersEventListener() {
 
     if (data.avatars.length < 5) return;
 
-    if (data.avatars.length === 5) {
-      const finalSlot = data.WinnerSide === 1 ? "opponent5" : "opponent6";
-      setOpponent(finalSlot, data.avatars[4]);
+    if (data.avatars.length === 1) {
+      const finalSlot = "opponent1";
+      setOpponent(finalSlot, data.avatars[0]);
     }
 
-    if (data.avatars.length === 6) {
-      if (data.WinnerSide === 1) {
-        setOpponent("opponent5", data.avatars[5]);
-        setOpponent("opponent6", data.avatars[4]);
-      } else {
-        setOpponent("opponent6", data.avatars[5]);
-        setOpponent("opponent5", data.avatars[4]);
-      }
+    if (data.avatars.length === 2) {
+      setOpponent("opponent3", data.avatars[1]);
     }
   });
 
