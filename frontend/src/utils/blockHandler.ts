@@ -1,6 +1,6 @@
 import { socket } from "./sockeService.ts";
 
-// Resolve API base in the same way other pages do so requests go to the chat-service proxy.
+
 const HOST = window.location.hostname;
 const PROTO = window.location.protocol;
 const API_BASE = (PROTO === 'https:') ? `${window.location.origin}/api` : `${PROTO}//${HOST}:4000/api`;
@@ -23,7 +23,7 @@ export function checkIfBlocked(blockerId: number | string, blockedId: number | s
 }
 
 export function showBlockedMessage(hideInput: boolean = true){
-    // hide message input area only when requested (blocker UX)
+    // hide message input area only when requested 
     const messageInputDiv = document.getElementById('messageInputContainer') as HTMLElement;
    if(messageInputDiv && hideInput){
         messageInputDiv.classList.add('hidden');
@@ -48,9 +48,9 @@ export async function blockUser(blockerId: number | string, blockedId: number | 
     }
     const token = localStorage.getItem('token') || '';
     try {
-        console.log('[frontend] blockUser payload:', { blockedId }, 'tokenPresent:', !!token);
+        
 
-        // then the existing fetch...
+        // then the existing fetch
         const res = await fetch(`${API_BASE}/block`, {
         method: 'POST',
         headers: {
@@ -64,9 +64,9 @@ export async function blockUser(blockerId: number | string, blockedId: number | 
             console.error('blockUser failed', res.status, data);
             return;
         }
-        console.log('User blocked successfully:', data);
+        
         showBlockedMessage();
-        // realtime notifications are handled by server-side controller; no socket emit from client
+        // realtime notifications are handled by server-side controller
     } catch (error) {
         console.error('Error blocking user failed:', error);
     }
@@ -105,9 +105,9 @@ export async function unblockUser(blockerId: number | string, blockedId: number 
             console.error('unblockUser failed', res.status, data);
             return;
         }
-        console.log('User unblocked successfully:', data);
+        
         showMessageInput();
-        // realtime notifications are handled by server-side controller; no socket emit from client
+        // realtime notifications are handled by server-side controller
     } catch (error) {
         console.error('Error unblocking user failed:', error);
     }

@@ -17,6 +17,7 @@ const connectionSubscribers: Array<(isConnected: boolean) => void> = [];
 const messageListeners: Array<(data: any) => void> = [];
 const blockListeners: Array<(data: any) => void> = [];
 const presenceListeners: Array<(userId: string, status: 'online' | 'offline') => void> = [];
+const profileListeners: Array<(payload: any) => void> = [];
 
 
 export function initializeSocket(userId: string | number, serverUrl: string, token?: string) {
@@ -34,7 +35,7 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
     }
 
     // connect to chat service
-    console.log('connecting to', serverUrl, 'with token?', !!token);
+    
     const opts: any = {
         transports: ["websocket", "polling"],
         withCredentials: false,
@@ -53,7 +54,7 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
     // friend accepted 
     socket.on("connect", () => {
        
-         console.log("SOCKET CONNECTED", socket?.id);
+        
         connected = true;
         // notify subscribers
         connectionSubscribers.forEach(cb => {
@@ -78,7 +79,7 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
 
     
     socket.on("user_online", ({ userId }) => {
-        console.log('DBG recv user_online', userId);
+        
         presenceListeners.forEach(cb => {
             try { cb(String(userId), 'online'); } catch (e) { console.warn('presence listener error', e); }
         });
@@ -93,7 +94,7 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
 
     // receive initial snapshot of online users
         socket.on("online_users", (userIds: string[]) => {
-            console.log("DBG recv online_users snapshot", userIds);
+            
 
             userIds.forEach((id) => {
                 presenceListeners.forEach(cb => {
@@ -115,11 +116,19 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
     });
     });
 
+    // profile/avatar updates
+    socket.on('profile_updated', (payload: any) => {
+        try {
+            
+            profileListeners.forEach(cb => {
+                try { cb(payload); } catch (e) { console.warn('profile listener callback failed', e); }
+            });
+        } catch (e) { console.warn('profile_updated handler failed', e); }
+    });
+
   
     socket.on('friend_accepted', (payload: any) => {
-          console.log(" FRONTEND RECEIVED friend_accepted");
-        const friendId = payload?.friendId || payload?.userId || '';
-        console.log('DBG recv friend_accepted', friendId);
+                const friendId = payload?.friendId || payload?.userId || '';
 
         friendListeners.forEach(fn => {
             try { fn(String(friendId)); } catch (e) { console.warn('friend listener error', e); }
@@ -180,6 +189,14 @@ export function listenForMessagesReceived(cb: (data: any) => void) {
 
 export function listenForBlockEvents(cb: (data: any) => void) {
     blockListeners.push(cb);
+}
+
+export function listenForProfileUpdates(cb: (payload: any) => void) {
+    profileListeners.push(cb);
+    return () => {
+        const idx = profileListeners.indexOf(cb);
+        if (idx !== -1) profileListeners.splice(idx, 1);
+    };
 }
 
 //temporarly

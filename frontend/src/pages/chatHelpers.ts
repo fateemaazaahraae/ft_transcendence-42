@@ -1,6 +1,19 @@
  
 const pendingPresence = new Map<string, "online" | "offline">();
 
+// Normalize avatar/image paths to a usable URL for <img src>
+function resolveAvatar(img?: string | null): string {
+    const origin = window.location.origin;
+    if (!img) return '/default.png';
+    if (/^https?:\/\//.test(img)) return img;
+    if (img.startsWith('/')) return `${origin}${img}`;
+    const cleaned = String(img)
+        .replace(/^(?:\.\.\/|\.\/)+/, "")
+        .replace(/^public\//, "")
+        .replace(/^\/+/, "");
+    return `${origin}/${cleaned}`.replace(/([^:]\/)\/+/, "$1");
+}
+
 let activeChatUserId: string | null = null;
 
 export function setActiveChatUser(userId: string | null) {
@@ -100,9 +113,9 @@ export function renderSingleMessage(message:{
 
     const timeStr = new Date((message as any).created_at ? ((message as any).created_at as number) * 1000 : Date.now()).toLocaleTimeString([], {hour: '2-digit',minute: '2-digit',hour12:false});
 
-    const myAvatar = (currentUserAvatar && String(currentUserAvatar).trim() !== '') ? currentUserAvatar : '/green-girl.svg';
-    const messageAvatar = (message as any).senderAvatar || '';
-    const friendAvatarUrl = friendAvatar || messageAvatar || '/default.png';
+    const myAvatar = resolveAvatar((currentUserAvatar && String(currentUserAvatar).trim() !== '') ? currentUserAvatar : '/green-girl.svg');
+    const messageAvatar = resolveAvatar((message as any).senderAvatar || '');
+    const friendAvatarUrl = resolveAvatar(friendAvatar || messageAvatar || '/default.png');
 
         if (isSender) {
         messageDiv.innerHTML = `
@@ -120,11 +133,19 @@ export function renderSingleMessage(message:{
             </div>
         `;
     } else {
+        // determine avatar to display for this incoming message
+        const senderId = String((message as any).sender_id || '');
+        const activeContactId = localStorage.getItem('activeContactId') || activeChatUserId || '';
+        const headerAvatar = localStorage.getItem('activeContactAvatar') || '';
+        const avatarSrc = (!isSender && senderId && activeContactId && String(senderId) === String(activeContactId) && headerAvatar)
+            ? resolveAvatar(headerAvatar)
+            : ((message as any).senderAvatar ? messageAvatar : friendAvatarUrl);
+
         messageDiv.innerHTML = `
             <div class="flex flex-col items-start mb-4 w-full pl-4">
                 <div class="flex flex-col items-start w-auto">
                  <div class="flex items-end gap-2">
-                        <img src="${(message as any).senderAvatar ? messageAvatar : friendAvatarUrl}" data-sender-id="${(message as any).sender_id}" class="w-12 h-12 object-cover border border-primary rounded-full flex-shrink-0 ">
+                        <img src="${avatarSrc}" data-sender-id="${(message as any).sender_id}" class="w-12 h-12 object-cover border border-primary rounded-full flex-shrink-0 ">
                         <div class="bg-primary/20 text-white text-sm p-3 rounded-xl rounded-bl-none break-words max-w-[250px]">
                             ${message.content || ""}
                         </div>
@@ -161,7 +182,32 @@ export function updateContactLastMessage(contactId: string, msg: any) {
     row.parentElement?.prepend(row);
 }
 
-export function updateUnreadBadge(contactId: string | number, increment = true) {
+// recent message signatures per contact used to avoid counting the same message twice
+const recentMessageSignatures: Map<string, Set<string>> = new Map();
+
+function markSignatureSeen(contactId: string | number, sig: string, ttl = 30000) {
+    try {
+        const key = String(contactId);
+        let set = recentMessageSignatures.get(key);
+        if (!set) {
+            set = new Set();
+            recentMessageSignatures.set(key, set);
+        }
+        set.add(sig);
+        // schedule removal
+        setTimeout(() => { set?.delete(sig); }, ttl);
+    } catch (e) {}
+}
+
+function hasSeenSignature(contactId: string | number, sig: string) {
+    try {
+        const key = String(contactId);
+        const set = recentMessageSignatures.get(key);
+        return set ? set.has(sig) : false;
+    } catch (e) { return false; }
+}
+
+export function updateUnreadBadge(contactId: string | number, increment = true, signature?: string) {
     const row = document.querySelector(
         `.contact-item[data-contact-id="${String(contactId)}"]`
     ) as HTMLElement | null;
@@ -170,6 +216,16 @@ export function updateUnreadBadge(contactId: string | number, increment = true) 
 
     const badge = row.querySelector(".unread-badge") as HTMLElement | null;
     if (!badge) return;
+
+    // dedupe using signature when incrementing
+    if (increment && signature) {
+        if (hasSeenSignature(contactId, signature)) {
+            // already counted recently
+            return;
+        }
+        // mark as seen so duplicates won't increment
+        markSignatureSeen(contactId, signature);
+    }
 
     let count = parseInt(badge.dataset.unread || "0", 10);
 
@@ -183,6 +239,18 @@ export function updateUnreadBadge(contactId: string | number, increment = true) 
         badge.classList.remove("hidden");
     } else {
         badge.classList.add("hidden");
+    }
+    try { persistUnreadCount(contactId, count); } catch (e) { console.warn('persist unread failed', e); }
+}
+
+//  store per-contact key `unread:<contactId>` in localStorage
+export function persistUnreadCount(contactId: string | number, count: number) {
+    try {
+        const key = `unread:${String(contactId)}`;
+        if (count > 0) localStorage.setItem(key, String(count));
+        else localStorage.removeItem(key);
+    } catch (e) {
+        console.warn('persistUnreadCount failed', e);
     }
 }
 
@@ -199,7 +267,7 @@ export function updateContactStatusUI(
         return;
     }
 
-    // console.log('[presence] updateContactStatusUI called for', userId, 'status=', status, 'rowExists=true');
+    
 
   // update dataset safely
   row.dataset.contactStatus = status;
@@ -216,7 +284,7 @@ export function updateContactStatusUI(
     } else {
         dot.classList.add("bg-redRemove");
     }
-    console.log('[presence] updated dot for', userId, 'to', status);
+    
 }
 
 export function applyPresenceToRenderedContacts() {
@@ -224,11 +292,11 @@ export function applyPresenceToRenderedContacts() {
         const row = document.querySelector(
             `.contact-item[data-contact-id="${userId}"]`
         );
-        console.log('[presence] applyPresenceToRenderedContacts checking', userId, 'status=', status, 'rowExists=', !!row);
+        
         if (row) {
             updateContactStatusUI(userId, status);
             pendingPresence.delete(userId);
-            console.log('[presence] applied pending presence for', userId);
+            
         }
     });
     }

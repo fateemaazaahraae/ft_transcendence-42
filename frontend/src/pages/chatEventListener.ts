@@ -3,7 +3,7 @@ import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../ut
 import { loadUser } from "../utils/loadUser.ts";
 import { viewFriendProfile } from "./viewFriendProfile.ts";
 import { blockUser, checkIfBlocked, showMessageInput, showBlockedMessage } from "../utils/blockHandler.ts";
-import { socket, initializeSocket, sendMessage, listenForMessagesReceived, subscribeConnection, listenForBlockEvents, listenForPresenceEvents,listenForFriendAccepted } from "../utils/sockeService.ts";
+import { socket, initializeSocket, sendMessage, listenForMessagesReceived, subscribeConnection, listenForBlockEvents, listenForPresenceEvents, listenForFriendAccepted, listenForProfileUpdates } from "../utils/sockeService.ts";
 import { setUserOnline, setUserOffline } from "../utils/presenceStore.ts";
 import {
     updateChatHeader,
@@ -227,7 +227,30 @@ export function ChatEventListener() {
             } catch (e) { console.warn('you_were_blocked handler update failed', e); }
 
             if (String(ACTIVE_CHAT_CONTACT_ID) === by) {
-                showBlockedMessage(false);
+                // On mobile close the active chat and show only contacts
+                if (window.innerWidth < 768) {
+                    // show blocked banner and then close chat UI
+                    showBlockedMessage();
+                    ACTIVE_CHAT_CONTACT_ID = null;
+                    setActiveChatUser(null);
+                    setChatUIState(false);
+                    try {
+                        localStorage.removeItem('activeContactId');
+                        localStorage.removeItem('activeContactUsername');
+                        localStorage.removeItem('activeContactAvatar');
+                        localStorage.removeItem('activeContactStatus');
+                    } catch (e) {}
+                    document.getElementById('messageInputContainer')?.classList.add('hidden');
+                    const chatDiv = document.getElementById('messagesPanel');
+                    if (chatDiv) {
+                        chatDiv.innerHTML = `<div class="flex-1 flex items-center justify-center h-full">\n                            <h1 class="text-center text-primary/65 font-bold text-4xl">Ping Pong<br>Chat</h1>\n                        </div>`;
+                    }
+                    contactsSide?.classList.remove('hidden');
+                    chat?.classList.add('hidden');
+                } else {
+                    // Desktop: show blocked banner but keep chat open
+                    showBlockedMessage(false);
+                }
             }
         });
 
@@ -273,6 +296,45 @@ export function ChatEventListener() {
         socket?.on("you_were_unblocked", () => {
             try { applyPresenceToRenderedContacts(); } catch (e) { console.warn('you_were_unblocked handler failed', e); }
         });
+
+        try {
+            // register profile update listener realtime avatar changes
+            listenForProfileUpdates((payload: any) => {
+                try {
+                    
+                    const userId = String(payload?.userId || payload?.id || '');
+                    const newAvatar = payload?.profileImage || payload?.profile_image || payload?.avatar || '';
+                    if (!userId) return;
+
+                    // normalize avatar using resolveChatAvatar helper
+                    const norm = resolveChatAvatar(newAvatar || '/default.png');
+
+                    // update rendered contact row image and data attribute
+                    const row = document.querySelector(`.contact-item[data-contact-id="${userId}"]`) as HTMLElement | null;
+                    if (row) {
+                        row.setAttribute('data-contact-avatar', norm);
+                        row.dataset.contactAvatar = norm;
+                        const img = row.querySelector('img') as HTMLImageElement | null;
+                        if (img) img.src = norm;
+                    }
+
+                    // if this user is the active chat user, update header and message avatars cache
+                    if (String(getActiveChatUser()) === userId) {
+                        try {
+                            const normLocal = norm;
+                            const headerImg = document.getElementById('chatContactAvatar') as HTMLImageElement | null;
+                            if (headerImg) headerImg.src = normLocal;
+                            try { localStorage.setItem('activeContactAvatar', normLocal); } catch (e) {}
+                            // update any rendered message avatar images for this sender
+                            document.querySelectorAll(`[data-sender-id="${userId}"]`).forEach((el) => {
+                                if (el instanceof HTMLImageElement) el.src = norm;
+                                else if (el.querySelector && el.querySelector('img')) (el.querySelector('img') as HTMLImageElement).src = norm;
+                            });
+                        } catch (e) { console.warn('failed to update active chat avatar', e); }
+                    }
+                } catch (e) { console.warn('profile_updated listener failed', e); }
+            });
+        } catch (e) { console.warn('listenForProfileUpdates setup failed', e); }
         
     }
 
@@ -395,9 +457,18 @@ export function ChatEventListener() {
                         chatDiv.innerHTML = `<div class="flex-1 flex items-center justify-center h-full">\n                            <h1 class="text-center text-primary/65 font-bold text-4xl">Ping Pong<br>Chat</h1>\n                        </div>`;
                     }
 
-                    contactsSide?.classList.remove("hidden");
-                    chat?.classList.remove("hidden");
-                    chat?.classList.add("flex");
+                    // On mobile we should show contacts and hide the chat pane
+                    if (window.innerWidth < 768) {
+                        contactsSide?.classList.remove("hidden");
+                        chat?.classList.add("hidden");
+                        chat?.classList.remove("flex");
+                        // hide messages panel on mobile to avoid overlaying contacts
+                        document.getElementById("messagesPanel")?.classList.add("hidden");
+                    } else {
+                        contactsSide?.classList.remove("hidden");
+                        chat?.classList.remove("hidden");
+                        chat?.classList.add("flex");
+                    }
                     document.getElementById("dropdownMenu")?.classList.add("hidden");
                 })();
             }
@@ -728,7 +799,7 @@ export function ChatEventListener() {
             // register friend-accepted listener after contacts list exists
             try {
                 listenForFriendAccepted(() => {
-                    console.log(" FETCH CONTACTS TRIGGERED");
+                    
                     // re-fetch contacts when a friend is accepted
                     fetchContacts(API_BASE_URL, CURRENT_USER_ID, contactsListDiv, () => {
                         attachContactClickListeners(contactsListDiv, handleContactSelect);
@@ -847,20 +918,34 @@ export function ChatEventListener() {
         if(otherId) {
             updateContactLastMessage(otherId, msg);
         }
-        if(!isForActiveChat && otherId)
-            updateUnreadBadge(otherId, true);
+        if(!isForActiveChat && otherId) {
+            // build a lightweight dedupe signature for this message to avoid double counting
+            const created = msg.created_at || msg.createdAt || msg.timestamp || 0;
+            const snippet = String(msg.content || '').slice(0, 40);
+            const msgId = msg.id || msg.message_id || '';
+            const signature = `${msgId}:${otherId}:${msg.sender_id}:${created}:${snippet}`;
+            updateUnreadBadge(otherId, true, signature);
+        }
         if (messagesPanel && isForActiveChat && ACTIVE_CHAT_CONTACT_ID) {
             const isSenderMe = String(msg.sender_id) === String(CURRENT_USER_ID);
 
             const raw =
-                localStorage.getItem('activeContactAvatar')
-                || sessionStorage.getItem('avatar:' + String(msg.sender_id))
+                sessionStorage.getItem('avatar:' + String(msg.sender_id))
                 || msg.senderAvatar
                 || '/default.png';
 
-            const avatarToUse = isSenderMe
-                ? CURRENT_USER_AVATAR
-                : (resolveChatAvatar(raw) || '/default.png');
+            // Prefer the chat header's active contact avatar for messages from the active contact
+            let avatarToUse: string;
+            if (isSenderMe) {
+                avatarToUse = CURRENT_USER_AVATAR;
+            } else {
+                const activeHeaderAvatar = localStorage.getItem('activeContactAvatar');
+                if (String(msg.sender_id) === String(ACTIVE_CHAT_CONTACT_ID) && activeHeaderAvatar) {
+                    avatarToUse = resolveChatAvatar(activeHeaderAvatar) || '/default.png';
+                } else {
+                    avatarToUse = resolveChatAvatar(raw) || '/default.png';
+                }
+            }
 
             renderSingleMessage(msg, isSenderMe, messagesPanel, CURRENT_USER_AVATAR, avatarToUse);
         }

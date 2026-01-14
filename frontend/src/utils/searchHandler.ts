@@ -2,19 +2,19 @@
 // search and contacts management
 
 export const debounce = <T extends (...args: any[]) => void>(fn: T, wait = 250) => {
-    let t: number;
+    let t: ReturnType<typeof setTimeout>;
     return (...args: Parameters<T>) => {
-        clearTimeout(t);
+        clearTimeout(t as any);
         t = setTimeout(() => fn(...args), wait);
     };
 };
 
 
-const renderContactItem = (u: any, lastMsg = 'Search result') => {
+const renderContactItem = (u: any, lastMsg = 'Search result', hideStatus = false) => {
     const status = u?.status || 'offline';
 
-    // hide status dot for blocked contacts
-    const statusClass = u?.isBlocked ? 'hidden' : (status === 'online' ? 'bg-greenAdd' : 'bg-redRemove');
+    // hide status dot for blocked contacts 
+    const statusClass = (hideStatus || u?.isBlocked) ? 'hidden' : (status === 'online' ? 'bg-greenAdd' : 'bg-redRemove');
     
     const avatar = u?.avatar || 'default.svg';
 
@@ -36,46 +36,46 @@ const renderContactItem = (u: any, lastMsg = 'Search result') => {
                 <img src="${avatar}" class="w-12 h-12 object-cover border border-primary rounded-full">
                 <div id="status-${u.id}" class="absolute bottom-0 right-0 w-3 h-3 rounded-full ${statusClass}"></div>
             </div>
-            <div class="w-full">
-            
-                <div class="flex w-full items-start">
-                <p class="font-medium text-sm text-secondary truncate">
-                    ${displayName}
-                </p>
-                
-                <span
-                class="unread-badge hidden ml-2 bg-red-500 text-white text-[10px]
-                    rounded-full px-2 py-[2px]"
-                data-unread="0"
-            >
-                0
-            </span>
-                <span class="last-message-time ml-auto text-[11px] text-gray-400">
-                    ${timeStr}
-                </span>
+            <div class="w-full flex flex-col">
+                <div class="flex items-center gap-2">
+                    <p class="font-medium text-sm text-secondary truncate">
+                        ${displayName}
+                    </p>
+                    <div class="ml-auto flex items-start">
+                        ${(() => {
+                            const ucount = (typeof u?.unread === 'number') ? u.unread : (typeof u?.unread_count === 'number' ? u.unread_count : 0);
+                            const badgeClass = ucount > 0 ? '' : 'hidden';
+                            const badgeText = ucount > 0 ? String(ucount) : '';
+                            return `<span class="unread-badge ${badgeClass} bg-red-500 text-white text-[10px] rounded-full px-2 py-[2px] self-start" data-unread="${badgeText}">${badgeText}</span>`;
+                        })()}
+                    </div>
+                </div>
+
+                <div class="flex items-end w-full mt-1">
+                    <p class="last-message text-xs text-gray-200 truncate">
+                        ${lastMsg}
+                    </p>
+                    <div class="ml-auto flex items-end gap-2">
+                        <span class="last-message-time text-[11px] text-gray-400 self-end">
+                            ${timeStr}
+                        </span>
+                    </div>
+                </div>
             </div>
-
-            
-            <p class="last-message text-xs text-gray-200 max-w-[200px] truncate">
-                ${lastMsg}
-            </p>
-        </div>
-
-        </div>
     `;
 };
 
 // render users to contact list
-const renderToList = (users: any[], div: HTMLElement, getLastMsg = (u: any) => 'Search result') => {
+const renderToList = (users: any[], div: HTMLElement, getLastMsg = (u: any) => 'Search result', hideStatus = false) => {
     if (!Array.isArray(users)) {
         console.error('renderToList: expected users array but got:', users);
         return;
     }
-    console.log('renderToList: rendering', users.length, 'users');
+    
     if (users.length > 0) {
-        try { console.log('First user sample:', JSON.stringify(users[0]).substring(0, 150)); } catch (e) {}
+        try { /* no-op debug removed */ } catch (e) {}
     }
-    const html = users.map(u => renderContactItem(u, getLastMsg(u))).join('');
+    const html = users.map(u => renderContactItem(u, getLastMsg(u), hideStatus)).join('');
     div.innerHTML = html;
     // restore  unread counts
     try {
@@ -114,22 +114,23 @@ export const searchUsers = (q: string, API_BASE_URL: string, CURRENT_USER_ID: st
 };
 
 export const renderSearchResults = (users: any[], div: HTMLElement) => {
-    renderToList(users, div);
+    // hide status dot when rendering search results
+    renderToList(users, div, (u: any) => 'Search result', true);
 };
 
 export const fetchContacts = (API_BASE_URL: string, CURRENT_USER_ID: string | number, div: HTMLElement, onComplete?: () => void) => {
-    console.log('fetchContacts: user=', CURRENT_USER_ID, 'div exists=', !!div);
+    
     const token = localStorage.getItem('token');
     const url = `${API_BASE_URL}/chats/contacts`;
-    console.log('fetching from:', url);
+    
     
     fetch(url, {
          headers: { 'Authorization': `Bearer ${token}` }
         })
         .then(async (res) => {
-            console.log('fetchContacts response status:', res.status, url);
+            
             const text = await res.text().catch(() => null);
-            console.log('fetchContacts raw body:', text);
+            
             let contacts: any = null;
             contacts = text ? JSON.parse(text) : null;
            
@@ -139,7 +140,7 @@ export const fetchContacts = (API_BASE_URL: string, CURRENT_USER_ID: string | nu
                 onComplete?.();
                 return;
             }
-            console.log('received', contacts);
+            
             renderToList(contacts, div, c => c.last_message || 'No messages yet.');
             onComplete?.();
         })

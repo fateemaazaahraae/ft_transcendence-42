@@ -22,7 +22,7 @@ export default fp(async (fastify) => {
 
   //  endpoint used by relationship-service to notify chat-service
   fastify.post('/internal/friend-accepted', async (request, reply) => {
-    console.log("FRIEND ACCEPTED EVENT", request.body);
+    
     const incomingServiceToken = request.headers['x-service-token'] || request.headers['X-Service-Token'];
     const serviceToken = process.env.SERVICE_TOKEN;
 
@@ -47,7 +47,7 @@ export default fp(async (fastify) => {
     try {
       io.to(String(userId)).emit('friend_accepted', { friendId });
       io.to(String(friendId)).emit('friend_accepted', { friendId: userId });
-      console.log('[internal] emitted friend_accepted to', userId, 'and', friendId);
+      
       return reply.send({ success: true });
     } catch (e) {
       request.log && request.log.error && request.log.error('failed to emit friend_accepted', e);

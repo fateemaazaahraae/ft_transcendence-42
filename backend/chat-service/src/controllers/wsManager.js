@@ -15,7 +15,6 @@ export function suppressReonline(recipientId, targetId, durationMs = 3000) {
     reonlineSuppress.set(key, expiry);
     // schedule cleanup
     setTimeout(() => { try { reonlineSuppress.delete(key); } catch(e) {} }, durationMs + 50);
-    console.log('[presence] suppressReonline set', key, 'until', new Date(expiry).toISOString());
   } catch (e) {
     console.warn('suppressReonline error', e);
   }
@@ -63,13 +62,12 @@ export const initSocket = (server) => {
 
     const userId = decoded.id;
     socket.data.userId = userId;
-    console.log('[ws] connection from socket', socket.id, 'user=', userId);
+    
 
     //friend accepted
     // io
 
   if (!userId) {
-    console.log(" NO USER ID");
     return;
   }
 
@@ -100,12 +98,11 @@ export const initSocket = (server) => {
             if (await canSeePresence(userId, other)) {
               visible.push(other);
             } else {
-              console.log('[presence] snapshot - filtering out', other, 'for', userId);
+              // filtered from presence snapshot
             }
         } catch (e) {}
       }
       socket.emit("online_users", visible);
-      console.log('[presence] sent online_users', userId, visible);
     } catch (e) {
       console.warn('online_users snapshot error', e);
     }
@@ -116,7 +113,6 @@ export const initSocket = (server) => {
 
     // only emit user_online when the first socket for this user connects
     if (current.size === 1) {
-      console.log('[presence] user_online emit for', userId, 'onlineCount=', current.size);
       try {
         // emit user_online only to users who may see this user's presence
         for (const [otherId, socketset] of onlineUsers.entries()) {
@@ -124,20 +120,18 @@ export const initSocket = (server) => {
           try {
             const allowed = await canSeePresence(otherId, userId);
             if (!allowed) {
-              console.log('[presence] skipping user_online to', otherId, 'about', userId, '(blocked)');
               continue;
             }
             if (isReonlineSuppressed(otherId, userId)) {
-              console.log('[presence] skipping user_online to', otherId, 'about', userId, '(suppressed)');
               continue;
             }
-            console.log('[presence] emitting user_online to', otherId, 'about', userId);
             io.to(String(otherId)).emit("user_online", { userId });
           } catch (e) { console.warn('[presence] per-recipient emit error', e); }
         }
       } catch (e) { console.warn('presence emit error', e); }
     }
-    try { console.log('[presence] onlineUsers keys now:', Array.from(onlineUsers.keys())); } catch (e) {}
+    
+
     socket.on("send_message", async (payload, ack) => {
       try {
         const { from, to, content } = payload;
@@ -149,8 +143,8 @@ export const initSocket = (server) => {
         const { convo, msg } = await history.sendMessage(from, to, content, authHeader);
         socket.to(to).emit("new_message", { conversation: convo, message: msg });
         
-        // Send a notification to notification-service (fire-and-forget, non-blocking)
-
+        
+        // send a notification to notification-service 
 
         try {
           const AUTH_URL = process.env.API_URL || 'http://auth-service:3000';
@@ -203,41 +197,6 @@ export const initSocket = (server) => {
 
     
 
-    // // forward block notifications to the blocked user
-    // socket.on('user_blocked', (payload) => {
-    //   try {
-    //     const { blockedId, blockerId } = payload || {};
-    //     if (!blockedId) return;
-    //     // validate emitter is the claimed blocker
-    //     if (String(socket.data.userId) !== String(blockerId)) {
-    //       console.warn('user_blocked: emitter userId mismatch', socket.data.userId, blockerId);
-    //       return;
-    //     }
-    //     socket.to(String(blockedId)).emit('you_were_blocked', { by: blockerId });
-
-    //     socket.to(String(blockerId)).emit('block_done', { target: blockedId });
-  
-    //   } catch (e) {
-    //     console.warn('user_blocked handler error', e);
-    //   }
-    // });
-
-    //         io.to(String(blockerId)).emit('block_done', { target: blockedId });
-    //     socket.on('user_unblocked', (payload) => {
-    //   try {
-    //     const { unblockedId, unblockedBy } = payload || {};
-    //     if (!unblockedId) return;
-    //     if (String(socket.data.userId) !== String(unblockedBy)) {
-    //       console.warn('user_unblocked: emitter mismatch', socket.data.userId, unblockedBy);
-    //       return;
-    //     }
-    //     socket.to(String(unblockedId)).emit('you_were_unblocked', { by: unblockedBy });
-    //       io.to(String(unblockedBy)).emit('unblock_done', { target: unblockedId });
-    //   } catch (e) {
-    //     console.warn('user_unblocked handler error', e);
-    //   }
-    // });
-
 
     socket.on("disconnect", async () => {
       try {
@@ -246,18 +205,16 @@ export const initSocket = (server) => {
           s.delete(socket.id);
           if (s.size === 0) {
             onlineUsers.delete(userId);
-            console.log('[presence] user_offline emit for', userId);
+            
             try {
               for (const [otherId] of onlineUsers.entries()) {
                 if (String(otherId) === String(userId)) continue;
                 try {
                   const allowed = await canSeePresence(otherId, userId);
                   if (!allowed) {
-                    console.log('[presence] skipping user_offline to', otherId, 'about', userId, '(blocked)');
                     continue;
                   }
                   // do not suppress offline emits just send them
-                  console.log('[presence] emitting user_offline to', otherId, 'about', userId);
                   io.to(String(otherId)).emit("user_offline", { userId });
                 } catch (e) { console.warn('[presence] per-recipient emit error', e); }
               }
