@@ -1,3 +1,4 @@
+import{ storeAchievements } from "../models/tournoi.js";
 
 export default class GameRoom {
   constructor(io, roomId, player1Socket, player2Socket) {
@@ -52,6 +53,7 @@ export default class GameRoom {
       this.stop();
 
       const winnerId = winnerSocket.data.userId;
+      const achievements = await storeAchievements(winnerId);
       const loserId =
       winnerId === this.player1.data.userId
         ? this.player2.data.userId
@@ -212,6 +214,8 @@ export default class GameRoom {
       winnerId === this.player1.data.userId
       ? this.player2.data.userId
       : this.player1.data.userId;
+      const achievements = await storeAchievements(winnerId);
+
 
       try {
         await fetch(`http://game-service:3003/tournamentwinner/${winnerId}`, {

@@ -2,21 +2,6 @@ import { Server } from "socket.io";
 import { createTournament } from "../models/tournoi.js";
 import { openDb } from "../models/db.js";
 
-// export const StartTournament = (server) => {
-
-//     const io = new Server(server, { cors: { origin: "*" }, methods: ["GET", "POST"] });
-    
-//     io.on('connection', (socket) => {
-//         const token = socket.handshake.auth.token;
-//         if (!token) { // check tocken (JWT)
-//             console.log('❌ Connection rejected: No token provided.');
-//             socket.disconnect();
-//             return;
-//         }
-//         console.log('I think we are connected!!');
-//     });
-// }
-
 export default async function TournamentRoutes(fastify) {
 
     fastify.post("/createTournament", async (request, reply) =>{
@@ -46,7 +31,7 @@ export default async function TournamentRoutes(fastify) {
         }
     });
 
-    // ---- GET TOURNAMENTS TABLE ---
+    //GET TOURNAMENTS TABLE
 
     fastify.get("/tournaments", async() => {
         const db = await openDb();
@@ -58,4 +43,26 @@ export default async function TournamentRoutes(fastify) {
         return tournaments;
     });
 
+    //GET ACHIEVEMENTS
+
+  fastify.get("/achievements/:id", async (req, reply) => {
+  const { id } = req.params; // UUID string
+  const db = await openDb();
+
+  const trophies = await db.all(
+    `
+    SELECT trophies.img_src
+    FROM achievements
+    JOIN trophies ON trophies.id = achievements.trophyId
+    WHERE achievements.winnerId = ?
+    `,
+    [id]
+  );
+
+  console.log("Achievements for user:", id, trophies); // debug
+  return trophies;
+});
+
+
 }
+

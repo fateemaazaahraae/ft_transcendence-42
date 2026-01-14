@@ -79,8 +79,9 @@ export async function tournamentChoices() {
 									tournaments.length === 0
 									? emptyAvTournaments
 									: tournaments.map(
-										(tour) => `
-											<div class="relative flex items-center bg-primary/50 rounded-[20px] px-6 py-[5px] w-full mx-auto">
+										(tour) => 
+										tour.players < 4 ?
+											`<div class="relative flex items-center bg-primary/50 rounded-[20px] px-6 py-[5px] w-full mx-auto">
 												<div class = "flex items-center justify-center w-[55px] h-[55px] border-[1.5px] rounded-full border-primary/60">
 													<img src="/golden_trophy.svg" class="w-[35px]"/>
 												</div>
@@ -98,6 +99,7 @@ export async function tournamentChoices() {
 
 											</div>
 										`
+										: ""
 									)
 									.join("")}
 						</div> 
@@ -107,7 +109,7 @@ export async function tournamentChoices() {
 				<!--JOIN TOURNAMENT MODAL -->
 				<div id="joinTour" class="fixed  inset-0 z-50 hidden items-center justify-center bg-black/70">
 					<div id="joinBox" class="flex flex-col justify-center items-center gap-6 w-[350px] h-[300px] rounded-3xl bg-black drop-shadow-pink">
-						<h3 id="title" class="text-3xl mt-10 font-glitch text-white/90"> Join Tournament </h3>
+						<h3 id="title" class="text-3xl mt-10 font-glitch text-center text-white/90"> Join Tournament </h3>
 						<input id="joinNick" type="text" placeholder="Nick name" class="mt-3 placeholder-white/70 w-[220px] bg-black drop-shadow-pink  rounded-2xl px-6 py-3 focus:outline-none focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] " />
 						<button data-i18n= "join" type="submit" id="joinBtn" class="bg-secondary/90 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary mb-16 mt-4 ">Join</button>
 					</div>
@@ -216,7 +218,7 @@ export function joinTournament(): string {
 	{
 		const title = document.getElementById("title");
 		if (title)
-			title.innerHTML = `Join Tournament </br> <span class="text-secondary ml-14">"${selectedTournamentName}"</span>`;
+			title.innerHTML = `Join Tournament </br> <span class="text-secondary ">"${selectedTournamentName}"</span>`;
 	}
     modal.classList.remove("hidden");
     modal.classList.add("flex");
