@@ -24,12 +24,19 @@ export async function storeAchievements(winnerId)
   );
 
   const trophyId = Math.min(countRow.count + 1, 6); // max 6 trophies
-
-  await db.run(
-    `INSERT INTO achievements (winnerId, trophyId)
-     VALUES (?, ?)`,
-    [winnerId, trophyId]
+  const trophies = await db.all(
+    `SELECT trophyId FROM achievements WHERE winnerId = ?`,[winnerId]
   );
+
+  console.log(`*&&&&&&&&&&&&${trophies}\n\n\n`);
+  if (trophies.length < 6)
+  {
+      await db.run(
+        `INSERT INTO achievements (winnerId, trophyId)
+         VALUES (?, ?)`,
+        [winnerId, trophyId]
+      );
+  }
 
   return { winnerId, trophyId };
 }

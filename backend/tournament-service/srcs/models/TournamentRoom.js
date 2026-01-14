@@ -125,7 +125,7 @@ export default class GameRoom {
         const CANVAS_HEIGHT = 580;
         const CANVAS_WIDTH = 1344;
         const BALL_SIZE = 10; // radius
-        const WIN_SCORE = 8;
+        const WIN_SCORE = 5;
         this.gameState.ball.x += this.gameState.ball.dx;
         this.gameState.ball.y += this.gameState.ball.dy;
 
