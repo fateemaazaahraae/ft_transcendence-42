@@ -2,15 +2,18 @@ import { GameLogic } from "./models/GameLogic.js"
 import Fastify from "fastify";
 import fastifyCors from "@fastify/cors";
 import GameRoutes from "./routes/gameRoutes.js"
+import { tournamentRoutes } from "./routes/TournamentRoute.js";
 
 const fastify = Fastify({ logger: true });
 
 
-fastify.register(fastifyCors, {
-  origin: '*',
+await fastify.register(fastifyCors, {
+    origin: '*',
+    credentials: true,
 });
 
-fastify.register(GameRoutes);
+await fastify.register(GameRoutes);
+tournamentRoutes(fastify)
 
 
 const start = async () => {

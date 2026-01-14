@@ -2,7 +2,7 @@ import { getTrSocket } from "../utils/tournamentSocket.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 import { showAlert } from "../utils/alert.ts";
-import { match } from "node:assert";
+// import { match } from "node:assert";
 
 export default function FinalMatchTr() {
   if (!requiredAuth()) return "";
@@ -70,6 +70,8 @@ export async function fillSettingsPage()
     const match = JSON.parse(cachedData);
     const userId = match.player1.id;
     const userId2 = match.player2.id;
+    const Nick1 = match.Nickname1;
+    const Nick2 = match.Nickname2;
     if (!userId || !userId2) {
       showAlert("Login first");
       navigate("/login");
@@ -80,14 +82,14 @@ export async function fillSettingsPage()
       const data = await res.json();
       // fill page
       (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
-      (document.getElementById("userName") as HTMLElement).textContent = data.userName || "";
+      (document.getElementById("userName") as HTMLElement).textContent = Nick1 || "";
       
 
       const res2 = await fetch(`http://localhost:3001/settings/${userId2}`);
       const data2 = await res2.json();
       // fill page
       (document.getElementById("myImg2") as HTMLImageElement).src = data2.profileImage || "";
-      (document.getElementById("userName2") as HTMLElement).textContent = data2.userName || "";
+      (document.getElementById("userName2") as HTMLElement).textContent = Nick2 || "";
     }
     catch (err)
     {
@@ -214,8 +216,18 @@ export async function FinalMatchTrEventListener() {
       } else {
         HeaderMsg = ""
       }
-      console.log(data.winner)
 
+
+      const cachedData = localStorage.getItem("LastMatch");
+      let finalWinnerNickname = Info.userName;
+      if (cachedData) {
+        const match = JSON.parse(cachedData);
+                if (match.player1 && match.player1.id === data.winner) {
+          finalWinnerNickname = match.Nickname1;
+        } else if (match.player2 && match.player2.id === data.winner) {
+          finalWinnerNickname = match.Nickname2;
+        }
+      }
       const winnerOverlay = document.createElement('div');
             winnerOverlay.id = 'winner-overlay';
             winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
@@ -227,7 +239,7 @@ export async function FinalMatchTrEventListener() {
                 <div class="flex flex-col justify-center items-center mt-[10%]">
                   <img src="${Info.profileImage}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
                     <div class="flex flex-row items-center">
-                      <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4">${Info.userName}</h1>
+                      <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4">${finalWinnerNickname}</h1>
                     </div>
                 </div>
                 <div class="space-y-4 mt-10">

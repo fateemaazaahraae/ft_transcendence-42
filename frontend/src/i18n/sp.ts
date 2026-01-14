@@ -51,7 +51,23 @@ const sp: translateDict = {
     availTour:"Torneos disponibles",
     yours: "Crea el tuyo",
     create: "Crear",
-
+    noTrophies: "¡Aún no hay trofeos! ¡Juega ahora y conviértete en campeón!",
+    player1: "Jugador 1",
+    player2: "Jugador 2",
+    pause: "Pausa",
+    gp: "Juego en pausa",
+    resume: "Reanudar partida",
+    restart: "Reiniciar partida",
+    quit: "Salir al menú",
+    fscore: "Puntuación Final",
+    main: "Menú principal",
+    playAg: "Jugar de nuevo",
+    wait: "Esperando al oponente",
+    leave: "Salir",
+    leaveQst: "¿Salir del partido?",
+    leaveSent: "Tu progreso en este partido se perderá.",
+    stay: "Quedarse",
+    waitP: "Esperando a los jugadores",
 }
 
 export default sp;

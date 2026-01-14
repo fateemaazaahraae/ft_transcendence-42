@@ -49,11 +49,9 @@ export function googleAuthRoutes(fastify) {
       const firstName = userInfo.given_name || "Unknown";
       const lastName = userInfo.family_name || "";
       const userName = email.split("@")[0];
-      let profileImage = userInfo.picture;
+      const profileImage = "https://localhost:8443/default.png";
       let user = await findUserByEmail(email);
       if (!user) {
-        if (profileImage.length < 100)
-            profileImage = "https://localhost:8443/default.png";
           user = await createUser(
             firstName,
             lastName,
@@ -64,7 +62,6 @@ export function googleAuthRoutes(fastify) {
           );
           user = await findUserByEmail(email);
         }
-        console.log("-------------> profile image : ", user.profileImage);
       
      const jwtToken = fastify.jwt.sign({
         id: user.id,

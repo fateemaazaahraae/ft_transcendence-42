@@ -101,8 +101,8 @@ export function ChoseAvatarEventListener() {
     }
 
     if (!avatarToSend) {
-      showAlert("Please choose an avatar");
-      return;
+      // showAlert("Please choose an avatar");
+      avatarToSend = "public/default.png";
     }
 
     try {

@@ -4,7 +4,6 @@ import { translateMsg } from "../i18n/translateBack";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 import { loadUser } from "../utils/loadUser.ts";
-import { io } from "socket.io-client";
 import { getGameSocket } from "../utils/gameSocket.ts";
 import { formatDate } from "../utils/date.ts";
 import { showAlert } from "../utils/alert";
@@ -156,7 +155,7 @@ export default async function Home() {
           <h1 class="text-white font-glitch text-xl md:text-2xl xl:text-4xl">${user.firstName} ${user.lastName}</h1>
           <h1 class="text-white font-roboto text-[14px] md:text-[16px] xl:text-xl">${user.userName}</h1>
           <div class="lg:gap-3 xl:gap-6 lg:mt-[5%] xl:mt-[10%]">
-            <div class="flex text-white font-roboto justify-between text-[10px] md:text-[13px] w-[210px] md:w-[300px] xl:w-[400px]">
+            <div class="fdata-i18n="player"lex text-white font-roboto justify-between text-[10px] md:text-[13px] w-[210px] md:w-[300px] xl:w-[400px]">
               <p data-i18n="level">Level</p>
               <p id="level" >7.5%</p>
             </div>
@@ -326,7 +325,6 @@ export async function GetWinsLosses(userId: string)
     }
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    console.log("WLXP data fetched:", data);
     return data;
   }
   catch (err)

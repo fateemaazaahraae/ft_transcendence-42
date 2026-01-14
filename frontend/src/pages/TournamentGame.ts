@@ -2,7 +2,7 @@ import { getTrSocket } from "../utils/tournamentSocket.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 import { showAlert } from "../utils/alert.ts";
-import { match } from "node:assert";
+// import { match } from "node:assert";
 
 export default function TournamentGame() {
   if (!requiredAuth()) return "";
@@ -37,22 +37,22 @@ export default function TournamentGame() {
     </div>
     <!-- LEAVE GAME BUTTON -->
       <div class="absolute top-[15%] lg:top-[10%] left-1/2 transform -translate-x-1/2 z-10">
-        <button id="leave-btn" class="px-6 py-3 bg-black hover:bg-secondary text-white border-secondary/40 overflow-hidden drop-shadow-pink rounded-lg font-roboto transition-all duration-300 flex items-center gap-2">
+        <button data-i18n="leave" id="leave-btn" class="px-6 py-3 bg-black hover:bg-secondary text-white border-secondary/40 overflow-hidden drop-shadow-pink rounded-lg font-roboto transition-all duration-300 flex items-center gap-2">
           Leave
         </button>
       </div>
     <!-- PAUSE OVERLAY (Hidden by default) -->
       <div id="leave-overlay" class="absolute inset-0 bg-black/50 z-[100] hidden flex-col items-center justify-center">
         <div class="bg-black p-8 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
-          <h2 class="text-3xl font-glitch tracking-[1px] leading-[5px] text-primary mb-5">Leave Match ?</h2>
-          <p class="font-roboto text-gray-300 mb-10">Your progress for this match will be lost.</p>
+          <h2 data-i18n="leaveQst" class="text-3xl font-glitch tracking-[1px] leading-[5px] text-primary mb-5">Leave Match ?</h2>
+          <p data-i18n="leaveSent" class="font-roboto text-gray-300 mb-10">Your progress for this match will be lost.</p>
 
-            <button id="cancel-btn" class="w-[200px] py-3 bg-secondary/80 hover:bg-secondary text-white rounded-lg font-roboto transition-all duration-300">
+            <button data-i18n="stay" id="cancel-btn" class="w-[200px] py-3 bg-secondary/80 hover:bg-secondary text-white rounded-lg font-roboto transition-all duration-300">
               <i class="fa-solid fa-xmark mr-2"></i>
               Stay
             </button>
             
-            <button id="quit-btn" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
+            <button data-i18n="confirm" id="quit-btn" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
               <i class="fa-solid fa-sign-out mr-2"></i>
               Yes
             </button>
@@ -70,7 +70,6 @@ export async function fillSettingsPage()
     const match = JSON.parse(cachedData);
     const userId = match.player1.id;
     const userId2 = match.player2.id;
-
     const Nick1 = match.Nickname1;
     const Nick2 = match.Nickname2;
     if (!userId || !userId2) {
@@ -218,6 +217,18 @@ export async function TournamentGameEventListener() {
       } else {
         HeaderMsg = ""
       }
+
+      const cachedData = localStorage.getItem("currentMatch1");
+      let finalWinnerNickname = Info.userName;
+      if (cachedData) {
+        const match = JSON.parse(cachedData);
+        if (match.player1 && match.player1.id === data.winner) {
+          finalWinnerNickname = match.Nickname1;
+        } else if (match.player2 && match.player2.id === data.winner) {
+          finalWinnerNickname = match.Nickname2;
+        }
+      }
+      console.log("Sending Winner to Final:", finalWinnerNickname);
       console.log(data.winner)
       if (!isWinner) {
         const winnerOverlay = document.createElement('div');
@@ -230,9 +241,6 @@ export async function TournamentGameEventListener() {
             <h1 class="text-green text-bold" mb-4>WINNER IS</h1>
             <div class="flex flex-col justify-center items-center mt-[10%]">
               <img src="${Info.profileImage}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
-                <div class="flex flex-row items-center">
-                  <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4">${Info.userName}</h1>
-                </div>
             </div>
             <div class="space-y-4 mt-10">
               <button id="quit-game-btn" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">
@@ -255,7 +263,7 @@ export async function TournamentGameEventListener() {
 
         window.removeEventListener("popstate", leaveGame);
         window.removeEventListener("beforeunload", leaveGame);
-        socket.emit("GoToFinal");
+        socket.emit("GoToFinal", { winnerNickname: finalWinnerNickname });
         navigate("/TrWaitingPlayers");
       }
     });

@@ -50,6 +50,23 @@ const fr: translateDict = {
     availTour: "Tournois disponibles",
     yours: "Crée le tien",
     create: "Créer",
+    noTrophies: "Aucun trophée pour le moment ! Joue maintenant et deviens un champion !",
+    player1: "Joueur 1",
+    player2: "Joueur 2",
+    pause: "Pause",
+    gp: "Jeu en pause",
+    resume: "Reprendre le jeu",
+    restart: "Redémarrer le jeu",
+    quit: "Quitter vers le menu",
+    fscore: "Score Final",
+    main: "Menu Principal",
+    playAg: "Rejouer",
+    wait: "En attente d’un adversaire",
+    leave: "Quitter",
+    leaveQst: "Quitter le match?",
+    leaveSent: "Votre progression pour ce match sera perdue.",
+    stay: "Rester",
+    waitP: "En attente des joueurs",
 }
 
 export default fr;
