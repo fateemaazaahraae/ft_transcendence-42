@@ -54,6 +54,7 @@ export default class GameRoom {
       winnerId === this.player1.data.userId
         ? this.player2.data.userId
         : this.player1.data.userId;
+      this.stop();
 
       try {
         const db = await getDb();
@@ -108,7 +109,6 @@ export default class GameRoom {
         console.error("❌ Failed to save match:", error);
     }
 
-  this.stop();
 }
 
     _setupListeners(socket) {
@@ -247,6 +247,7 @@ export default class GameRoom {
       ? this.player2.data.userId
       : this.player1.data.userId;
 
+    this.stop();
     
     try {
         const db = await getDb();
@@ -300,8 +301,6 @@ export default class GameRoom {
         console.error("❌ Failed to save match:", error);
     }
 
-    // Stop the loop
-    this.stop(); 
   }
   
   resetBall (MoveTo = null) {

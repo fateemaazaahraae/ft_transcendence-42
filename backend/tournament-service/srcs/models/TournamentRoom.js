@@ -1,4 +1,3 @@
-import { openDb } from "./db.js";
 
 export default class GameRoom {
   constructor(io, roomId, player1Socket, player2Socket) {
@@ -30,7 +29,6 @@ export default class GameRoom {
 
 
     async handlePlayerDisconnect(disconnectedSocket) {
-      // console.log(this.player1.id, "<--- id1 id2--->", this.player2.id)
       if (this.isGameOver) return;
 
       this.isGameOver = true;
@@ -50,11 +48,16 @@ export default class GameRoom {
           score: this.gameState.score
         });
       }
+
+      this.stop();
+
       const winnerId = winnerSocket.data.userId;
       const loserId =
       winnerId === this.player1.data.userId
         ? this.player2.data.userId
         : this.player1.data.userId;
+
+      try {
         await fetch(`http://game-service:3003/tournamentwinner/${winnerId}`, {
           method: "POST"
         });
@@ -73,7 +76,9 @@ export default class GameRoom {
                 timestamp: Date.now()
           })
         });
-      this.stop();
+      } catch (error) {
+        console.log("Error saving match data:", error)
+      }
     }
 
 
@@ -118,7 +123,7 @@ export default class GameRoom {
         const CANVAS_HEIGHT = 580;
         const CANVAS_WIDTH = 1344;
         const BALL_SIZE = 10; // radius
-        const WIN_SCORE = 6;
+        const WIN_SCORE = 8;
         this.gameState.ball.x += this.gameState.ball.dx;
         this.gameState.ball.y += this.gameState.ball.dy;
 
@@ -189,19 +194,26 @@ export default class GameRoom {
     }
 
     async endGame(winnerId) {
+
+      if (this.isGameOver) return;
+
+      this.isGameOver = true;
+      
       console.log(`🏆 Game Over! Winner: ${winnerId}`);
       
       // Tell everyone who won
       this.io.to(this.roomId).emit('game_over', { 
-      winner: winnerId,
-      score: this.gameState.score 
+        winner: winnerId,
+        score: this.gameState.score 
       });
+      this.stop();
 
       const loserId =
       winnerId === this.player1.data.userId
       ? this.player2.data.userId
       : this.player1.data.userId;
 
+      try {
         await fetch(`http://game-service:3003/tournamentwinner/${winnerId}`, {
           method: "POST"
         });
@@ -220,58 +232,9 @@ export default class GameRoom {
                 timestamp: Date.now()
           })
         });
-      // try {
-      //   const db = await getDb();
-      //   const matchId = this.roomId;
-      //   const timestamp = Date.now();
-
-      //   console.log("-------------winerid: ", winnerId, "----------------loserId: ", loserId);
-      //   await db.run(
-      //     `INSERT OR IGNORE INTO Trwlxp (id) VALUES (?)`,
-      //     [winnerId]
-      //   );
-      //   await db.run(
-      //     `INSERT OR IGNORE INTO Trwlxp (id) VALUES (?)`,
-      //     [loserId]
-      //   );
-
-      //   await db.run(
-      //     `UPDATE Trwlxp
-      //     SET Wins = Wins + 1,
-      //         XPoints = XPoints + 50
-      //     WHERE id = ?`,
-      //     [winnerId]
-      //   );
-      //   // console.log("***********updating the win/lose of Tournament***********");
-
-      //   await db.run(
-      //     `UPDATE Trwlxp
-      //     SET Losses = Losses + 1
-      //     WHERE id = ?`,
-      //     [loserId]
-      //   );
-
-      //   await db.run(
-      //     `INSERT INTO Trmatches (id, player1Id, player2Id, score1, score2, winnerId, timestamp)
-      //       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      //     [
-      //         matchId,
-      //         this.player1.data.userId,
-      //         this.player2.data.userId,
-      //         this.gameState.score.p1,
-      //         this.gameState.score.p2,
-      //         winnerId,
-      //         timestamp
-      //     ]
-      //   );
-
-      //   console.log("✅ tournament Match saved to SQLite database!");
-
-      // } catch (error) {
-      //   console.error("❌ Failed to save Tr match:", error);
-      // }
-
-      this.stop(); 
+      } catch (error) {
+        console.error("Error saving match data:", error)
+      }
     }
       
     resetBall (MoveTo = null) {

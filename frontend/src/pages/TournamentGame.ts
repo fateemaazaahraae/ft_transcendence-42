@@ -222,7 +222,7 @@ export async function TournamentGameEventListener() {
       let finalWinnerNickname = Info.userName;
       if (cachedData) {
         const match = JSON.parse(cachedData);
-                if (match.player1 && match.player1.id === data.winner) {
+        if (match.player1 && match.player1.id === data.winner) {
           finalWinnerNickname = match.Nickname1;
         } else if (match.player2 && match.player2.id === data.winner) {
           finalWinnerNickname = match.Nickname2;
@@ -241,9 +241,6 @@ export async function TournamentGameEventListener() {
             <h1 class="text-green text-bold" mb-4>WINNER IS</h1>
             <div class="flex flex-col justify-center items-center mt-[10%]">
               <img src="${Info.profileImage}" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
-                <div class="flex flex-row items-center">
-                  <h1 class="font-roboto text-center text-[18px] lg:text-xl xl:text-2xl truncate w-[110px] mt-4">${finalWinnerNickname}</h1>
-                </div>
             </div>
             <div class="space-y-4 mt-10">
               <button id="quit-game-btn" class="w-[200px] py-3 bg-black border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] text-white rounded-lg font-roboto transition-all mt-7 duration-300">

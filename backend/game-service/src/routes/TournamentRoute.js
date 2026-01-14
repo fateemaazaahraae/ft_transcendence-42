@@ -8,10 +8,6 @@ export async function tournamentRoutes(fastify)
         const userId = request.params.userId;
         console.log(`dkhelt winner ${userId}`);
         const db = await getDb();
-        // await db.run(
-        //             `INSERT OR IGNORE INTO wlxp (id) VALUES (?)`,
-        //             [userId]
-        //         );
         await db.run(`UPDATE wlxp
             SET Wins = Wins + 1,
                 XPoints = XPoints + 50
@@ -26,10 +22,6 @@ export async function tournamentRoutes(fastify)
         const userId = request.params.userId;
         console.log(`dkhelt loser ${userId}`);
         const db = await getDb();
-            // await db.run(
-            //         `INSERT OR IGNORE INTO wlxp (id) VALUES (?)`,
-            //         [userId]
-            //     );
         await db.run(`UPDATE wlxp
             SET Losses = Losses + 1
             WHERE id = ?`,
