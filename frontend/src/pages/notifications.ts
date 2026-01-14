@@ -54,24 +54,28 @@ async function markAllNotificationsAsRead(userId: string) {
     })
 }
 
-export function notificationBarListeners(userId: string) {
-    const bar = document.getElementById("notificationBar");
-    const bell = document.querySelector<HTMLElement>(".fa-bell");
+let notificationListenerInitialized = false;
 
-    document.addEventListener("click", async(e) => {
-        if (!bell || !bar)
-            return;
+export function notificationBarListeners(userId: string) {
+    if (notificationListenerInitialized) return;
+    notificationListenerInitialized = true;
+
+    document.addEventListener("click", async (e) => {
+        const bar = document.getElementById("notificationBar");
+        const bell = document.querySelector<HTMLElement>(".fa-bell");
+
+        if (!bar || !bell) return;
+
         if (bell.contains(e.target as Node)) {
             bar.classList.toggle("hidden");
+
             if (!bar.classList.contains("hidden")) {
                 const notifs = await fetchNotifications(userId);
                 renderNotifications(notifs);
-                await markAllNotificationsAsRead(userId)
-                await updateUnreadCount(userId)
-                console.log("12345 heeeerrrrrreee")
+                await markAllNotificationsAsRead(userId);
+                await updateUnreadCount(userId);
             }
-        } 
-        else if (!bar.contains(e.target as Node)) {
+        } else if (!bar.contains(e.target as Node)) {
             bar.classList.add("hidden");
         }
     });

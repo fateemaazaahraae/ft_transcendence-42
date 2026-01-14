@@ -22,7 +22,7 @@ import Friends, {FriendsEventListener} from "./pages/friends.ts";
 import Invitations, {InvitationsEventListener} from "./pages/invitaions.ts";
 import Blocked, { BlockedEventListener } from "./pages/blocked.ts";
 import PageNotFound from "./pages/pageNotFound.ts"
-import { notificationBarListeners, renderNotifications, updateUnreadCount } from "./pages/notifications.ts";
+import { notificationBarListeners, updateUnreadCount } from "./pages/notifications.ts";
 import { LanguagesMenuEventListener } from "./pages/languagesMenu.ts";
 import { initLogout } from "./pages/logout.ts";
 import Chat from "./pages/Chat.ts";
