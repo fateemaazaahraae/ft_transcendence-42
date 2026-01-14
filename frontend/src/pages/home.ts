@@ -297,7 +297,6 @@ export async function GetWinsLosses(userId: string)
     }
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    console.log("WLXP data fetched:", data);
     return data;
   }
   catch (err)

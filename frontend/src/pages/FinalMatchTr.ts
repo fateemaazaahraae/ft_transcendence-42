@@ -2,7 +2,7 @@ import { getTrSocket } from "../utils/tournamentSocket.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 import { showAlert } from "../utils/alert.ts";
-import { match } from "node:assert";
+// import { match } from "node:assert";
 
 export default function FinalMatchTr() {
   if (!requiredAuth()) return "";

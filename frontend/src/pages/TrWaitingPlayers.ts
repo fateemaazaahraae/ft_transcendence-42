@@ -87,22 +87,6 @@ export default function TrWaitingPlayers() {
   return `
   <div class="relative w-full h-screen overflow-x-hidden">
 
-    <!-- Controls Icons -->
-    <div class="absolute top-10 right-[5%] flex items-center gap-4">
-      <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
-          <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
-        </button>
-      </div>
-      <div class="relative">
-        <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-        <div id="notifBadge" class="absolute hidden top-1 inset-0 w-[7px] h-[7px] rounded-full bg-red-600"></div>
-      </div>
-      <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-    </div>
-
-
     <!-- Wait opponent -->
   <div class = "flex flex-col items-center justify-center mt-[10%] gap-10">
     <h1 id="waitingText"
@@ -116,17 +100,16 @@ export default function TrWaitingPlayers() {
       <div class="flex flex-row justify-center items-center mt-[8%] lg:mt-[2%] gap-2 md:gap-[3px]">
           <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
               <img id="opponent1"
-              src=""
+              src="/public/blue.png"
               class="justify-center w-[100px] h-[100px] md:w-[200px] md:h-[200px] lg:w-[200px] lg:h-[200px] rounded-full border-2 border-primary object-cover">
               <img id="opponent2"
-              src="/public/opponent1.png"
+              src="/public/blue.png"
               class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
                       lg:w-[200px] lg:h-[200px]
                       rounded-full border-2 border-primary object-cover
                        transition-opacity duration-300"
               />
           </div>
-          
       </div>
       <div  class="flex items-center justify-center w-[120px] h-[120px] md:w-[130px] md:h-[130px] xl:w-[190px] xl:h-[190px] rounded-full drop-shadow-cyan " > 
 							<img src="golden_trophy.svg" class=" w-[80px] md:w-[90px] xl:w-[190px]" />
@@ -135,14 +118,14 @@ export default function TrWaitingPlayers() {
   
           <div class="flex flex-col justify-center items-center mt-[8%] lg:mt-[5%] gap-2 md:gap-10">
               <img id="opponent3"
-              src="/public/opponent1.png"
+              src="/public/pink.png"
               class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
                       lg:w-[200px] lg:h-[200px]
                       rounded-full border-2 border-secondary object-cover
                        transition-opacity duration-300"
               />
               <img id="opponent4"
-              src="/public/opponent1.png"
+              src="/public/pink.png"
               class="opponentImg waiting w-[100px] h-[100px] md:w-[200px] md:h-[200px]
                       lg:w-[200px] lg:h-[200px]
                       rounded-full border-2 border-secondary object-cover
@@ -179,7 +162,11 @@ export function TrWaitingPlayersEventListener() {
 
   function clearOpponent(id: string) {
     const img = document.getElementById(id) as HTMLImageElement | null;
-    if (img) img.src = "";
+    if (img) img.src = "/public/blue.png";
+  }
+  function clearOpponent2(id: string) {
+    const img = document.getElementById(id) as HTMLImageElement | null;
+    if (img) img.src = "/public/pink.png";
   }
 
   function setOpponent(id: string, src: string) {
@@ -194,9 +181,14 @@ export function TrWaitingPlayersEventListener() {
 
   socket.on("startWaitFinal", (data: any) => {
     if (!Array.isArray(data.avatars)) return;
+    hasReceivedGameData = true;
 
     for (let i = 1; i <= 6; i++) {
-      clearOpponent(`opponent${i}`);
+      if (i === 1 || i === 2)  {
+        clearOpponent(`opponent${i}`);
+      } else {
+        clearOpponent2(`opponent${i}`);
+      }
     }
 
     data.avatars.slice(0, 4).forEach((avatar: string, i: number) => {
@@ -226,7 +218,11 @@ export function TrWaitingPlayersEventListener() {
 
 
     for (let i = 1; i <= 4; i++) {
-      clearOpponent(`opponent${i}`);
+      if (i === 1 || i === 2)  {
+        clearOpponent(`opponent${i}`);
+      } else {
+        clearOpponent2(`opponent${i}`);
+      }
     }
 
     data.avatars.forEach((avatar: string, index: number) => {
@@ -257,7 +253,7 @@ export function TrWaitingPlayersEventListener() {
   socket.off("start_final_game");
 
   socket.on("start_final_game", (data: any) => {
-    // hasReceivedGameData = true;
+    hasReceivedGameData = true;
     console.log("🎉 MATCH Fiiiiiiiiiiinal!...");
     localStorage.setItem("LastMatch", JSON.stringify(data));
     navigate("/FinalMatchTr");
