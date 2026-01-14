@@ -126,28 +126,75 @@ export function ChatEventListener() {
         return;
     }
 
-    // initialize socket connection
+    // initialize socket connection first so presence snapshot/events are received
     const TOKEN = localStorage.getItem('token') || '';
     initializeSocket(CURRENT_USER_ID, WS_URL, TOKEN);
-        
-   listenForPresenceEvents(
-  (userId) => {
-    setUserOnline(String(userId));
-    updateContactStatusUI(String(userId), "online");
-  },
-  (userId) => {
-    setUserOffline(String(userId));
-    updateContactStatusUI(String(userId), "offline");
-  }
-);
 
+    // presence listener: register to receive online/offline events
+     listenForPresenceEvents(
+        async (userId) => {
+            try {
+                if (!CURRENT_USER_ID) return;
 
-    // block / unblock
-        listenForBlockEvents(({ by }) => {
-            if (String(by) === String(ACTIVE_CHAT_CONTACT_ID)) {
-                showBlockedMessage();
+                const me = String(CURRENT_USER_ID);
+                const other = String(userId);
+
+                // helper to wrap checkIfBlocked 
+                const isBlockedBy = (blocker: string, blocked: string) => {
+                    return new Promise<boolean>((resolve) => {
+                        try {
+                            checkIfBlocked(blocker, blocked, resolve);
+                        } catch (e) {
+                            console.warn('isBlockedBy: check failed', e);
+                            resolve(false);
+                        }
+                    });
+                };
+
+               
+                setUserOnline(other);
+                updateContactStatusUI(other, "online");
+            } catch (e) {
+                console.warn('presence onOnline handler error', e);
             }
+        },
+        (userId) => {
+            try {
+                const other = String(userId);
+                setUserOffline(other);
+                updateContactStatusUI(other, "offline");
+            } catch (e) {
+                console.warn('presence onOffline handler error', e);
+            }
+        }
+    );
+
+    listenForBlockEvents(({ by, target }) => {
+
+        //  Someone blocked ME
+        if (by && String(by) === String(getActiveChatUser())) {
+            showBlockedMessage();
+            updateContactStatusUI(by, "offline");
+        }
+
+        // I blocked or unblocked someone → refresh contacts
+        if (target) {
+           // lightweight UI update: re-apply presence indicators and update active chat state
+           try {
+               applyPresenceToRenderedContacts();
+               if (String(getActiveChatUser()) === String(target)) {
+                   const me = String(CURRENT_USER_ID || '');
+                   checkIfBlocked(me, String(target), (isBlocked) => {
+                       setBlockButtonUI(Boolean(isBlocked));
+                       if (isBlocked) showBlockedMessage(); else showMessageInput();
+                   });
+               }
+           } catch (e) {
+               console.warn('lightweight block UI update failed', e);
+           }
+        }
     });
+
 
     //disable send button until socket connected
     const sendButtonEl = document.getElementById("sendMessageBtn") as HTMLButtonElement | null;
@@ -157,15 +204,74 @@ export function ChatEventListener() {
         if (sendButtonEl) sendButtonEl.disabled = !isConnected;
     });
 
-    // listen for server notification that *this* user was blocked by someone
+
+    
+    // listen for server notification that this user was blocked by someone
     if (socket) {
         socket.on('you_were_blocked', (data: any) => {
             const by = String(data?.by || '');
-            // if the blocked user is currently viewing the blocker, hide input
+            // if the blocked user is currently viewing the blocker hide input
+            // mark the blocker as blocked in the contacts list and hide their presence
+            try {
+                // update contact row dataset
+                const row = document.querySelector(`.contact-item[data-contact-id="${by}"]`) as HTMLElement | null;
+                if (row) {
+                    row.setAttribute('data-contact-isblocked', '1');
+                    row.dataset.contactIsblocked = '1';
+                    // ensure status is offline visually
+                    try { updateContactStatusUI(by, 'offline'); } catch (e) {}
+                    // hide status dot if present
+                    const dot = document.getElementById(`status-${by}`);
+                    if (dot) dot.classList.add('hidden');
+                }
+            } catch (e) { console.warn('you_were_blocked handler update failed', e); }
+
             if (String(ACTIVE_CHAT_CONTACT_ID) === by) {
                 showBlockedMessage();
-            } else {
             }
+        });
+
+        // When the blocker receives confirmation (block_done), update their contacts UI
+        socket?.on('block_done', ({ target }: { target: string }) => {
+            try {
+                const t = String(target || '');
+                if (!t) return;
+                const row = document.querySelector(`.contact-item[data-contact-id="${t}"]`) as HTMLElement | null;
+                if (row) {
+                    row.setAttribute('data-contact-isblocked', '1');
+                    row.dataset.contactIsblocked = '1';
+                    updateContactStatusUI(t, 'offline');
+                    const dot = document.getElementById(`status-${t}`);
+                    if (dot) dot.classList.add('hidden');
+                }
+                // if currently chatting with that user, close chat UI similar to manual block flow
+                if (String(getActiveChatUser()) === t) {
+                    showBlockedMessage();
+                    // also clear active chat UI state
+                    ACTIVE_CHAT_CONTACT_ID = null;
+                    setActiveChatUser(null);
+                    setChatUIState(false);
+                }
+            } catch (e) { console.warn('block_done handler failed', e); }
+        });
+
+        
+        // When someone unblocks a user, perform a lightweight UI update so page doesn't need full refresh
+        socket?.on("unblock_done", ({ target }: { target: string }) => {
+            try {
+                applyPresenceToRenderedContacts();
+                if (String(getActiveChatUser()) === String(target)) {
+                    const me = String(CURRENT_USER_ID || '');
+                    checkIfBlocked(me, String(target), (isBlocked) => {
+                        setBlockButtonUI(Boolean(isBlocked));
+                        if (!isBlocked) showMessageInput();
+                    });
+                }
+            } catch (e) { console.warn('unblock_done handler failed', e); }
+        });
+
+        socket?.on("you_were_unblocked", () => {
+            try { applyPresenceToRenderedContacts(); } catch (e) { console.warn('you_were_unblocked handler failed', e); }
         });
         
     }
@@ -253,6 +359,15 @@ export function ChatEventListener() {
                 // perform block then close chat and show blocked state on the button
                 (async () => {
                     const res = await blockUser(meId, targetId);
+
+                    setUserOffline(targetId);
+                    updateContactStatusUI(targetId, "offline");
+
+                    // hide status dot immediately for the blocked contact
+                    try {
+                        const dot = document.getElementById(`status-${targetId}`);
+                        if (dot) dot.classList.add('hidden');
+                    } catch (e) { /* ignore DOM errors */ }
 
                     if (blockBtn) {
                         blockBtn.innerHTML = '<i class="fa fa-ban"></i> Blocked';

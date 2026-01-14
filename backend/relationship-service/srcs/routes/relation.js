@@ -160,6 +160,20 @@ export async function relationRoutes(fastify) {
                 [user_id, blockedId, blockedId, user_id]
             );
 
+            // notify chat-service about the block so it can emit realtime events
+            try {
+                await fetch("http://chat-service:4000/internal/user-blocked", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-service-token": process.env.SERVICE_TOKEN
+                    },
+                    body: JSON.stringify({ by: user_id, blockedId })
+                });
+            } catch (notifyErr) {
+                console.error('Failed to notify chat-service about block:', notifyErr && notifyErr.message ? notifyErr.message : notifyErr);
+            }
+
             return { success: true, blocked: { user_id: String(user_id), blocked_user_id: String(blockedId) } };
         } catch (err) {
             console.error(' /block error:', err && err.message ? err.message : err);
@@ -188,6 +202,19 @@ fastify.get('/debug/blocked-all', async (req, reply) => {
         console.log("--------")
         console.log("heeereee")
         console.log("--------")
+        // notify chat-service about the unblock so it can emit realtime events
+        try {
+            await fetch("http://chat-service:4000/internal/user-unblocked", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-service-token": process.env.SERVICE_TOKEN
+                },
+                body: JSON.stringify({ by: me, blockedId })
+            });
+        } catch (notifyErr) {
+            console.error('Failed to notify chat-service about unblock:', notifyErr && notifyErr.message ? notifyErr.message : notifyErr);
+        }
         return { success: true };
     });
 

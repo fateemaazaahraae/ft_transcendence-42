@@ -1,10 +1,37 @@
 import { Server } from "socket.io";
 import history from "../services/history.js";
+import Blocked from "../models/blocked.js";
 import jwt from "jsonwebtoken";
 
 
 export let socket = null;
 const onlineUsers = new Map();
+// suppression map to prevent immediate re-online events after we emit offline due to block
+const reonlineSuppress = new Map(); // key -> expiry timestamp
+
+export function suppressReonline(recipientId, targetId, durationMs = 3000) {
+  try {
+    const key = `${recipientId}:${targetId}`;
+    const expiry = Date.now() + durationMs;
+    reonlineSuppress.set(key, expiry);
+    // schedule cleanup
+    setTimeout(() => { try { reonlineSuppress.delete(key); } catch(e) {} }, durationMs + 50);
+    console.log('[presence] suppressReonline set', key, 'until', new Date(expiry).toISOString());
+  } catch (e) {
+    console.warn('suppressReonline error', e);
+  }
+}
+
+function isReonlineSuppressed(recipientId, targetId) {
+  try {
+    const key = `${recipientId}:${targetId}`;
+    const expiry = reonlineSuppress.get(key);
+    if (!expiry) return false;
+    return Date.now() < expiry;
+  } catch (e) {
+    return false;
+  }
+}
 export const initSocket = (server) => {
   const io = new Server(server, {
     path: "/ws/socket.io",
@@ -14,7 +41,7 @@ export const initSocket = (server) => {
   // export the io instance for other modules if needed
   socket = io;
 
-  io.on("connection", (socket) => {
+  io.on("connection", async (socket) => {
     const rawToken =
       socket.handshake.headers?.authorization ||
       socket.handshake.auth?.token;
@@ -44,22 +71,47 @@ export const initSocket = (server) => {
     // io
 
   if (!userId) {
-    console.log("❌ NO USER ID");
+    console.log(" NO USER ID");
     return;
   }
 
   socket.join(String(userId));
-  console.log("✅ USER JOINED ROOM", userId);
-    // send current online users to the newly connected client
+  console.log(" USER JOINED ROOM", userId);
+  
+  async function canSeePresence(a, b) {
+      try {
+        const [aBlockedB, bBlockedA] = await Promise.all([
+          Blocked.isBlocked('', String(a), String(b)),
+          Blocked.isBlocked('', String(b), String(a))
+        ]);
+        return !(aBlockedB || bBlockedA);
+      } catch (e) {
+        
+        console.warn('canSeePresence error', e);
+        return true;
+      }
+    }
+
+    // send current online users to the newly connected client 
     try {
-      const onlineNow = Array.from(onlineUsers.keys()).filter(id => id !== userId);
-      socket.emit("online_users", onlineNow);
-      console.log('[presence] sent online_users snapshot to', userId, onlineNow);
+      const otherIds = Array.from(onlineUsers.keys()).filter(id => id !== userId);
+      const visible = [];
+      for (const other of otherIds) {
+        // only include if both sides can see each other
+        try {
+            if (await canSeePresence(userId, other)) {
+              visible.push(other);
+            } else {
+              console.log('[presence] snapshot - filtering out', other, 'for', userId);
+            }
+        } catch (e) {}
+      }
+      socket.emit("online_users", visible);
+      console.log('[presence] sent online_users', userId, visible);
     } catch (e) {
       console.warn('online_users snapshot error', e);
     }
 
-    // maintain set of socket ids per user to handle multi-tab connections
     const current = onlineUsers.get(userId) || new Set();
     current.add(socket.id);
     onlineUsers.set(userId, current);
@@ -68,7 +120,23 @@ export const initSocket = (server) => {
     if (current.size === 1) {
       console.log('[presence] user_online emit for', userId, 'onlineCount=', current.size);
       try {
-        socket.broadcast.emit("user_online", { userId });
+        // emit user_online only to users who may see this user's presence
+        for (const [otherId, socketset] of onlineUsers.entries()) {
+          if (String(otherId) === String(userId)) continue;
+          try {
+            const allowed = await canSeePresence(otherId, userId);
+            if (!allowed) {
+              console.log('[presence] skipping user_online to', otherId, 'about', userId, '(blocked)');
+              continue;
+            }
+            if (isReonlineSuppressed(otherId, userId)) {
+              console.log('[presence] skipping user_online to', otherId, 'about', userId, '(suppressed)');
+              continue;
+            }
+            console.log('[presence] emitting user_online to', otherId, 'about', userId);
+            io.to(String(otherId)).emit("user_online", { userId });
+          } catch (e) { console.warn('[presence] per-recipient emit error', e); }
+        }
       } catch (e) { console.warn('presence emit error', e); }
     }
     try { console.log('[presence] onlineUsers keys now:', Array.from(onlineUsers.keys())); } catch (e) {}
@@ -135,39 +203,43 @@ export const initSocket = (server) => {
       }
     });
 
-    // forward block notifications to the blocked user
-    socket.on('user_blocked', (payload) => {
-      try {
-        const { blockedId, blockerId } = payload || {};
-        if (!blockedId) return;
-        // validate emitter is the claimed blocker
-        if (String(socket.data.userId) !== String(blockerId)) {
-          console.warn('user_blocked: emitter userId mismatch', socket.data.userId, blockerId);
-          return;
-        }
-        socket.to(String(blockedId)).emit('you_were_blocked', { by: blockerId });
-      } catch (e) {
-        console.warn('user_blocked handler error', e);
-      }
-    });
+    // // forward block notifications to the blocked user
+    // socket.on('user_blocked', (payload) => {
+    //   try {
+    //     const { blockedId, blockerId } = payload || {};
+    //     if (!blockedId) return;
+    //     // validate emitter is the claimed blocker
+    //     if (String(socket.data.userId) !== String(blockerId)) {
+    //       console.warn('user_blocked: emitter userId mismatch', socket.data.userId, blockerId);
+    //       return;
+    //     }
+    //     socket.to(String(blockedId)).emit('you_were_blocked', { by: blockerId });
 
-    
-        socket.on('user_unblocked', (payload) => {
-      try {
-        const { unblockedId, unblockedBy } = payload || {};
-        if (!unblockedId) return;
-        if (String(socket.data.userId) !== String(unblockedBy)) {
-          console.warn('user_unblocked: emitter mismatch', socket.data.userId, unblockedBy);
-          return;
-        }
-        socket.to(String(unblockedId)).emit('you_were_unblocked', { by: unblockedBy });
-      } catch (e) {
-        console.warn('user_unblocked handler error', e);
-      }
-    });
+    //     socket.to(String(blockerId)).emit('block_done', { target: blockedId });
+  
+    //   } catch (e) {
+    //     console.warn('user_blocked handler error', e);
+    //   }
+    // });
+
+    //         io.to(String(blockerId)).emit('block_done', { target: blockedId });
+    //     socket.on('user_unblocked', (payload) => {
+    //   try {
+    //     const { unblockedId, unblockedBy } = payload || {};
+    //     if (!unblockedId) return;
+    //     if (String(socket.data.userId) !== String(unblockedBy)) {
+    //       console.warn('user_unblocked: emitter mismatch', socket.data.userId, unblockedBy);
+    //       return;
+    //     }
+    //     socket.to(String(unblockedId)).emit('you_were_unblocked', { by: unblockedBy });
+    //       io.to(String(unblockedBy)).emit('unblock_done', { target: unblockedId });
+    //   } catch (e) {
+    //     console.warn('user_unblocked handler error', e);
+    //   }
+    // });
 
 
-    socket.on("disconnect", () => {
+    socket.on("disconnect", async () => {
       try {
         const s = onlineUsers.get(userId);
         if (s) {
@@ -175,7 +247,22 @@ export const initSocket = (server) => {
           if (s.size === 0) {
             onlineUsers.delete(userId);
             console.log('[presence] user_offline emit for', userId);
-            try { socket.broadcast.emit("user_offline", { userId }); } catch (e) { console.warn('presence emit error', e); }
+            try {
+              // emit user_offline only to users who may see this user's presence
+              for (const [otherId] of onlineUsers.entries()) {
+                if (String(otherId) === String(userId)) continue;
+                try {
+                  const allowed = await canSeePresence(otherId, userId);
+                  if (!allowed) {
+                    console.log('[presence] skipping user_offline to', otherId, 'about', userId, '(blocked)');
+                    continue;
+                  }
+                  // do not suppress offline emits; just send them
+                  console.log('[presence] emitting user_offline to', otherId, 'about', userId);
+                  io.to(String(otherId)).emit("user_offline", { userId });
+                } catch (e) { console.warn('[presence] per-recipient emit error', e); }
+              }
+            } catch (e) { console.warn('presence emit error', e); }
           } else {
             onlineUsers.set(userId, s);
           }

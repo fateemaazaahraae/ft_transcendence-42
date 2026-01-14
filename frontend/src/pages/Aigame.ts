@@ -340,8 +340,7 @@ export function AiGameEventListener() {
         if (Math.abs(diff) <= deadzone) {
           paddleRightY = targetCenterY;
         } else {
-          const speedFactor = 0.7; // Ai padding moving speed // or we'll call it later difficulty level
-          const move = Math.sign(diff) * PaddleSpeed * speedFactor * dt;
+          const move = Math.sign(diff) * PaddleSpeed * dt;
           // if (Math.abs(move) > Math.abs(diff)) paddleRightY = targetCenterY; else  // just to not make a gitch in the paddle's movement
           paddleRightY += move;
         }
