@@ -74,36 +74,36 @@ export async function tournamentChoices() {
 				<div id="availTournament" class="flex flex-col justify-center w-full h-full transition-all duration-300">
 					<h1 data-i18n = "availTour" class="font-glitch text-center text-3xl mb-8">Available tournaments</h1>
 					<div id="availTournament" class="flex">
-						<div class="flex flex-col gap-4 h-[600px] w-[600px] mx-auto overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4 pb-6">
-								${
-									tournaments.length === 0
-									? emptyAvTournaments
-									: tournaments.map(
-										(tour) => 
-										tour.players < 4 ?
-											`<div class="relative flex items-center bg-primary/50 rounded-[20px] px-6 py-[5px] w-full mx-auto">
-												<div class = "flex items-center justify-center w-[55px] h-[55px] border-[1.5px] rounded-full border-primary/60">
-													<img src="/golden_trophy.svg" class="w-[35px]"/>
-												</div>
-												<div class="flex flex-col items-start ml-8">
-													<p class="font-bold">${tour.tournamentName}</p>
-													<p class="text-white/70 ">${tour.players} players</p>
-												</div>
-												<button
-												class="join-btn absolute right-6 cursor-pointer text-secondary text-3xl"
-												data-tournament-id="${tour.id}", data-tournament-name="${tour.tournamentName}"
-												aria-label="Join tournament"
-												>
-												<i class="fa-solid fa-right-to-bracket"></i>
-												</button>
-
-											</div>
-										`
-										: ""
-									)
-									.join("")}
-						</div> 
+					<div class="flex flex-col gap-4 h-[600px] w-[600px] mx-auto overflow-y-auto scrollbar scrollbar-thumb-primary/40 scrollbar-track-primary/10 p-4 pb-6">
+						${
+						tournaments.filter(tour => tour.players < 4).length === 0
+							? emptyAvTournaments
+							: tournaments.filter(tour => tour.players < 4).map(
+								(tour) => `
+									<div class="relative flex items-center bg-primary/50 rounded-[20px] px-6 py-[5px] w-full mx-auto">
+									<div class="flex items-center justify-center w-[55px] h-[55px] border-[1.5px] rounded-full border-primary/60">
+										<img src="/golden_trophy.svg" class="w-[35px]" />
+									</div>
+									<div class="flex flex-col items-start ml-8">
+										<p class="font-bold">${tour.tournamentName}</p>
+										<p class="text-white/70">${tour.players} players</p>
+									</div>
+									<button
+										class="join-btn absolute right-6 cursor-pointer text-secondary text-3xl"
+										data-tournament-id="${tour.id}"
+										data-tournament-name="${tour.tournamentName}"
+										aria-label="Join tournament"
+									>
+										<i class="fa-solid fa-right-to-bracket"></i>
+									</button>
+									</div>
+								`
+								)
+								.join("")
+						}
 					</div>
+					</div>
+
 
 				</div>
 				<!--JOIN TOURNAMENT MODAL -->
@@ -217,7 +217,7 @@ export function joinTournament(): string {
 	{
 		const title = document.getElementById("title");
 		if (title)
-			title.innerHTML = `Join Tournament </br> <span class="text-secondary">"${tournamentName}"</span>`;
+			title.innerHTML = `Join Tournament </br> <span class="text-secondary text-xl">"${tournamentName}"</span>`;
 	}
     modal.classList.remove("hidden");
     modal.classList.add("flex");

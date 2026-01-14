@@ -73,7 +73,6 @@ export async function fillSettingsPage()
 
     const Nick1 = match.Nickname1;
     const Nick2 = match.Nickname2;
-    console.log(`************nick1 is ${Nick1} and nick2 is: ${Nick2}`);
     if (!userId || !userId2) {
       showAlert("Login first");
       navigate("/login");
@@ -124,7 +123,6 @@ export async function winnerdata(winner: any) {
 }
 
 export async function TournamentGameEventListener() {
-  let Nickname : string;
   fillSettingsPage();
   const socket = getTrSocket(localStorage.getItem("token"));
   const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
@@ -151,7 +149,6 @@ export async function TournamentGameEventListener() {
   }
 
   socket.on("game_update", (gameState: any) => {// listen for a socket.emit('game_update') with the new positions
-    // Nickname = data.nick;    
     if (!ctx || !canvas) return;
     console.log()
 
