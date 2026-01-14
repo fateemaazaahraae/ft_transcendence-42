@@ -72,7 +72,6 @@ export async function fillSettingsPage()
     const userId2 = match.player2.id;
     const Nick1 = match.Nickname1;
     const Nick2 = match.Nickname2;
-    console.log(`************nick1 is ${Nick1} and nick2 is: ${Nick2}`);
     if (!userId || !userId2) {
       showAlert("Login first");
       navigate("/login");
