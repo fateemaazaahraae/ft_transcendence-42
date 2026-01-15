@@ -283,7 +283,28 @@ export async function RemoteGameEventListener() {
     LeaveOverlay.classList.add('hidden');
   });
 
+  const chatInviteGameId = localStorage.getItem("chatInviteGame");
+  if (chatInviteGameId) {
+      socket.emit("join_game", { gameId: chatInviteGameId });
+      localStorage.removeItem("chatInviteGame"); // cleanup
+  }
+
+  // try {
+  //   const pathParts = window.location.pathname.split("/");
+  //   const gameId = pathParts[pathParts.length - 1];
+  //   if (gameId) {
+  //     socket.emit("join_game", { gameId });
+  //   } 
+  // } catch (e) {
+  //   console.warn("failed to emit join_game", e);
+  // }
+
   let hasReceivedGameData = false;
+
+  socket.on("game_joined", () => {
+    hasReceivedGameData = true;
+  });
+
 
   socket.once("game_update", () => {
       hasReceivedGameData = true;

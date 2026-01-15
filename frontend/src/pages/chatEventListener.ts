@@ -892,41 +892,54 @@ export function ChatEventListener() {
         }
     });
     function renderGameInvite(invite: any) {
-    const myUserId = String(CURRENT_USER_ID);
+        const myUserId = String(CURRENT_USER_ID);
 
-    // ✅ ONLY receiver sees Accept
-    if (String(invite.to) !== myUserId) return;
+        // ✅ ONLY receiver sees Accept
+        if (String(invite.to) !== myUserId) return;
 
-    const chatContainer = document.getElementById("messagesPanel");
-    if (!chatContainer) return;
+        const chatContainer = document.getElementById("messagesPanel");
+        if (!chatContainer) return;
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "my-2 p-2 border rounded";
+        const wrapper = document.createElement("div");
+        wrapper.className = "my-2 p-2 border rounded";
 
-    const text = document.createElement("p");
-    text.innerText = "🎮 Pong game invite";
+        const text = document.createElement("p");
+        text.innerText = "🎮 Pong game invite";
 
-    const btn = document.createElement("button");
-    btn.innerText = "Accept Pong Invite";
-    btn.className = "mt-2 px-3 py-1 bg-green-500 text-white rounded";
+        const btn = document.createElement("button");
+        btn.innerText = "Accept Pong Invite";
+        btn.className = "mt-2 px-3 py-1 bg-green-500 text-white rounded";
 
-    btn.onclick = () => {
-        socket.emit("accept_game_invite", {
-        inviteId: invite.inviteId,
-        from: invite.from,
-        to: invite.to
-        });
-        console.log("✅ Invite accepted", invite.inviteId);
-    };
+        btn.onclick = () => {
+            socket.emit("accept_game_invite", {
+            inviteId: invite.inviteId,
+            from: invite.from,
+            to: invite.to
+            });
+            console.log("✅ Invite accepted", invite.inviteId);
+        };
 
-    wrapper.appendChild(text);
-    wrapper.appendChild(btn);
-    chatContainer.appendChild(wrapper);
+        // localStorage.setItem("chatInviteGame", invite.inviteId);
+        
+        wrapper.appendChild(text);
+        wrapper.appendChild(btn);
+        chatContainer.appendChild(wrapper);
     }
     socket.on("game_start", (data: any) => {
         console.log("🚀 GAME START", data);
 
-        if (data.gameType === "pong") {
+         if (data.gameType === "pong") {
+            // persist minimal match info so RemoteGame can render players immediately
+            try {
+                const matchInfo = data.match || {
+                    gameId: data.gameId,
+                    player1: { id: data.player1 || "" },
+                    player2: { id: data.player2 || "" },
+                };
+                localStorage.setItem("currentMatch", JSON.stringify(matchInfo));
+            } catch (e) { console.warn("failed to save match info", e); }
+        
+            localStorage.setItem("chatInviteGame", data.gameId);
             // SPA redirect to your Pong route
             window.location.href = `/pong/${data.gameId}`;
         }

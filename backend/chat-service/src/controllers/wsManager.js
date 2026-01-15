@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 import history from "../services/history.js";
 import Blocked from "../models/blocked.js";
 import jwt from "jsonwebtoken";
-import GameRoom from "./gameinvite.js";
+// import GameRoom from "./gameinvite.js";
 
 
 export let socket = null;
@@ -291,97 +291,32 @@ export const initSocket = (server) => {
       // reuse inviteId as gameId for simplicity
       const gameId = inviteId;
 
+      // Build a full payload including a match object and explicit player ids
+      // so clients can persist currentMatch and fetch player settings.
+      const matchInfo = {
+        gameId,
+        player1: { id: String(from) },
+        player2: { id: String(to) }
+      };
+
       const payload = {
         type: "game_start",
         gameId,
-        gameType: "pong"
+        gameType: "pong",
+        match: matchInfo,
+        // keep these top-level fields for backward compatibility with clients
+        player1: String(from),
+        player2: String(to)
       };
 
-      // notify both players
-      socket.emit("game_start", payload);          // receiver
-      socket.to(String(from)).emit("game_start", payload); // sender
+      // notify both players (receiver and the original inviter)
+      try {
+        socket.emit("game_start", payload); // receiver (accepter)
+      } catch (e) { console.warn("[game] emit to receiver failed", e); }
+      try {
+        socket.to(String(from)).emit("game_start", payload); // sender (inviter)
+      } catch (e) { console.warn("[game] emit to inviter failed", e); }
     });
-
-
-//   socket.on("StartInviteGame", (data) => {
-//     const player1Id = data.player1;
-//     const player2Id = data.player2;
-
-//     console.log(`Received invite: P1: ${player1Id}, P2: ${player2Id}`);
-
-//     if (player1Id === player2Id) return;
-
-//     // 1. IDENTIFY PLAYER 1 (The Sender)
-//     // If the sender IS player 1, we just use 'socket' directly.
-//     // If you want to be safe, you can verify: if (socket.data.userId !== player1Id) return;
-//     const player1Socket = socket; 
-
-//     // 2. FIND PLAYER 2 (The Target)
-//     let player2Socket = null;
-
-//     for (const [_, s] of io.sockets.sockets) {
-//         if (s.data.userId === player2Id) {
-//             player2Socket = s;
-//             break; 
-//         }
-//     }
-
-//     // 3. CRITICAL: CHECK IF PLAYER 2 IS ONLINE
-//     if (!player2Socket) {
-//         console.log(`❌ Error: Player 2 (${player2Id}) is not connected.`);
-//         // Optional: Tell Player 1 that Player 2 is offline
-//         player1Socket.emit("game_error", { message: "Player 2 is offline" });
-//         return; // <--- STOP HERE to prevent the crash
-//     }
-
-//     // 4. START THE MATCH
-//     const matchId = `match_${Date.now()}`;
-//     const matchInfo = { matchId, player1: player1Id, player2: player2Id };
-
-//     console.log(`🚀 Match Started: ${matchInfo.player1} vs ${matchInfo.player2}`);
-
-//     player1Socket.emit("match_found", matchInfo);
-//     player2Socket.emit("match_found", matchInfo);
-
-//     const game = new GameRoom(io, matchId, player1Socket, player2Socket);
-//     game.start();
-// });
-
-    // // forward block notifications to the blocked user
-    // socket.on('user_blocked', (payload) => {
-    //   try {
-    //     const { blockedId, blockerId } = payload || {};
-    //     if (!blockedId) return;
-    //     // validate emitter is the claimed blocker
-    //     if (String(socket.data.userId) !== String(blockerId)) {
-    //       console.warn('user_blocked: emitter userId mismatch', socket.data.userId, blockerId);
-    //       return;
-    //     }
-    //     socket.to(String(blockedId)).emit('you_were_blocked', { by: blockerId });
-
-    //     socket.to(String(blockerId)).emit('block_done', { target: blockedId });
-  
-    //   } catch (e) {
-    //     console.warn('user_blocked handler error', e);
-    //   }
-    // });
-
-    //         io.to(String(blockerId)).emit('block_done', { target: blockedId });
-    //     socket.on('user_unblocked', (payload) => {
-    //   try {
-    //     const { unblockedId, unblockedBy } = payload || {};
-    //     if (!unblockedId) return;
-    //     if (String(socket.data.userId) !== String(unblockedBy)) {
-    //       console.warn('user_unblocked: emitter mismatch', socket.data.userId, unblockedBy);
-    //       return;
-    //     }
-    //     socket.to(String(unblockedId)).emit('you_were_unblocked', { by: unblockedBy });
-    //       io.to(String(unblockedBy)).emit('unblock_done', { target: unblockedId });
-    //   } catch (e) {
-    //     console.warn('user_unblocked handler error', e);
-    //   }
-    // });
-
 
     socket.on("disconnect", async () => {
       try {

@@ -8,6 +8,10 @@ import Fastify from 'fastify';
 // const fastify = Fastify({ logger: true });
 const waitingQueue = [];
 
+// Add pending games map so invite-based games (chat invite ids) can be matched:
+// key: gameId (inviteId), value: { socket, timeout }
+const pendingGames = new Map();
+
 const getUserDataFromToken = (token) => {
   try {
     const payloadBase64 = token.split('.')[1];
@@ -93,51 +97,6 @@ export const GameLogic = (server) => {
         })
 
 
-        socket.on("StartInviteGame", (data) => {
-            const player1Id = data.player1;
-            const player2Id = data.player2;
-
-            console.log(`Received invite: P1: ${player1Id}, P2: ${player2Id}`);
-
-            if (player1Id === player2Id) return;
-
-            // 1. IDENTIFY PLAYER 1 (The Sender)
-            // If the sender IS player 1, we just use 'socket' directly.
-            // If you want to be safe, you can verify: if (socket.data.userId !== player1Id) return;
-            const player1Socket = socket; 
-
-            // 2. FIND PLAYER 2 (The Target)
-            let player2Socket = null;
-
-            for (const [_, s] of io.sockets.sockets) {
-                if (s.data.userId === player2Id) {
-                    player2Socket = s;
-                    break; 
-                }
-            }
-
-            // 3. CRITICAL: CHECK IF PLAYER 2 IS ONLINE
-            if (!player2Socket) {
-                console.log(`❌ Error: Player 2 (${player2Id}) is not connected.`);
-                // Optional: Tell Player 1 that Player 2 is offline
-                player1Socket.emit("game_error", { message: "Player 2 is offline" });
-                return; // <--- STOP HERE to prevent the crash
-            }
-
-            // 4. START THE MATCH
-            const matchId = `match_${Date.now()}`;
-            const matchInfo = { matchId, player1: player1Id, player2: player2Id };
-
-            console.log(`🚀 Match Started: ${matchInfo.player1} vs ${matchInfo.player2}`);
-
-            player1Socket.emit("match_found", matchInfo);
-            player2Socket.emit("match_found", matchInfo);
-
-            const game = new GameRoom(io, matchId, player1Socket, player2Socket);
-            game.start();
-        });
-
-
         socket.on("join_queue", () => {
             const userId = socket.data.userId;
 
@@ -180,13 +139,80 @@ export const GameLogic = (server) => {
                 console.log("Waiting for players...");
             }
         });
+
+        // Handle invite-based games: clients navigate to /pong/:gameId and emit "join_game"
+        socket.on("join_game", ({ gameId } = {}) => {
+            try {
+                if (!gameId) return;
+                console.log(`[game] join_game ${gameId} by ${socket.data.userId}`);
+
+                // If there's already a pending socket waiting for this gameId, pair them
+                const pending = pendingGames.get(gameId);
+                if (pending && pending.socket && pending.socket.id !== socket.id) {
+                    // cancel timeout for pending
+                    clearTimeout(pending.timeout);
+                    pendingGames.delete(gameId);
+
+                    const player1Socket = pending.socket;
+                    const player2Socket = socket;
+
+                    // Build matchInfo similar to other flows (player objects)
+                    const matchInfo = {
+                        matchId: gameId,
+                        player1: player1Socket.data.user,
+                        player2: player2Socket.data.user
+                    };
+
+                    console.log(`[game] Invite match found for ${gameId}: ${player1Socket.data.userId} vs ${player2Socket.data.userId}`);
+
+                    // notify both sockets (optional)
+                    try { player1Socket.emit("match_found", matchInfo); } catch (e) {}
+                    try { player2Socket.emit("match_found", matchInfo); } catch (e) {}
+
+                    // create GameRoom and start
+                    const game = new GameRoom(io, gameId, player1Socket, player2Socket);
+                    game.start();
+                    return;
+                }
+
+                // otherwise store this socket as pending, set a timeout to clear stale entries
+                const timeout = setTimeout(() => {
+                    try {
+                        const p = pendingGames.get(gameId);
+                        if (p && p.socket && p.socket.id === socket.id) {
+                            pendingGames.delete(gameId);
+                            try { socket.emit("game_join_timeout", { gameId }); } catch (e) {}
+                            console.log(`[game] pending join for ${gameId} timed out for ${socket.data.userId}`);
+                        }
+                    } catch (e) {}
+                }, 30 * 1000); // 30s timeout
+
+                // Overwrite any existing same-socket pending entry (defensive)
+                pendingGames.set(gameId, { socket, timeout });
+                console.log(`[game] stored pending join for ${gameId} from ${socket.data.userId}`);
+            } catch (e) {
+                console.warn('join_game handler error', e);
+            }
+        });
+
+        // Ensure pendingGames cleaned up when socket disconnects
         socket.on('disconnect', () => {
             console.log(`user disconnected: ${socket.data.userId}`);
 
+            // remove from waitingQueue if present
             const index = waitingQueue.findIndex(s => s.id === socket.id);
             if (index !== -1) {
-                waitingQueue.splice(index, 1);// splice (index) from where start removing and (1) how many to remove
+                waitingQueue.splice(index, 1);
                 console.log(`${socket.data.userId} removed from queue bslama`);
+            }
+
+            // cleanup pendingGames entries referencing this socket
+            for (const [gameId, entry] of pendingGames.entries()) {
+                if (entry.socket && entry.socket.id === socket.id) {
+                    clearTimeout(entry.timeout);
+                    pendingGames.delete(gameId);
+                    console.log(`[game] cleaned pending entry ${gameId} due to disconnect of ${socket.data.userId}`);
+                }
             }
         });
     });
