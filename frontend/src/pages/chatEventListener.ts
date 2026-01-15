@@ -372,7 +372,10 @@ export function ChatEventListener() {
     // remove block  when user clicks the block menu item
     if (blockBtn) {
         blockBtn.addEventListener("click", (): void => {
-            if (blockConfirmationDiv) blockConfirmationDiv.classList.remove("hidden");
+            if (blockConfirmationDiv) {
+                blockConfirmationDiv.classList.remove("hidden");
+                blockConfirmationDiv.classList.add("flex");
+            }
         });
     }
 
@@ -473,13 +476,19 @@ export function ChatEventListener() {
                 })();
             }
         });
-        if (blockConfirmationDiv) blockConfirmationDiv.classList.add("hidden");
+        if (blockConfirmationDiv) {
+            blockConfirmationDiv.classList.add("hidden");
+            blockConfirmationDiv.classList.remove("flex");
+        }
         
     });
 
     // cancel
     cancelBlockBtn?.addEventListener("click", () => {
-        if (blockConfirmationDiv) blockConfirmationDiv.classList.add("hidden");
+        if (blockConfirmationDiv) {
+            blockConfirmationDiv.classList.add("hidden");
+            blockConfirmationDiv.classList.remove("flex");
+        }
     });
     const contactsListDiv = document.querySelector('#contacts_side .space-y-4') as HTMLElement | null;
 
