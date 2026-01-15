@@ -5,7 +5,6 @@ import Blocked from "../models/blocked.js";
 const REL_SERVICE_URL = process.env.REL_SERVICE_URL || 'http://relationship-service:3002';
 const AUTH_URL = process.env.AUTH_URL || 'http://auth-service:3000';
 
-// simple in-memory cache for avatars: { id -> { url, ts } }
 const avatarCache = new Map();
 const AVATAR_TTL = 1000 * 60 * 5; // 5 minutes
 
@@ -74,15 +73,16 @@ export default {
     // create message
     const msg = Messages.create(convo.id, from, content);
 
+    
+
     // include sender avatar in ack
     try {
       const avatar = await fetchAvatarFor(from, authHeader);
       if (avatar) msg.senderAvatar = avatar;
     } catch (e) {
-      // ignore avatar errors
     }
 
-    return { convo, msg }; // ack includes avatar when available
+    return { convo, msg }; //  includes avatar when available
   },
 
   getHistory: async (userA, userB, limit = 200, authHeader = '') => {
@@ -99,7 +99,6 @@ export default {
     // wait for all avatar fetches
     await Promise.all(Object.values(avatarPromises));
 
-    // attach senderAvatar to messages (if available in cache)
     const enriched = messages.map((m) => {
       const aid = String(m.sender_id);
       const cached = avatarCache.get(aid);

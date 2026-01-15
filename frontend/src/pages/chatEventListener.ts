@@ -132,7 +132,7 @@ export function ChatEventListener() {
     const TOKEN = localStorage.getItem('token') || '';
     initializeSocket(CURRENT_USER_ID, WS_URL, TOKEN);
 
-    // presence listener: register to receive online/offline events
+    // presence listener register to receive online offline events
      listenForPresenceEvents(
         async (userId) => {
             try {
@@ -175,13 +175,13 @@ export function ChatEventListener() {
 
         //  Someone blocked ME
         if (by && String(by) === String(getActiveChatUser())) {
-            showBlockedMessage();
+            showBlockedMessage(false);
             updateContactStatusUI(by, "offline");
         }
 
-        // I blocked or unblocked someone → refresh contacts
+        // i blocked or unblocked someone => refresh contacts
         if (target) {
-           // lightweight UI update: re-apply presence indicators and update active chat state
+           // eapply presence  and update active chat state
            try {
                applyPresenceToRenderedContacts();
                if (String(getActiveChatUser()) === String(target)) {
@@ -229,11 +229,11 @@ export function ChatEventListener() {
             } catch (e) { console.warn('you_were_blocked handler update failed', e); }
 
             if (String(ACTIVE_CHAT_CONTACT_ID) === by) {
-                showBlockedMessage();
+                showBlockedMessage(false);
             }
         });
 
-        // When the blocker receives confirmation (block_done), update their contacts UI
+        // When the blocker receives confirmation block_done, update their contacts UI
         socket?.on('block_done', ({ target }: { target: string }) => {
             try {
                 const t = String(target || '');
@@ -303,13 +303,13 @@ export function ChatEventListener() {
         }
     };
 
-    // block button and modal handlers
+    // block button
     const blockBtn = document.getElementById("blockUserBtn");
     const blockConfirmationDiv = document.getElementById("blockConfirmation");
     const confirmBlockBtn = document.getElementById("confirmBlockBtn");
     const cancelBlockBtn = document.getElementById("cancelBlockBtn");
 
-    // show modal when user clicks the block menu item
+    // remove block  when user clicks the block menu item
     if (blockBtn) {
         blockBtn.addEventListener("click", (): void => {
             if (blockConfirmationDiv) blockConfirmationDiv.classList.remove("hidden");
@@ -335,7 +335,7 @@ export function ChatEventListener() {
         }
     }
 
-    // confirm block: call API and hide modal
+    // confirm block
     confirmBlockBtn?.addEventListener("click", async () => {
         const targetId = String(ACTIVE_CHAT_CONTACT_ID || '').trim();
         const meId = String(CURRENT_USER_ID || '').trim();
@@ -345,10 +345,10 @@ export function ChatEventListener() {
             if (blockConfirmationDiv) blockConfirmationDiv.classList.add("hidden");
             return;
         }
-        // call block API with string ids (supports UUIDs)
+        
         checkIfBlocked(meId, targetId, (isBlocked) => {
             if (isBlocked) {
-                // already blocked: show blocked state on the button
+                // already blocked show blocked state on the button
                 if (blockBtn) {
                     blockBtn.innerHTML = '<i class="fa fa-ban"></i> Blocked';
                     blockBtn.setAttribute('data-blocked', 'true');
@@ -369,7 +369,7 @@ export function ChatEventListener() {
                     try {
                         const dot = document.getElementById(`status-${targetId}`);
                         if (dot) dot.classList.add('hidden');
-                    } catch (e) { /* ignore DOM errors */ }
+                    } catch (e) { }
 
                     if (blockBtn) {
                         blockBtn.innerHTML = '<i class="fa fa-ban"></i> Blocked';
@@ -408,7 +408,7 @@ export function ChatEventListener() {
         
     });
 
-    // cancel: just hide modal
+    // cancel
     cancelBlockBtn?.addEventListener("click", () => {
         if (blockConfirmationDiv) blockConfirmationDiv.classList.add("hidden");
     });
@@ -419,14 +419,13 @@ export function ChatEventListener() {
     
 
     let PENDING_CHAT_USER_ID: string | null = null;
-    // support SPA opener: other pages can set `openChatUser` in localStorage
     try {
         const pendingFromStorage = localStorage.getItem('openChatUser');
         if (pendingFromStorage) {
             PENDING_CHAT_USER_ID = pendingFromStorage;
             localStorage.removeItem('openChatUser');
         }
-    } catch (e) { /* ignore storage errors */ }
+    } catch (e) { }
 
     const debouncedSearch = debounce((query: string) => {
         if (!query.trim()) {
@@ -523,7 +522,7 @@ export function ChatEventListener() {
             const userId1 = String(CURRENT_USER_ID);
             const userId2 = String(contactId);
             
-            //fetch history with Authorization header so server can resolve avatars
+            //fetch history with Authorization header 
             const tokenForFetch = localStorage.getItem('token') || '';
             fetch(`${API_BASE_URL}/chats/history/${userId1}/${userId2}`, {
                 headers: {
@@ -567,7 +566,6 @@ export function ChatEventListener() {
    
     async function openConversationWith(userId: string | null) {
         if (!userId) return;
-        // prefer the already-rendered contact element
         try {
             if (contactsListDiv) {
                 const contactEl = contactsListDiv.querySelector(`[data-contact-id="${userId}"]`) as HTMLElement | null;
@@ -616,7 +614,7 @@ export function ChatEventListener() {
             localStorage.removeItem('activeContactStatus');
             
             const isMobile = window.innerWidth < 768;
-            // on mobile: show contacts hide chat
+            // on mobile show contacts hide chat
             if (isMobile) {
                 contactsSide?.classList.remove("hidden");
                 chat?.classList.add("hidden");
@@ -743,9 +741,8 @@ export function ChatEventListener() {
         });
 
 
-        //  auto-open chat if redirected with ?user=
+        
         if (PENDING_CHAT_USER_ID) {
-            // contact items are rendered with `data-contact-id` and related attrs
             const contactEl = contactsListDiv.querySelector(
                 `[data-contact-id="${PENDING_CHAT_USER_ID}"]`
             ) as HTMLElement | null;
@@ -789,7 +786,6 @@ export function ChatEventListener() {
         if(!content || !ACTIVE_CHAT_CONTACT_ID) return;
         
         
-        // optimistic render: show message immediately in UI
             try {
                 let friendAvatar = localStorage.getItem('activeContactAvatar')
                             || (ACTIVE_CHAT_CONTACT_ID ? sessionStorage.getItem('avatar:' + String(ACTIVE_CHAT_CONTACT_ID)) : null)
@@ -814,7 +810,6 @@ export function ChatEventListener() {
 
         } catch (e) { console.warn('optimistic render failed', e); }
 
-        // send to server (ack used only for error handling, do not re-render on ack)
         sendMessage(ACTIVE_CHAT_CONTACT_ID, content, (res) => {
             if(res?.status === "error") {
                 console.debug("send failed", res?.reason || "unknown");
@@ -840,7 +835,6 @@ export function ChatEventListener() {
         const convo = data?.conversation;
         if (!msg) return;
 
-        // normalize & cache sender avatar so fresh tabs can use it
         if (msg.senderAvatar) {
             try {
                 const fixed = resolveChatAvatar(msg.senderAvatar);

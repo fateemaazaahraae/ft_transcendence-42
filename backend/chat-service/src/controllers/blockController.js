@@ -6,15 +6,13 @@ export const blockUser = async (request, reply) => {
     const { blockedId } = request.body || {};
     const blockerId = request.user && request.user.id ? String(request.user.id) : null;
     const authHeader = request.headers.authorization || '';
-    // debug: presence of auth header and blockedId
     request.log.info({ hasAuth: !!authHeader, blockedId }, '[chat] POST /api/block received');
 
     if (!blockedId) return reply.code(400).send({ error: 'missing blockedId' });
     const result = await blockedModel.block(authHeader, null, blockedId);
-    // REALTIME: notify affected users from server side (single source of truth)
+    // REALTIME notify affected users from server side 
     try {
       if (socket) {
-        // log current room membership for diagnostics
         try {
           const room = socket.sockets && socket.sockets.adapter && socket.sockets.adapter.rooms && socket.sockets.adapter.rooms.get(String(blockerId));
           const roomSize = room ? room.size : 0;
@@ -28,10 +26,9 @@ export const blockUser = async (request, reply) => {
         // notify all blocker's sessions that block completed
         socket.to(String(blockerId)).emit("block_done", { target: blockedId });
         request.log.info({ to: blockerId, event: 'block_done' }, '[chat] emitted block_done');
-        // immediately hide blocked user's presence for the blocker
+        // immediately hide blocked users presence for the blocker
         socket.to(String(blockerId)).emit("user_offline", { userId: String(blockedId) });
         request.log.info({ to: blockerId, event: 'user_offline', about: blockedId }, '[chat] emitted user_offline');
-        // suppress any immediate re-online about this pair for a short window
         try { suppressReonline(blockerId, blockedId, 3000); } catch (e) { request.log.warn('suppressReonline failed', e); }
       }
     } catch (e) {
@@ -61,7 +58,7 @@ export const unblock= async (request, reply) => {
 
      try {
       if (socket) {
-        // log current room membership for diagnostics (unblock)
+        
         try {
           const roomB = socket.sockets && socket.sockets.adapter && socket.sockets.adapter.rooms && socket.sockets.adapter.rooms.get(String(blockedId));
           const roomBSize = roomB ? roomB.size : 0;
@@ -79,7 +76,7 @@ export const unblock= async (request, reply) => {
         socket.to(String(unblockedBy)).emit("unblock_done", { target: blockedId });
         request.log.info({ to: unblockedBy, event: 'unblock_done' }, '[chat] emitted unblock_done');
 
-        // if the unblocked user is currently online, tell the unblocking user they are online
+        // if the unblocked user is currently online tell the unblocking user they are online
         try {
           const room = socket.sockets && socket.sockets.adapter && socket.sockets.adapter.rooms && socket.sockets.adapter.rooms.get(String(blockedId));
           const isOnline = room && room.size > 0;
