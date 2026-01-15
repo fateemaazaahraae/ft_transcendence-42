@@ -44,7 +44,8 @@ export default async function Home() {
     userId = localStorage.getItem("userId");
 
     const resGame = await fetch(`game/matches/user/${userId}`);
-    if (!resGame.ok) throw new Error("Can't fetch matches");
+    if (!resGame.ok) 
+      showAlert("Can't fetch matches");
 
     matches = await resGame.json();
 
@@ -154,7 +155,7 @@ export default async function Home() {
           <h1 class="text-white font-glitch text-xl md:text-2xl xl:text-4xl">${user.firstName} ${user.lastName}</h1>
           <h1 class="text-white font-roboto text-[14px] md:text-[16px] xl:text-xl">${user.userName}</h1>
           <div class="lg:gap-3 xl:gap-6 lg:mt-[5%] xl:mt-[10%]">
-            <div class="fdata-i18n="player"lex text-white font-roboto justify-between text-[10px] md:text-[13px] w-[210px] md:w-[300px] xl:w-[400px]">
+            <div class="flex text-white font-roboto justify-between text-[10px] md:text-[13px] w-[210px] md:w-[300px] xl:w-[400px]">
               <p data-i18n="level">Level</p>
               <p id="level" >7.5%</p>
             </div>
@@ -222,7 +223,7 @@ export default async function Home() {
     </div>
     <div class="h-[30%] w-[10px] lg:w-[1px] xl:w-[3px] xl:h-[250px] lg:h-[180px] rounded-full bg-[#35C6DD] mt-[2%] lg:mt-[14%] xl:mt-[1%] lg:mr-[20px] lg:ml-[40px] xl:ml-[80px] xl:mr-[40px] shadow-[0_0_20px_#35C6DD]"></div>
     <div class="flex flex-col justify-center items-center gap-2">
-      <h1 data-i18n="achievements" class="text-white font-glitch md:text-2xl xl:text-4xl mt-[10%] md:mt-[5%] lg:mt-[20%] mr-[80%] lg:mr-[40%] xl:mr-0 xl:mt-0">Achievements</h1>
+      <h1 data-i18n="achievements" class="text-white font-glitch md:text-2xl xl:text-4xl mt-[15%] md:mt-[8%] lg:mt-[20%] mr-[80%] lg:mr-[40%] xl:mr-0 xl:mt-0">Achievements</h1>
 
       <div class="relative group w-[340px] h-[220px] ">
   <!-- Main trophy -->
@@ -235,10 +236,10 @@ export default async function Home() {
           ${
   trophies.length === 0
     ? `
-      <div class="flex flex-col items-center justify-center gap-5 lg:mr-[10%] w-[200px] md:w-[400px] h-full rounded-[30px]">
-        <i class="fa-duotone fa-solid fa-trophy text-secondary drop-shadow-cyan text-[40px] md:text-[50px]"></i>
+      <div class="flex flex-col mr-[60%] mt-2 lg:mt-0  items-center justify-center gap-5 lg:mr-[10%] w-[200px] md:w-[250px] lg:w-[400px] h-full rounded-[30px]">
+        <i class="fa-duotone fa-solid fa-trophy text-secondary drop-shadow-cyan text-[30px] md:text-[40px] lg:text-[50px]"></i>
         <p data-i18n="noTrophies"
-          class="font-regular font-roboto text-primary text-center text-[18px] md:text-xl">
+          class="font-regular font-roboto text-primary text-center text-[12px] md:text-[15px] lg:text-xl">
           No trophies yet!<br/>Play now and become<br/>a champion!
         </p>
       </div>

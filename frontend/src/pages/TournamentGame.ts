@@ -10,7 +10,7 @@ export default function TournamentGame() {
 
   return `
   <div id="container" class="relative w-full h-screen">
-    <div class="absolute flex top-[15%] md:top-[20%] lg:top-[23%] xl:top-[18%] left-[6%] md:left-[2%] lg:left-[11%] xl:left-[22%] md:translate-x-1/2">
+    <div class="absolute flex top-[15%] md:top-[20%] lg:top-[23%] xl:top-[18%] left-[6%] md:left-[5%] lg:left-[11%] xl:left-[22%] md:translate-x-1/2">
         
         <img src="" id="myImg" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-primary/80 object-cover border-[2px]"/>
         
@@ -27,7 +27,7 @@ export default function TournamentGame() {
         <img src="" id="myImg2" class="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] xl:w-[100px] xl:h-[100px] rounded-full border-secondary/80 object-cover border-[2px]"/>
     </div>
     <!-- GAME CANVAS AREA -->
-    <div class="absolute left-1/2 transform -translate-x-1/2 rotate-90 lg:rotate-0 top-[43%] lg:top-[37%] xl:top-[32%] md:top-[38%] h-[38%] md:h-[55%] w-full md:w-[80%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
+    <div class="absolute left-1/2 transform -translate-x-1/2 rotate-90 lg:rotate-0 top-[43%] lg:top-[37%] xl:top-[32%] md:top-[50%] h-[38%] md:h-[55%] w-full md:w-[80%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
       <!-- This is where the game will be drawn -->
       <canvas 
         id="gameCanvas"
@@ -40,6 +40,18 @@ export default function TournamentGame() {
           Leave
         </button>
       </div>
+
+      <!-- GAME NOT SUPPORTED -->
+
+      <div id="notSupported" class=" lg:hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60">
+    <div class="flex flex-col justify-center items-center w-[250px] h-[200px]  md:w-[350px] md:h-[300px] rounded-3xl bg-black drop-shadow-pink">
+      <h3 data-i18n="notSupp" class="text-[17px] md:text-2xl font-roboto text-center text-white/90 px-6">
+        This game is not supported on phones or tablets.<br />
+        Please switch to a laptop or desktop to play.
+      </h3>
+    </div>
+  </div>
+
     <!-- PAUSE OVERLAY (Hidden by default) -->
       <div id="leave-overlay" class="absolute inset-0 bg-black/50 z-[100] hidden flex-col items-center justify-center">
         <div class="bg-black p-8 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
@@ -232,7 +244,7 @@ export async function TournamentGameEventListener() {
       if (!isWinner) {
         const winnerOverlay = document.createElement('div');
         winnerOverlay.id = 'winner-overlay';
-        winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
+        winnerOverlay.className = 'absolute inset-0 bg-black/50 z-[100] hidden lg:flex flex-col items-center justify-center';
         winnerOverlay.innerHTML = `
           <div class="bg-black p-10 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
             <h3 class="text-3xl font-glitch ${h3ColorClass} mb-3">${h3Text}</h3>

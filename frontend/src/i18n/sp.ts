@@ -62,12 +62,15 @@ const sp: translateDict = {
     fscore: "Puntuación Final",
     main: "Menú principal",
     playAg: "Jugar de nuevo",
-    wait: "Esperando al oponente",
+    wait: "Esperando al oponente...",
     leave: "Salir",
     leaveQst: "¿Salir del partido?",
     leaveSent: "Tu progreso en este partido se perderá.",
     stay: "Quedarse",
-    waitP: "Esperando a los jugadores",
+    waitP: "Esperando a los jugadores...",
+    joinTour: "Unirse al torneo",
+    join: "Unirse",
+    notSupp: "Este juego no es compatible con teléfonos ni tabletas. Cambia a un ordenador portátil o de escritorio para jugar.",
 }
 
 export default sp;

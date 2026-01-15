@@ -61,12 +61,15 @@ const fr: translateDict = {
     fscore: "Score Final",
     main: "Menu Principal",
     playAg: "Rejouer",
-    wait: "En attente d’un adversaire",
+    wait: "En attente d’un adversaire...",
     leave: "Quitter",
     leaveQst: "Quitter le match?",
     leaveSent: "Votre progression pour ce match sera perdue.",
     stay: "Rester",
-    waitP: "En attente des joueurs",
+    waitP: "En attente des joueurs...",
+    joinTour: "Rejoindre le tournoi",
+    join: "Rejoindre",
+    notSupp: "Ce jeu n’est pas compatible avec les téléphones et les tablettes. Veuillez utiliser un ordinateur portable ou de bureau pour jouer.",
 }
 
 export default fr;

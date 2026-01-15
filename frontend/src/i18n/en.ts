@@ -61,12 +61,15 @@ const en: translateDict = {
     fscore: "Final Score",
     playAg: "Play Again",
     main: "Main Menu",
-    wait: "Waiting For Opponent",
+    wait: "Waiting For Opponent...",
     leave: "Leave",
     leaveQst: "Leave Match?",
     leaveSent: "Your progress for this match will be lost.",
     stay: "Stay",
-    waitP: "Waitng for Players",
+    waitP: "Waitng for Players...",
+    joinTour: "Join Tournament",
+    join: "Join",
+    notSupp: "This game is not supported on phones or tablets. Please switch to a laptop or desktop to play.",
     
 }
 

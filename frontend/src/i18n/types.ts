@@ -67,4 +67,7 @@ export interface translateDict {
     leaveSent: string;
     stay: string;
     waitP: string;
+    joinTour: string;
+    join: string;
+    notSupp: string;
 }

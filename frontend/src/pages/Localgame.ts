@@ -74,6 +74,17 @@ export default async function LocalGame() {
       </div>
     </div>
 
+    <!-- GAME NOT SUPPORTED -->
+
+      <div id="notSupported" class=" lg:hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60">
+    <div class="flex flex-col justify-center items-center w-[250px] h-[200px]  md:w-[350px] md:h-[300px] rounded-3xl bg-black drop-shadow-pink">
+      <h3 data-i18n="notSupp" class="text-[17px] md:text-2xl font-roboto text-center text-white/90 px-6">
+        This game is not supported on phones or tablets.<br />
+        Please switch to a laptop or desktop to play.
+      </h3>
+    </div>
+  </div>
+
     <!-- GAME CANVAS AREA -->
     <div class="absolute left-1/2 transform -translate-x-1/2 rotate-90 lg:rotate-0 top-[43%] lg:top-[37%] xl:top-[32%] md:top-[38%] h-[38%] md:h-[55%] w-full md:w-[80%] lg:w-[70%] lg:h-[50%] xl:h-[60%] border-[#35C6DD]/40 rounded-3xl overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)]">
       <!-- This is where the game will be drawn -->
@@ -355,7 +366,7 @@ export function LocalGameEventListener() {
           const winner = player1Score >= WINNING_SCORE ? "player1" : "player2";
             const winnerOverlay = document.createElement('div');
             winnerOverlay.id = 'winner-overlay';
-            winnerOverlay.className = 'ml-12 md:ml-0 w-[80%] md:w-full absolute inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center';
+            winnerOverlay.className = 'ml-12 md:ml-0 w-[80%] md:w-full absolute inset-0 bg-black/50 z-[100] hidden lg:flex flex-col items-center justify-center';
             winnerOverlay.innerHTML = `
               <div class="bg-black p-10 rounded-2xl border-primary/40 overflow-hidden shadow-[0_0_15px_5px_rgba(0,255,255,0.5)] max-w-md w-[90%] text-center">
                 <h2 class="text-2xl md:text-4xl font-glitch ${player1Score >= WINNING_SCORE ? 'text-primary' : 'text-secondary'} mb-4">🏆 ${winner} Wins! 🏆</h2>

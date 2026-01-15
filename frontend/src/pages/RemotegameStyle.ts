@@ -28,7 +28,7 @@ export default function RemoteGameStyle() {
     <!-- Wait opponent -->
 
     <h1 data-i18n= "wait" id="waitingText"
-        class="text-3xl md:text-4xl lg:text-5xl font-glitch text-center mt-[40%] md:mt-[20%] lg:mt-[14%]">
+        class="text-xl md:text-3xl lg:text-5xl font-glitch text-center mt-[40%] md:mt-[20%] lg:mt-[14%]">
       Waiting For Opponent<span id="dots">...</span>
     </h1>
     <div class="flex flex-col lg:flex-row justify-center items-center mt-[8%] lg:mt-[5%] gap-6 md:gap-10">

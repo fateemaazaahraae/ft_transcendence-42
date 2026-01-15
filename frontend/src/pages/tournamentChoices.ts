@@ -86,7 +86,7 @@ export async function tournamentChoices() {
 									</div>
 									<div class="flex flex-col items-start ml-8">
 										<p class="font-bold">${tour.tournamentName}</p>
-										<p class="text-white/70">${tour.players} players</p>
+										<p data-i18n="players" class="text-white/70">${tour.players} player(s)</p>
 									</div>
 									<button
 										class="join-btn absolute right-6 cursor-pointer text-secondary text-3xl"
@@ -107,9 +107,12 @@ export async function tournamentChoices() {
 
 				</div>
 				<!--JOIN TOURNAMENT MODAL -->
-				<div id="joinTour" class="fixed  inset-0 z-50 hidden items-center justify-center bg-black/70">
+				<div  id="joinTour" class="fixed  inset-0 z-50 hidden items-center justify-center bg-black/70">
 					<div id="joinBox" class="flex flex-col justify-center items-center gap-6 w-[350px] h-[300px] rounded-3xl bg-black drop-shadow-pink">
-						<h3 id="title" class="text-3xl mt-10 font-glitch text-center text-white/90"> Join Tournament </h3>
+						<div class="flex flex-col gap-2">
+							<h3 data-i18n= "joinTour"  class="text-3xl mt-12 font-glitch text-center text-white/90"> Join Tournament </h3>
+							<h3 data-i18n= "join" id="title" class=" font-glitch text-center">  </h3>
+						</div>
 						<input id="joinNick" type="text" placeholder="Nick name" class="mt-3 placeholder-white/70 w-[220px] bg-black drop-shadow-pink  rounded-2xl px-6 py-3 focus:outline-none focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] " />
 						<button data-i18n= "join" type="submit" id="joinBtn" class="bg-secondary/90 font-glitch h-12 w-40 rounded-full text-2xl hover:bg-secondary mb-16 mt-4 ">Join</button>
 					</div>
@@ -216,7 +219,7 @@ export function joinTournament(): string {
 	{
 		const title = document.getElementById("title");
 		if (title)
-			title.innerHTML = `Join Tournament </br> <span class="text-secondary text-xl">"${selectedTournamentName}"</span>`;
+			title.innerHTML = `<span class="text-secondary text-xl">"${selectedTournamentName}"</span>`;
 	}
     modal.classList.remove("hidden");
     modal.classList.add("flex");
