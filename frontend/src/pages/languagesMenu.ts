@@ -6,7 +6,6 @@ export function LanguagesMenuEventListener() {
     // const currentLangBtn = document.getElementById("currentLang");
 
     document.addEventListener("click", (e) => {
-        console.log("Language menu clicked");
         const arrow = document.querySelector<HTMLElement>(".arrow");
         if (!arrow || !btn)
             return;

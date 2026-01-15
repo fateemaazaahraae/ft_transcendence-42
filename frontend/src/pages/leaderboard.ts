@@ -40,8 +40,6 @@ export default async function Leaderboard() {
   const users: User[] = await fetchLeaderboard();
   const topThree: User[] = users.slice(0, 3);
   const restUsers: User[] = users.slice(3, 7);
-  console.log(topThree);
-  console.log(restUsers);
   const currentLang = (await getSavedLang()).toUpperCase();
   return `
   <div class="min-h-screen text-white font-roboto px-6 md:px-20 py-10 relative pb-[90px] overflow-y-auto">

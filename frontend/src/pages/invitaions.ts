@@ -16,7 +16,6 @@ export async function fetchMoreInfo(data: Invitaions[]): Promise<Invitaions[]> {
     data.map(async (friend) => {
       const res = await fetch(`http://localhost:3000/users/${friend.sender_id}`);
       if (!res.ok) return friend;
-      console.log("---- " + friend.created_at.toString());
       const user = await res.json();
       return {
         ...friend,
@@ -135,12 +134,10 @@ export function InvitationsEventListener() {
   const blockedButton = document.getElementById("blockedButton");
 
   friendsButton?.addEventListener("click", () => {
-    console.log("Friends Button Clicked");
     navigate("/friends");
   })
 
   blockedButton?.addEventListener("click", () => {
-    console.log("Blocked Button Clicked");
     navigate("/blocked");
   })
 

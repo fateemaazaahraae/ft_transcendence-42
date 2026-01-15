@@ -76,12 +76,10 @@ export function LocalGameStyleEventListener() {
   setTimeout(() => {
       const match=document.getElementById("play");
       match?.addEventListener("click", () =>{
-        console.log("Local multiplayer button clicked!");
         navigate("/Localgame");
       });
       const matchai=document.getElementById("playai");
       matchai?.addEventListener("click", () =>{
-        console.log("VS AI button clicked!");
         navigate("/Aigame");
       });
   }, 100);

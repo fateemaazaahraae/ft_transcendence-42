@@ -104,7 +104,6 @@ export function RemoteGameStyleEventListener() {
   startOpponentImageRotation();
   const socket = getGameSocket(localStorage.getItem("token"));
   function leaveGame() {
-    console.log("You left!!");
     socket.disconnect();
     navigate("/gameStyle");
   }

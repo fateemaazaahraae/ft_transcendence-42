@@ -152,14 +152,6 @@ export default class GameRoom {
     this.gameState.ball.x += this.gameState.ball.dx;
     this.gameState.ball.y += this.gameState.ball.dy;
 
-    // const dt = Math.min((now - last) / 1000, 0.04);
-    // last = now;
-
-    // const PrevX = ball.x;
-    // const PrevY = ball.y;
-    // const NewX = ball.x + ball.vx * dt;// following the rule : position' = position + velocity * dt; (to calculate value in px)
-    // const NewY = ball.y + ball.vy * dt;
-
 
     if (this.input[this.player1.id].up) {
       this.gameState.paddle1.y = Math.max(0, this.gameState.paddle1.y - SPEED);

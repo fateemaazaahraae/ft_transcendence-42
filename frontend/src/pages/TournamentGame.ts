@@ -120,9 +120,7 @@ export async function winnerdata(winner: any) {
       const userName = data.userName || "";
 
       return {profileImage, userName};
-      
-      // (document.getElementById("myImg") as HTMLImageElement).src = data.profileImage || "";
-      // (document.getElementById("userName") as HTMLElement).textContent = data.userName || "";
+
     }
     catch (err)
     {
@@ -149,9 +147,6 @@ export async function TournamentGameEventListener() {
   const quitBtn = document.getElementById('quit-btn') as HTMLButtonElement;
   const player1ScoreDisplay = document.getElementById('player1-score-display') as HTMLSpanElement;
   const player2ScoreDisplay = document.getElementById('player2-score-display') as HTMLSpanElement;
-  // const modal = document.getElementById("game-over-modal");
-  // const resultTitle = document.getElementById("game-result-title");
-  // const finalScoreText = document.getElementById("final-score");
 
   function updateScoreDisplay() {
     if (player1ScoreDisplay) player1ScoreDisplay.textContent = player1Score.toString();
@@ -160,7 +155,6 @@ export async function TournamentGameEventListener() {
 
   socket.on("game_update", (gameState: any) => {// listen for a socket.emit('game_update') with the new positions
     if (!ctx || !canvas) return;
-    console.log()
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -239,8 +233,6 @@ export async function TournamentGameEventListener() {
           finalWinnerNickname = match.Nickname2;
         }
       }
-      console.log("Sending Winner to Final:", finalWinnerNickname);
-      console.log(data.winner)
       if (!isWinner) {
         const winnerOverlay = document.createElement('div');
         winnerOverlay.id = 'winner-overlay';
@@ -295,7 +287,6 @@ export async function TournamentGameEventListener() {
   window.addEventListener('keydown', onKeyDown);
   window.addEventListener('keyup', onKeyUp);
   function leaveGame() {
-    console.log("someone left!!");
     socket.emit('leave_game');
   }
 

@@ -78,8 +78,7 @@ export function TrWaitingPlayersEventListener() {
   startWaitingDots();
   window.addEventListener('popstate', () => {
     socket.emit("leave_queue", { tournamentId });
-    socket.disconnect();/////////
-    console.log("You left!!");
+    socket.disconnect();
   });
 
   function clearOpponent(id: string) {
@@ -175,7 +174,6 @@ export function TrWaitingPlayersEventListener() {
 
   socket.on("start_final_game", (data: any) => {
     hasReceivedGameData = true;
-    console.log("🎉 MATCH Fiiiiiiiiiiinal!...");
     localStorage.setItem("LastMatch", JSON.stringify(data));
     showAlert("Match Final is about to Start.", "success");
     setTimeout(() => {
@@ -184,7 +182,6 @@ export function TrWaitingPlayersEventListener() {
   });
 
   socket.on("match_found1", (data: any) => {
-    console.log("🎉 MATCH FOUND!...");
     localStorage.setItem("currentMatch1", JSON.stringify(data));
     showAlert("Tournament is about to start.", "success");
     // socket.emit("fire_matches", )
@@ -194,7 +191,6 @@ export function TrWaitingPlayersEventListener() {
   });
 
   socket.on("match_found2", (data: any) => {
-    console.log("🎉 MATCH FOUND!...");
     localStorage.setItem("currentMatch2", JSON.stringify(data));
     showAlert("Tournament is about to start.", "success");
     // socket.emit("fire_matches", )
@@ -215,8 +211,6 @@ export function TrWaitingPlayersEventListener() {
     const slotId = `opponent${data.number}`;
     const img = document.getElementById(slotId) as HTMLImageElement;
     if (!img) return;
-    console.log("a player connected with the pic: ", data.pic,
-        "and number---> ", data.number);
     img.classList.remove("waiting");
     img.classList.add("locked");
     img.src = data.pic;

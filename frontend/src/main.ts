@@ -79,22 +79,18 @@ async function render(path: string) {
         page = routes["/pong/:gameId"];
     }
 
-    // render the page
     app!.innerHTML = await page.render();  // in case render becomes async
 
 
     requestAnimationFrame(() => window.scrollTo(0, 0));
     sideBarListeners();
-    // run setup if exists
     if (page.setUp)
         await page.setUp();
     const lang = await getSavedLang();
-    // const lang = localStorage.getItem(:);
     translatePage(lang);
     const currentLangBtn = document.getElementById("currentLang");
     if (currentLangBtn)
         currentLangBtn.innerHTML = `<i class="fa-solid fa-chevron-down text-xs"></i> ${lang.toUpperCase()}`;
-    // renderNotifications(notifications);
     initLogout();
     searchBar();
     const userId = localStorage.getItem("userId")

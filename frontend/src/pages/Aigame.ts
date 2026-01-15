@@ -162,7 +162,6 @@ export function AiGameEventListener() {
     const canvas = document.getElementById('pongCanvas') as HTMLCanvasElement | null;
     if (canvas)
     {
-      console.log("Canvas found! Ready to start game.");
       
       // The canvas size l(height and width)
       canvas.width = canvas.offsetWidth;
@@ -257,7 +256,6 @@ export function AiGameEventListener() {
       if (quitBtn) {
         quitBtn.addEventListener('click', () => {
           navigate('/localMode');
-          // console.log('Quit lacal game style');
         });
       }
 
@@ -271,7 +269,6 @@ export function AiGameEventListener() {
         if (!gameRunning) {
           togglePause();
         }
-        console.log('Game Restarting');
       }
 
       function drawMyScene() {
@@ -332,12 +329,6 @@ export function AiGameEventListener() {
       function updateAI(dt: number) {
         // Only start reacting once the ball crosses the canvas center (and ball moving toward AI)
         if (ball.x < (width / 2) + 150 || ball.vx <= 0) {
-          // // optionally slowly return paddle to center when idle:
-          // const idleTarget = height / 2 - paddleHeight / 2;
-          // const toIdle = idleTarget - paddleRightY;
-          // paddleRightY += Math.sign(toIdle) * Math.min(Math.abs(toIdle), PaddleSpeed * 0.3 * dt);
-          // // clamp and return
-          // paddleRightY = Math.max(0, Math.min(height - paddleHeight, paddleRightY));
           return;
         }
 
@@ -368,7 +359,6 @@ export function AiGameEventListener() {
         }
 
         const dt = Math.min((now - last) / 1000, 0.04);  // kan7sbo delta time li hia lwa9t bin kola frame w frame kan9smoh 3la 1000 to get the value in milliseconds // then kanakhdo l min value between time btw frames and 0.04 so always 0.04 is the max value can be chosing
-        // console.log('the dt var is: ', dt);
         last = now; // update the last time value
 
         // move paddles

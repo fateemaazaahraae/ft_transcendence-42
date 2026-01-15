@@ -106,13 +106,11 @@ export function GameStyleEventListener(){
       if (!socket.hasListeners("match_found")) {
           
           socket.on("connect", () => {
-              console.log("✅ Connected via Manager! ID:", socket.id);
               navigate("/RemotegameStyle");
               socket.emit('join_queue');
           });
 
-          socket.on("match_found", (data: any) => {
-              console.log("🎉 MATCH FOUND! Navigating to gameeeee...");
+          socket.on("match_found", (data: any) => {;
               localStorage.setItem("currentMatch", JSON.stringify(data));
               navigate("/remotegame"); 
           });

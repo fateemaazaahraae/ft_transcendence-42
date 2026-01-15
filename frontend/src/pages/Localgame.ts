@@ -97,12 +97,6 @@ export default async function LocalGame() {
   `;
 }
 
-// To always remember
-  //       y
-  //       ↑
-  //       |
-  //       | 
-  //  -----+----→ x
 
 export function LocalGameEventListener() {
   setTimeout(() => {
@@ -130,7 +124,6 @@ export function LocalGameEventListener() {
     const canvas = document.getElementById('pongCanvas') as HTMLCanvasElement | null;
     if (canvas)
     {
-      console.log("Canvas found! Ready to start game.");
       
       // The canvas size l(height and width)
       canvas.width = canvas.offsetWidth;
@@ -226,7 +219,6 @@ export function LocalGameEventListener() {
       if (quitBtn) {
         quitBtn.addEventListener('click', () => {
           navigate('/localMode');
-          // console.log('Quit lacal game style');
         });
       }
 
@@ -240,7 +232,6 @@ export function LocalGameEventListener() {
         if (!gameRunning) {
           togglePause();
         }
-        console.log('Game Restarting');
       }
 //
 
@@ -301,7 +292,6 @@ export function LocalGameEventListener() {
         }
 
         const dt = Math.min((now - last) / 1000, 0.04);  // kan7sbo delta time li hia lwa9t bin kola frame w frame kan9smoh 3la 1000 to get the value in milliseconds // then kanakhdo l min value between time btw frames and 0.04 so always 0.04 is the max value can be chosing
-        // console.log('the dt var is: ', dt);
         last = now; // update the last time value
 
         // move paddles

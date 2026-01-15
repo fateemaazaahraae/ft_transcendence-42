@@ -40,9 +40,6 @@ export default function ResetPw() {
 }
 
 export function ResetPwEventListener(){
-  // const btnSend=document.getElementById("send");
-  // btnSend?.addEventListener("click", () =>{navigate("/TwoFactor");
-  // });
   const form = document.getElementById("emailForm") as HTMLFormElement | null;
   if (!form) {
     console.log("Email form not found in the DOM");
@@ -53,7 +50,7 @@ export function ResetPwEventListener(){
     const email = (document.getElementById("email") as HTMLInputElement).value;
 
     try {
-      const res = await fetch("/auth/forget-password", {
+      const res = await fetch("/api/forget-password", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({email})

@@ -142,16 +142,13 @@ export async function tournamentChoices() {
 }
 
 function handleTournamentbtn(tournamentId: string, nick: string, tourName?: string) {
-	console.log("Create tr button is clicked!");
-	const token = localStorage.getItem("token"); // this will get JWT prolly
-	console.log("hereeeeeeeeeeeee" + token);
+	const token = localStorage.getItem("token"); // this will get JWT 
 	if (!token) {
 		navigate("/login"); 
 		return;
 	}
 	const socket = getTrSocket(token); /// here is the key to send request to our game server
 	socket.on("connect", () => {
-		console.log("✅ Connected via Manager! ID:", socket.id);
 		navigate("/TrWaitingPlayers");
 		socket.emit('join_queue', { tournamentId , nick, tourName});
 	});

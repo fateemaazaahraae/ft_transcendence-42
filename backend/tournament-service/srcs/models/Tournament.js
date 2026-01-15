@@ -64,11 +64,6 @@ export const StartTournament = (server) => {
           const QueueState = tournaments[tournamentId];
           const userId = socket.data.userId;
 
-          // const index = QueueState.waiting.findIndex(
-          //   s => s.data.userId === socket.data.userId
-          // );
-          
-          // if (index !== -1) {
           const waitingIndex = QueueState.waiting.findIndex(s => s.data.userId === userId);
 
           if (waitingIndex !== -1) {

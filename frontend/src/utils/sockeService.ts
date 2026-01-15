@@ -1,6 +1,4 @@
-// import { Socket } from "node:dgram";
 import { io, Socket } from "socket.io-client";
-import { getActiveChatUser } from "../pages/chatHelpers";
 
 
 // const redis = new Redis(process.env.REDIS_URL);
@@ -85,7 +83,6 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
         });
     });
     socket.on("user_offline", ({ userId }) => {
-        // console.log('DBG recv user_offline', userId);
         presenceListeners.forEach(cb => {
             try { cb(String(userId), 'offline'); } catch (e) { console.warn('presence listener error', e); }
         });
@@ -111,12 +108,11 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
         socket.on(
         "accept_game_invite",
         ({ roomId }: { roomId: string }) => {
-            console.log("[game] invite accepted, room:", roomId);
 
-            socket.join(roomId);
+            socket?.join(roomId);
 
-            socket.to(roomId).emit("start_game", { roomId });
-            socket.emit("start_game", { roomId });
+            socket?.to(roomId).emit("start_game", { roomId });
+            socket?.emit("start_game", { roomId });
         }
         );
 
@@ -150,7 +146,6 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
     });
 
     socket.on("disconnect", (reason) => {
-        console.log("socket disconnected", reason, 'socket id', socket?.id);
         connected = false;
         connectionSubscribers.forEach(cb => {
             try { cb(false); } catch (e) { console.warn('connection subscriber error', e); }

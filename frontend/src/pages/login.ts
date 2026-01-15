@@ -95,7 +95,8 @@ export default function Login() {
 
 export function LoginEventListener() {
   const password = document.getElementById("pw");
-  password?.addEventListener("click", () => {
+  password?.addEventListener("click", (e) => {
+    e.preventDefault(); 
     navigate("/resetpw");
   });
   const register = document.getElementById("register-link");

@@ -8,9 +8,6 @@ const fastify = Fastify({ logger: true });
 
 fastify.register(fastifyCors, { origin: '*' });
 
-// fastify.get('/test', async (request, reply) => {
-//     return { message: 'tournament server is Running!' };
-// });
 await initTrophies();
 fastify.register(TournamentRoutes);
 

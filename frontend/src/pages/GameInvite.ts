@@ -256,7 +256,6 @@ export async function GameInviteEventListener() {
   window.addEventListener('keydown', onKeyDown);
   window.addEventListener('keyup', onKeyUp);
   function leaveGame() {
-    console.log("someone left!!");
     socket.emit('leave_game');
   }
 

@@ -58,7 +58,6 @@ export const GameLogic = (server) => {
         console.log(`🔌 User ${userData.name} connected!`);
 
         // socket.data.userId = userId;
-        // console.log(`User connected! Socket ID: ${socket.id} | User ID: ${socket.data.userId}`);
 
         socket.on("leave_queue", () => {
         const index = waitingQueue.findIndex(
@@ -69,29 +68,6 @@ export const GameLogic = (server) => {
             console.log(`${socket.data.userId} removed from queue (leave_queue)`);
         }
         });
-
-        // socket.on("save-ai-match", async (data) => {
-        //     // console.log(`this player: ${data.userId} wins againset Ai ------------`);
-        //     try {
-        //         const db = await getDb();
-
-        //         await db.run(
-        //         `INSERT OR IGNORE INTO wlxp (id) VALUES (?)`,
-        //         [data.userId]
-        //         );
-
-        //         await db.run(
-        //         `UPDATE wlxp
-        //         SET XPoints = XPoints + 30
-        //         WHERE id = ?`,
-        //         [data.userId]
-        //         );
-                
-        //         console.log("✅ Match vs Ai is saved to SQLite database!");
-        //     } catch (error) {
-        //         console.error("❌ Failed to save Ai match:", error);
-        //     }
-        // })
 
 
         socket.on("join_queue", () => {
@@ -107,7 +83,6 @@ export const GameLogic = (server) => {
             }
 
             waitingQueue.push(socket);
-            // console.log(`${userId} joined the queue. queue size===:${waitingQueue.length}===`);
 
             if (waitingQueue.length >= 2) {
                 const player1 = waitingQueue.shift();
@@ -133,9 +108,6 @@ export const GameLogic = (server) => {
                 const game = new GameRoom(io, matchId, player1, player2);
                 game.start();
             }
-            // else {
-            //     console.log("Waiting for players...");
-            // }
         });
 
         // Handle someone invite for a game
