@@ -111,7 +111,7 @@ export function LocalGameEventListener() {
     let animationId: number | null = null;
     let player1Score = 0;
     let player2Score = 0;
-    const WINNING_SCORE = 2; // Check which player WINS the match score 5
+    const WINNING_SCORE = 5; // Check which player WINS the match score 5
 
     const pauseBtn = document.getElementById('pause-btn') as HTMLButtonElement;
     const pauseOverlay = document.getElementById('pause-overlay') as HTMLDivElement;

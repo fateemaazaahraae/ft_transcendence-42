@@ -166,6 +166,11 @@ export function TrWaitingPlayersEventListener() {
     window.removeEventListener("popstate", leaveGame);
   }
 
+  socket.on("opponent_left_tournament", (data: any) => {
+    showAlert("No game available, your oppnent has left!", "success");
+    navigate("/home");
+  });
+
   socket.off("start_final_game");
 
   socket.on("start_final_game", (data: any) => {

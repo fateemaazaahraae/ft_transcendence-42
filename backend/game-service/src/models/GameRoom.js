@@ -149,7 +149,7 @@ export default class GameRoom {
     const CANVAS_HEIGHT = 580;
     const CANVAS_WIDTH = 1344;
     const BALL_SIZE = 10; // radius
-    const WIN_SCORE = 3;
+    const WIN_SCORE = 5;
     this.gameState.ball.x += this.gameState.ball.dx;
     this.gameState.ball.y += this.gameState.ball.dy;
 
@@ -183,10 +183,6 @@ export default class GameRoom {
       this.gameState.ball.dy *= -1;
     }
 
-    // Later we will check for paddle collisions here
-    // if (this.gameState.ball.x - BALL_SIZE <= 0 || this.gameState.ball.x + BALL_SIZE >= CANVAS_WIDTH) {
-    //   this.gameState.ball.dx *= -1;
-    // }
     if (
       this.gameState.ball.dx < 0 && // Only check if moving left
       this.gameState.ball.x - BALL_SIZE <= PADDLE_WIDTH + 8 && // Ball hit the paddle's right edge
@@ -312,7 +308,6 @@ export default class GameRoom {
   }
 
   broadcast() {
-    // Send the entire state to everyone in this specific room // using server instance socket.io and the room id so we know to which room we're talking yah ofc
     this.io.to(this.roomId).emit('game_update', this.gameState);
   }
 

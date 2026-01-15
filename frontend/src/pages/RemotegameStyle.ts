@@ -9,22 +9,6 @@ export default function RemoteGameStyle() {
   return `
   <div class="relative w-full h-screen overflow-x-hidden">
 
-    <!-- Controls Icons -->
-    <div class="absolute top-10 right-[5%] flex items-center gap-4">
-      <div class="arrow relative group">
-        <button class="flex items-center gap-2 text-primary font-roboto hover:text-secondary transition-all duration-400 ease-in-out">
-          <i class="fa-solid fa-chevron-down text-xs"></i>
-          En
-        </button>
-      </div>
-      <div class="relative">
-        <i class="fa-regular fa-bell text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-        <div id="notifBadge" class="absolute hidden top-1 inset-0 w-[7px] h-[7px] rounded-full bg-red-600"></div>
-      </div>
-      <i class="fa-solid fa-arrow-right-from-bracket text-primary hover:text-secondary cursor-pointer transition-all duration-400 ease-in-out"></i>
-    </div>
-
-
     <!-- Wait opponent -->
 
     <h1 data-i18n= "wait" id="waitingText"

@@ -62,15 +62,20 @@ export const StartTournament = (server) => {
           if (!tournamentId || !tournaments[tournamentId]) return;
           
           const QueueState = tournaments[tournamentId];
-          const index = QueueState.waiting.findIndex(
-            s => s.data.userId === socket.data.userId
-          );
+          const userId = socket.data.userId;
+
+          // const index = QueueState.waiting.findIndex(
+          //   s => s.data.userId === socket.data.userId
+          // );
           
-          if (index !== -1) {
-            QueueState.waiting.splice(index, 1);
+          // if (index !== -1) {
+          const waitingIndex = QueueState.waiting.findIndex(s => s.data.userId === userId);
+
+          if (waitingIndex !== -1) {
+            QueueState.waiting.splice(waitingIndex, 1);
             
-            if(QueueState.save.length > index) QueueState.save.splice(index, 1);
-            if(QueueState.Nicknames.length > index) QueueState.Nicknames.splice(index, 1);
+            if(QueueState.save.length > waitingIndex) QueueState.save.splice(waitingIndex, 1);
+            if(QueueState.Nicknames.length > waitingIndex) QueueState.Nicknames.splice(waitingIndex, 1);
 
             try {
               const db = await openDb();
@@ -85,18 +90,27 @@ export const StartTournament = (server) => {
               console.error("❌ Failed to save Tr match:", error);
             }
             broadcastQueueState(io, tournamentId);
+            return;
+          }
+          if (QueueState.finalists) {
+            const finalistIndex = QueueState.finalists.findIndex(s => s.data.userId === userId);
+
+            if (finalistIndex !== -1) {
+              QueueState.finalists.splice(finalistIndex, 1);
+              ThereIsFinalist = false;
+              QueueState.finalistNickname.splice(finalistIndex, 1);
+              if (QueueState.finalists.length === 1) {
+                const winnerSocket = QueueState.finalists[0];
+                winnerSocket.emit("opponent_left_tournament", {
+                  message: "Your opponent left. You win the tournament"
+                });
+              }
+            }
           }
         }
 
         let ThereIsFinalist = false;
 
-        socket.on("finalist_quit", (data) => {
-            console.log("someone QUUUUUUUUIIIIIT*********^^^\N\N");
-          if (QueueState.finalists === 1 && ThereIsFinalist) {
-            console.log("FINAAAAAAAAAAAAAAAAAAAALIST QUIIIIIIIIIIIT*********^^^\N\N");
-            handleLeave(data.tournamentId);
-          }
-        });
 
         socket.on('GoToFinal', (data) => {
           console.log(`🔥Let'sss go to the final yalaaah🔥`);

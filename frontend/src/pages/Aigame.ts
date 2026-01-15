@@ -143,7 +143,7 @@ export function AiGameEventListener() {
     let animationId: number | null = null;
     let player1Score = 0;
     let player2Score = 0;
-    const WINNING_SCORE = 1; // Check which player WINS the match score 5
+    const WINNING_SCORE = 5; // Check which player WINS the match score 5
 
     const pauseBtn = document.getElementById('pause-btn') as HTMLButtonElement;
     const pauseOverlay = document.getElementById('pause-overlay') as HTMLDivElement;
@@ -222,7 +222,6 @@ export function AiGameEventListener() {
         const k = e.key.toLowerCase();
         if (k === 'w' || k === 's' || k === 'arrowup' || k === 'arrowdown') keys[k] = false;
       });
-  ////////////////////
 
       function togglePause() {
         gameRunning = !gameRunning;
@@ -274,7 +273,6 @@ export function AiGameEventListener() {
         }
         console.log('Game Restarting');
       }
-/////////////////////////
 
       function drawMyScene() {
         // Drawing Midle line
@@ -322,7 +320,6 @@ export function AiGameEventListener() {
         ball.vx = dir * InitSpeed * Math.cos(angle);
         ball.vy = InitSpeed * Math.sin(angle);
       }
-////////******** */
       function predictBallY(): number | null {
         if (ball.vx <= 1) return null; // small threshold to avoid division by zero / near-zero
 
@@ -493,9 +490,9 @@ export function AiGameEventListener() {
                     navigate('/localMode');
                   });
                 }
-                if (winner === data.userName) {
-                  socket.emit('save-ai-match', { userId });
-                }
+                // if (winner === data.userName) {//for updating score when win against ai
+                //   socket.emit('save-ai-match', { userId });
+                // }
           }
           catch (err)
           {
