@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import history from "../services/history.js";
 import Blocked from "../models/blocked.js";
 import jwt from "jsonwebtoken";
+import GameRoom from "./gameinvite.js";
 
 
 export let socket = null;
@@ -38,10 +39,48 @@ export const initSocket = (server) => {
     cors: { origin: "*" }
   });
 
+  const getUserDataFromToken = (token) => {
+  try {
+    const payloadBase64 = token.split('.')[1];
+    const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
+    const decoded = JSON.parse(decodedJson);
+    
+    // console.log("*********************  succesfully got the pic and data");
+    return {
+        id: decoded.id,
+        name: decoded.userName,       // Make sure these match your JWT fields
+        avatar:
+            decoded.profileImage ??
+            decoded.avatar ??
+            "/public/default.png"
+        // avatar: decoded.profileImage || "/public/default.png" // Fallback
+    };
+  } catch (error) {
+    console.error("Failed to decode token:", error.message);
+    return null;
+  }
+};
   // export the io instance for other modules if needed
   socket = io;
 
   io.on("connection", async (socket) => {
+      const token = socket.handshake.auth.token;
+        if (!token) { // check tocken (JWT)
+            console.log('❌ Connection rejected: No token provided.');
+            socket.disconnect();
+            return;
+        }
+
+        const userData = getUserDataFromToken(token);
+        
+        if (!userData) {
+            socket.disconnect();
+            return;
+        }
+
+
+        socket.data.user = userData; 
+        socket.data.userId = userData.id
     const rawToken =
       socket.handshake.headers?.authorization ||
       socket.handshake.auth?.token;
@@ -202,6 +241,111 @@ export const initSocket = (server) => {
         if (ack) ack({ status: "error", reason: "server_error" });
       }
     });
+
+    socket.on("send_game_invite", async (payload, ack) => {
+      try {
+        const { to, gameType = "pong" } = payload;
+        const from = socket.data.userId;
+
+        if (!to || !from) {
+          ack?.({ status: "error", reason: "invalid_payload" });
+          return;
+        }
+
+        // simple invite id (not a game room yet)
+        const inviteId = `${from}_${to}_${Date.now()}`;
+
+        const inviteMessage = {
+          type: "game_invite",
+          from,
+          to,
+          inviteId,
+          gameType
+        };
+
+        // receiver
+        socket.to(String(to)).emit("new_message", inviteMessage);
+
+        // sender (so it appears in chat)
+        socket.emit("new_message", inviteMessage);
+
+        ack?.({ status: "ok", inviteId });
+      } catch (err) {
+        console.error("[chat] send_game_invite error", err);
+        ack?.({ status: "error", reason: "server_error" });
+      }
+    });
+
+
+    socket.on("accept_game_invite", ({ inviteId, from, to }) => {
+      const accepter = socket.data.userId;
+
+      // 🔒 SECURITY: only receiver can accept
+      if (String(accepter) !== String(to)) {
+        console.warn("[game] non-receiver tried to accept invite", accepter, to);
+        return;
+      }
+
+      console.log("[game] invite accepted by receiver", accepter, inviteId);
+
+      // reuse inviteId as gameId for simplicity
+      const gameId = inviteId;
+
+      const payload = {
+        type: "game_start",
+        gameId,
+        gameType: "pong"
+      };
+
+      // notify both players
+      socket.emit("game_start", payload);          // receiver
+      socket.to(String(from)).emit("game_start", payload); // sender
+    });
+
+
+//   socket.on("StartInviteGame", (data) => {
+//     const player1Id = data.player1;
+//     const player2Id = data.player2;
+
+//     console.log(`Received invite: P1: ${player1Id}, P2: ${player2Id}`);
+
+//     if (player1Id === player2Id) return;
+
+//     // 1. IDENTIFY PLAYER 1 (The Sender)
+//     // If the sender IS player 1, we just use 'socket' directly.
+//     // If you want to be safe, you can verify: if (socket.data.userId !== player1Id) return;
+//     const player1Socket = socket; 
+
+//     // 2. FIND PLAYER 2 (The Target)
+//     let player2Socket = null;
+
+//     for (const [_, s] of io.sockets.sockets) {
+//         if (s.data.userId === player2Id) {
+//             player2Socket = s;
+//             break; 
+//         }
+//     }
+
+//     // 3. CRITICAL: CHECK IF PLAYER 2 IS ONLINE
+//     if (!player2Socket) {
+//         console.log(`❌ Error: Player 2 (${player2Id}) is not connected.`);
+//         // Optional: Tell Player 1 that Player 2 is offline
+//         player1Socket.emit("game_error", { message: "Player 2 is offline" });
+//         return; // <--- STOP HERE to prevent the crash
+//     }
+
+//     // 4. START THE MATCH
+//     const matchId = `match_${Date.now()}`;
+//     const matchInfo = { matchId, player1: player1Id, player2: player2Id };
+
+//     console.log(`🚀 Match Started: ${matchInfo.player1} vs ${matchInfo.player2}`);
+
+//     player1Socket.emit("match_found", matchInfo);
+//     player2Socket.emit("match_found", matchInfo);
+
+//     const game = new GameRoom(io, matchId, player1Socket, player2Socket);
+//     game.start();
+// });
 
     // // forward block notifications to the blocked user
     // socket.on('user_blocked', (payload) => {

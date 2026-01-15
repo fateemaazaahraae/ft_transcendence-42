@@ -14,7 +14,7 @@ const getUserDataFromToken = (token) => {
     const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
     const decoded = JSON.parse(decodedJson);
     
-    console.log("*********************  succesfully got the pic and data");
+    // console.log("*********************  succesfully got the pic and data");
     return {
         id: decoded.id,
         name: decoded.userName,       // Make sure these match your JWT fields
@@ -91,6 +91,52 @@ export const GameLogic = (server) => {
                 console.error("❌ Failed to save Ai match:", error);
             }
         })
+
+
+        socket.on("StartInviteGame", (data) => {
+            const player1Id = data.player1;
+            const player2Id = data.player2;
+
+            console.log(`Received invite: P1: ${player1Id}, P2: ${player2Id}`);
+
+            if (player1Id === player2Id) return;
+
+            // 1. IDENTIFY PLAYER 1 (The Sender)
+            // If the sender IS player 1, we just use 'socket' directly.
+            // If you want to be safe, you can verify: if (socket.data.userId !== player1Id) return;
+            const player1Socket = socket; 
+
+            // 2. FIND PLAYER 2 (The Target)
+            let player2Socket = null;
+
+            for (const [_, s] of io.sockets.sockets) {
+                if (s.data.userId === player2Id) {
+                    player2Socket = s;
+                    break; 
+                }
+            }
+
+            // 3. CRITICAL: CHECK IF PLAYER 2 IS ONLINE
+            if (!player2Socket) {
+                console.log(`❌ Error: Player 2 (${player2Id}) is not connected.`);
+                // Optional: Tell Player 1 that Player 2 is offline
+                player1Socket.emit("game_error", { message: "Player 2 is offline" });
+                return; // <--- STOP HERE to prevent the crash
+            }
+
+            // 4. START THE MATCH
+            const matchId = `match_${Date.now()}`;
+            const matchInfo = { matchId, player1: player1Id, player2: player2Id };
+
+            console.log(`🚀 Match Started: ${matchInfo.player1} vs ${matchInfo.player2}`);
+
+            player1Socket.emit("match_found", matchInfo);
+            player2Socket.emit("match_found", matchInfo);
+
+            const game = new GameRoom(io, matchId, player1Socket, player2Socket);
+            game.start();
+        });
+
 
         socket.on("join_queue", () => {
             const userId = socket.data.userId;

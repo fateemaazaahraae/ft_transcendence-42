@@ -138,7 +138,7 @@ export default async function Chat() {
                   <div class="relative">
                     
                     <i id="sendMessageBtn" class="fa-regular fa-paper-plane text-secondary absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"></i>
-                    <i class="fa-solid fa-table-tennis-paddle-ball text-secondary absolute left-3 top-1/2 -translate-y-1/2 cursor-pointer"></i>
+                    <i id="sendInvite" class="fa-solid fa-table-tennis-paddle-ball text-secondary absolute left-3 top-1/2 -translate-y-1/2 cursor-pointer"></i>
                     
                     <input 
                       type="text" 

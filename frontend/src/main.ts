@@ -29,6 +29,7 @@ import Chat from "./pages/Chat.ts";
 import { ChatEventListener } from "./pages/chatEventListener.ts";
 import { showAlert } from "./utils/alert.ts";
 import RemoteGame, { RemoteGameEventListener } from "./pages/RemoteGame.ts";////
+import GameInvite, { GameInviteEventListener } from "./pages/GameInvite.ts";////
 import FinalMatchTr, { FinalMatchTrEventListener } from "./pages/FinalMatchTr.ts";////
 import TournamentGame, { TournamentGameEventListener } from "./pages/TournamentGame.ts";////
 import TournamentGametwo, { TournamentGametwoEventListener } from "./pages/TournamentGametwo.ts";////
@@ -61,19 +62,26 @@ const routes: Record<string, { render: () => string | Promise<string>; setUp?: (
     "/blocked": {render: Blocked, setUp: BlockedEventListener},
     "/chat": {render: Chat, setUp: ChatEventListener},
     "/remotegame": { render: RemoteGame, setUp: RemoteGameEventListener },
+    "/GameInvite": { render: GameInvite, setUp: GameInviteEventListener },
     "/FinalMatchTr": { render: FinalMatchTr, setUp: FinalMatchTrEventListener },
     "/tournamentgame": {render: TournamentGame, setUp: TournamentGameEventListener },
     "/tournamentgametwo": {render: TournamentGametwo, setUp: TournamentGametwoEventListener },
     "/tournamentChoices": { render: tournamentChoices, setUp: tournamentChoicesEventListener },
+    "/pong/:gameId": { render: RemoteGame, setUp: RemoteGameEventListener },
     404: {render: PageNotFound},
 };
 
 async function render(path: string) {
     const app = document.querySelector<HTMLDivElement>("#app");
-    const page = routes[path] || routes[404];
+    let page = routes[path] || routes[404];
+    
+    if (path.startsWith("/pong/")) {
+        page = routes["/pong/:gameId"];
+    }
 
     // render the page
     app!.innerHTML = await page.render();  // in case render becomes async
+
 
     requestAnimationFrame(() => window.scrollTo(0, 0));
     sideBarListeners();

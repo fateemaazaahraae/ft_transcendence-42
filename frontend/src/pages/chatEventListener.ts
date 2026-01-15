@@ -1,4 +1,6 @@
 
+import { getGameSocket } from "../utils/gameSocket.ts";
+import { navigate } from "../main.ts";
 import { debounce, searchUsers, fetchContacts, renderSearchResults } from "../utils/searchHandler.ts";
 import { loadUser } from "../utils/loadUser.ts";
 import { viewFriendProfile } from "./viewFriendProfile.ts";
@@ -779,9 +781,9 @@ export function ChatEventListener() {
     //socket eventhandlers
     const messageInput =document.getElementById("messageInput") as HTMLInputElement | null;
     const sendButton = document.getElementById("sendMessageBtn");
+    const sendInvite = document.getElementById("sendInvite");
     const messagesPanel = document.getElementById("messagesPanel");
     
-
     const handleSendMessage = async () => {
         const content = messageInput?.value.trim();
         if(!content || !ACTIVE_CHAT_CONTACT_ID) return;
@@ -882,6 +884,64 @@ export function ChatEventListener() {
 
 
     }
+
+    
+    socket.on("new_message", (msg: any) => {
+        if (msg.type === "game_invite") {
+            renderGameInvite(msg);
+        }
+    });
+    function renderGameInvite(invite: any) {
+    const myUserId = String(CURRENT_USER_ID);
+
+    // ✅ ONLY receiver sees Accept
+    if (String(invite.to) !== myUserId) return;
+
+    const chatContainer = document.getElementById("messagesPanel");
+    if (!chatContainer) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "my-2 p-2 border rounded";
+
+    const text = document.createElement("p");
+    text.innerText = "🎮 Pong game invite";
+
+    const btn = document.createElement("button");
+    btn.innerText = "Accept Pong Invite";
+    btn.className = "mt-2 px-3 py-1 bg-green-500 text-white rounded";
+
+    btn.onclick = () => {
+        socket.emit("accept_game_invite", {
+        inviteId: invite.inviteId,
+        from: invite.from,
+        to: invite.to
+        });
+        console.log("✅ Invite accepted", invite.inviteId);
+    };
+
+    wrapper.appendChild(text);
+    wrapper.appendChild(btn);
+    chatContainer.appendChild(wrapper);
+    }
+    socket.on("game_start", (data: any) => {
+        console.log("🚀 GAME START", data);
+
+        if (data.gameType === "pong") {
+            // SPA redirect to your Pong route
+            window.location.href = `/pong/${data.gameId}`;
+        }
+    });
+
+
+// // 8. Send game invite
+const handleSendInvite = () => {
+    console.log("🎾 Game invite clicked");
+    socket.emit("send_game_invite", {
+        to: ACTIVE_CHAT_CONTACT_ID,
+        gameType: "pong"
+    });
+};
+sendInvite?.addEventListener('click', handleSendInvite);
 
 
 }

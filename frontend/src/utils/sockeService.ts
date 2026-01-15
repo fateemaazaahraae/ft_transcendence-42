@@ -109,6 +109,20 @@ export function initializeSocket(userId: string | number, serverUrl: string, tok
         });
 
 
+        socket.on(
+        "accept_game_invite",
+        ({ roomId }: { roomId: string }) => {
+            console.log("[game] invite accepted, room:", roomId);
+
+            socket.join(roomId);
+
+            socket.to(roomId).emit("start_game", { roomId });
+            socket.emit("start_game", { roomId });
+        }
+        );
+
+
+
     socket.on("new_message", (data: any) => {
     messageListeners.forEach(cb => {
         try { cb(data); } catch (e) {
