@@ -250,19 +250,30 @@ export function TrWaitingPlayersEventListener() {
     hasReceivedGameData = true;
     console.log("🎉 MATCH Fiiiiiiiiiiinal!...");
     localStorage.setItem("LastMatch", JSON.stringify(data));
-    navigate("/FinalMatchTr");
+    showAlert("Match Final is about to Start.", "success");
+    setTimeout(() => {
+      navigate("/FinalMatchTr");
+    }, 3000);
   });
 
   socket.on("match_found1", (data: any) => {
     console.log("🎉 MATCH FOUND!...");
     localStorage.setItem("currentMatch1", JSON.stringify(data));
-    navigate("/tournamentgame"); 
+    showAlert("Tournament is about to start.", "success");
+    // socket.emit("fire_matches", )
+    setTimeout(() => {
+      navigate("/tournamentgame"); 
+    }, 3000);
   });
 
   socket.on("match_found2", (data: any) => {
     console.log("🎉 MATCH FOUND!...");
     localStorage.setItem("currentMatch2", JSON.stringify(data));
-    navigate("/tournamentgametwo"); 
+    showAlert("Tournament is about to start.", "success");
+    // socket.emit("fire_matches", )
+    setTimeout(() => {
+      navigate("/tournamentgametwo"); 
+    }, 3000);
   });
   
   let hasReceivedGameData = false;

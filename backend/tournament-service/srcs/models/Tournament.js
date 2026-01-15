@@ -144,8 +144,10 @@ export const StartTournament = (server) => {
             player2.emit("start_final_game", matchInfo);
             
             console.log("match final en cours");
-            const gameFinal = new GameRoom(io, matchId, player1, player2);
-            gameFinal.start();
+            setTimeout(() => {
+              const gameFinal = new GameRoom(io, matchId, player1, player2);
+              gameFinal.start();
+            }, 3000);
             
           }
         });
@@ -235,11 +237,13 @@ export const StartTournament = (server) => {
                 player3.emit("match_found2", match2Info);
                 player4.emit("match_found2", match2Info);
     
-                console.log("matches starting...");
-                const game1 = new GameRoom(io, match1Id, player1, player2);
-                game1.start();
-                const game2 = new GameRoom(io, match2Id, player3, player4);
-                game2.start();
+                setTimeout(() => {
+                  console.log("matches starting...");
+                  const game1 = new GameRoom(io, match1Id, player1, player2);
+                  game1.start();
+                  const game2 = new GameRoom(io, match2Id, player3, player4);
+                  game2.start();
+                }, 3000);
             } else {
                 console.log("Waiting for players...");
             }

@@ -901,16 +901,23 @@ export function ChatEventListener() {
         if (!chatContainer) return;
 
         const wrapper = document.createElement("div");
-        wrapper.className = "my-2 p-2 border rounded";
+        wrapper.className = "flex flex-col justify-center items-center gap-4 w-[280px] lg:w-[320px] h-[150px] rounded-3xl bg-primary/60 ";
 
         const text = document.createElement("p");
-        text.innerText = "🎮 Pong game invite";
+        text.className = "text-xl lg:text-2xl font-glitch text-center text-white/80"
 
-        const btn = document.createElement("button");
-        btn.innerText = "Accept Pong Invite";
-        btn.className = "mt-2 px-3 py-1 bg-green-500 text-white rounded";
+        text.innerHTML = `<i class="fa-solid fa-table-tennis-paddle-ball text-primary"></i> Pong game invite`;
+        const btnCont = document.createElement("div");
+        btnCont.className = "flex gap-6 lg:gap-8 font-roboto"; 
+        const btn1 = document.createElement("button");
+        btn1.innerText = "Accept";
+        btn1.className = "mt-2 px-3 py-1 bg-greenAdd text-white rounded-xl";
 
-        btn.onclick = () => {
+        const btn2 = document.createElement("button");
+        btn2.innerText = "Cancel";
+        btn2.className = "mt-2 px-3 py-1 bg-redRemove text-white rounded-xl";
+
+        btn1.onclick = () => {
             socket.emit("accept_game_invite", {
             inviteId: invite.inviteId,
             from: invite.from,
@@ -918,11 +925,17 @@ export function ChatEventListener() {
             });
             console.log("✅ Invite accepted", invite.inviteId);
         };
+        btn2.onclick = () => {
+            wrapper.remove();
+            console.log("✅ Invite cancled", invite.inviteId);
+        };
 
         // localStorage.setItem("chatInviteGame", invite.inviteId);
         
         wrapper.appendChild(text);
-        wrapper.appendChild(btn);
+        btnCont.appendChild(btn1);
+        btnCont.appendChild(btn2);
+        wrapper.appendChild(btnCont);
         chatContainer.appendChild(wrapper);
     }
     socket.on("game_start", (data: any) => {

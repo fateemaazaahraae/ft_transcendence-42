@@ -2,7 +2,6 @@ import { getGameSocket } from "../utils/gameSocket.ts";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
 import { showAlert } from "../utils/alert.ts";
-import { match } from "node:assert";
 
 export default function RemoteGame() {
   if (!requiredAuth()) return "";

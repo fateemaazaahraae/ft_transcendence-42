@@ -1,17 +1,13 @@
 
 import { getSavedLang } from "../i18n/index.ts";
-import { translateMsg } from "../i18n/translateBack";
 import { navigate } from "../main.ts";
 import { requiredAuth } from "../utils/authGuard.ts";
-import { loadUser } from "../utils/loadUser.ts";
-import { io } from "socket.io-client";
-import { getGameSocket } from "../utils/gameSocket.ts";
 import { formatDate } from "../utils/date.ts";
 import { showAlert } from "../utils/alert";
 
 
 export default async function Home() {
-  //GET AUTHENTICATION DATA
+ // GET AUTHENTICATION DATA
   let user:any;
   try{
     const params = new URLSearchParams(window.location.search);
@@ -23,6 +19,7 @@ export default async function Home() {
       }
       if (!token)
         token = localStorage.getItem("token");
+      if (!requiredAuth()) return "";
       const res = await fetch("http://localhost:3000/user/me", {
         headers: {
           "Authorization": `Bearer ${token}`
@@ -99,6 +96,7 @@ export default async function Home() {
   {
     console.error(err);
   }
+
 
   const currentLang = (await getSavedLang()).toUpperCase();
 
