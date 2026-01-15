@@ -2,7 +2,6 @@ import { Server } from "socket.io";
 import history from "../services/history.js";
 import Blocked from "../models/blocked.js";
 import jwt from "jsonwebtoken";
-// import GameRoom from "./gameinvite.js";
 
 
 export let socket = null;
@@ -43,7 +42,6 @@ export const initSocket = (server) => {
     const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
     const decoded = JSON.parse(decodedJson);
     
-    // console.log("*********************  succesfully got the pic and data");
     return {
         id: decoded.id,
         name: decoded.userName,       // Make sure these match your JWT fields

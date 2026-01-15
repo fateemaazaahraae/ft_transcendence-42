@@ -78,7 +78,6 @@ export default class GameRoom {
           WHERE id = ?`,
           [winnerId]
         );
-        console.log("***********updating the win/lose data***********");
 
 
         await db.run(
@@ -251,7 +250,6 @@ export default class GameRoom {
         const timestamp = Date.now();
 
 
-        console.log("-------------winerid: ", winnerId, "----------------loserId: ", loserId);
         await db.run(
           `INSERT OR IGNORE INTO wlxp (id) VALUES (?)`,
           [winnerId]
@@ -268,7 +266,6 @@ export default class GameRoom {
           WHERE id = ?`,
           [winnerId]
         );
-        console.log("***********updating the win/lose data***********");
 
         await db.run(
           `UPDATE wlxp
