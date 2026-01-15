@@ -702,17 +702,27 @@ export function ChatEventListener() {
    
     setupWindowResize(() => {
         if (!ACTIVE_CHAT_CONTACT_ID) {
-            chat?.classList.remove("hidden");
-            chat?.classList.add("flex");
-            contactsSide?.classList.remove("hidden");
+            // no active chat hide the chat panel on small screens show contacts.
+            if (window.innerWidth < 768) {
+                chat?.classList.add("hidden");
+                chat?.classList.remove("flex");
+                contactsSide?.classList.remove("hidden");
+            } else {
+                chat?.classList.remove("hidden");
+                chat?.classList.add("flex");
+                contactsSide?.classList.remove("hidden");
+            }
             return;
         }
-        chat?.classList.remove("hidden");
-        chat?.classList.add("flex");
+
         if (window.innerWidth < 768) {
             contactsSide?.classList.add("hidden");
+            chat?.classList.remove("hidden");
+            chat?.classList.add("flex");
         } else {
             contactsSide?.classList.remove("hidden");
+            chat?.classList.remove("hidden");
+            chat?.classList.add("flex");
         }
     });
 
