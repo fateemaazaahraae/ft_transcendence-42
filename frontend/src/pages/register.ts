@@ -85,6 +85,7 @@ export default function Register() {
 
 
 export function RegisterEventListener() {
+  
   const login = document.getElementById("login-link");
   login?.addEventListener("click", (e) => {
     e.preventDefault();
