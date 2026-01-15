@@ -46,9 +46,9 @@ export default function Register() {
             <input id="password" type="password" required placeholder="Password" class="w-full h-[40px] md:h-[48px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[15px] placeholder:text-[0.8em] ">
             <div id="passwordErr" class="text-redRemove text-[10px] mt-2"></div>
           </div>
-          <div class="w-full">
+          <div class="flex flex-col h-[50px] w-full">
             <input id="confirmPassword" type="password" required placeholder="Confirm Password" class="w-full h-[40px] md:h-[48px] px-[20px] py-[15px] bg-black font-roboto text-white border-none shadow-[0_0_10px_rgba(53,198,221,0.9)] focus:shadow-[0_0_10px_rgba(255,255,255,0.9)] text-[0.9em] font-medium outline-none placeholder:text-gray-400 transition-shadow duration-400 ease-in-out rounded-[15px] placeholder:text-[0.8em] ">
-            <div class="mt-1"></div>
+            <div id="confPassErr" class="text-redRemove text-[10px] mt-2"></div>
           </div>
         </div>
         <button type="submit" id="submit"
@@ -98,7 +98,7 @@ export function RegisterEventListener() {
   }
 
   /*REGEX RULES */
-  const nameRegex = /^[a-zA-Z]{3,30}$/;
+  const nameRegex = /^[a-zA-Z]{3,}(-[a-zA-Z]{3,30})?$/;
   const userRegex = /^[a-zA-Z0-9_]{3,15}$/;
   const emailRegex = /^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})$/;
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_])[A-Za-z\d@$!%*#?&_]{8,}$/;
@@ -159,7 +159,7 @@ export function RegisterEventListener() {
 
   function validateConfirmPassword(): boolean {
     const valid = getValue("password") === getValue("confirmPassword");
-    setError("confirmPasswordErr", valid ? "" : "Passwords do not match.");
+    setError("confPassErr", valid ? "" : "Passwords do not match.");
     return valid;
   }
 
@@ -169,9 +169,7 @@ export function RegisterEventListener() {
   document.getElementById("userName")?.addEventListener("input", validateUsername);
   document.getElementById("email")?.addEventListener("input", validateEmail);
   document.getElementById("password")?.addEventListener("input", validatePassword);
-  document
-    .getElementById("confirmPassword")
-    ?.addEventListener("input", validateConfirmPassword);
+  document.getElementById("confirmPassword")?.addEventListener("input", validateConfirmPassword);
 
   /*SUBMIT HANDLER*/
   form.addEventListener("submit", async (e) => {
@@ -184,8 +182,6 @@ export function RegisterEventListener() {
       validateEmail() &&
       validatePassword() &&
       validateConfirmPassword();
-
-    if (!isValid) return;
 
     const payload = {
       firstName: getValue("firstName"),

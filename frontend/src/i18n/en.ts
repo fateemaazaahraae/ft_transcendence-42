@@ -50,7 +50,24 @@ const en: translateDict = {
     availTour: "Available tournaments",
     yours: "Create yours",
     create: "Create",
-    nick: "Nick name",
+    noTrophies:"No trophies yet! Play now and become a champion!",
+    player1: "Player 1",
+    player2: "Player 2",
+    pause:"Pause",
+    gp:"Game Paused",
+    resume: "Resume Game",
+    restart: "Restart Game",
+    quit: "Quit to Menu",
+    fscore: "Final Score",
+    playAg: "Play Again",
+    main: "Main Menu",
+    wait: "Waiting For Opponent",
+    leave: "Leave",
+    leaveQst: "Leave Match?",
+    leaveSent: "Your progress for this match will be lost.",
+    stay: "Stay",
+    waitP: "Waitng for Players",
+    
 }
 
 export default en;

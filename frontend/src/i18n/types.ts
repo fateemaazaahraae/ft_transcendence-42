@@ -50,5 +50,21 @@ export interface translateDict {
     availTour: string;
     yours: string;
     create: string;
-    nick: string;
+    noTrophies: string;
+    player1:string;
+    player2:string;
+    pause:string;
+    gp:string;
+    resume:string;
+    restart: string;
+    quit: string;
+    fscore: string;
+    playAg: string;
+    main: string;
+    wait: string;
+    leave: string;
+    leaveQst: string;
+    leaveSent: string;
+    stay: string;
+    waitP: string;
 }
