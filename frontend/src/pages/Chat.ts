@@ -77,13 +77,13 @@ export default async function Chat() {
           <div class="h-full w-full md:w-[80%] "> 
             
         <div id="main_chat" 
-         class="w-full h-full 
-                hidden md:block
+         class="w-full  
+                hidden 
                 absolute top-0 left-0  
                 shadow-lg overflow-hidden text-white rounded-xl
                 md:relative md:flex lg:w-[90%] md:w-[90%] h-[700px] md:h-[700px]">
               <div id="chatContainer" class="w-full h-full flex flex-col">
-                <div id="chatHeader" class="hidden relative md:h-16 flex items-center justify-between md:pl-8 p-3 rounded-t-xl bg-primary/80"> <div class="flex items-center gap-3">
+                <div id="chatHeader" class=" relative md:h-16 flex items-center justify-between md:pl-8 p-3 rounded-t-xl bg-primary/80"> <div class="flex items-center gap-3">
                 <i id="backToContacts"
           class="fa-solid fa-arrow-left bg-primary cursor-pointer p-3 rounded-full text-white md:hidden"></i>
     <img id="chatContactAvatar" src="/green-girl.svg" class="w-12 h-12 object-cover border border-primary rounded-full">
@@ -122,7 +122,7 @@ export default async function Chat() {
 
             </div>
 
-            <div id="blockConfirmation" class="hidden absolute inset-0 flex items-center justify-center">
+            <div id="blockConfirmation" class="hidden absolute inset-0 items-center justify-center">
                 <div class="confirm bg-primary/65 p-8 rounded-xl shadow-md text-center max-w-xs w-full mx-2 min-h-[160px] flex flex-col justify-between">
                   <p class=" text-white text-lg">Block ?</p>
                   <div class="flex items-center justify-center gap-10 ">
